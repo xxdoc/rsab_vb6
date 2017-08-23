@@ -1,0 +1,4 @@
+Form2 = 100, 100, 920, 472, Z, 50, 50, 870, 422, C
+frmSettingKoneksi = 0, 0, 0, 0, C, 75, 75, 895, 447, C
+Koneksi = 100, 100, 920, 472, 
+SavetoFile = 0, 0, 0, 0, C
