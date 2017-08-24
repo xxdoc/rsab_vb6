@@ -14,7 +14,7 @@ lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName As String) As Long
 
 
 Public Function GetTxt(FileNm As String, Table As String, Field As String) As String
-  IniFilename = App.Path & "\" & FileNm
+  IniFilename = "C:\" & FileNm
     
   result = GetPrivateProfileString("" & Table & "", "" & Field & "", "Empty", mYvalue, Len(mYvalue), IniFilename)
   GetTxt = Mid(mYvalue, 1, InStr(1, mYvalue, "~", vbTextCompare) - 1)
@@ -22,7 +22,7 @@ Public Function GetTxt(FileNm As String, Table As String, Field As String) As St
 End Function
 
 Public Function SaveTxt(FileNm As String, Table As String, Field As String, Teks As String)
-  IniFilename = App.Path & "\" & FileNm
+  IniFilename = "c:\" & FileNm
     
   result = WritePrivateProfileString("" & Table & "", "" & Field & "", "" & Teks & "~", IniFilename)
 End Function

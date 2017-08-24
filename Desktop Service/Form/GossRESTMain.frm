@@ -117,7 +117,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "c:/log.txt" For Append As #LogFile
+    Open "E:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
@@ -180,6 +180,7 @@ Private Sub Gossamer1_DynamicRequest( _
     ByRef RespExtraHeaders As String, _
     ByRef RespBody() As Byte, _
     ByVal ClientIndex As Integer)
+    On Error Resume Next
     
     Dim ErrNumber As Long
     Dim ErrDescription As String
