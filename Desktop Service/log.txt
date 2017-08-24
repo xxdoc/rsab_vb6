@@ -1806,3 +1806,11 @@ Error 3265 (&H00000CC1) Item cannot be found in the collection corresponding to 
 2017-08-18 17:09:37, -1, , 3, 1, , Gossamer service stopped
 2017-08-18 17:16:04, -1, , 3, 0, , Gossamer service started
 2017-08-18 17:16:05, 0, 127.0.0.1, 2, 1, GET, /printvb/cetak-antrian?cetak=1&norec=ff8081815def1440015df4d7c13f07f8
+2017-08-24 10.59.53, -1, , 3, 0, , Gossamer service started
+2017-08-24 11.14.32, -1, , 3, 0, , Gossamer service started
+2017-08-24 21.42.10, -1, , 3, 0, , Gossamer service started
+2017-08-24 21.42.46, 0, 127.0.0.1, 2, 0, GET, /
+2017-08-24 21.42.46, 0, 127.0.0.1, 2, 0, GET, /spider.jpg
+2017-08-24 21.42.46, 0, 127.0.0.1, 2, 0, GET, /favicon.ico
+2017-08-24 21.46.27, -1, , 3, 0, , Gossamer service started
+2017-08-24 21.46.30, 0, 127.0.0.1, 2, 0, GET, /

@@ -44,6 +44,7 @@ Begin VB.Form GossRESTMain
       End
       Begin VB.Menu mnuKoneksi 
          Caption         =   "Koneksi"
+         Visible         =   0   'False
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
@@ -116,7 +117,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "log.txt" For Append As #LogFile
+    Open "c:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show

@@ -15,11 +15,11 @@ Public StatusCN As String
 Public Sub openConnection()
  On Error GoTo NoConn
  Dim host, Port, username, password, database As String
-   host = GetTxt("Setting.ini", "Koneksi", "a")
-   Port = GetTxt("Setting.ini", "Koneksi", "b")
-   username = GetTxt("Setting.ini", "Koneksi", "c")
-   password = GetTxt("Setting.ini", "Koneksi", "d")
-   database = GetTxt("Setting.ini", "Koneksi", "e")
+   host = GetTxt2("Setting.ini", "Koneksi", "a")
+   Port = GetTxt2("Setting.ini", "Koneksi", "b")
+   username = GetTxt2("Setting.ini", "Koneksi", "c")
+   password = GetTxt2("Setting.ini", "Koneksi", "d")
+   database = GetTxt2("Setting.ini", "Koneksi", "e")
 'On Error Resume Next
  
     With CN

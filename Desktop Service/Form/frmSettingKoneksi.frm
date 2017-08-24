@@ -119,19 +119,19 @@ Private Sub Command1_Click()
 '    SaveTxt "Setting.ini", "Koneksi", "password", Text4.Text
 '    SaveTxt "Setting.ini", "Koneksi", "database", Text5.Text
 
-    SaveTxt "Setting.ini", "Koneksi", "a", Text1.Text
-    SaveTxt "Setting.ini", "Koneksi", "b", Text2.Text
-    SaveTxt "Setting.ini", "Koneksi", "c", Text3.Text
-    SaveTxt "Setting.ini", "Koneksi", "d", Text4.Text
-    SaveTxt "Setting.ini", "Koneksi", "e", Text5.Text
+    SaveTxt2 "Setting.ini", "Koneksi", "a", Text1.Text
+    SaveTxt2 "Setting.ini", "Koneksi", "b", Text2.Text
+    SaveTxt2 "Setting.ini", "Koneksi", "c", Text3.Text
+    SaveTxt2 "Setting.ini", "Koneksi", "d", Text4.Text
+    SaveTxt2 "Setting.ini", "Koneksi", "e", Text5.Text
     
 End Sub
 
 Private Sub Form_Load()
 On Error Resume Next
- Text1.Text = GetTxt("Setting.ini", "Koneksi", "a")
-   Text2.Text = GetTxt("Setting.ini", "Koneksi", "b")
-   Text3.Text = GetTxt("Setting.ini", "Koneksi", "c")
-   Text4.Text = GetTxt("Setting.ini", "Koneksi", "d")
-   Text5.Text = GetTxt("Setting.ini", "Koneksi", "e")
+ Text1.Text = GetTxt2("Setting.ini", "Koneksi", "a")
+   Text2.Text = GetTxt2("Setting.ini", "Koneksi", "b")
+   Text3.Text = GetTxt2("Setting.ini", "Koneksi", "c")
+   Text4.Text = GetTxt2("Setting.ini", "Koneksi", "d")
+   Text5.Text = GetTxt2("Setting.ini", "Koneksi", "e")
 End Sub
