@@ -149,6 +149,7 @@ End Sub
 
 Public Sub CetakBilling(strNoregistrasi As String, jumlahCetak As Integer, view As String)
 'On Error GoTo errLoad
+On Error Resume Next
 
 Set frmCRCetakBilling = Nothing
 Dim adocmd As New ADODB.Command

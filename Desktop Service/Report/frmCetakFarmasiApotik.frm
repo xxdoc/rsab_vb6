@@ -207,13 +207,13 @@ bolStrukResep = True
                .database.AddADOCommand CN_String, adoReport
                
               
-                .txtnopendaftaran.SetText RS("noregistrasi")
+                .txtNoPendaftaran.SetText RS("noregistrasi")
                 .txtnocm.SetText RS("nocm")
                 .txtnmpasien.SetText RS("namapasienjk")
                 .txtklpkpasien.SetText RS("kelompokpasien")
                 '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
                 .txtNamaRuangan.SetText RS("ruanganpasien")
-                .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
                 .txtNamaDokter.SetText RS("namalengkap")
                 .txtuser.SetText strUser
                 
@@ -236,7 +236,7 @@ bolStrukResep = True
                 
                 
             If view = "false" Then
-                strPrinter1 = GetTxt("Setting.ini", "Printer", "BuktiPendaftaran")
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "CetakResep")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
                 .PrintOut False
                 Unload Me
