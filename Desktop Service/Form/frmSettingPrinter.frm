@@ -105,6 +105,7 @@ Private Sub Form_Load()
     Combo1.AddItem "CetakRMK"
     Combo1.AddItem "CetakGeneral"
     Combo1.AddItem "CetakResep"
+    Combo1.AddItem "CetakLabelEtiket"
     
     
 End Sub
