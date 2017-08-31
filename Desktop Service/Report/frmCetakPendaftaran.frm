@@ -265,7 +265,7 @@ boolLembarPersetujuan = False
                         " INNER JOIN alamat_m ap ON ap.nocmfk = ps.id " & _
                         " INNER JOIN jeniskelamin_m jk ON ps.objectjeniskelaminfk = jk.id " & _
                         " INNER JOIN ruangan_m ru ON pd.objectruanganlastfk = ru.id " & _
-                        " INNER JOIN pegawai_m pp ON pd.objectpegawaifk = pp.id " & _
+                        " LEFT JOIN pegawai_m pp ON pd.objectpegawaifk = pp.id " & _
                         " INNER JOIN kelompokpasien_m kp ON pd.objectkelompokpasienlastfk = kp.id " & _
                         " INNER JOIN antrianpasiendiperiksa_t apdp ON apdp.noregistrasifk = pd.norec" & _
                         " where pd.noregistrasi ='" & strNorec & "' "
@@ -340,7 +340,7 @@ boolLembarPersetujuan = False
                         " INNER JOIN alamat_m ap ON ap.nocmfk = ps.id " & _
                         " INNER JOIN jeniskelamin_m jk ON ps.objectjeniskelaminfk = jk.id " & _
                         " INNER JOIN ruangan_m ru ON pd.objectruanganlastfk = ru.id " & _
-                        " INNER JOIN pegawai_m pp ON pd.objectpegawaifk = pp.id " & _
+                        " LEFT JOIN pegawai_m pp ON pd.objectpegawaifk = pp.id " & _
                         " INNER JOIN kelompokpasien_m kp ON pd.objectkelompokpasienlastfk = kp.id " & _
                         " INNER JOIN antrianpasiendiperiksa_t apdp ON apdp.noregistrasifk = pd.norec" & _
                         " where pd.noregistrasi ='" & strNorec & "' "
@@ -495,7 +495,7 @@ boolLembarPersetujuan = False
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
                        " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
                        " INNER JOIN ruangan_m AS ru ON pd.objectruanganlastfk = ru.id " & _
-                       " INNER JOIN pegawai_m AS pp ON pd.objectpegawaifk = pp.id " & _
+                       " LEFT JOIN pegawai_m AS pp ON pd.objectpegawaifk = pp.id " & _
                        " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
                        " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
@@ -513,9 +513,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
 
@@ -589,7 +589,7 @@ boolLembarPersetujuan = False
 
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
         .txttgl.SetText strTglLahir
-        .txtNoCM.SetText strNocm
+        .txtnocm.SetText strNocm
     
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
@@ -748,9 +748,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
@@ -847,7 +847,7 @@ boolLembarPersetujuan = False
                        " INNER JOIN ruangan_m ru on apdp.objectruanganfk=ru.id " & _
                        " INNER JOIN kamar_m kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER JOIN tempattidur_m tt on apdp.nobed=tt.id " & _
-                       " INNER JOIN pegawai_m pg on pd.objectpegawaifk=pg.id " & _
+                       " LEFT JOIN pegawai_m pg on pd.objectpegawaifk=pg.id " & _
                        " INNER JOIN kelompokpasien_m kp on pd.objectkelompokpasienlastfk=kp.id " & _
                        " INNER JOIN kelas_m kls on apdp.objectkelasfk=kls.id " & _
                        " where pd.noregistrasi ='" & strNorec & "' "
@@ -860,9 +860,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "Umur -"
+                .txtumur.SetText "Umur -"
             Else
-                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
+                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd/mm/yyyy")
                 .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd/mm/yyyy"))

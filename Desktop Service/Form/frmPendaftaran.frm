@@ -12,6 +12,23 @@ Begin VB.Form frmPendaftaran
    ScaleHeight     =   960
    ScaleWidth      =   5040
    StartUpPosition =   3  'Windows Default
+   Begin VB.Label lblStatus 
+      Caption         =   "Cetak Antrian"
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   9.75
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   255
+      Left            =   240
+      TabIndex        =   0
+      Top             =   360
+      Width           =   2055
+   End
 End
 Attribute VB_Name = "frmPendaftaran"
 Attribute VB_GlobalNameSpace = False
@@ -20,7 +37,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 Public Function Pendaftaran(ByVal QueryText As String) As Byte()
-    On Error Resume Next
+    On Error GoTo cetak   'Resume Next
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
@@ -36,7 +53,7 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
         Param1 = Split(arrItem(0), "=")
         Param2 = Split(arrItem(1), "=")
         Param3 = Split(arrItem(2), "=")
-        Param4 = Split(arrItem(3), "=")
+'        Param4 = Split(arrItem(3), "=")
         Select Case Param1(0)
             Case "cek-konek"
                 lblStatus.Caption = "Cek"
@@ -45,17 +62,9 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
             
             Case "cetak-kartupasien"
                 lblStatus.Caption = "Cetak Kartu Pasien"
-'                Me.Show
-                ReadRs "SELECT ps.namapasien,ps.nocm,jk.reportdisplay as jk , ps.tgllahir  " & _
-                        " from pasien_m ps INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
-                        " where ps.id='" & Param2(1) & "' "
-                 If Not RS.EOF Then
-                    
-                   
-                    '(strNocm, strNamaPasien, strTglLahir, strJk, view)
-                    Call frmCetakPendaftaran.cetakKartuPasien(RS("nocm"), RS("namapasien"), Format(RS("tgllahir"), "dd/mm/yyyy"), RS("jk"), Param3(1))
                 
-                End If
+               Call cetak_KartuPasien(Param2(1))
+
                 'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-kartupasien=1&id=1231=false
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -93,7 +102,9 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Root("by") = "grh@epic"
                 
             Case "cetak-labelpasien"
+                Param4 = Split(arrItem(3), "=")
                 lblStatus.Caption = "Cetak Label Pasien"
+                
                 Call frmCetakPendaftaran.cetakLabelPasien(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-labelpasien=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false&qty=2
                 Set Root = New JNode
@@ -144,6 +155,9 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
     End With
     If CN.State = adStateOpen Then CN.Close
     Unload Me
+    Exit Function
+cetak:
+ MsgBox Err.Description
 End Function
 
 Private Sub CETAK_Billing(strNoregistrasi As String, jumlahCetak As Integer)
@@ -200,5 +214,46 @@ On Error Resume Next
         
         Printer.EndDoc
     Next
+End Sub
+
+
+Private Sub cetak_KartuPasien(strNocm As String)
+    
+    Dim prn As Printer
+    Dim strPrinter As String
+    
+    strSQL = "SELECT ps.namapasien || ' ( ' ||  jk.reportdisplay || ' ) ' as namapasien ,ps.nocm, ps.tgllahir,ps.namaayah  " & _
+            " from pasien_m ps INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
+            " where ps.id=" & strNocm & " "
+      
+     ReadRs strSQL
+      
+    strPrinter = GetTxt("Setting.ini", "Printer", "KartuPasien")
+    If Printers.count > 0 Then
+        For Each prn In Printers
+            If prn.DeviceName = strPrinter Then
+                Set Printer = prn
+                Exit For
+            End If
+        Next prn
+    End If
+    
+     If Not RS.EOF Then
+            Printer.Print "^XA"
+            
+            Printer.Print "^CFA,22"
+            Printer.Print "^FO230,170^FD " & RS!namapasien & " ^FS"
+            Printer.Print "^FO230,210^FD " & RS!namaayah & " ^FS"
+            Printer.Print "^FO230,245^FD " & RS!tgllahir & " ^FS"
+            
+            Printer.Print "^CFA,45"
+            Printer.Print "^FO50,370^FD " & RS!nocm & " ^FS"
+            Printer.Print "^FO540,270^BQN,2,5^FD    " & RS!nocm & "^FS"
+            
+            Printer.Print "^XZ"
+            Printer.EndDoc
+       End If
+   
+    
 End Sub
 

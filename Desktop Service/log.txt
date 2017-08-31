@@ -1799,18 +1799,24 @@ Error 9 (&H00000009) Subscript out of range
 2017-08-18 10:33:46, 0, 127.0.0.1, 2, 1, GET, /printvb/Pendaftaran?cetak-lembarpersetujuan=1&nores=1706000352&view=true
 2017-08-18 10:36:22, -1, , 3, 0, , Gossamer service started
 2017-08-18 10:36:25, 0, 127.0.0.1, 2, 1, GET, /printvb/Pendaftaran?cetak-lembarpersetujuan=1&nores=1706000352&view=true
-2017-08-18 16:58:00, -1, , 3, 0, , Gossamer service started
-2017-08-18 17:03:39, -1, , 3, 0, , Gossamer service started
-Error 3265 (&H00000CC1) Item cannot be found in the collection corresponding to the requested name or ordinal.
-2017-08-18 17:06:41, 0, 127.0.0.1, 2, 1, GET, /printvb/cetak-antrian?cetak=1&norec=ff8081815def1440015df4cf259a07f7
-2017-08-18 17:09:37, -1, , 3, 1, , Gossamer service stopped
-2017-08-18 17:16:04, -1, , 3, 0, , Gossamer service started
-2017-08-18 17:16:05, 0, 127.0.0.1, 2, 1, GET, /printvb/cetak-antrian?cetak=1&norec=ff8081815def1440015df4d7c13f07f8
-2017-08-24 10.59.53, -1, , 3, 0, , Gossamer service started
-2017-08-24 11.14.32, -1, , 3, 0, , Gossamer service started
-2017-08-24 21.42.10, -1, , 3, 0, , Gossamer service started
-2017-08-24 21.42.46, 0, 127.0.0.1, 2, 0, GET, /
-2017-08-24 21.42.46, 0, 127.0.0.1, 2, 0, GET, /spider.jpg
-2017-08-24 21.42.46, 0, 127.0.0.1, 2, 0, GET, /favicon.ico
-2017-08-24 21.46.27, -1, , 3, 0, , Gossamer service started
-2017-08-24 21.46.30, 0, 127.0.0.1, 2, 0, GET, /
+2017-08-18 15:13:51, -1, , 3, 0, , Gossamer service started
+2017-08-18 15:17:39, 0, 127.0.0.1, 2, 1, GET, /printvb/Pendaftaran?cetak-buktipendaftaran=1&norec=1708000156&view=false
+2017-08-18 15:18:18, 0, 127.0.0.1, 2, 1, GET, /printvb/Pendaftaran?cetak-labelpasien=1&norec=1708000156&view=false&qty=1
+2017-08-23 15:02:32, -1, , 3, 0, , Gossamer service started
+2017-08-24 10.21.53, -1, , 3, 0, , Gossamer service started
+2017-08-24 10.22.32, 0, 127.0.0.1, 2, 1, GET, /printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000178&view=true
+2017-08-24 10.22.33, 0, 127.0.0.1, 2, 0, GET, /favicon.ico
+2017-08-24 10.23.03, 1, 127.0.0.1, 2, 1, GET, /printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000178&view=false
+2017-08-24 21.45.19, -1, , 3, 0, , Gossamer service started
+2017-08-24 21.45.39, -1, , 3, 0, , Gossamer service started
+2017-08-24 21.45.48, 0, 127.0.0.1, 2, 0, GET, /
+2017-08-24 21.48.38, -1, , 3, 0, , Gossamer service started
+2017-08-24 21.48.52, -1, , 3, 0, , Gossamer service started
+2017-08-24 21.48.56, 0, 127.0.0.1, 2, 0, GET, /
+2017-08-24 21.48.56, 0, 127.0.0.1, 2, 0, GET, /spider.jpg
+2017-08-24 21.48.56, 0, 127.0.0.1, 2, 0, GET, /
+2017-08-24 21.48.57, 0, 127.0.0.1, 2, 0, GET, /spider.jpg
+2017-08-24 21.48.57, 0, 127.0.0.1, 2, 0, GET, /
+2017-08-24 21.48.57, 0, 127.0.0.1, 2, 0, GET, /spider.jpg
+2017-08-24 21.57.23, 0, 127.0.0.1, 2, 1, GET, /cetak-antrian?cetak=1&norec=40288c835d9c46eb015da32b0e800023
+2017-08-24 21.57.41, -1, , 3, 1, , Gossamer service stopped
