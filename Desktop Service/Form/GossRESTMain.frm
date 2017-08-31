@@ -146,7 +146,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "E:/log.txt" For Append As #LogFile
+    Open "C:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
@@ -264,7 +264,7 @@ Private Sub Gossamer1_LogEvent(ByVal GossEvent As GossEvent, ByVal ClientIndex A
               CStr(.EventType); ", "; _
               CStr(.EventSubtype); ", "; _
               .Method; ", "; _
-              .text
+              .Text
     End With
 End Sub
 Private Function Query(ByVal QueryText As String) As Byte()

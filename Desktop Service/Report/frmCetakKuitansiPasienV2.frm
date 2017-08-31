@@ -158,7 +158,8 @@ Set Report = New crKuitansiPasien
            "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
            "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
            "inner join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
-           "inner join pegawai_m as pg on pg.id=sbp.objectpegawaipenerimafk " & _
+           "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
+           "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
            "where pd.noregistrasi='" & strNoregistrasi & "'"
     
     With Report

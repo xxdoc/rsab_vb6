@@ -68,10 +68,10 @@ Public Sub PrintBothSides(ByVal prnDriver As String, ByVal frontText As String, 
 
     ' Gets a Device Context Handle and initializes a Graphics Buffer
     
-    Dim hDc As Long
+    Dim hDC As Long
     Dim errValue As Long
     
-    If ZBRGDIInitGraphics(prnDriver, hDc, errValue) = 0 Then
+    If ZBRGDIInitGraphics(prnDriver, hDC, errValue) = 0 Then
         msg = "Printing : InitGraphics : Error[" & CStr(errValue) & "]"
         GoTo PrintBothSides_Exit
     End If
@@ -111,7 +111,7 @@ Public Sub PrintBothSides(ByVal prnDriver As String, ByVal frontText As String, 
     
     ' Prints the graphics buffer (front side)
     
-    If ZBRGDIPrintGraphics(hDc, errValue) = 0 Then
+    If ZBRGDIPrintGraphics(hDC, errValue) = 0 Then
         msg = "Printing : PrintGraphics : Error[" & CStr(errValue) & "]"
         GoTo PrintBothSides_CloseGraphicsDevice
     End If
@@ -132,13 +132,13 @@ Public Sub PrintBothSides(ByVal prnDriver As String, ByVal frontText As String, 
     
     ' Prints the graphics buffer (back side)
     
-    If ZBRGDIPrintGraphics(hDc, errValue) = 0 Then
+    If ZBRGDIPrintGraphics(hDC, errValue) = 0 Then
         msg = "Printing : PrintGraphics : Error[" & CStr(errValue) & "]"
         GoTo PrintBothSides_CloseGraphicsDevice
     End If
     
     ' Starts the printing process and releases the graphics buffer
-    If ZBRGDICloseGraphics(hDc, errValue) = 0 Then
+    If ZBRGDICloseGraphics(hDC, errValue) = 0 Then
         msg = "Printing : CloseGraphics : Error[" & CStr(errValue) & "]"
     End If
     
@@ -148,7 +148,7 @@ PrintBothSides_Exit:
     
 PrintBothSides_CloseGraphicsDevice:
     On Error GoTo PrintBothSides_Error
-    If ZBRGDICloseGraphics(hDc, errValue) = 0 Then
+    If ZBRGDICloseGraphics(hDC, errValue) = 0 Then
         msg = "Printing : CloseGraphics : Error[" & CStr(errValue) & "]"
     End If
     
@@ -173,10 +173,10 @@ Public Sub PrintFrontSideOnly(ByVal prnDriver As String, ByVal Text As String, B
 ''            Printer.Print "^FO540,270^BQN,2,5^FD    " & RS!nocm & "^FS"
     ' Gets a Device Context Handle and initializes a Graphics Buffer
     
-    Dim hDc As Long
+    Dim hDC As Long
     Dim errValue As Long
     
-    If ZBRGDIInitGraphics(prnDriver, hDc, errValue) = 0 Then
+    If ZBRGDIInitGraphics(prnDriver, hDC, errValue) = 0 Then
         msg = "Printing : InitGraphics : Error[" & CStr(errValue) & "]"
         GoTo PrintFrontSideOnly_Exit
     End If
@@ -193,19 +193,19 @@ Public Sub PrintFrontSideOnly(ByVal prnDriver As String, ByVal Text As String, B
 '        GoTo PrintFrontSideOnly_CloseGraphicsDevice
 '    End If
     
-    If ZBRGDIDrawText(530, 210, namaayah, "Arial", 11, 0, &HFF0000, errValue) = 0 Then
+    If ZBRGDIDrawText(500, 220, namaayah, "Arial", 11, 0, &HFF0000, errValue) = 0 Then
         msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
         GoTo PrintFrontSideOnly_CloseGraphicsDevice
     End If
-    If ZBRGDIDrawText(530, 270, namapasien, "Arial", 13, 0, &HFF0000, errValue) = 0 Then
+    If ZBRGDIDrawText(500, 270, namapasien, "Arial", 13, 0, &HFF0000, errValue) = 0 Then
         msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
         GoTo PrintFrontSideOnly_CloseGraphicsDevice
     End If
-    If ZBRGDIDrawText(530, 330, tgllahir, "Arial", 11, 0, &HFF0000, errValue) = 0 Then
+    If ZBRGDIDrawText(500, 330, tgllahir, "Arial", 11, 0, &HFF0000, errValue) = 0 Then
         msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
         GoTo PrintFrontSideOnly_CloseGraphicsDevice
     End If
-    If ZBRGDIDrawText(35, 540, nocm, "Arial", 16, 0, &HFF0000, errValue) = 0 Then
+    If ZBRGDIDrawText(45, 540, nocm, "Arial", 16, 0, &HFF0000, errValue) = 0 Then
         msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
         GoTo PrintFrontSideOnly_CloseGraphicsDevice
     End If
@@ -213,7 +213,7 @@ Public Sub PrintFrontSideOnly(ByVal prnDriver As String, ByVal Text As String, B
 '        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
 '        GoTo PrintFrontSideOnly_CloseGraphicsDevice
 '    End If
-If ZBRGDIDrawBarCode(600, 550, 0, 0, 1, 2, 60, 1, nocm, errValue) = 0 Then
+If ZBRGDIDrawBarCode(630, 550, 0, 0, 1, 2, 60, 1, nocm, errValue) = 0 Then
         msg = "Printing : DrawBarCode : Error[" & CStr(errValue) & "]"
         GoTo PrintFrontSideOnly_CloseGraphicsDevice
     End If
@@ -242,14 +242,14 @@ If ZBRGDIDrawBarCode(600, 550, 0, 0, 1, 2, 60, 1, nocm, errValue) = 0 Then
     
     ' Prints the graphics buffer (front side)
     
-    If ZBRGDIPrintGraphics(hDc, errValue) = 0 Then
+    If ZBRGDIPrintGraphics(hDC, errValue) = 0 Then
         msg = "Printing : PrintGraphics : Error[" & CStr(errValue) & "]"
         GoTo PrintFrontSideOnly_CloseGraphicsDevice
     End If
 
     ' Starts the printing process and releases the graphics buffer
 '
-    If ZBRGDICloseGraphics(hDc, errValue) = 0 Then
+    If ZBRGDICloseGraphics(hDC, errValue) = 0 Then
         msg = "Printing : CloseGraphics : Error[" & CStr(errValue) & "]"
     End If
 '
@@ -259,7 +259,7 @@ PrintFrontSideOnly_Exit:
     
 PrintFrontSideOnly_CloseGraphicsDevice:
     On Error GoTo PrintFrontSideOnly_Error
-    If ZBRGDICloseGraphics(hDc, errValue) = 0 Then
+    If ZBRGDICloseGraphics(hDC, errValue) = 0 Then
         msg = "Printing : CloseGraphics : Error[" & CStr(errValue) & "]"
     End If
     
