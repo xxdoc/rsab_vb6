@@ -20,6 +20,14 @@ Begin VB.Form GossRESTMain
       _ExtentY        =   741
       VDir            =   "VDir"
    End
+   Begin VB.Label Label2 
+      Caption         =   "."
+      Height          =   375
+      Left            =   3960
+      TabIndex        =   1
+      Top             =   0
+      Width           =   375
+   End
    Begin VB.Label Label1 
       Caption         =   "PT-jasamedika_saranatama"
       BeginProperty Font 
@@ -71,6 +79,8 @@ Dim nid As NOTIFYICONDATA ' deklarasi variable
 
 Public STM As ADODB.Stream
 Private LogFile As Integer
+Private graphicSDKVersion   As String
+Private prnSDKVersion       As String
 
 
 Private Sub SanitizeInit()
@@ -95,7 +105,26 @@ Private Sub Command1_Click()
 End Sub
 
 Private Sub Form_Initialize()
+Dim msg As String
     GossRESTDB.InitializeDB
+    GetGraphicsDllVersion graphicSDKVersion
+    
+    If graphicSDKVersion <> "" Then
+        msg = "Graphics: " & graphicSDKVersion & "; "
+    End If
+        
+    ' Gets printer dll version
+    '     and if present enables the magnetic encoding frame
+    
+    GetPrinterDllVersion prnSDKVersion
+
+    If prnSDKVersion <> "" Then
+        msg = msg & "Printer: " & prnSDKVersion & "; "
+    End If
+    
+    ' Displays dll versions
+     Label2.ToolTipText = msg
+    
 End Sub
 
 Private Sub Form_Load()
@@ -235,7 +264,7 @@ Private Sub Gossamer1_LogEvent(ByVal GossEvent As GossEvent, ByVal ClientIndex A
               CStr(.EventType); ", "; _
               CStr(.EventSubtype); ", "; _
               .Method; ", "; _
-              .Text
+              .text
     End With
 End Sub
 Private Function Query(ByVal QueryText As String) As Byte()

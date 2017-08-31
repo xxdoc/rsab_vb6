@@ -194,13 +194,13 @@ On Error Resume Next
     
     For i = 0 To RS.RecordCount - 1
         'MsgBox "CETAK"
-        Printer.FontSize = 10
+        Printer.fontSize = 10
         Printer.Print "     RUMAH SAKIT ANAK DAN BUNDA"
-        Printer.FontSize = 18
+        Printer.fontSize = 18
         Printer.FontBold = True
         Printer.Print "      HARAPAN KITA"
         Printer.FontBold = False
-        Printer.FontSize = 10
+        Printer.fontSize = 10
         Printer.Print "   Jl. S. Parman Kav.87, Slipi, Jakarta Barat"
         Printer.Print "      Telp. 021-5668286, 021-5668284"
         Printer.Print "      Fax.  021-5601816, 021-5673832"
@@ -208,7 +208,7 @@ On Error Resume Next
         Printer.Print ""
         Printer.Print "Tanggal :" & Format(Now(), "yyyy MM dd hh:mm")
         Printer.Print ""
-        Printer.FontSize = 12
+        Printer.fontSize = 12
           '1,3,,4,6,8,10,12,13,15
         Printer.Print RS(1) & " " & RS(1) & " " & RS(3) & " " & RS(4) & " " & RS(6) & " " & RS(8) & " " & RS(10) & " " & RS(12) & " "
         
@@ -238,21 +238,46 @@ Private Sub cetak_KartuPasien(strNocm As String)
         Next prn
     End If
     
-     If Not RS.EOF Then
-            Printer.Print "^XA"
-            
-            Printer.Print "^CFA,22"
-            Printer.Print "^FO230,170^FD " & RS!namapasien & " ^FS"
-            Printer.Print "^FO230,210^FD " & RS!namaayah & " ^FS"
-            Printer.Print "^FO230,245^FD " & RS!tgllahir & " ^FS"
-            
-            Printer.Print "^CFA,45"
-            Printer.Print "^FO50,370^FD " & RS!nocm & " ^FS"
-            Printer.Print "^FO540,270^BQN,2,5^FD    " & RS!nocm & "^FS"
-            
-            Printer.Print "^XZ"
-            Printer.EndDoc
-       End If
+    Dim msg As String
+    Dim ayah As String
+    Dim ayah2 As String
+    
+    If IsNull(RS!namaayah) = True Then
+    ayah = ""
+    Else
+    ayah = RS!namaayah
+    End If
+    If IsNull(RS!tgllahir) = True Then
+    ayah2 = ""
+    Else
+    ayah2 = RS!tgllahir
+    End If
+    'ByVal prnDriver As String, ByVal text As String, ByVal imgPath As String, _
+                                ByRef msg As String, nocm As String, namapasien As String, namaayah As String, tgllahir As String
+    PrintFrontSideOnly strPrinter, "", "", msg, RS!nocm, RS!namapasien, ayah, ayah2
+    
+'     If Not RS.EOF Then
+'
+'
+''            Printer.Print "^XA"
+''
+''            Printer.Print "^CFA,22"
+''            Printer.Print "^FO230,170^FD " & RS!namapasien & " ^FS"
+''            Printer.Print "^FO230,210^FD " & RS!namaayah & " ^FS"
+''            Printer.Print "^FO230,245^FD " & RS!tgllahir & " ^FS"
+''
+''            Printer.Print "^CFA,45"
+''            Printer.Print "^FO50,370^FD " & RS!nocm & " ^FS"
+''            Printer.Print "^FO540,270^BQN,2,5^FD    " & RS!nocm & "^FS"
+''
+''            Printer.Print "^XZ"
+'            Printer.EndDoc
+'       End If
+'    If msg <> "" Then Print #LogFile, _
+'                  "Error "; _
+'                  CStr(ErrNumber); _
+'                  " (&H"; Right$("0000000" & Hex$(ErrNumber), 8); ") "; _
+'                  msg
    
     
 End Sub
