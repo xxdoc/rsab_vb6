@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
 Object = "{6BF52A50-394A-11D3-B153-00C04F79FAA6}#1.0#0"; "wmp.dll"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
 Begin VB.Form Form1 
    BorderStyle     =   0  'None
    Caption         =   "Form1"
@@ -867,7 +867,7 @@ On Error GoTo hell
 '   ##END DIRECT SHOW
 
     WindowsMediaPlayer1.URL = App.Path & "\video\" & File1.List(0)
-    WindowsMediaPlayer1.settings.Volume = sora
+    WindowsMediaPlayer1.settings.volume = sora
     
     
     Call OpenPortWinsock
@@ -1361,11 +1361,17 @@ Dim ratus As Boolean
         DoEvents
     Loop Until Timer - t > 2
     
-    If jenis = "A" Then Call sndPlaySound(App.Path & "\sound\AA.wav", SND_ALIAS Or SND_SYNC)
-    If jenis = "B" Then Call sndPlaySound(App.Path & "\sound\BB.wav", SND_ALIAS Or SND_SYNC)
-    If jenis = "C" Then Call sndPlaySound(App.Path & "\sound\CC.wav", SND_ALIAS Or SND_SYNC)
-    If jenis = "D" Then Call sndPlaySound(App.Path & "\sound\DD.wav", SND_ALIAS Or SND_SYNC)
-    If jenis = "E" Then Call sndPlaySound(App.Path & "\sound\EE.wav", SND_ALIAS Or SND_SYNC)
+'    If jenis = "A" Then Call sndPlaySound(App.Path & "\sound\AA.wav", SND_ALIAS Or SND_SYNC)
+'    If jenis = "B" Then Call sndPlaySound(App.Path & "\sound\BB.wav", SND_ALIAS Or SND_SYNC)
+'    If jenis = "C" Then Call sndPlaySound(App.Path & "\sound\CC.wav", SND_ALIAS Or SND_SYNC)
+'    If jenis = "D" Then Call sndPlaySound(App.Path & "\sound\DD.wav", SND_ALIAS Or SND_SYNC)
+'    If jenis = "E" Then Call sndPlaySound(App.Path & "\sound\EE.wav", SND_ALIAS Or SND_SYNC)
+    
+    If jenis = "A" Then Call sndPlaySound(App.Path & "\sound\A.mp3", SND_ALIAS Or SND_SYNC)
+    If jenis = "B" Then Call sndPlaySound(App.Path & "\sound\B.mp3", SND_ALIAS Or SND_SYNC)
+    If jenis = "C" Then Call sndPlaySound(App.Path & "\sound\C.mp3", SND_ALIAS Or SND_SYNC)
+    If jenis = "D" Then Call sndPlaySound(App.Path & "\sound\D.mp3", SND_ALIAS Or SND_SYNC)
+    If jenis = "E" Then Call sndPlaySound(App.Path & "\sound\E.mp3", SND_ALIAS Or SND_SYNC)
     
 
 '    t = Timer
@@ -1642,13 +1648,13 @@ Private Sub Timer4_Timer()
 '        DirectShow_Play
 '        DirectShow_Volume sora
 '    End If
-    If WindowsMediaPlayer1.Controls.CurrentPosition + 2 > WindowsMediaPlayer1.currentMedia.Duration Then
+    If WindowsMediaPlayer1.Controls.currentPosition + 2 > WindowsMediaPlayer1.currentMedia.duration Then
         vdeo = vdeo + 1
         If vdeo > File1.ListCount - 1 Then vdeo = 0
         'WindowsMediaPlayer1.URL = App.Path & "\video\" & File1.List(0)
         WindowsMediaPlayer1.URL = App.Path & "\video\" & File1.List(vdeo)
     End If
-    Label1.Caption = WindowsMediaPlayer1.Controls.CurrentPosition
+    Label1.Caption = WindowsMediaPlayer1.Controls.currentPosition
 Error_Handler:
 End Sub
 
