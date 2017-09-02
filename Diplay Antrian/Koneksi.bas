@@ -11,6 +11,10 @@ Public strSQL As String
 Public strSQL2 As String
 
 Public StatusCN As String
+
+Public SKanan As String
+Public SKiri As String
+
 Public Sub openConnection()
  On Error GoTo NoConn
  Dim host, port, username, password, database As String
@@ -19,6 +23,11 @@ Public Sub openConnection()
    username = GetTxt("Setting.ini", "Koneksi", "c")
    password = GetTxt("Setting.ini", "Koneksi", "d")
    database = GetTxt("Setting.ini", "Koneksi", "e")
+   
+   SKanan = 1
+   SKiri = 1
+   SKanan = GetTxt("Setting.ini", "SuaraAntrian", "Kanan")
+   SKiri = GetTxt("Setting.ini", "SuaraAntrian", "Kiri")
 'On Error Resume Next
  
     With CN

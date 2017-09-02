@@ -82,6 +82,8 @@ Private LogFile As Integer
 Private graphicSDKVersion   As String
 Private prnSDKVersion       As String
 
+Public urlLengkap As String
+
 
 Private Sub SanitizeInit()
     FromChars = Split(FROM_CHARS, "\")
@@ -146,7 +148,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "E:/log.txt" For Append As #LogFile
+    Open "C:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
@@ -194,7 +196,7 @@ Sub minimize_to_tray()
     nid.uFlags = NIF_ICON Or NIF_TIP Or NIF_MESSAGE
     nid.uCallBackMessage = WM_MOUSEMOVE
     nid.hIcon = Me.Icon
-    nid.szTip = " pesan saat mouse di tray icon" & vbNullChar
+    nid.szTip = "RSAB Harapan Kita" & vbNullChar
     Shell_NotifyIcon NIM_ADD, nid
 End Sub
 
@@ -222,6 +224,7 @@ Private Sub Gossamer1_DynamicRequest( _
         For Each Itm In ReqHeaders
             Debug.Print Itm(0), Itm(1)
         Next Itm
+        urlLengkap = URI
         If URI = "\printvb\query" Then RespBody = Query(Gossamer1.URLDecode(Params))
         If URI = "\printvb\cetak-antrian" Then RespBody = frmCetakAntrian.CetakAntrian(Gossamer1.URLDecode(Params))
         If URI = "\printvb\kasir" Then RespBody = frmKasir.Kasir(Gossamer1.URLDecode(Params))
@@ -260,11 +263,11 @@ Private Sub Gossamer1_LogEvent(ByVal GossEvent As GossEvent, ByVal ClientIndex A
         Print #LogFile, _
               Format$(.Timestamp, "YYYY-MM-DD HH:NN:SS, "); _
               CStr(ClientIndex); ", "; _
-              .IP; ", "; _
+              ", "; _
               CStr(.EventType); ", "; _
               CStr(.EventSubtype); ", "; _
               .Method; ", "; _
-              .Text
+              .IP + ":1237" + Replace(urlLengkap, "\", "/") + .Text
     End With
 End Sub
 Private Function Query(ByVal QueryText As String) As Byte()

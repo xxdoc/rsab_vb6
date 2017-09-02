@@ -207,13 +207,13 @@ bolStrukResep = True
                .database.AddADOCommand CN_String, adoReport
                
               
-                .txtNoPendaftaran.SetText RS("noregistrasi")
+                .txtnopendaftaran.SetText RS("noregistrasi")
                 .txtnocm.SetText RS("nocm")
                 .txtnmpasien.SetText RS("namapasienjk")
-                .txtklpkpasien.SetText RS("kelompokpasien")
+'                .txtklpkpasien.SetText RS("kelompokpasien")
                 '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
                 .txtNamaRuangan.SetText RS("ruanganpasien")
-                .txtumur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
                 .txtNamaDokter.SetText RS("namalengkap")
                 .txtuser.SetText strUser
                 
@@ -222,7 +222,7 @@ bolStrukResep = True
              '   .udtanggal.SetUnboundFieldSource ("{Ado.tglpelayanan}")
                 .usNoResep.SetUnboundFieldSource ("{Ado.noresep}")
                 .ucbiayasatuan.SetUnboundFieldSource ("{Ado.totalharga}")
-                .ucHrgSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
+       '2         .ucHrgSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
                 .ustindakan.SetUnboundFieldSource ("{Ado.namaprodukstandar}")
                 .usQtyHrg.SetUnboundFieldSource ("{Ado.qtyhrg}")
                 .unQtyTotal.SetUnboundFieldSource ("{Ado.jumlah}")

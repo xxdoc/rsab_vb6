@@ -181,6 +181,22 @@ Begin VB.Form Form1
       RemotePort      =   1000
       LocalPort       =   1000
    End
+   Begin VB.Label lKiri 
+      Height          =   255
+      Left            =   19680
+      TabIndex        =   31
+      Top             =   240
+      Visible         =   0   'False
+      Width           =   255
+   End
+   Begin VB.Label lKanan 
+      Height          =   255
+      Left            =   20040
+      TabIndex        =   30
+      Top             =   240
+      Visible         =   0   'False
+      Width           =   255
+   End
    Begin WMPLibCtl.WindowsMediaPlayer WindowsMediaPlayer1 
       Height          =   10275
       Left            =   4560
@@ -844,6 +860,17 @@ On Error GoTo hell
     Label1.Caption = App.Path
     tmt3 = 60
     
+    If SKiri = 1 Then
+        lKiri.Visible = True
+    Else
+        lKiri.Visible = False
+    End If
+    
+    If SKanan = 1 Then
+        lKanan.Visible = True
+    Else
+        lKanan.Visible = False
+    End If
 '    If GetSetting("Antrian", "Video", "suara") = "ON" Then
 '        sora = 70
 '    Else
@@ -903,7 +930,7 @@ On Error GoTo hell
     Exit Sub
     
 hell:
-    frmSetServer.Show
+    frmSettingKoneksi.Show
 End Sub
 
 Private Sub LoadTrigger()
@@ -947,11 +974,11 @@ Private Sub Label1_DblClick()
 End Sub
 
 Private Sub Label2_Click(Index As Integer)
-    frmSettingKoneksi.Show vbModal
+    frmSettingKoneksi.Show
 End Sub
 
 Private Sub lblJam_DblClick()
-    frmSettingKoneksi.Show vbModal
+    frmSettingKoneksi.Show
 End Sub
 
 Private Sub Timer1_Timer()
@@ -1333,7 +1360,12 @@ Dim disada As Boolean
                 loket = 10
             End If
             
-            If disada = True Then Call PlaySound(RS!noantrian, UCase(RS!jenis))
+            If RS!tempatlahir >= 7 And SKiri = 1 Then
+                If disada = True Then Call PlaySound(RS!noantrian, UCase(RS!jenis))
+            End If
+            If RS!tempatlahir <= 6 And SKanan = 1 Then
+                If disada = True Then Call PlaySound(RS!noantrian, UCase(RS!jenis))
+            End If
             disada = False
             RS.MoveNext
         Next

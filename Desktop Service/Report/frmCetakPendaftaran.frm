@@ -732,12 +732,12 @@ boolLembarPersetujuan = False
                        " jk.jeniskelamin,ps.noidentitas,ag.agama,pk.pekerjaan,kb.name as kebangsaan, " & _
                        " al.alamatlengkap , al.kotakabupaten, al.kecamatan, al.namadesakelurahan, al.mobilephone1, " & _
                        " sp.statusperkawinan from pasien_m ps " & _
-                       " INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
-                       " INNER JOIN alamat_m al on ps.id=al.nocmfk " & _
-                       " INNER JOIN agama_m ag on ps.objectagamafk=ag.id " & _
-                       " INNER JOIN pekerjaan_m pk on pk.id=ps.objectpekerjaanfk " & _
+                       " left JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
+                       " left JOIN alamat_m al on ps.id=al.nocmfk " & _
+                       " left JOIN agama_m ag on ps.objectagamafk=ag.id " & _
+                       " left JOIN pekerjaan_m pk on pk.id=ps.objectpekerjaanfk " & _
                        " LEFT JOIN kebangsaan_m kb on kb.id=ps.objectkebangsaanfk " & _
-                       " INNER JOIN statusperkawinan_m sp on sp.id=ps.objectstatusperkawinanfk " & _
+                       " left JOIN statusperkawinan_m sp on sp.id=ps.objectstatusperkawinanfk " & _
                        " where ps.nocm ='" & strNorec & "' "
             
             ReadRs strSQL
@@ -836,17 +836,17 @@ boolLembarPersetujuan = False
                        " COALESCE(ps.namasuamiistri,'-') as namasuamiistri, pg.namalengkap as namadokterpj, kp.kelompokpasien, " & _
                        " '-' as alamatPekerjaan,'-' as keldihubungi  ,'-' as Hubungan , '-' as alamatKeluarga, " & _
                        " '-' as NohpKeluarga " & _
-                       " FROM pasiendaftar_t pd INNER JOIN antrianpasiendiperiksa_t apdp on pd.norec=apdp.noregistrasifk " & _
+                       " FROM pasiendaftar_t pd  " & _
+                       " INNER JOIN antrianpasiendiperiksa_t apdp on pd.norec=apdp.noregistrasifk  " & _
                        " INNER JOIN pasien_m ps on pd.nocmfk=ps.id " & _
                        " INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
-                       " INNER JOIN alamat_m al on ps.id=al.nocmfk " & _
-                       " INNER JOIN agama_m ag on ps.objectagamafk=ag.id " & _
-                       " INNER JOIN pekerjaan_m pk on pk.id=ps.objectpekerjaanfk " & _
+                       " INNER JOIN alamat_m al on ps.id=al.nocmfk  INNER JOIN agama_m ag on ps.objectagamafk=ag.id " & _
+                       " left JOIN pekerjaan_m pk on pk.id=ps.objectpekerjaanfk " & _
                        " LEFT JOIN kebangsaan_m kb on kb.id=ps.objectkebangsaanfk " & _
-                       " INNER JOIN statusperkawinan_m sp on sp.id=ps.objectstatusperkawinanfk " & _
+                       " left JOIN statusperkawinan_m sp on sp.id=ps.objectstatusperkawinanfk " & _
                        " INNER JOIN ruangan_m ru on apdp.objectruanganfk=ru.id " & _
-                       " INNER JOIN kamar_m kmr on apdp.objectkamarfk=kmr.id " & _
-                       " INNER JOIN tempattidur_m tt on apdp.nobed=tt.id " & _
+                       " left JOIN kamar_m kmr on apdp.objectkamarfk=kmr.id " & _
+                       " left JOIN tempattidur_m tt on apdp.nobed=tt.id " & _
                        " LEFT JOIN pegawai_m pg on pd.objectpegawaifk=pg.id " & _
                        " INNER JOIN kelompokpasien_m kp on pd.objectkelompokpasienlastfk=kp.id " & _
                        " INNER JOIN kelas_m kls on apdp.objectkelasfk=kls.id " & _
@@ -929,7 +929,7 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-    MsgBox vbError, vbInformation
+    MsgBox Err.Description, vbInformation
 End Sub
 
 

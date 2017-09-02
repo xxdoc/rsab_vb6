@@ -122,7 +122,7 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
             Case "cetak-lembarmasukkeluar"
                 lblStatus.Caption = "Cetak Lembar Masuk Keluar Pasien Rawat Inap"
                 Call frmCetakPendaftaran.cetakLembarMasuk(Param2(1), Param3(1))
-                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-summarylist=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-lembarmasukkeluar=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"

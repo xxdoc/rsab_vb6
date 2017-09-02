@@ -21,6 +21,22 @@ Begin VB.Form frmSettingKoneksi
    ScaleHeight     =   4065
    ScaleWidth      =   8505
    StartUpPosition =   3  'Windows Default
+   Begin VB.CheckBox Check2 
+      Caption         =   "Kanan"
+      Height          =   255
+      Left            =   6720
+      TabIndex        =   24
+      Top             =   3120
+      Width           =   975
+   End
+   Begin VB.CheckBox Check1 
+      Caption         =   "Kiri"
+      Height          =   255
+      Left            =   5640
+      TabIndex        =   23
+      Top             =   3120
+      Width           =   975
+   End
    Begin VB.ComboBox cboVol 
       Height          =   360
       Left            =   1560
@@ -33,7 +49,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   5520
       TabIndex        =   18
-      Text            =   "Text1"
       Top             =   720
       Width           =   1575
    End
@@ -42,7 +57,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   5520
       TabIndex        =   17
-      Text            =   "Text1"
       Top             =   1200
       Width           =   1575
    End
@@ -51,7 +65,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   5520
       TabIndex        =   16
-      Text            =   "Text1"
       Top             =   1680
       Width           =   1575
    End
@@ -60,7 +73,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   5520
       TabIndex        =   15
-      Text            =   "Text1"
       Top             =   2160
       Width           =   1575
    End
@@ -69,7 +81,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   7200
       TabIndex        =   14
-      Text            =   "Text1"
       Top             =   720
       Width           =   855
    End
@@ -78,7 +89,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   7200
       TabIndex        =   13
-      Text            =   "Text1"
       Top             =   1200
       Width           =   855
    End
@@ -87,7 +97,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   7200
       TabIndex        =   12
-      Text            =   "Text1"
       Top             =   1680
       Width           =   855
    End
@@ -96,7 +105,6 @@ Begin VB.Form frmSettingKoneksi
       Height          =   375
       Left            =   7200
       TabIndex        =   11
-      Text            =   "Text1"
       Top             =   2160
       Width           =   855
    End
@@ -144,6 +152,14 @@ Begin VB.Form frmSettingKoneksi
       TabIndex        =   0
       Top             =   3360
       Width           =   1095
+   End
+   Begin VB.Label Label8 
+      Caption         =   "Suara Antrian :"
+      Height          =   375
+      Left            =   5520
+      TabIndex        =   22
+      Top             =   2640
+      Width           =   1455
    End
    Begin VB.Label Label7 
       Caption         =   "Volume Video :"
@@ -232,6 +248,17 @@ Private Sub Command1_Click()
     SaveTxt "Setting.ini", "DisplayTrigger_3", "PORT", trg22.Text
     SaveTxt "Setting.ini", "DisplayTrigger_4", "PORT", trg23.Text
     
+    If Check1.Value = Checked Then
+        SaveTxt "Setting.ini", "SuaraAntrian", "Kiri", 1
+    Else
+        SaveTxt "Setting.ini", "SuaraAntrian", "Kiri", 0
+    End If
+    
+    If Check2.Value = Checked Then
+        SaveTxt "Setting.ini", "SuaraAntrian", "Kanan", 1
+    Else
+        SaveTxt "Setting.ini", "SuaraAntrian", "Kanan", 0
+    End If
     
 End Sub
 
@@ -254,6 +281,18 @@ On Error Resume Next
     trg21.Text = GetTxt("Setting.ini", "DisplayTrigger_2", "PORT")
     trg22.Text = GetTxt("Setting.ini", "DisplayTrigger_3", "PORT")
     trg23.Text = GetTxt("Setting.ini", "DisplayTrigger_4", "PORT")
+    
+    If GetTxt("Setting.ini", "SuaraAntrian", "Kiri") = 1 Then
+        Check1.Value = Checked
+    Else
+        Check1.Value = Unchecked
+    End If
+    
+    If GetTxt("Setting.ini", "SuaraAntrian", "Kanan") = 1 Then
+        Check2.Value = Checked
+    Else
+        Check2.Value = Unchecked
+    End If
     
     cboVol.AddItem 0
     cboVol.AddItem 30
