@@ -3,10 +3,10 @@ Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
 Begin VB.Form Form2 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Panggil Antrian"
-   ClientHeight    =   2805
+   ClientHeight    =   4290
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   5235
+   ClientWidth     =   5310
    BeginProperty Font 
       Name            =   "Tahoma"
       Size            =   11.25
@@ -20,19 +20,213 @@ Begin VB.Form Form2
    LinkTopic       =   "Form2"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   2805
-   ScaleWidth      =   5235
+   ScaleHeight     =   4290
+   ScaleWidth      =   5310
    StartUpPosition =   3  'Windows Default
+   Begin VB.TextBox A3 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   7680
+      TabIndex        =   29
+      Text            =   "0"
+      Top             =   3000
+      Visible         =   0   'False
+      Width           =   1335
+   End
+   Begin VB.TextBox B3 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   7680
+      TabIndex        =   28
+      Text            =   "0"
+      Top             =   3360
+      Visible         =   0   'False
+      Width           =   1335
+   End
+   Begin VB.TextBox C3 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   7680
+      TabIndex        =   27
+      Text            =   "0"
+      Top             =   3720
+      Visible         =   0   'False
+      Width           =   1335
+   End
+   Begin VB.TextBox Text9 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      BackColor       =   &H00404040&
+      ForeColor       =   &H00FFFFFF&
+      Height          =   390
+      Left            =   7680
+      Locked          =   -1  'True
+      TabIndex        =   26
+      Text            =   "Berikutnya"
+      Top             =   2640
+      Visible         =   0   'False
+      Width           =   1335
+   End
+   Begin VB.TextBox Text16 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      BackColor       =   &H00404040&
+      ForeColor       =   &H00FFFFFF&
+      Height          =   390
+      Left            =   3240
+      Locked          =   -1  'True
+      TabIndex        =   25
+      Text            =   "Sisa"
+      Top             =   2640
+      Width           =   855
+   End
+   Begin VB.TextBox Text15 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      BackColor       =   &H00404040&
+      ForeColor       =   &H00FFFFFF&
+      Height          =   390
+      Left            =   1680
+      Locked          =   -1  'True
+      TabIndex        =   24
+      Text            =   "Sekarang"
+      Top             =   2640
+      Width           =   1575
+   End
+   Begin VB.TextBox Text14 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      BackColor       =   &H00404040&
+      ForeColor       =   &H00FFFFFF&
+      Height          =   390
+      Left            =   960
+      Locked          =   -1  'True
+      TabIndex        =   23
+      Text            =   "Jenis"
+      Top             =   2640
+      Width           =   735
+   End
+   Begin VB.TextBox C4 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   3240
+      TabIndex        =   22
+      Text            =   "0"
+      Top             =   3720
+      Width           =   855
+   End
+   Begin VB.TextBox C2 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   1680
+      TabIndex        =   21
+      Text            =   "0"
+      Top             =   3720
+      Width           =   1575
+   End
+   Begin VB.TextBox C1 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   960
+      TabIndex        =   20
+      Text            =   "C"
+      Top             =   3720
+      Width           =   735
+   End
+   Begin VB.TextBox B4 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   3240
+      TabIndex        =   19
+      Text            =   "0"
+      Top             =   3360
+      Width           =   855
+   End
+   Begin VB.TextBox B2 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   1680
+      TabIndex        =   18
+      Text            =   "0"
+      Top             =   3360
+      Width           =   1575
+   End
+   Begin VB.TextBox B1 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   960
+      TabIndex        =   17
+      Text            =   "B"
+      Top             =   3360
+      Width           =   735
+   End
+   Begin VB.TextBox A4 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   3240
+      TabIndex        =   16
+      Text            =   "0"
+      Top             =   3000
+      Width           =   855
+   End
+   Begin VB.TextBox A2 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   1680
+      TabIndex        =   15
+      Text            =   "0"
+      Top             =   3000
+      Width           =   1575
+   End
+   Begin VB.TextBox A1 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   960
+      TabIndex        =   14
+      Text            =   "A"
+      Top             =   3000
+      Width           =   735
+   End
+   Begin VB.Frame Frame1 
+      Caption         =   "Info"
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   1935
+      Left            =   0
+      TabIndex        =   13
+      Top             =   2280
+      Width           =   5175
+   End
    Begin VB.CommandButton Command3 
       Caption         =   ".."
       Height          =   270
-      Left            =   4200
+      Left            =   4920
       TabIndex        =   12
-      Top             =   240
+      Top             =   1920
       Width           =   255
    End
    Begin VB.TextBox Text5 
       Alignment       =   2  'Center
+      Appearance      =   0  'Flat
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   15.75
@@ -91,6 +285,7 @@ Begin VB.Form Form2
    End
    Begin VB.TextBox Text2 
       Alignment       =   2  'Center
+      Appearance      =   0  'Flat
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   15.75
@@ -109,6 +304,7 @@ Begin VB.Form Form2
    End
    Begin VB.TextBox Text1 
       Alignment       =   2  'Center
+      Appearance      =   0  'Flat
       Enabled         =   0   'False
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -140,7 +336,7 @@ Begin VB.Form Form2
       Height          =   615
       Left            =   2520
       TabIndex        =   1
-      Top             =   1920
+      Top             =   1560
       Width           =   1935
    End
    Begin VB.CommandButton Command1 
@@ -157,7 +353,7 @@ Begin VB.Form Form2
       Height          =   615
       Left            =   480
       TabIndex        =   0
-      Top             =   1920
+      Top             =   1560
       Width           =   1935
    End
    Begin VB.Label Label5 
@@ -244,6 +440,7 @@ Private Sub Command1_Click()
     Else
         MsgBox "Antrian habis!", vbInformation, "..:."
     End If
+    Call infotainment
 End Sub
 
 Private Sub Command2_Click()
@@ -266,6 +463,8 @@ Private Sub Command2_Click()
     Else
         MsgBox "Tidak ada antrian!", vbInformation, "..:."
     End If
+    
+    Call infotainment
 End Sub
 
 Private Sub Command3_Click()
@@ -278,4 +477,90 @@ On Error Resume Next
     Text3.Text = GetTxt("Setting.ini", "Caller", "Port")
     Text1.Text = GetTxt("Setting.ini", "Caller", "Loket")
     Text2.Text = GetTxt("Setting.ini", "Caller", "Jenis")
+    
+    Call infotainment
+End Sub
+
+
+
+Private Sub infotainment()
+    On Error GoTo as_epic
+        
+    strSQL = "select jenis, max(noantrian) as last from antrianpasienregistrasi_t " & _
+             "where  statuspanggil ='1' " & _
+             "and tanggalreservasi between '" & Format(Now(), "yyyy-mm-dd 00:00") & "' and '" & Format(Now(), "yyyy-mm-dd 23:59") & "' " & _
+             "group by jenis order by jenis "
+    ReadRs strSQL
+    strSQL2 = "select jenis, count(noantrian) as sisa from antrianpasienregistrasi_t  " & _
+             "where  statuspanggil ='0' " & _
+             "and tanggalreservasi between '" & Format(Now(), "yyyy-mm-dd 00:00") & "' and '" & Format(Now(), "yyyy-mm-dd 23:59") & "' " & _
+             "GROUP BY jenis order by jenis"
+    ReadRs2 strSQL2
+    A2 = 0
+    A3 = 0
+    A4 = 0
+    
+    B2 = 0
+    B3 = 0
+    B4 = 0
+    
+    C2 = 0
+    C3 = 0
+    C4 = 0
+    For i = 0 To RS.RecordCount - 1
+        If RS!jenis = A1 Then
+            A2 = RS!Last
+        End If
+        If RS!jenis = B1 Then
+            B2 = RS!Last
+        End If
+        If RS!jenis = C1 Then
+            C2 = RS!Last
+        End If
+            A3 = Val(A2) + 1
+            B3 = Val(B2) + 1
+            C3 = Val(C2) + 1
+        RS.MoveNext
+    Next
+    For i = 0 To RS2.RecordCount - 1
+        If RS2!jenis = A1 Then
+            A4 = RS2!sisa
+        End If
+        If RS2!jenis = B1 Then
+            B4 = RS2!sisa
+        End If
+        If RS2!jenis = C1 Then
+            C4 = RS2!sisa
+        End If
+        RS2.MoveNext
+    Next
+
+        
+as_epic:
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Private Sub Text2_Change()
+    Call infotainment
 End Sub

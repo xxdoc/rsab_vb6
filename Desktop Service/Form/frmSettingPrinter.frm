@@ -68,6 +68,7 @@ Attribute VB_Exposed = False
 Private Sub Combo1_Change()
     On Error Resume Next
     'Combo2.Text = GetSetting("Jasamedika Service", Combo1.Text, "Printer")
+    Combo2.Text = ""
     Combo2.Text = GetTxt("Setting.ini", "Printer", Combo1.Text)
 End Sub
 

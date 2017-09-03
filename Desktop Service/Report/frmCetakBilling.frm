@@ -148,8 +148,8 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakBilling(strNoregistrasi As String, jumlahCetak As Integer, view As String)
-'On Error GoTo errLoad
-On Error Resume Next
+On Error GoTo errLoad
+'On Error Resume Next
 
 Set frmCRCetakBilling = Nothing
 Dim adocmd As New ADODB.Command
@@ -243,5 +243,5 @@ Set Report = New crBilling
         'End If
     End With
 Exit Sub
-'errLoad:
+errLoad:
 End Sub

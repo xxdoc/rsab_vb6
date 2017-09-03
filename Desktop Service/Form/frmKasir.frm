@@ -19,7 +19,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Function Kasir(ByVal QueryText As String) As Byte()
-On Error Resume Next
+On Error GoTo errLoad
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
@@ -68,10 +68,13 @@ On Error Resume Next
     End With
     If CN.State = adStateOpen Then CN.Close
     Unload Me
+    Exit Function
+    
+errLoad:
 End Function
 
 Private Sub CETAK_Billing(strNoregistrasi As String, jumlahCetak As Integer, view As String)
-On Error Resume Next
+On Error GoTo errLoad
     Dim prn As Printer
     Dim strPrinter As String
   
@@ -115,13 +118,13 @@ On Error Resume Next
     End If
     
    '
-    Printer.FontSize = 10
+    Printer.fontSize = 10
         Printer.Print "     RUMAH SAKIT ANAK DAN BUNDA"
-        Printer.FontSize = 18
+        Printer.fontSize = 18
         Printer.FontBold = True
         Printer.Print "      HARAPAN KITA"
         Printer.FontBold = False
-        Printer.FontSize = 10
+        Printer.fontSize = 10
         Printer.Print "   Jl. S. Parman Kav.87, Slipi, Jakarta Barat"
         Printer.Print "      Telp. 021-5668286, 021-5668284"
         Printer.Print "      Fax.  021-5601816, 021-5673832"
@@ -132,12 +135,14 @@ On Error Resume Next
     For i = 0 To RS.RecordCount - 1
         'MsgBox "CETAK"
 
-        Printer.FontSize = 12
+        Printer.fontSize = 12
           '1,3,,4,6,8,10,12,13,15
         Printer.Print RS(1) & " " & RS(1) & " " & RS(3) & " " & RS(4) & " " & RS(6) & " " & RS(8) & " " & RS(10) & " " & RS(12) & " "
         RS.MoveNext
     Next
     Printer.EndDoc
+    Exit Sub
+errLoad:
 End Sub
 
 

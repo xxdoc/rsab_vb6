@@ -101,13 +101,22 @@ Private Function Sanitize(ByVal Arg As String) As String
 End Function
 
 
-
-Private Sub Command1_Click()
-    
+ 
+Private Sub TerminateProcess(app_exe As String)
+    Dim Process As Object
+    For Each Process In GetObject("winmgmts:").ExecQuery("Select Name from Win32_Process Where Name = '" & app_exe & "'")
+        Process.Terminate
+    Next
 End Sub
 
 Private Sub Form_Initialize()
+On Error Resume Next
 Dim msg As String
+
+    TerminateProcess ("Desktop ServiceC.exe")
+    TerminateProcess ("Desktop ServiceD.exe")
+    TerminateProcess ("Desktop ServiceE.exe")
+    
     GossRESTDB.InitializeDB
     GetGraphicsDllVersion graphicSDKVersion
     
@@ -148,7 +157,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "C:/log.txt" For Append As #LogFile
+    Open "D:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show

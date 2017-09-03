@@ -113,6 +113,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub Command1_Click()
+On Error GoTo errLoad
 '    SaveTxt "Setting.ini", "Koneksi", "host", Text1.Text
 '    SaveTxt "Setting.ini", "Koneksi", "port", Text2.Text
 '    SaveTxt "Setting.ini", "Koneksi", "username", Text3.Text
@@ -125,13 +126,18 @@ Private Sub Command1_Click()
     SaveTxt2 "Setting.ini", "Koneksi", "d", Text4.Text
     SaveTxt2 "Setting.ini", "Koneksi", "e", Text5.Text
     
+    Exit Sub
+    
+errLoad:
 End Sub
 
 Private Sub Form_Load()
-On Error Resume Next
+On Error GoTo errLoad
  Text1.Text = GetTxt2("Setting.ini", "Koneksi", "a")
    Text2.Text = GetTxt2("Setting.ini", "Koneksi", "b")
    Text3.Text = GetTxt2("Setting.ini", "Koneksi", "c")
    Text4.Text = GetTxt2("Setting.ini", "Koneksi", "d")
    Text5.Text = GetTxt2("Setting.ini", "Koneksi", "e")
+   
+errLoad:
 End Sub

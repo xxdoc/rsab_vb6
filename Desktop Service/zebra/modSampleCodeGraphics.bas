@@ -55,7 +55,7 @@ GetGraphicsDllVersion_Exit:
     Exit Sub
     
 GetGraphicsDllVersion_Error:
-    MsgBox "Error in GetGraphicsDllVersion: " & Err.Description
+'    MsgBox "Error in GetGraphicsDllVersion: " & Err.Description
     GoTo GetGraphicsDllVersion_Exit
 End Sub
 
@@ -153,7 +153,7 @@ PrintBothSides_CloseGraphicsDevice:
     End If
     
 PrintBothSides_Error:
-    MsgBox "Error in PrintBothSides: " & Err.Description
+'    MsgBox "Error in PrintBothSides: " & Err.Description
     GoTo PrintBothSides_Exit
 End Sub
 
@@ -264,7 +264,7 @@ PrintFrontSideOnly_CloseGraphicsDevice:
     End If
     
 PrintFrontSideOnly_Error:
-    MsgBox "Error in PrintFrontSideOnly: " & Err.Description
+'    MsgBox "Error in PrintFrontSideOnly: " & Err.Description
     GoTo PrintFrontSideOnly_Exit
 End Sub
 

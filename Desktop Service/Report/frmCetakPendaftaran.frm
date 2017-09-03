@@ -610,7 +610,7 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-MsgBox Err.Description
+'MsgBox Err.Description
 End Sub
 
 Public Sub cetakLabelPasien(strNorec As String, view As String, qty As String)
@@ -929,7 +929,7 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-    MsgBox Err.Description, vbInformation
+'    MsgBox Err.Description, vbInformation
 End Sub
 
 

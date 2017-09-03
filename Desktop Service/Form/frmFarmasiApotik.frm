@@ -19,7 +19,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Function farmasiApotik(ByVal QueryText As String) As Byte()
-    On Error Resume Next
+    On Error GoTo errLoad
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
@@ -75,10 +75,12 @@ Public Function farmasiApotik(ByVal QueryText As String) As Byte()
     End With
     If CN.State = adStateOpen Then CN.Close
     Unload Me
+    Exit Function
+errLoad:
 End Function
 
 Private Sub CETAK_Etiket(strNorec As String, jumlahCetak As Integer)
-On Error Resume Next
+On Error GoTo errLoad
     Dim prn As Printer
     Dim strPrinter As String
     
@@ -135,7 +137,7 @@ On Error Resume Next
         Next
         RS.MoveNext
     Next
+    Exit Sub
     
-    
-    
+errLoad:
 End Sub

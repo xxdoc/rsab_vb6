@@ -157,11 +157,11 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
     Unload Me
     Exit Function
 cetak:
- MsgBox Err.Description
+' MsgBox Err.Description
 End Function
 
 Private Sub CETAK_Billing(strNoregistrasi As String, jumlahCetak As Integer)
-On Error Resume Next
+On Error GoTo errLoad
     Dim prn As Printer
     Dim strPrinter As String
   
@@ -214,11 +214,14 @@ On Error Resume Next
         
         Printer.EndDoc
     Next
+    
+    Exit Sub
+errLoad:
 End Sub
 
 
 Private Sub cetak_KartuPasien(strNocm As String)
-    
+    On Error GoTo errLoad
     Dim prn As Printer
     Dim strPrinter As String
     
@@ -278,7 +281,9 @@ Private Sub cetak_KartuPasien(strNocm As String)
 '                  CStr(ErrNumber); _
 '                  " (&H"; Right$("0000000" & Hex$(ErrNumber), 8); ") "; _
 '                  msg
+   Exit Sub
    
+errLoad:
     
 End Sub
 

@@ -182,6 +182,7 @@ Begin VB.Form Form1
       LocalPort       =   1000
    End
    Begin VB.Label lKiri 
+      BackColor       =   &H00404040&
       Height          =   255
       Left            =   19680
       TabIndex        =   31
@@ -190,6 +191,7 @@ Begin VB.Form Form1
       Width           =   255
    End
    Begin VB.Label lKanan 
+      BackColor       =   &H00404040&
       Height          =   255
       Left            =   20040
       TabIndex        =   30
@@ -930,7 +932,7 @@ On Error GoTo hell
     Exit Sub
     
 hell:
-    frmSettingKoneksi.Show
+'    frmSettingKoneksi.Show
 End Sub
 
 Private Sub LoadTrigger()
@@ -982,6 +984,7 @@ Private Sub lblJam_DblClick()
 End Sub
 
 Private Sub Timer1_Timer()
+On Error GoTo asepic
     tmt = tmt + 1
     tmt4 = tmt4 + 1
     If tmt4 > 5 Then
@@ -1015,7 +1018,7 @@ Private Sub Timer1_Timer()
 '        DirectShow_Play
 '        DirectShow_Volume 0
 '    End If
-'Error_Handler:
+asepic:
 End Sub
 
 Private Sub OpenPortWinsock()
@@ -1395,17 +1398,17 @@ Dim ratus As Boolean
         DoEvents
     Loop Until Timer - t > 2
     
-'    If jenis = "A" Then Call sndPlaySound(App.Path & "\sound\AA.wav", SND_ALIAS Or SND_SYNC)
-'    If jenis = "B" Then Call sndPlaySound(App.Path & "\sound\BB.wav", SND_ALIAS Or SND_SYNC)
-'    If jenis = "C" Then Call sndPlaySound(App.Path & "\sound\CC.wav", SND_ALIAS Or SND_SYNC)
-'    If jenis = "D" Then Call sndPlaySound(App.Path & "\sound\DD.wav", SND_ALIAS Or SND_SYNC)
-'    If jenis = "E" Then Call sndPlaySound(App.Path & "\sound\EE.wav", SND_ALIAS Or SND_SYNC)
+    If jenis = "A" Then Call sndPlaySound(App.Path & "\sound\AA.wav", SND_ALIAS Or SND_SYNC)
+    If jenis = "B" Then Call sndPlaySound(App.Path & "\sound\BB.wav", SND_ALIAS Or SND_SYNC)
+    If jenis = "C" Then Call sndPlaySound(App.Path & "\sound\CC.wav", SND_ALIAS Or SND_SYNC)
+    If jenis = "D" Then Call sndPlaySound(App.Path & "\sound\DD.wav", SND_ALIAS Or SND_SYNC)
+    If jenis = "E" Then Call sndPlaySound(App.Path & "\sound\EE.wav", SND_ALIAS Or SND_SYNC)
     
-    If jenis = "A" Then Call sndPlaySound(App.Path & "\sound\A.mp3", SND_ALIAS Or SND_SYNC)
-    If jenis = "B" Then Call sndPlaySound(App.Path & "\sound\B.mp3", SND_ALIAS Or SND_SYNC)
-    If jenis = "C" Then Call sndPlaySound(App.Path & "\sound\C.mp3", SND_ALIAS Or SND_SYNC)
-    If jenis = "D" Then Call sndPlaySound(App.Path & "\sound\D.mp3", SND_ALIAS Or SND_SYNC)
-    If jenis = "E" Then Call sndPlaySound(App.Path & "\sound\E.mp3", SND_ALIAS Or SND_SYNC)
+'    If jenis = "A" Then Call sndPlaySound(App.Path & "\sound\A.mp3", SND_ALIAS Or SND_SYNC)
+'    If jenis = "B" Then Call sndPlaySound(App.Path & "\sound\B.mp3", SND_ALIAS Or SND_SYNC)
+'    If jenis = "C" Then Call sndPlaySound(App.Path & "\sound\C.mp3", SND_ALIAS Or SND_SYNC)
+'    If jenis = "D" Then Call sndPlaySound(App.Path & "\sound\D.mp3", SND_ALIAS Or SND_SYNC)
+'    If jenis = "E" Then Call sndPlaySound(App.Path & "\sound\E.mp3", SND_ALIAS Or SND_SYNC)
     
 
 '    t = Timer
@@ -1630,6 +1633,7 @@ loketttt:
 End Sub
 
 Private Sub Timer2_Timer()
+On Error GoTo as_epic
 '    lbl(KedipLoket).FontBold = Not lbl(KedipLoket).FontBold
     tmt2 = tmt2 + 1
     If tmt2 > 10 Then
@@ -1641,6 +1645,7 @@ Private Sub Timer2_Timer()
         tmt2 = 0
 '        lblWs.Visible = False
     End If
+as_epic:
 End Sub
 
 Private Sub Timer3_Timer()
@@ -1650,6 +1655,7 @@ Private Sub Timer3_Timer()
 End Sub
 
 Private Sub Timer4_Timer()
+    On Error GoTo Error_Handler
 '    tmt3 = tmt3 + 1
 '    If tmt3 > 60 Then
 '        strSQL = "select distinct noantrian from AntrianPasienRegistrasi where TglAntrian > '" & Format(Now(), "yyyy-mm-dd") & " 00:00' and JenisPasien = 'bpjs' " '  group by jenispasien"
@@ -1671,7 +1677,7 @@ Private Sub Timer4_Timer()
 '        File1.Tag = Val(File1.Tag) + 1
 '        If Val(File1.Tag) > File1.ListCount - 1 Then File1.Tag = 0
 '    End If
-    On Error GoTo Error_Handler
+
 '    Label3.Caption = Round(DirectShow_Position.CurrentPosition, 0) & "/" & Round(DirectShow_Position.StopTime, 0)
 '    If DirectShow_Position.CurrentPosition >= DirectShow_Position.StopTime Then
 '            'DirectShow_Position.CurrentPosition = 0

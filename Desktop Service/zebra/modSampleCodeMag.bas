@@ -52,7 +52,7 @@ ByteToString_Exit:
     
 ByteToString_Error:
     s = ""
-    MsgBox "Error in ByteToString: " & Err.Description
+'    MsgBox "Error in ByteToString: " & Err.Description
     GoTo ByteToString_Exit
 End Function
 
@@ -72,7 +72,7 @@ StringToByte_Exit:
     Exit Sub
     
 StringToByte_Error:
-    MsgBox "Error in StringToByte: " & Err.Description
+'    MsgBox "Error in StringToByte: " & Err.Description
     GoTo StringToByte_Exit
 End Sub
 
@@ -104,7 +104,7 @@ GetPrinterDllVersion_Exit:
     Exit Sub
 
 GetPrinterDllVersion_Error:
-    MsgBox "Error in GetPrinterDllVersion: " & Err.Description
+'    MsgBox "Error in GetPrinterDllVersion: " & Err.Description
     GoTo GetPrinterDllVersion_Exit
 End Sub
 
@@ -188,7 +188,7 @@ MagCode_Exit:
     Exit Sub
 
 MagCode_Error:
-    MsgBox "Error in MagCode: " & Err.Description
+'    MsgBox "Error in MagCode: " & Err.Description
     GoTo MagCode_Exit
 End Sub
 

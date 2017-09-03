@@ -19,7 +19,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Function TataRekening(ByVal QueryText As String) As Byte()
-On Error Resume Next
+On Error GoTo errLoad
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
@@ -51,10 +51,13 @@ On Error Resume Next
         .Close
     End With
     Unload Me
+    Exit Function
+    
+errLoad:
 End Function
 
 Private Sub CETAK_ANTRIAN(strNorec As String, jumlahCetak As Integer)
-On Error Resume Next
+On Error GoTo errLoad
     Dim prn As Printer
     Dim strPrinter As String
     
@@ -72,7 +75,7 @@ On Error Resume Next
     
     strPrinter = GetTxt("Setting.ini", "Printer", "CetakAntrian")
     'GetSetting("Jasamedika Service", "CetakAntrian", "Printer")
-    If Printers.Count > 0 Then
+    If Printers.count > 0 Then
         For Each prn In Printers
             If prn.DeviceName = strPrinter Then
                 Set Printer = prn
@@ -81,15 +84,15 @@ On Error Resume Next
         Next prn
     End If
     
-    For I = 1 To jumlahCetak
+    For i = 1 To jumlahCetak
         'MsgBox "CETAK"
-        Printer.FontSize = 10
+        Printer.fontSize = 10
         Printer.Print "     RUMAH SAKIT ANAK DAN BUNDA"
-        Printer.FontSize = 18
+        Printer.fontSize = 18
         Printer.FontBold = True
         Printer.Print "      HARAPAN KITA"
         Printer.FontBold = False
-        Printer.FontSize = 10
+        Printer.fontSize = 10
         Printer.Print "   Jl. S. Parman Kav.87, Slipi, Jakarta Barat"
         Printer.Print "      Telp. 021-5668286, 021-5668284"
         Printer.Print "      Fax.  021-5601816, 021-5673832"
@@ -97,19 +100,23 @@ On Error Resume Next
         Printer.Print ""
         Printer.Print "Tanggal :" & Format(Now(), "yyyy MM dd hh:mm")
         Printer.Print ""
-        Printer.FontSize = 14
+        Printer.fontSize = 14
         Printer.FontBold = True
         Printer.Print "Nomor Antrian Anda : "
-        Printer.FontSize = 30
+        Printer.fontSize = 30
         Printer.Print "       " & NoAntri
         Printer.FontBold = False
-        Printer.FontSize = 10
+        Printer.fontSize = 10
         Printer.Print ""
         Printer.Print " Silahkan menunggu nomor Anda dipanggil"
         Printer.Print "    Antrian yang belum dipanggil " & jmlAntrian & " orang"
         
         Printer.EndDoc
     Next
+    
+    Exit Sub
+    
+errLoad:
 End Sub
 
 

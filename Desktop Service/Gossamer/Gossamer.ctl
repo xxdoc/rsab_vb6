@@ -379,7 +379,7 @@ Attribute StopListening.VB_Description = "Shuts down any active GossClients and 
     Dim Index As Integer
     
     wskRequest.Close
-    For Index = 0 To gcClients.Count - 1
+    For Index = 0 To gcClients.count - 1
         If gcClients(Index).InUse Then gcClients(Index).Shutdown
     Next
     
@@ -486,7 +486,7 @@ End Sub
 Private Sub wskRequest_ConnectionRequest(ByVal requestID As Long)
     Dim Index As Integer
     
-    For Index = 0 To gcClients.Count - 1
+    For Index = 0 To gcClients.count - 1
         If Not gcClients(Index).InUse Then
             gcClients(Index).Accept requestID
             Exit Sub
