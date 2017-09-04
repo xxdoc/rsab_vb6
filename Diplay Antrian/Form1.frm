@@ -1281,7 +1281,8 @@ End Sub
 Private Sub loadAntrian()
 On Error Resume Next
 Dim disada As Boolean
-
+    
+    If CN.State = adStateClosed Then CN.Open
 '    If reload = False Then Exit Sub
 '    reload = True
     lblWs.Visible = True
@@ -1372,6 +1373,7 @@ Dim disada As Boolean
     End If
     onload = False
     If Timer1.Enabled = False Then Timer1.Enabled = True
+    If CN.State = adStateOpen Then CN.Close
 End Sub
 
 
@@ -1648,7 +1650,7 @@ Private Sub Timer3_Timer()
 End Sub
 
 Private Sub Timer4_Timer()
-    tmt3 = tmt3 + 1
+'    tmt3 = tmt3 + 1
 '    If tmt3 > 60 Then
 '        strSQL = "select distinct noantrian from AntrianPasienRegistrasi where TglAntrian > '" & Format(Now(), "yyyy-mm-dd") & " 00:00' and JenisPasien = 'bpjs' " '  group by jenispasien"
 '        Call msubRecFO(rsa, strSQL)
