@@ -19,11 +19,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Function Kasir(ByVal QueryText As String) As Byte()
-On Error GoTo errLoad
+On Error Resume Next
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
     Dim Param3() As String
+    Dim Param4() As String
+    Dim Param5() As String
+    Dim Param6() As String
     Dim arrItem() As String
     
    If CN.State = adStateClosed Then Call openConnection
@@ -34,6 +37,9 @@ On Error GoTo errLoad
         Param1 = Split(arrItem(0), "=")
         Param2 = Split(arrItem(1), "=")
         Param3 = Split(arrItem(2), "=")
+        Param4 = Split(arrItem(3), "=")
+        Param5 = Split(arrItem(4), "=")
+        Param6 = Split(arrItem(5), "=")
         Select Case Param1(0)
             Case "cetak-billing"
                 Call frmCRCetakBilling.CetakBilling(Param2(1), Val(Param1(1)), Param3(1))
@@ -50,6 +56,20 @@ On Error GoTo errLoad
                 Set Root = New JNode
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&view=false
+            
+            Case "cetak-laporan-penerimaan"
+                Call frmCRLaporanPenerimaan.CetakLaporanPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Penerimaan Kasir"
+                Root("by") = "as@epic"
+                '127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
+            
+            Case "cetak-rekap-penerimaan"
+                Call frmRekapPenerimaan.CetakRekapPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Rekap Penerimaan Kasir"
+                Root("by") = "as@epic"
+                '127.0.0.1:1237/printvb/kasir?cetak-rekap-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
             
             Case Else
                 Set Root = New JNode

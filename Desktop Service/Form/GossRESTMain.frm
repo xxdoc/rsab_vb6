@@ -113,9 +113,9 @@ Private Sub Form_Initialize()
 On Error Resume Next
 Dim msg As String
 
-    TerminateProcess ("Desktop ServiceC.exe")
-    TerminateProcess ("Desktop ServiceD.exe")
-    TerminateProcess ("Desktop ServiceE.exe")
+'    TerminateProcess ("Desktop ServiceC.exe")
+'    TerminateProcess ("Desktop ServiceD.exe")
+'    TerminateProcess ("Desktop ServiceE.exe")
     
     GossRESTDB.InitializeDB
     GetGraphicsDllVersion graphicSDKVersion
@@ -157,7 +157,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "D:/log.txt" For Append As #LogFile
+    Open "C:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
