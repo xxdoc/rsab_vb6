@@ -303,7 +303,7 @@ Begin VB.Form Form2
       Height          =   495
       Left            =   960
       TabIndex        =   4
-      Text            =   "C"
+      Text            =   "A"
       Top             =   960
       Width           =   1215
    End
