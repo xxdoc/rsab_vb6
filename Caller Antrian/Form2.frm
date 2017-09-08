@@ -23,6 +23,11 @@ Begin VB.Form Form2
    ScaleHeight     =   4290
    ScaleWidth      =   5310
    StartUpPosition =   3  'Windows Default
+   Begin VB.Timer Timer1 
+      Interval        =   1000
+      Left            =   4680
+      Top             =   120
+   End
    Begin VB.TextBox A3 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
@@ -420,6 +425,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Dim timtimer As Double
 Private Sub Command1_Click()
     If ws1.State <> sckClosed Then ws1.Close
     ws1.Connect Text4.Text, Text3.Text
@@ -563,4 +569,12 @@ End Sub
 
 Private Sub Text2_Change()
     Call infotainment
+End Sub
+
+Private Sub Timer1_Timer()
+    timtimer = timtimer + 1
+    If timtimer = 60 Then
+        Call infotainment
+        timtimer = 1
+    End If
 End Sub
