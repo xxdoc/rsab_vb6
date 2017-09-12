@@ -27,10 +27,7 @@ On Error Resume Next
     Dim Param4() As String
     Dim Param5() As String
     Dim Param6() As String
-<<<<<<< HEAD
     Dim Param7() As String
-=======
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
     Dim arrItem() As String
     
    If CN.State = adStateClosed Then Call openConnection
@@ -41,13 +38,10 @@ On Error Resume Next
         Param1 = Split(arrItem(0), "=")
         Param2 = Split(arrItem(1), "=")
         Param3 = Split(arrItem(2), "=")
-<<<<<<< HEAD
-        
-=======
         Param4 = Split(arrItem(3), "=")
         Param5 = Split(arrItem(4), "=")
         Param6 = Split(arrItem(5), "=")
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
+
         Select Case Param1(0)
             Case "cetak-billing"
                 Call frmCRCetakBilling.CetakBilling(Param2(1), Val(Param1(1)), Param3(1))

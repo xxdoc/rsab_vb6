@@ -50,7 +50,6 @@ Module=modSampleCodeGraphics; zebra\modSampleCodeGraphics.bas
 Module=modSampleCodeMag; zebra\modSampleCodeMag.bas
 Module=modZBRGraphics; zebra\modZBRGraphics.bas
 Module=modZBRPrinter; zebra\modZBRPrinter.bas
-<<<<<<< HEAD
 Designer=Report\crBukuRegisterPelayananPasien.Dsr
 Form=Report\frmCRCetakBukuRegisterPelayanan.frm
 Form=Form\frmLaporanPelayanan.frm
@@ -64,22 +63,16 @@ Designer=Report\Cr_cetakbuktilayananruangan.Dsr
 Designer=Report\crLaporanPasienDaftar.Dsr
 Form=Report\frmCRCetakDaftarPasien.frm
 Designer=Report\crLaporanPendapatanRuanganDetail.Dsr
-=======
 Form=Report\frmCetakBilling.frm
 Designer=Report\crBilling.Dsr
 Form=frmLaporanPenerimaan.frm
 Designer=crLaporanPenerimaan.Dsr
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
 ExeName32="Desktop ServiceC.exe"
-<<<<<<< HEAD
-Path32="..\..\..\..\.."
-=======
 Path32="C:\"
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
 Command32=""
 Name="DesktopService"
 HelpContextID="0"
