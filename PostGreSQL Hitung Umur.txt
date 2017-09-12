@@ -1,0 +1,11 @@
+PostGreSQL :: Hitung Umur
+Ternyata untuk menghitung umur dari data yang disimpan di PostGreSQL sangat gampang. PostGreSQL sendiri sudah menyediakan fungsi yang mendukung. Beberapa fungsi yang bisa dipakai adalah AGE dan EXTRACT.
+
+AGE dipakai untuk menghitung umur dari sebuah data, dibandingkan dengan hari ini, atau dengan data lain (tipenya timestamp).
+
+Misal: age(timestamp '1980-09-27'),
+akan menghasilkan nilai (bertipe interval) "24 years 1 mon 25 days".
+
+Nah, kalau mau mengambil nilai tahunnya saja, tinggal menggunakan EXTRACT
+Contoh: EXTRACT(year FROM AGE(timestamp '2001-09-27')),
+hasilnya akan jadi 24.

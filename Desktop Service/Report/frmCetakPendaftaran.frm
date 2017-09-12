@@ -430,7 +430,7 @@ boolLembarPersetujuan = False
              If Not RS.EOF Then
               .txtnosjp.SetText RS("nosep")
               .txtTglSep.SetText Format(RS("tanggalsep"), "dd/mm/yyyy")
-              .txtNomorKartuAskes.SetText RS("nokepesertaan")
+              .txtNomorKartuAskes.SetText IIf(IsNull(RS("nokepesertaan")), "-", RS("nokepesertaan"))
               .txtNamaPasien.SetText RS("namapeserta")
               .txtkelamin.SetText RS("jeniskelamin")
               .txtTanggalLahir.SetText Format(RS("tgllahir"), "dd/mm/yyyy")
@@ -516,9 +516,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtumur.SetText "-"
+                .txtUmur.SetText "-"
             Else
-                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
 
@@ -705,8 +705,13 @@ boolLembarPersetujuan = False
 '      Set sect = .Sections.Item("Section8")
 
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
+<<<<<<< HEAD
         .txtTgl.SetText strTglLahir
         .txtnocm.SetText strNocm
+=======
+        .txttgl.SetText strTglLahir
+        .txtNoCM.SetText strNocm
+>>>>>>> b59f33ff8add012565a07809f1948692b16d730f
     
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
@@ -865,15 +870,19 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtumur.SetText "-"
+                .txtUmur.SetText "-"
             Else
-                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namaayah}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
+<<<<<<< HEAD
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+=======
+            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
+>>>>>>> b59f33ff8add012565a07809f1948692b16d730f
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
@@ -977,9 +986,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtumur.SetText "Umur -"
+                .txtUmur.SetText "Umur -"
             Else
-                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
+                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd/mm/yyyy")
                 .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd/mm/yyyy"))

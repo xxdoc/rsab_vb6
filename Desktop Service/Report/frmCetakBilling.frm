@@ -170,8 +170,8 @@ Set Report = New crBilling
                 " INNER join ruangan_m  as ru on ru.id=pd.objectruanganlastfk " & _
                 " INNER join ruangan_m  as ru2 on ru2.id=apd.objectruanganfk " & _
                 " left join kelas_m  as kl on kl.id=pd.objectkelasfk " & _
-                " INNER join pegawai_m  as pg on pg.id=pd.objectpegawaifk " & _
-                " INNER join pegawai_m  as pg2 on pg2.id=apd.objectpegawaifk " & _
+                " left join pegawai_m  as pg on pg.id=pd.objectpegawaifk " & _
+                " left join pegawai_m  as pg2 on pg2.id=apd.objectpegawaifk " & _
                 " left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
                 " left join kamar_m  as kmr on kmr.id=apd.objectkamarfk " & _
                 " where pd.noregistrasi='" & strNoregistrasi & "' "
@@ -189,8 +189,8 @@ Set Report = New crBilling
             "inner join ruangan_m  as ru on ru.id=pd.objectruanganlastfk " & _
             "inner join ruangan_m  as ru2 on ru2.id=apd.objectruanganfk " & _
             "LEFT join kelas_m  as kl on kl.id=pd.objectkelasfk " & _
-            "inner join pegawai_m  as pg on pg.id=pd.objectpegawaifk " & _
-            "inner join pegawai_m  as pg2 on pg2.id=apd.objectpegawaifk " & _
+            "left join pegawai_m  as pg on pg.id=pd.objectpegawaifk " & _
+            "left join pegawai_m  as pg2 on pg2.id=apd.objectpegawaifk " & _
             "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
             "where pd.noregistrasi='" & strNoregistrasi & "' "
 
@@ -202,7 +202,7 @@ Set Report = New crBilling
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))

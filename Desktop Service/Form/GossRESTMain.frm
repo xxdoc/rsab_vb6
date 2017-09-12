@@ -113,9 +113,9 @@ Private Sub Form_Initialize()
 On Error Resume Next
 Dim msg As String
 
-    TerminateProcess ("Desktop ServiceC.exe")
-    TerminateProcess ("Desktop ServiceD.exe")
-    TerminateProcess ("Desktop ServiceE.exe")
+'    TerminateProcess ("Desktop ServiceC.exe")
+'    TerminateProcess ("Desktop ServiceD.exe")
+'    TerminateProcess ("Desktop ServiceE.exe")
     
     GossRESTDB.InitializeDB
     GetGraphicsDllVersion graphicSDKVersion

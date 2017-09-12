@@ -19,7 +19,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Function Kasir(ByVal QueryText As String) As Byte()
-On Error GoTo errLoad
+On Error Resume Next
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
@@ -27,7 +27,10 @@ On Error GoTo errLoad
     Dim Param4() As String
     Dim Param5() As String
     Dim Param6() As String
+<<<<<<< HEAD
     Dim Param7() As String
+=======
+>>>>>>> b59f33ff8add012565a07809f1948692b16d730f
     Dim arrItem() As String
     
    If CN.State = adStateClosed Then Call openConnection
@@ -38,7 +41,13 @@ On Error GoTo errLoad
         Param1 = Split(arrItem(0), "=")
         Param2 = Split(arrItem(1), "=")
         Param3 = Split(arrItem(2), "=")
+<<<<<<< HEAD
         
+=======
+        Param4 = Split(arrItem(3), "=")
+        Param5 = Split(arrItem(4), "=")
+        Param6 = Split(arrItem(5), "=")
+>>>>>>> b59f33ff8add012565a07809f1948692b16d730f
         Select Case Param1(0)
             Case "cetak-billing"
                 Call frmCRCetakBilling.CetakBilling(Param2(1), Val(Param1(1)), Param3(1))
@@ -92,6 +101,20 @@ On Error GoTo errLoad
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Pendapatan Ruangan Detail"
                 '127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuanganDetail=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            
+            Case "cetak-laporan-penerimaan"
+                Call frmCRLaporanPenerimaan.CetakLaporanPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Penerimaan Kasir"
+                Root("by") = "as@epic"
+                '127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
+            
+            Case "cetak-rekap-penerimaan"
+                Call frmRekapPenerimaan.CetakRekapPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Rekap Penerimaan Kasir"
+                Root("by") = "as@epic"
+                '127.0.0.1:1237/printvb/kasir?cetak-rekap-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
             
             Case Else
                 Set Root = New JNode

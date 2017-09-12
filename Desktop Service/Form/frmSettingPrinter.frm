@@ -108,10 +108,17 @@ Private Sub Form_Load()
     Combo1.AddItem "CetakGeneral"
     Combo1.AddItem "CetakResep"
     Combo1.AddItem "CetakLabelEtiket"
+<<<<<<< HEAD
     Combo1.AddItem "RegisterPelayanan"
     Combo1.AddItem "LaporanPasienPulang"
     Combo1.AddItem "LaporanPendapatanRuangan"
     Combo1.AddItem "RincianBiayaPelayanan"
     Combo1.AddItem "PasienDaftar"
+=======
+    Combo1.AddItem "LaporanPenerimaan"
+    Combo1.AddItem "RekapPenerimaan"
+    
+    
+>>>>>>> b59f33ff8add012565a07809f1948692b16d730f
 End Sub
 
