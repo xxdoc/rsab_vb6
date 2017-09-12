@@ -157,7 +157,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "D:/log.txt" For Append As #LogFile
+    Open "E:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
@@ -240,6 +240,7 @@ Private Sub Gossamer1_DynamicRequest( _
         If URI = "\printvb\tata-rekening" Then RespBody = frmTataRekening.TataRekening(Gossamer1.URLDecode(Params))
         If URI = "\printvb\Pendaftaran" Then RespBody = frmPendaftaran.Pendaftaran(Gossamer1.URLDecode(Params))
         If URI = "\printvb\farmasiApotik" Then RespBody = frmFarmasiApotik.farmasiApotik(Gossamer1.URLDecode(Params))
+        If URI = "\printvb\laporanPelayanan" Then RespBody = frmLaporanPelayanan.laporanPelayanan(Gossamer1.URLDecode(Params))
         If Err Then
             ErrNumber = Err.Number
             ErrDescription = Err.Description

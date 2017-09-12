@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRCetakKuitansiPasienV2 = Nothing
 End Sub
 
-Public Sub CetakUlangJenisKuitansi(strNoregistrasi As String, jumlahCetak As Integer, view As String)
+Public Sub CetakUlangJenisKuitansi(strNoregistrasi As String, jumlahCetak As Integer, strIdPegawai As String, view As String)
 On Error GoTo errLoad
 
 Set frmCRCetakKuitansiPasienV2 = Nothing
@@ -175,6 +175,13 @@ Set Report = New crKuitansiPasien
             .txtNoCM2.SetText RS("nocm")
             .txtPrintTglBKM.SetText "Jakarta, " & Format(Now(), "dd MMM yyyy")
             .txtPetugasKasir.SetText RS("namalengkap")
+            
+            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
+            If RS2.BOF Then
+                .txtPetugasCetak.SetText "-"
+            Else
+                .txtPetugasCetak.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            End If
             
             If view = "false" Then
                 Dim strPrinter As String

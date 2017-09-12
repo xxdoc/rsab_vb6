@@ -101,13 +101,17 @@ Private Sub Form_Load()
     Combo1.AddItem "Tracer1"
     Combo1.AddItem "Tracer2"
     Combo1.AddItem "BuktiLayanan"
+    Combo1.AddItem "BuktiLayananRuangan"
     Combo1.AddItem "CetakSep"
     Combo1.AddItem "SummaryList"
     Combo1.AddItem "CetakRMK"
     Combo1.AddItem "CetakGeneral"
     Combo1.AddItem "CetakResep"
     Combo1.AddItem "CetakLabelEtiket"
-    
-    
+    Combo1.AddItem "RegisterPelayanan"
+    Combo1.AddItem "LaporanPasienPulang"
+    Combo1.AddItem "LaporanPendapatanRuangan"
+    Combo1.AddItem "RincianBiayaPelayanan"
+    Combo1.AddItem "PasienDaftar"
 End Sub
 

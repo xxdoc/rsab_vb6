@@ -43,6 +43,10 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
     Dim Param2() As String
     Dim Param3() As String
     Dim Param4() As String
+    Dim Param5() As String
+    Dim Param6() As String
+    Dim Param7() As String
+    Dim Param8() As String
     Dim arrItem() As String
    
     If CN.State = adStateClosed Then Call openConnection
@@ -94,13 +98,24 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Root("by") = "grh@epic"
                 
             Case "cetak-buktilayanan"
+                Param4 = Split(arrItem(3), "=")
                 lblStatus.Caption = "Cetak Bukti Layanan"
-                Call frmCetakPendaftaran.cetakBuktiLayanan(Param2(1), Param3(1))
-                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-buktilayanan=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false
+                Call frmCetakPendaftaran.cetakBuktiLayanan(Param2(1), Param3(1), Param4(1))
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-buktilayanan=1&norec=1707000166&strIdPegawai=1&view=true
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
-                
+             
+             Case "cetak-buktilayanan-ruangan"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                lblStatus.Caption = "Cetak Bukti Layanan Ruangan"
+                Call frmCetakPendaftaran.cetakBuktiLayananRuangan(Param2(1), Param3(1), Param4(1), Param5(1))
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-buktilayanan-ruangan=1&norec=1707000166&strIdPegawai=1&strIdRuangan=&view=true
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+               
             Case "cetak-labelpasien"
                 Param4 = Split(arrItem(3), "=")
                 lblStatus.Caption = "Cetak Label Pasien"
@@ -127,14 +142,29 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
              
-             Case "cetak-lembarpersetujuan"
+            Case "cetak-lembarpersetujuan"
                 lblStatus.Caption = "Cetak Lembar Persetjuan Rawat Inap"
                 Call frmCetakPendaftaran.cetakPersetujuan(Param2(1), Param3(1))
                 'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-summarylist=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
-           
+        
+            Case "cetak-pasiendaftar"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Param7 = Split(arrItem(6), "=")
+                Param8 = Split(arrItem(7), "=")
+                
+                lblStatus.Caption = "Cetak Pasien Daftar"
+                Call frmCRCetakDaftarPasien.CetakPasienDaftar(Param2(1), Param3(1), Param4(1), Param5(1), (Param6(1)), Param7(1), Param8(1))
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-pasiendaftar=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-02%2023:59:59&strIdRuangan=6&strIdDepartement=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-pasiendaftar=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-02%2023:59:59&strIdRuangan=&strIdDepartement=&strIdKelompokPasien=&strIdPegawai=1&view=true
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"

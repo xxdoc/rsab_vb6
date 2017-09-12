@@ -24,6 +24,10 @@ On Error GoTo errLoad
     Dim Param1() As String
     Dim Param2() As String
     Dim Param3() As String
+    Dim Param4() As String
+    Dim Param5() As String
+    Dim Param6() As String
+    Dim Param7() As String
     Dim arrItem() As String
     
    If CN.State = adStateClosed Then Call openConnection
@@ -34,6 +38,7 @@ On Error GoTo errLoad
         Param1 = Split(arrItem(0), "=")
         Param2 = Split(arrItem(1), "=")
         Param3 = Split(arrItem(2), "=")
+        
         Select Case Param1(0)
             Case "cetak-billing"
                 Call frmCRCetakBilling.CetakBilling(Param2(1), Val(Param1(1)), Param3(1))
@@ -46,10 +51,47 @@ On Error GoTo errLoad
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-kwitansi=1&noregistrasi=1708000446&view=false
             Case "cetak-kwitansiv2"
-                Call frmCRCetakKuitansiPasienV2.CetakUlangJenisKuitansi(Param2(1), Val(Param1(1)), Param3(1))
+                Param4 = Split(arrItem(3), "=")
+                Call frmCRCetakKuitansiPasienV2.CetakUlangJenisKuitansi(Param2(1), Val(Param1(1)), Param3(1), Param4(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Kwitansi"
-                '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&view=false
+                '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&strIdPegawai=1&view=false
+            Case "cetak-LaporanPasienPulang"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Param7 = Split(arrItem(6), "=")
+                Call frmCRCetakLaporanPasienPulang.CetakLaporanPasienPulang(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Pasien Pulang"
+                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            Case "cetak-LaporanPendapatanRuangan"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Param7 = Split(arrItem(6), "=")
+                Call frmCRCetakLaporanPendapatanRuangan.CetakLaporanPendapatanRuangan(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Pendapatan Ruangan"
+                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuangan=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            Case "cetak-RincianBiaya"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Call frmCRCetakRincianBiaya.CetakRincianBiaya(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Rincian Biaya"
+                '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
+                '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=&strNoStruk=S000000168&strNoKwitansi=&strIdPegawai=1&view=true
+            Case "cetak-LaporanPendapatanRuanganDetail"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Param7 = Split(arrItem(6), "=")
+                Call frmCRCetakLaporanPendapatanRuangan.CetakLaporanPendapatanRuanganDetail(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Pendapatan Ruangan Detail"
+                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuanganDetail=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
             
             Case Else
                 Set Root = New JNode
