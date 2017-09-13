@@ -1,0 +1,2 @@
+Formula Supress jika ada baris pertama sama selanjutnya datanya sama
+if {@usNoPendaftaran} = previous({@usNoPendaftaran}) then true else false

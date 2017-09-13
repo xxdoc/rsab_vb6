@@ -130,6 +130,7 @@ Dim strPort As String
 
 Dim bolBuktiPendaftaran As Boolean
 Dim bolBuktiLayanan  As Boolean
+Dim bolBuktiLayananRuangan  As Boolean
 Dim bolcetakSep  As Boolean
 Dim bolTracer1  As Boolean
 Dim bolKartuPasien  As Boolean
@@ -155,6 +156,10 @@ Private Sub cmdCetak_Click()
         reportBuktiLayanan.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
         PrinterNama = cboPrinter.Text
         reportBuktiLayanan.PrintOut False
+    ElseIf bolBuktiLayananRuangan = True Then
+        reportBuktiLayananRuangan.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+        PrinterNama = cboPrinter.Text
+        reportBuktiLayananRuangan.PrintOut False
     ElseIf bolcetakSep = True Then
         reportSep.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
         PrinterNama = cboPrinter.Text
@@ -193,6 +198,8 @@ Private Sub CmdOption_Click()
         Report.PrinterSetup Me.hwnd
     ElseIf bolBuktiLayanan = True Then
         reportBuktiLayanan.PrinterSetup Me.hwnd
+    ElseIf bolBuktiLayananRuangan = True Then
+        reportBuktiLayananRuangan.PrinterSetup Me.hwnd
     ElseIf bolcetakSep = True Then
         reportSep.PrinterSetup Me.hwnd
     ElseIf bolTracer1 = True Then
@@ -246,6 +253,7 @@ Dim strSQL As String
 
 bolBuktiPendaftaran = True
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -321,6 +329,7 @@ Dim strSQL As String
 
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = True
 bolKartuPasien = False
@@ -394,6 +403,7 @@ Dim strSQL As String
 
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = True
 bolTracer1 = False
 bolKartuPasien = False
@@ -476,6 +486,7 @@ Dim umur As String
     
 bolBuktiPendaftaran = False
 bolBuktiLayanan = True
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -580,7 +591,8 @@ Dim umur As String
 Dim strFilter As String
 
 bolBuktiPendaftaran = False
-bolBuktiLayanan = True
+bolBuktiLayanan = False
+bolBuktiLayananRuangan = True
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -609,8 +621,8 @@ boolLembarPersetujuan = False
                        " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
                        " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
-                       " INNER JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
-                       " INNER JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
+                       " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
+                       " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
                        " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
                        " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
@@ -687,6 +699,7 @@ Dim strSQL As String
     
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = True
@@ -705,10 +718,17 @@ boolLembarPersetujuan = False
 '      Set sect = .Sections.Item("Section8")
 
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
+<<<<<<< HEAD
         .txtTgl.SetText strTglLahir
         .txtnocm.SetText strNocm
         .txtTgl.SetText strTglLahir
         .txtnocm.SetText strNocm
+=======
+
+        .txtTgl.SetText strTglLahir
+        .txtnocm.SetText strNocm
+
+>>>>>>> adaf835163d5d3e241dd7b9e44d5622466a0126a
     
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
@@ -743,6 +763,7 @@ Dim jml As Integer
     
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -835,6 +856,7 @@ Dim strSQL As String
     
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -934,6 +956,7 @@ Dim strSQL As String
     
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -1061,6 +1084,7 @@ Dim strSQL As String
     
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False

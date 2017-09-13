@@ -3,7 +3,7 @@ Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crBukuRegisterPelayananPasien
    ClientHeight    =   7410
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   15210
+   ClientWidth     =   15885
    OleObjectBlob   =   "crBukuRegisterPelayananPasien.dsx":0000
 End
 Attribute VB_Name = "crBukuRegisterPelayananPasien"

@@ -41,6 +41,10 @@ On Error Resume Next
         Param4 = Split(arrItem(3), "=")
         Param5 = Split(arrItem(4), "=")
         Param6 = Split(arrItem(5), "=")
+<<<<<<< HEAD
+=======
+
+>>>>>>> adaf835163d5d3e241dd7b9e44d5622466a0126a
         Select Case Param1(0)
             Case "cetak-billing"
                 Call frmCRCetakBilling.CetakBilling(Param2(1), Val(Param1(1)), Param3(1))
@@ -90,7 +94,7 @@ On Error Resume Next
                 Param5 = Split(arrItem(4), "=")
                 Param6 = Split(arrItem(5), "=")
                 Param7 = Split(arrItem(6), "=")
-                Call frmCRCetakLaporanPendapatanRuangan.CetakLaporanPendapatanRuanganDetail(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRCetakLaporanPendapatanRuanganDetail.CetakLaporanPendapatanRuanganDetail(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Pendapatan Ruangan Detail"
                 '127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuanganDetail=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true

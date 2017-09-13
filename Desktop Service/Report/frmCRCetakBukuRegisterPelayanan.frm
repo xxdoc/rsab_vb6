@@ -168,13 +168,16 @@ Set Report = New crBukuRegisterPelayananPasien
     If strIdDepartement <> "" Then strFilter = strFilter & " AND ru2.objectdepartemenfk = '" & strIdDepartement & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND klp.id = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg2.id = '" & strIdDokter & "' "
-
+    
+    strFilter = strFilter & " group by pd.noregistrasi,ps.nocm,ps.namapasien,jk.reportdisplay,ru.namaruangan,kl.namakelas,   " & _
+"                 pg.namalengkap,pd.tglregistrasi,pd.tglpulang,rk.namarekanan,ru2.namaruangan,pr.namaproduk,jp.jenisproduk, pg2.namalengkap,pp.hargajual,   " & _
+"                 kmr.namakamar,ru2.id,ru2.objectdepartemenfk, klp.id, klp.kelompokpasien,pg2.id order by pd.tglregistrasi"
         
     strSQL = "SELECT pd.noregistrasi,ps.nocm,(ps.namapasien || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan,kl.namakelas,   " & _
-"                 pg.namalengkap,pd.tglregistrasi,pd.tglpulang,rk.namarekanan,pp.tglpelayanan, ru2.namaruangan as ruanganTindakan,   " & _
-"                 pr.namaproduk,jp.jenisproduk, pg2.namalengkap as dokter,pp.jumlah,pp.hargajual,   " & _
-"                 case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,   " & _
-"                 (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as total, kmr.namakamar " & _
+"                 pg.namalengkap,pd.tglregistrasi,pd.tglpulang,rk.namarekanan,ru2.namaruangan as ruanganTindakan,   " & _
+"                 pr.namaproduk,jp.jenisproduk, pg2.namalengkap as dokter,sum(pp.jumlah) as jumlah,pp.hargajual,   " & _
+"                 sum(case when pp.hargadiscount is null then 0 else pp.hargadiscount end) as diskon,   " & _
+"                 sum(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as total, kmr.namakamar " & _
 "                 ,ru2.id as idRuanganTindakan,ru2.objectdepartemenfk as idDepartementTindakan, klp.id as IdKelompokPasien, klp.kelompokpasien, " & _
 "                 pg2.id as idDokter " & _
 "                 from pasiendaftar_t as pd  " & _
@@ -220,7 +223,7 @@ Set Report = New crBukuRegisterPelayananPasien
     With Report
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
-            .udtTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
+'            .udtTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
