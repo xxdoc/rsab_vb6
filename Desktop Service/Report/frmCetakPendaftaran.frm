@@ -285,7 +285,7 @@ boolLembarPersetujuan = False
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usNoTelpon.SetUnboundFieldSource ("{ado.mobilephone2}")
 
-            .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -516,9 +516,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
 
@@ -536,7 +536,7 @@ boolLembarPersetujuan = False
            ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -644,7 +644,7 @@ boolLembarPersetujuan = False
            ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -705,13 +705,10 @@ boolLembarPersetujuan = False
 '      Set sect = .Sections.Item("Section8")
 
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
-<<<<<<< HEAD
         .txtTgl.SetText strTglLahir
         .txtnocm.SetText strNocm
-=======
-        .txttgl.SetText strTglLahir
-        .txtNoCM.SetText strNocm
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
+        .txtTgl.SetText strTglLahir
+        .txtnocm.SetText strNocm
     
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
@@ -870,19 +867,15 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namaayah}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-<<<<<<< HEAD
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
-=======
-            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
@@ -986,9 +979,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "Umur -"
+                .txtumur.SetText "Umur -"
             Else
-                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
+                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd/mm/yyyy")
                 .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd/mm/yyyy"))

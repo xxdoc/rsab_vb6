@@ -1,7 +1,7 @@
 VERSION 5.00
-Begin VB.Form frmKasir 
+Begin VB.Form frmRajal 
    BorderStyle     =   1  'Fixed Single
-   Caption         =   "Kasir"
+   Caption         =   "Rawat Jalan"
    ClientHeight    =   1035
    ClientLeft      =   45
    ClientTop       =   375
@@ -13,12 +13,12 @@ Begin VB.Form frmKasir
    ScaleWidth      =   4005
    StartUpPosition =   3  'Windows Default
 End
-Attribute VB_Name = "frmKasir"
+Attribute VB_Name = "frmRajal"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Public Function Kasir(ByVal QueryText As String) As Byte()
+Public Function RawatJalan(ByVal QueryText As String) As Byte()
 On Error Resume Next
     Dim Root As JNode
     Dim Param1() As String
@@ -42,72 +42,12 @@ On Error Resume Next
         Param5 = Split(arrItem(4), "=")
         Param6 = Split(arrItem(5), "=")
         Select Case Param1(0)
-            Case "cetak-billing"
-                Call frmCRCetakBilling.CetakBilling(Param2(1), Val(Param1(1)), Param3(1))
+            Case "form-odontogram"
+                frmDiagramOdonto.Show
+                
                 Set Root = New JNode
                 Root("Status") = "Cetak Billing!!"
-                '127.0.0.1:1237/printvb/kasir?cetak-billing=1&noregistrasi=1707000053&view=false
-            Case "cetak-kwitansi"
-                Call frmCRCetakKuitansiPasien.CetakUlangJenisKuitansi(Param2(1), Val(Param1(1)), Param3(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Kwitansi"
-                '127.0.0.1:1237/printvb/kasir?cetak-kwitansi=1&noregistrasi=1708000446&view=false
-            Case "cetak-kwitansiv2"
-                Param4 = Split(arrItem(3), "=")
-                Call frmCRCetakKuitansiPasienV2.CetakUlangJenisKuitansi(Param2(1), Val(Param1(1)), Param3(1), Param4(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Kwitansi"
-                '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&strIdPegawai=1&view=false
-            Case "cetak-LaporanPasienPulang"
-                Param4 = Split(arrItem(3), "=")
-                Param5 = Split(arrItem(4), "=")
-                Param6 = Split(arrItem(5), "=")
-                Param7 = Split(arrItem(6), "=")
-                Call frmCRCetakLaporanPasienPulang.CetakLaporanPasienPulang(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Laporan Pasien Pulang"
-                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
-            Case "cetak-LaporanPendapatanRuangan"
-                Param4 = Split(arrItem(3), "=")
-                Param5 = Split(arrItem(4), "=")
-                Param6 = Split(arrItem(5), "=")
-                Param7 = Split(arrItem(6), "=")
-                Call frmCRCetakLaporanPendapatanRuangan.CetakLaporanPendapatanRuangan(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Laporan Pendapatan Ruangan"
-                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuangan=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
-            Case "cetak-RincianBiaya"
-                Param4 = Split(arrItem(3), "=")
-                Param5 = Split(arrItem(4), "=")
-                Param6 = Split(arrItem(5), "=")
-                Call frmCRCetakRincianBiaya.CetakRincianBiaya(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Rincian Biaya"
-                '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
-                '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=&strNoStruk=S000000168&strNoKwitansi=&strIdPegawai=1&view=true
-            Case "cetak-LaporanPendapatanRuanganDetail"
-                Param4 = Split(arrItem(3), "=")
-                Param5 = Split(arrItem(4), "=")
-                Param6 = Split(arrItem(5), "=")
-                Param7 = Split(arrItem(6), "=")
-                Call frmCRCetakLaporanPendapatanRuangan.CetakLaporanPendapatanRuanganDetail(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Laporan Pendapatan Ruangan Detail"
-                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuanganDetail=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
-            
-            Case "cetak-laporan-penerimaan"
-                Call frmCRLaporanPenerimaan.CetakLaporanPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Laporan Penerimaan Kasir"
-                Root("by") = "as@epic"
-                '127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
-            
-            Case "cetak-rekap-penerimaan"
-                Call frmRekapPenerimaan.CetakRekapPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Rekap Penerimaan Kasir"
-                Root("by") = "as@epic"
-                '127.0.0.1:1237/printvb/kasir?cetak-rekap-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
+                '127.0.0.1:1237/formvb\rawat-jalan?form-odontogram=1&noregistrasi=1707000053&view=true
             
             Case Else
                 Set Root = New JNode

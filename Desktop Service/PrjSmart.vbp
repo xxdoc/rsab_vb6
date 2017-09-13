@@ -18,7 +18,7 @@ Form=Form\frmSettingPrinter.frm
 Module=Koneksi; Module\Koneksi.bas
 Form=Form\frmCetakAntrian.frm
 Form=Form\frmSettingKoneksi.frm
-Form=Form\frmKasir.frm
+Form=Form\frmRajal.frm
 Form=Form\frmTataRekening.frm
 Module=SavetoFile; Module\SaveTxt.bas
 Designer=Report\crRekapPenerimaan.Dsr
@@ -50,7 +50,6 @@ Module=modSampleCodeGraphics; zebra\modSampleCodeGraphics.bas
 Module=modSampleCodeMag; zebra\modSampleCodeMag.bas
 Module=modZBRGraphics; zebra\modZBRGraphics.bas
 Module=modZBRPrinter; zebra\modZBRPrinter.bas
-<<<<<<< HEAD
 Designer=Report\crBukuRegisterPelayananPasien.Dsr
 Form=Report\frmCRCetakBukuRegisterPelayanan.frm
 Form=Form\frmLaporanPelayanan.frm
@@ -64,22 +63,22 @@ Designer=Report\Cr_cetakbuktilayananruangan.Dsr
 Designer=Report\crLaporanPasienDaftar.Dsr
 Form=Report\frmCRCetakDaftarPasien.frm
 Designer=Report\crLaporanPendapatanRuanganDetail.Dsr
-=======
 Form=Report\frmCetakBilling.frm
 Designer=Report\crBilling.Dsr
 Form=frmLaporanPenerimaan.frm
 Designer=crLaporanPenerimaan.Dsr
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
+Object={D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0; Flash.ocx
+Object={86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0; MSCOMCT2.OCX
+Form=Form\frmDiagramOdonto.frm
+Form=Form\frmKasir.frm
+Form=Form\frmCetakOdontoGram.frm
+Designer=Report\crOdontoGram.Dsr
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
 ExeName32="Desktop ServiceC.exe"
-<<<<<<< HEAD
-Path32="..\..\..\..\.."
-=======
 Path32="C:\"
->>>>>>> b59f33ff8add012565a07809f1948692b16d730f
 Command32=""
 Name="DesktopService"
 HelpContextID="0"

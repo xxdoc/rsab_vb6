@@ -174,11 +174,11 @@ Private Sub Form_Unload(Cancel As Integer)
     Shell_NotifyIcon NIM_DELETE, nid
     If CN.State = adStateOpen Then CN.Close
 End Sub
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, y As Single)
     Dim msg As Long
     Dim sFilter As String
     
-    msg = x / Screen.TwipsPerPixelX
+    msg = X / Screen.TwipsPerPixelX
     Select Case msg
         Case WM_LBUTTONDOWN
             Me.Show ' tampilkan form
@@ -200,7 +200,7 @@ End Sub
 Sub minimize_to_tray()
     Me.Hide
     nid.cbSize = Len(nid)
-    nid.hwnd = Me.hwnd
+    nid.hWnd = Me.hWnd
     nid.uId = vbNull
     nid.uFlags = NIF_ICON Or NIF_TIP Or NIF_MESSAGE
     nid.uCallBackMessage = WM_MOUSEMOVE
@@ -241,6 +241,7 @@ Private Sub Gossamer1_DynamicRequest( _
         If URI = "\printvb\Pendaftaran" Then RespBody = frmPendaftaran.Pendaftaran(Gossamer1.URLDecode(Params))
         If URI = "\printvb\farmasiApotik" Then RespBody = frmFarmasiApotik.farmasiApotik(Gossamer1.URLDecode(Params))
         If URI = "\printvb\laporanPelayanan" Then RespBody = frmLaporanPelayanan.laporanPelayanan(Gossamer1.URLDecode(Params))
+        If URI = "\formvb\rawat-jalan" Then RespBody = frmRajal.RawatJalan(Gossamer1.URLDecode(Params))
         If Err Then
             ErrNumber = Err.Number
             ErrDescription = Err.Description
