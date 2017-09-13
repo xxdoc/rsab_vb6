@@ -169,10 +169,10 @@ Set Report = New crLaporanPasienDaftar
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND klp.id = '" & strIdKelompokPasien & "' "
 '    If strIdDokter <> "" Then strFilter = strFilter & " AND pg2.id = '" & strIdDokter & "' "
     
-    strFilter = strFilter & " order by pd.tglregistrasi "
+    strFilter = strFilter & " order by apd.tglregistrasi "
         
-    strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk,ru.namaruangan as ruanganakhir,kl.namakelas,   " & _
-"                 pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,rk.namarekanan,ru2.namaruangan as ruangandaftar,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap,   " & _
+    strSQL = "SELECT DISTINCT pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk,ru.namaruangan as ruanganakhir,kl.namakelas,   " & _
+"                 pg.namalengkap as dokterpj,apd.tglregistrasi,pd.tglpulang,rk.namarekanan,ru2.namaruangan as ruangandaftar,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap,   " & _
 "                 pg2.namalengkap as dokter, kmr.namakamar,cast(apd.nobed as varchar(10)) as nobed,ru2.id as idruangandaftar,ru2.objectdepartemenfk as iddepartementdaftar, klp.id as IdKelompokPasien, klp.kelompokpasien, " & _
 "                 pg2.id as idDokter,ar.asalrujukan,case when apd.statuskunjungan='BARU' then 'Y' ELSE 'N' END as statuskunjungan,alm.alamatlengkap,kdp.kondisipasien,dpt.namadepartemen  " & _
 "                 from pasiendaftar_t as pd  " & _

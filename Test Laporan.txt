@@ -27,3 +27,6 @@ LaporanPendapatanRuanganDetail
 
 LaporanPendapatanPoli
 http://127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=6&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
+
+LaporanSensuBPJS
+http://127.0.0.1:1237/printvb/Pendaftaran?cetak-sensusbpjs=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-02%2023:59:59&strIdRuangan=6&strIdDepartement=18&strIdKelompokPasien=2&strIdPegawai=1&view=true
