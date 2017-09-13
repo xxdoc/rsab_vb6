@@ -111,6 +111,8 @@ Private Sub Form_Load()
     Combo1.AddItem "RegisterPelayanan"
     Combo1.AddItem "LaporanPasienPulang"
     Combo1.AddItem "LaporanPendapatanRuangan"
+    Combo1.AddItem "LaporanPendapatanRuanganDetail"
+    Combo1.AddItem "LaporanPendapatanPoli"
     Combo1.AddItem "RincianBiayaPelayanan"
     Combo1.AddItem "PasienDaftar"
     Combo1.AddItem "LaporanPenerimaan"

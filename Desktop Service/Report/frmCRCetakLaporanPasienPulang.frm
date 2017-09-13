@@ -160,7 +160,7 @@ Set Report = New crLaporanPasienPulang
     strFilter = ""
     orderby = ""
 
-    strFilter = " where sp.tglstruk BETWEEN '" & _
+    strFilter = " where pd.tglpulang BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "'"
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
@@ -168,14 +168,14 @@ Set Report = New crLaporanPasienPulang
     If strIdRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
         
-    orderby = strFilter & "group by pd.tglregistrasi,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,apd.objectruanganfk,ru.namaruangan, " & _
-            "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sppj.totalppenjamin,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya " & _
+    orderby = strFilter & "group by pd.tglregistrasi,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,pd.objectruanganlastfk,ru.namaruangan, " & _
+            "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya " & _
             "order by sp.tglstruk"
 
         
-    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,apd.objectruanganfk,ru.namaruangan,kl.namakelas,sp.nostruk as nobilling,sbm.nosbm as nokwitansi,sum(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
+    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,pd.objectruanganlastfk,ru.namaruangan,kl.namakelas,sp.nostruk as nobilling,sbm.nosbm as nokwitansi,sum(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
             "sum(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as jumlahbiaya, sum((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah) as diskon,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
-            "sp.totalharusdibayar,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya " & _
+            "sp.totalharusdibayar,sp.totalprekanan as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya " & _
             "from strukpelayanan_t as sp " & _
             "inner JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
             "LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec   " & _
@@ -187,12 +187,12 @@ Set Report = New crLaporanPasienPulang
             "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
             "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
-            "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  " & _
+            "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk  " & _
             "inner JOIN produk_m as pr on pr.id=pp.produkfk  " & _
             "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  " & _
             "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk  " & _
             "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk  " & _
-            "inner JOIN pasien_m as ps on ps.id=sp.nocmfk  " & _
+            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk  " & _
             "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
             "left join kelas_m  as kl on kl.id=pd.objectkelasfk  " & _
             "LEFT JOIN strukpelayananpenjamin_t as sppj on sp.norec=sppj.nostrukfk " & _
@@ -219,7 +219,7 @@ Set Report = New crLaporanPasienPulang
 '            .ucDeposit.SetUnboundFieldSource ("{ado.Deposit}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucPiutang.SetUnboundFieldSource ("{ado.totalppenjamin}")
-            .ucTanggunganPasien.SetUnboundFieldSource ("{ado.totalharusdibayar}")
+'            .ucTanggunganPasien.SetUnboundFieldSource ("{ado.totalharusdibayar}")
 '            .ucKembalian.SetUnboundFieldSource ("{ado.Kembalian}")
             .ucLainlain.SetUnboundFieldSource ("{ado.pendapatanlainlain}")
             .usPembayaran.SetUnboundFieldSource ("{ado.namarekanan}")
