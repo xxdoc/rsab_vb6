@@ -90,7 +90,7 @@ Begin VB.Form frmDiagramOdonto
             Strikethrough   =   0   'False
          EndProperty
          CustomFormat    =   "dd/MM/yyyy HH:mm"
-         Format          =   134283267
+         Format          =   134676483
          UpDown          =   -1  'True
          CurrentDate     =   37823
       End
@@ -8352,101 +8352,101 @@ End Sub
 
 Private Function Add_CatatanOdonto() As Boolean
     On Error GoTo errSimpan
-    Set adoCommand = Nothing
-    With adoCommand
-        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
-        .Parameters.Append .CreateParameter("NoPendaftaran", adChar, adParamInput, 10, txtNoPendaftaran.Text)
-        .Parameters.Append .CreateParameter("NoCM", adVarChar, adParamInput, 12, txtNoCM.Text)
-        .Parameters.Append .CreateParameter("TglPeriksa", adDate, adParamInput, , Format(dtpTglPeriksa.Value, "yyyy/MM/dd HH:mm:ss"))
-        .Parameters.Append .CreateParameter("IdDokter", adChar, adParamInput, 10, mstrKdDokter)
-        .Parameters.Append .CreateParameter("KdRuangan", adChar, adParamInput, 3, mstrKdRuangan)
-        .Parameters.Append .CreateParameter("KdSubInstalasi", adChar, adParamInput, 3, mstrKdSubInstalasi)
-        .Parameters.Append .CreateParameter("DiagramOdonto", adBinary, adParamInput, 10, Null)
-        .Parameters.Append .CreateParameter("Keterangan", adVarChar, adParamInput, 200, IIf(Trim(Len(Me.txtKeterangan.Text)) = 0, Null, Trim(Me.txtKeterangan.Text)))
-        .Parameters.Append .CreateParameter("IdUser", adChar, adParamInput, 10, strIDPegawaiAktif)
-
-        .ActiveConnection = dbConn
-        .CommandText = "dbo.Add_CatatanOdonto"
-        .CommandType = adCmdStoredProc
-        .Execute
-        If Not (.Parameters("RETURN_VALUE").Value = 0) Then
-            MsgBox "Ada Kesalahan dalam Penyimpanan Data", vbCritical, "Validasi"
-            Add_CatatanOdonto = False
-        Else
-            Add_CatatanOdonto = True
-        End If
-        Call deleteADOCommandParameters(adoCommand)
-        Set adoCommand = Nothing
-    End With
+'    Set adoCommand = Nothing
+'    With adoCommand
+'        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
+'        .Parameters.Append .CreateParameter("NoPendaftaran", adChar, adParamInput, 10, txtNoPendaftaran.Text)
+'        .Parameters.Append .CreateParameter("NoCM", adVarChar, adParamInput, 12, txtNoCM.Text)
+'        .Parameters.Append .CreateParameter("TglPeriksa", adDate, adParamInput, , Format(dtpTglPeriksa.Value, "yyyy/MM/dd HH:mm:ss"))
+'        .Parameters.Append .CreateParameter("IdDokter", adChar, adParamInput, 10, mstrKdDokter)
+'        .Parameters.Append .CreateParameter("KdRuangan", adChar, adParamInput, 3, mstrKdRuangan)
+'        .Parameters.Append .CreateParameter("KdSubInstalasi", adChar, adParamInput, 3, mstrKdSubInstalasi)
+'        .Parameters.Append .CreateParameter("DiagramOdonto", adBinary, adParamInput, 10, Null)
+'        .Parameters.Append .CreateParameter("Keterangan", adVarChar, adParamInput, 200, IIf(Trim(Len(Me.txtKeterangan.Text)) = 0, Null, Trim(Me.txtKeterangan.Text)))
+'        .Parameters.Append .CreateParameter("IdUser", adChar, adParamInput, 10, strIDPegawaiAktif)
+'
+'        .ActiveConnection = dbConn
+'        .CommandText = "dbo.Add_CatatanOdonto"
+'        .CommandType = adCmdStoredProc
+'        .Execute
+'        If Not (.Parameters("RETURN_VALUE").Value = 0) Then
+'            MsgBox "Ada Kesalahan dalam Penyimpanan Data", vbCritical, "Validasi"
+'            Add_CatatanOdonto = False
+'        Else
+'            Add_CatatanOdonto = True
+'        End If
+'        Call deleteADOCommandParameters(adoCommand)
+'        Set adoCommand = Nothing
+'    End With
     Exit Function
 errSimpan:
-    Call deleteADOCommandParameters(adoCommand)
-    Set adoCommand = Nothing
-    Call msubPesanError
+'    Call deleteADOCommandParameters(adoCommand)
+'    Set adoCommand = Nothing
+'    Call msubPesanError
 End Function
 
 Private Function Add_DetailCatatanOdonto(ByVal NoDiagramOdonto As String) As Boolean
     On Error GoTo errSimpan
-    With adoCommand
-        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
-        .Parameters.Append .CreateParameter("NoPendaftaran", adChar, adParamInput, 10, txtNoPendaftaran.Text)
-        .Parameters.Append .CreateParameter("TglPeriksa", adDate, adParamInput, , Format(dtpTglPeriksa.Value, "yyyy/MM/dd HH:mm:ss"))
-        .Parameters.Append .CreateParameter("NoDiagramOdonto", adTinyInt, adParamInput, , NoDiagramOdonto)
-        .Parameters.Append .CreateParameter("BelumErupsi", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).BelumErupsi)
-        .Parameters.Append .CreateParameter("ErupsiSebagian", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).ErupsiSebagian)
-        .Parameters.Append .CreateParameter("AnomaliBentuk", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).AnomaliBentuk)
-
-        .Parameters.Append .CreateParameter("Calculus", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).Calculus)
-
-        .Parameters.Append .CreateParameter("KariesDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesDepan)
-        .Parameters.Append .CreateParameter("KariesKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesKiri)
-        .Parameters.Append .CreateParameter("KariesKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesKanan)
-        .Parameters.Append .CreateParameter("KariesAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesAtas)
-        .Parameters.Append .CreateParameter("KariesBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesBawah)
-        .Parameters.Append .CreateParameter("NonVital", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).NonVital)
-        .Parameters.Append .CreateParameter("TamblanLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamDepan)
-        .Parameters.Append .CreateParameter("TamblanLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamKiri)
-        .Parameters.Append .CreateParameter("TamblanLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamKanan)
-        .Parameters.Append .CreateParameter("TamblanLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamAtas)
-        .Parameters.Append .CreateParameter("TamblanLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamBawah)
-        .Parameters.Append .CreateParameter("TamblanNonLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamDepan)
-        .Parameters.Append .CreateParameter("TamblanNonLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKiri)
-        .Parameters.Append .CreateParameter("TamblanNonLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKanan)
-        .Parameters.Append .CreateParameter("TamblanNonLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamAtas)
-        .Parameters.Append .CreateParameter("TamblanNonLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamBawah)
-        .Parameters.Append .CreateParameter("MahkotaLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamDepan)
-        .Parameters.Append .CreateParameter("MahkotaLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamKiri)
-        .Parameters.Append .CreateParameter("MahkotaLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamKanan)
-        .Parameters.Append .CreateParameter("MahkotaLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamAtas)
-        .Parameters.Append .CreateParameter("MahkotaLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamBawah)
-        .Parameters.Append .CreateParameter("MahkotaNonLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamDepan)
-        .Parameters.Append .CreateParameter("MahkotaNonLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKiri)
-        .Parameters.Append .CreateParameter("MahkotaNonLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKanan)
-        .Parameters.Append .CreateParameter("MahkotaNonLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamAtas)
-        .Parameters.Append .CreateParameter("MahkotaNonLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamBawah)
-        .Parameters.Append .CreateParameter("SisaAkar", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).SisaAkar)
-        .Parameters.Append .CreateParameter("GigiHilang", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).GigiHilang)
-        .Parameters.Append .CreateParameter("Jembatan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).Jembatan)
-        .Parameters.Append .CreateParameter("GigiTiruanLepas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).GigiTiruanLepas)
-
-        .ActiveConnection = dbConn
-        .CommandText = "dbo.Add_DetailCatatanOdonto"
-        .CommandType = adCmdStoredProc
-        .Execute
-        If Not (.Parameters("RETURN_VALUE").Value = 0) Then
-            MsgBox "Ada Kesalahan dalam Penyimpanan Data", vbCritical, "Validasi"
-            Add_DetailCatatanOdonto = False
-        Else
-            Add_DetailCatatanOdonto = True
-        End If
-        Call deleteADOCommandParameters(adoCommand)
-        Set adoCommand = Nothing
-    End With
+'    With adoCommand
+'        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
+'        .Parameters.Append .CreateParameter("NoPendaftaran", adChar, adParamInput, 10, txtNoPendaftaran.Text)
+'        .Parameters.Append .CreateParameter("TglPeriksa", adDate, adParamInput, , Format(dtpTglPeriksa.Value, "yyyy/MM/dd HH:mm:ss"))
+'        .Parameters.Append .CreateParameter("NoDiagramOdonto", adTinyInt, adParamInput, , NoDiagramOdonto)
+'        .Parameters.Append .CreateParameter("BelumErupsi", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).BelumErupsi)
+'        .Parameters.Append .CreateParameter("ErupsiSebagian", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).ErupsiSebagian)
+'        .Parameters.Append .CreateParameter("AnomaliBentuk", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).AnomaliBentuk)
+'
+'        .Parameters.Append .CreateParameter("Calculus", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).Calculus)
+'
+'        .Parameters.Append .CreateParameter("KariesDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesDepan)
+'        .Parameters.Append .CreateParameter("KariesKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesKiri)
+'        .Parameters.Append .CreateParameter("KariesKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesKanan)
+'        .Parameters.Append .CreateParameter("KariesAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesAtas)
+'        .Parameters.Append .CreateParameter("KariesBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).KariesBawah)
+'        .Parameters.Append .CreateParameter("NonVital", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).NonVital)
+'        .Parameters.Append .CreateParameter("TamblanLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamDepan)
+'        .Parameters.Append .CreateParameter("TamblanLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamKiri)
+'        .Parameters.Append .CreateParameter("TamblanLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamKanan)
+'        .Parameters.Append .CreateParameter("TamblanLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamAtas)
+'        .Parameters.Append .CreateParameter("TamblanLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanLogamBawah)
+'        .Parameters.Append .CreateParameter("TamblanNonLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamDepan)
+'        .Parameters.Append .CreateParameter("TamblanNonLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKiri)
+'        .Parameters.Append .CreateParameter("TamblanNonLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKanan)
+'        .Parameters.Append .CreateParameter("TamblanNonLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamAtas)
+'        .Parameters.Append .CreateParameter("TamblanNonLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).TambalanNonLogamBawah)
+'        .Parameters.Append .CreateParameter("MahkotaLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamDepan)
+'        .Parameters.Append .CreateParameter("MahkotaLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamKiri)
+'        .Parameters.Append .CreateParameter("MahkotaLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamKanan)
+'        .Parameters.Append .CreateParameter("MahkotaLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamAtas)
+'        .Parameters.Append .CreateParameter("MahkotaLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaLogamBawah)
+'        .Parameters.Append .CreateParameter("MahkotaNonLogamDepan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamDepan)
+'        .Parameters.Append .CreateParameter("MahkotaNonLogamKiri", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKiri)
+'        .Parameters.Append .CreateParameter("MahkotaNonLogamKanan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKanan)
+'        .Parameters.Append .CreateParameter("MahkotaNonLogamAtas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamAtas)
+'        .Parameters.Append .CreateParameter("MahkotaNonLogamBawah", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamBawah)
+'        .Parameters.Append .CreateParameter("SisaAkar", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).SisaAkar)
+'        .Parameters.Append .CreateParameter("GigiHilang", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).GigiHilang)
+'        .Parameters.Append .CreateParameter("Jembatan", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).Jembatan)
+'        .Parameters.Append .CreateParameter("GigiTiruanLepas", adChar, adParamInput, 1, varKondisiGigi(NoDiagramOdonto).GigiTiruanLepas)
+'
+'        .ActiveConnection = dbConn
+'        .CommandText = "dbo.Add_DetailCatatanOdonto"
+'        .CommandType = adCmdStoredProc
+'        .Execute
+'        If Not (.Parameters("RETURN_VALUE").Value = 0) Then
+'            MsgBox "Ada Kesalahan dalam Penyimpanan Data", vbCritical, "Validasi"
+'            Add_DetailCatatanOdonto = False
+'        Else
+'            Add_DetailCatatanOdonto = True
+'        End If
+'        Call deleteADOCommandParameters(adoCommand)
+'        Set adoCommand = Nothing
+'    End With
     Exit Function
 errSimpan:
-    Call deleteADOCommandParameters(adoCommand)
-    Set adoCommand = Nothing
-    msubPesanError
+'    Call deleteADOCommandParameters(adoCommand)
+'    Set adoCommand = Nothing
+'    msubPesanError
 End Function
 
 Private Function funcKonvertKeKoordinat(varBagianGigi As BagianGigi) As SumbuKoordinat
@@ -8474,7 +8474,7 @@ Public Sub subLoadDetailCatatanOdonto()
 
     strSQL = "select * from DetailCatatanOdonto where NoPendaftaran='" & Me.txtNoPendaftaran.Text & "'"
 
-    Call msubRecFO(RS, strSQL)
+    ReadRs strSQL
     While Not RS.EOF
         idx = RS.Fields.Item("NoDiagramOdonto").Value
         If RS.Fields.Item("BelumErupsi").Value = "Y" Then
@@ -8662,7 +8662,7 @@ Public Sub subLoadDetailCatatanOdonto()
     Wend
     strSQL = "select Keterangan from CatatanOdonto where NoPendaftaran='" & Me.txtNoPendaftaran.Text & "'"
     Set RS = Nothing
-    Call msubRecFO(RS, strSQL)
+    ReadRs strSQL
     If Not RS.EOF Then txtKeterangan.Text = IIf(IsNull(RS(0).Value), "", RS(0).Value)
 
     varStatusAksi = NORMAL_A
@@ -8743,9 +8743,9 @@ Private Sub chkShowHideGigiHilang_Click()
 End Sub
 
 Private Sub cmdCetakOdonto_Click()
-    strSQL = "select * from V_CetakOdontoGram where NoPendaftaran='" & mstrNoPen & "'"
-    Call msubRecFO(dbRst, strSQL)
-    If dbRst.EOF = False Then
+'    strSQL = "select * from V_CetakOdontoGram where NoPendaftaran='" & mstrNoPen & "'"
+    ReadRs strSQL
+    If RS.EOF = False Then
         Call subCaptureDesktop
     frmCetakOdontoGram.Show
     Else

@@ -58,7 +58,7 @@ Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
     Set sect = Nothing
     Exit Sub
 tangani:
-    Call msubPesanError
+'    Call msubPesanError
 End Sub
 
 Private Sub Form_Load()
@@ -112,7 +112,7 @@ Private Sub Form_Load()
 
     With rpt
         .txtTglPendaftaran.SetText frmDiagramOdonto.txtTglDaftar.Text
-        .txtumur.SetText frmDiagramOdonto.txtThn.Text & " thn"
+        .txtUmur.SetText frmDiagramOdonto.txtThn.Text & " thn"
         .txtKelasPelayanan.SetText frmDiagramOdonto.txtKls.Text
         .txtJenisPasien.SetText frmDiagramOdonto.txtJenisPasien.Text
         .txtKota.SetText strNKotaRS & ","

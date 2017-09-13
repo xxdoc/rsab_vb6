@@ -118,13 +118,13 @@ Dim strDriverName As String
 Dim strPort As String
 
 Private Sub cmdCetak_Click()
-    Report.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+    Report3.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
     'PrinterNama = cboPrinter.Text
-    Report.PrintOut False
+    Report3.PrintOut False
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hwnd
+    Report3.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 

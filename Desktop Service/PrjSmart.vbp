@@ -21,8 +21,8 @@ Form=Form\frmSettingKoneksi.frm
 Form=Form\frmRajal.frm
 Form=Form\frmTataRekening.frm
 Module=SavetoFile; Module\SaveTxt.bas
-Designer=Report\crRekapPenerimaan.Dsr
-Form=frmRekapPenerimaan.frm
+Designer=Report\crRekapPendapatan.Dsr
+Form=Form\frmRekapPendapatan.frm
 Module=mdTerbilang; Module\mdTerbilang.bas
 Form=Report\frmCetakKuitansiPasienV2.frm
 Designer=Report\crKuitansiPasien.Dsr
@@ -65,20 +65,21 @@ Form=Report\frmCRCetakDaftarPasien.frm
 Designer=Report\crLaporanPendapatanRuanganDetail.Dsr
 Form=Report\frmCetakBilling.frm
 Designer=Report\crBilling.Dsr
-Form=frmLaporanPenerimaan.frm
-Designer=crLaporanPenerimaan.Dsr
-<<<<<<< HEAD
+Form=Form\frmLaporanPendapatan.frm
+Designer=Report\crLaporanPendapatan.Dsr
 Object={D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0; Flash.ocx
 Object={86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0; MSCOMCT2.OCX
 Form=Form\frmDiagramOdonto.frm
 Form=Form\frmKasir.frm
 Form=Form\frmCetakOdontoGram.frm
 Designer=Report\crOdontoGram.Dsr
-=======
 Designer=Report\crLaporanPendapatanPoli.Dsr
 Form=Report\frmCRCetakLaporanPendapatanRuanganDetail.frm
 Form=Report\frmCRCetakLaporanPendapatanPoli.frm
->>>>>>> adaf835163d5d3e241dd7b9e44d5622466a0126a
+Form=frmLaporanPenerimaan.frm
+Designer=crLaporanPenerimaan.Dsr
+Form=frmRekapPenerimaan.frm
+Designer=Report\crRekapPenerimaan.Dsr
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
