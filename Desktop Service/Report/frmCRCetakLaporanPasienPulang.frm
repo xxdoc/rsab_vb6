@@ -168,14 +168,14 @@ Set Report = New crLaporanPasienPulang
     If strIdRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
         
-    orderby = strFilter & "group by pd.tglregistrasi,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,pd.objectruanganlastfk,ru.namaruangan, " & _
-            "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya " & _
+    orderby = strFilter & "group by pd.tglregistrasi,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru2.namaruangan, " & _
+            "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya,ru.objectdepartemenfk " & _
             "order by sp.tglstruk"
 
         
-    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,pd.objectruanganlastfk,ru.namaruangan,kl.namakelas,sp.nostruk as nobilling,sbm.nosbm as nokwitansi,sum(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
+    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru2.namaruangan,kl.namakelas,sp.nostruk as nobilling,sbm.nosbm as nokwitansi,sum(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
             "sum(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as jumlahbiaya, sum((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah) as diskon,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
-            "sp.totalharusdibayar,sp.totalprekanan as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya " & _
+            "sp.totalharusdibayar,(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap " & _
             "from strukpelayanan_t as sp " & _
             "inner JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
             "LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec   " & _
@@ -183,7 +183,7 @@ Set Report = New crLaporanPasienPulang
             "left JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk  " & _
             "left JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk  " & _
             "left JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk  " & _
-            "left JOIN ruangan_m as ru2 on ru2.id=sbm.objectruanganfk  " & _
+            "left JOIN ruangan_m as ru2 on ru2.id=sp.objectruanganfk  " & _
             "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
             "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
@@ -223,6 +223,7 @@ Set Report = New crLaporanPasienPulang
 '            .ucKembalian.SetUnboundFieldSource ("{ado.Kembalian}")
             .ucLainlain.SetUnboundFieldSource ("{ado.pendapatanlainlain}")
             .usPembayaran.SetUnboundFieldSource ("{ado.namarekanan}")
+            .usInap.SetUnboundFieldSource ("{ado.inap}")
             
         .txtTgl.SetText Format(tglAwal, "dd/MM/yyyy 00:00:00") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy 23:59:59")
         

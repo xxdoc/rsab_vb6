@@ -14,6 +14,7 @@ lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName As String) As Long
 
 
 Public Function GetTxt(FileNm As String, Table As String, Field As String) As String
+  On Error Resume Next
   IniFilename = "D:\" & FileNm
     
   result = GetPrivateProfileString("" & Table & "", "" & Field & "", "Empty", mYvalue, Len(mYvalue), IniFilename)

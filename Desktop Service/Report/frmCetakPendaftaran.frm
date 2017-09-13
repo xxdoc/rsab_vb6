@@ -286,14 +286,14 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usNoTelpon.SetUnboundFieldSource ("{ado.mobilephone2}")
 
-            .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -362,9 +362,9 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
 '            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
             .udTglReg.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
@@ -502,7 +502,7 @@ boolLembarPersetujuan = False
             strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
                        " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
                        " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
-                       " pro.namaproduk,tp.jumlah,tp.hargasatuan,ks.namakelas,ar.asalrujukan, " & _
+                       " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan,ks.namakelas,ar.asalrujukan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
                        " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
@@ -512,8 +512,8 @@ boolLembarPersetujuan = False
                        " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
                        " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
-                       " INNER JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
-                       " INNER JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
+                       " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
+                       " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
                        " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
                        " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
@@ -535,9 +535,9 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
             
             .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
             .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -547,7 +547,7 @@ boolLembarPersetujuan = False
            ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -600,18 +600,19 @@ boolLabelPasien = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
-    
+    strSQL = ""
     strFilter = ""
     If strIdRuangan <> "" Then strFilter = " AND ru2.id = '" & strIdRuangan & "' "
     strFilter = strFilter & " ORDER BY tp.tglpelayanan "
     With reportBuktiLayananRuangan
+    
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
             
             strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
                        " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
                        " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
-                       " pro.namaproduk,tp.jumlah,tp.hargasatuan,ks.namakelas,ar.asalrujukan, " & _
+                       " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan,ks.namakelas,ar.asalrujukan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
                        " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
@@ -640,24 +641,23 @@ boolLembarPersetujuan = False
             Else
                 .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
-
-
+            
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
-            
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
+
             .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
             .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            
+
             .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruangakhir}")
            ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
-            .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
-            
+            .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
             .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
@@ -689,7 +689,7 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-
+MsgBox "error"
 End Sub
 
 Public Sub cetakKartuPasien(strNocm As String, strNamaPasien As String, strTglLahir As String, strJk As String, view As String)
@@ -769,7 +769,7 @@ boolLembarPersetujuan = False
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
             
-            strSQL = "select pd.noregistrasi,pd.tglregistrasi,p.nocm,p.namapasien, jk.reportdisplay as jk from pasiendaftar_t pd " & _
+            strSQL = "select pd.noregistrasi,pd.tglregistrasi,p.nocm,p.namapasien, jk.reportdisplay as jk, p.tgllahir from pasiendaftar_t pd " & _
                       " INNER JOIN pasien_m p on pd.nocmfk=p.id " & _
                        " INNER JOIN jeniskelamin_m jk on jk.id=p.objectjeniskelaminfk " & _
                        " where pd.noregistrasi ='" & strNorec & "' "
@@ -794,25 +794,25 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
 
-            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
     
-            .udtgl1.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .udtgl1.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoreg1.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNocm1.SetUnboundFieldSource ("{ado.nocm}")
             .usNp1.SetUnboundFieldSource ("{ado.namapasien}")
             .usjk1.SetUnboundFieldSource ("{ado.jk}")
    
-            .udtgl2.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .udtgl2.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoreg2.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNocm2.SetUnboundFieldSource ("{ado.nocm}")
             .usNp2.SetUnboundFieldSource ("{ado.namapasien}")
             .usjk2.SetUnboundFieldSource ("{ado.jk}")
             
-            .udtgl3.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .udtgl3.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoreg3.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNocm3.SetUnboundFieldSource ("{ado.nocm}")
             .usNp3.SetUnboundFieldSource ("{ado.namapasien}")
@@ -890,8 +890,8 @@ boolLembarPersetujuan = False
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namaayah}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
            
@@ -1005,7 +1005,7 @@ boolLembarPersetujuan = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1018,7 +1018,7 @@ boolLembarPersetujuan = False
             
             .usTL.SetUnboundFieldSource ("{ado.tempatlahir}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
             
             .usStatusPerkawinan.SetUnboundFieldSource ("{ado.statusperkawinan}")
             .usAgama.SetUnboundFieldSource ("{ado.agama}")

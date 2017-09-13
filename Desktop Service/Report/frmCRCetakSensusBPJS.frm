@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRCetakDaftarPasien 
+Begin VB.Form frmCRCetakSensusBPJS 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmCRCetakDaftarPasien.frx":0000
+   Icon            =   "frmCRCetakSensusBPJS.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmCRCetakDaftarPasien
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRCetakDaftarPasien"
+Attribute VB_Name = "frmCRCetakSensusBPJS"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanPasienDaftar
+Dim Report As New crLaporanSensusBPJS
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -132,7 +132,7 @@ Private Sub Form_Load()
     For Each p In Printers
         cboPrinter.AddItem p.DeviceName
     Next
-    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "PasienDaftar")
+    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "SensusBPJS")
 End Sub
 
 Private Sub Form_Resize()
@@ -144,18 +144,18 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRCetakDaftarPasien = Nothing
+    Set frmCRCetakSensusBPJS = Nothing
 End Sub
 
-Public Sub CetakPasienDaftar(tglAwal As String, tglAkhir As String, strIdRuangan As String, strIdDepartement As String, _
+Public Sub CetakSensusBPJS(tglAwal As String, tglAkhir As String, strIdRuangan As String, strIdDepartement As String, _
                                         strIdKelompokPasien As String, strIdPegawai As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRCetakDaftarPasien = Nothing
+Set frmCRCetakSensusBPJS = Nothing
 Dim adocmd As New ADODB.Command
 Dim strFilter As String
-Set Report = New crLaporanPasienDaftar
+Set Report = New crLaporanSensusBPJS
 
     strFilter = ""
 
@@ -167,7 +167,6 @@ Set Report = New crLaporanPasienDaftar
     If strIdRuangan <> "" Then strFilter = strFilter & " AND ru2.id = '" & strIdRuangan & "' "
     If strIdDepartement <> "" Then strFilter = strFilter & " AND ru2.objectdepartemenfk = '" & strIdDepartement & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND klp.id = '" & strIdKelompokPasien & "' "
-'    If strIdDokter <> "" Then strFilter = strFilter & " AND pg2.id = '" & strIdDokter & "' "
     
     strFilter = strFilter & " order by pd.tglregistrasi "
         
@@ -203,22 +202,22 @@ Set Report = New crLaporanPasienDaftar
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.ruangandaftar}")
-            .UsPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
+'            .usPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
-            .usUmur.SetUnboundFieldSource ("{ado.umur}")
-            .usBaru.SetUnboundFieldSource ("{ado.statuskunjungan}")
-            .usInap.SetUnboundFieldSource ("{ado.inap}")
+'            .usUmur.SetUnboundFieldSource ("{ado.umur}")
+'            .usBaru.SetUnboundFieldSource ("{ado.statuskunjungan}")
+'            .usInap.SetUnboundFieldSource ("{ado.inap}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas})  then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
-            .usBed.SetUnboundFieldSource ("if isnull({ado.nobed})  then "" - "" else {ado.nobed} ") '("{ado.nobed}")
-            .usDokter.SetUnboundFieldSource ("if isnull({ado.dokter})  then "" - "" else {ado.dokter} ") '("{ado.dokter}")
+'            .usBed.SetUnboundFieldSource ("if isnull({ado.nobed})  then "" - "" else {ado.nobed} ") '("{ado.nobed}")
+'            .usDokter.SetUnboundFieldSource ("if isnull({ado.dokter})  then "" - "" else {ado.dokter} ") '("{ado.dokter}")
 '            .usDokterPengirim.SetUnboundFieldSource ("{ado.dokterpengirim}")
-            .usAsalPasien.SetUnboundFieldSource ("{ado.asalrujukan}")
-            .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
+'            .usAsalPasien.SetUnboundFieldSource ("{ado.asalrujukan}")
+'            .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
 '            .usCaraMasuk.SetUnboundFieldSource ("{ado.caramasuk}")
-            .usKeadaan.SetUnboundFieldSource ("if isnull({ado.kondisipasien})  then "" - "" else {ado.kondisipasien} ") '("{ado.kondisipasien}")
-            .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
+'            .usKeadaan.SetUnboundFieldSource ("if isnull({ado.kondisipasien})  then "" - "" else {ado.kondisipasien} ") '("{ado.kondisipasien}")
+'            .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usDepartement.SetUnboundFieldSource ("{ado.namadepartemen}")
             
             .txtTgl.SetText Format(tglAwal, "dd/MM/yyyy 00:00:00") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy 23:59:59")
@@ -240,7 +239,7 @@ Set Report = New crLaporanPasienDaftar
             If view = "false" Then
                 Dim strPrinter As String
 '
-                strPrinter = GetTxt("Setting.ini", "Printer", "PasienDaftar")
+                strPrinter = GetTxt("Setting.ini", "Printer", "SensusBPJS")
                 .SelectPrinter "winspool", strPrinter, "Ne00:"
                 .PrintOut False
                 Unload Me
