@@ -49,17 +49,20 @@ On Error Resume Next
                 Set Root = New JNode
                 Root("Status") = "Cetak Billing!!"
                 '127.0.0.1:1237/printvb/kasir?cetak-billing=1&noregistrasi=1707000053&view=false
+            
             Case "cetak-kwitansi"
                 Call frmCRCetakKuitansiPasien.CetakUlangJenisKuitansi(Param2(1), Val(Param1(1)), Param3(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-kwitansi=1&noregistrasi=1708000446&view=false
+            
             Case "cetak-kwitansiv2"
                 Param4 = Split(arrItem(3), "=")
                 Call frmCRCetakKuitansiPasienV2.CetakUlangJenisKuitansi(Param2(1), Val(Param1(1)), Param3(1), Param4(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&strIdPegawai=1&view=false
+            
             Case "cetak-LaporanPasienPulang"
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
@@ -69,6 +72,7 @@ On Error Resume Next
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Pasien Pulang"
                 '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            
             Case "cetak-LaporanPendapatanRuangan"
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
@@ -78,6 +82,7 @@ On Error Resume Next
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Pendapatan Ruangan"
                 '127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuangan=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            
             Case "cetak-RincianBiaya"
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
@@ -87,6 +92,7 @@ On Error Resume Next
                 Root("Status") = "Cetak Rincian Biaya"
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=&strNoStruk=S000000168&strNoKwitansi=&strIdPegawai=1&view=true
+            
             Case "cetak-LaporanPendapatanRuanganDetail"
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
@@ -109,7 +115,7 @@ On Error Resume Next
                 Set Root = New JNode
                 Root("Status") = "Cetak Rekap Penerimaan Kasir"
                 Root("by") = "as@epic"
-                'http://127.0.0.1:1237/printvb/kasir?cetak-rekap-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&view=true
+'                http://127.0.0.1:1237/printvb/kasir?cetak-rekap-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&namaKasir=DADAn&view=true
                 
             Case "cetak-laporan-pendapatan"
                 If CN.State = adStateClosed Then Call openConnection
