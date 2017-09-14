@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hwnd
+    Report.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -165,16 +165,17 @@ Set Report = New crKuitansiPasien
     With Report
         If Not RS.EOF Then
             .txtNoBKM.SetText RS("noregistrasi")
-            .txtNamaPenyetor.SetText RS("namapasien")
-            .txtNamaPasien.SetText RS("namapasien")
-            .txtKeterangan.SetText RS("keteranganlainnya")
+            .txtNamaPenyetor.SetText UCase(RS("namapasien"))
+            .txtNamaPasien.SetText UCase(RS("namapasien"))
+            .txtKeterangan.SetText UCase("Biaya Layanan Tindakan " & RS("namaruangan"))  'RS("keteranganlainnya")
             .txtTerbilang.SetText TERBILANG(RS("totaldibayar"))
             .txtRp.SetText "Rp. " & Format(RS("totaldibayar"), "##,##0.00")
-            .txtRuangan.SetText RS("namaruangan")
+            .txtRuangan.SetText UCase(RS("namaruangan"))
             .txtNoPen2.SetText RS("noregistrasi")
             .txtNoCM2.SetText RS("nocm")
             .txtPrintTglBKM.SetText "Jakarta, " & Format(Now(), "dd MMM yyyy")
             .txtPetugasKasir.SetText RS("namalengkap")
+            .txtDesc.SetText UCase("NAMA/MR/No.REG  : " & RS("namapasien") & "/ " & RS("nocm") & "/ " & RS("noregistrasi"))
             
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then

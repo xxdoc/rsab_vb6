@@ -184,7 +184,7 @@ Set Report = New crLaporanPendapatan
              "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
              "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
              "left JOIN strukbuktipenerimaancarabayar_t as sbmc  on sbmc.nosbmfk=sbm.norec left JOIN carabayar_m as cb  on cb.id=sbmc.objectcarabayarfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' " & _
+             "where pd.tglregistrasi between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' and djp.objectjenisprodukfk <> 97 " & _
              str2 & _
              str1 & _
              "order by pd.noregistrasi"
@@ -192,10 +192,12 @@ Set Report = New crLaporanPendapatan
    ReadRs2 "select " & _
            "sum(case when sbmc.objectcarabayarfk is not null and cb.id=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as cash, " & _
            "sum(case when sbmc.objectcarabayarfk is not null and cb.id>1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as kk, " & _
-           "sum(case when pd.objectkelompokpasienlastfk >1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as jm " & _
+           "sum(case when pd.objectkelompokpasienlastfk >1 and sp.norec is not null then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as jm " & _
            "from pasiendaftar_t pd " & _
-           "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
-           "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
+           "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec  " & _
+           "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec  " & _
+           "INNER JOIN produk_m pr on pr.id=pp.produkfk " & _
+           "INNER JOIN detailjenisproduk_m djp on djp.id=pr.objectdetailjenisprodukfk " & _
            "INNER JOIN pasien_m ps on ps.id=pd.nocmfk " & _
            "left JOIN strukpelayanan_t sp on sp.noregistrasifk=pd.norec " & _
            "left JOIN strukbuktipenerimaan_t sbm on sbm.norec=sp.nosbmlastfk " & _
@@ -203,7 +205,7 @@ Set Report = New crLaporanPendapatan
            "left JOIN carabayar_m cb on cb.id=sbmc.objectcarabayarfk " & _
            "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
            "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
-             "where pd.tglregistrasi between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' " & _
+             "where pd.tglregistrasi between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' and djp.objectjenisprodukfk <> 97 " & _
              "" & str1 & " " & str2
     ReadRs3 "select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*ppd.jumlah) as total " & _
             "from pasiendaftar_t pd " & _
@@ -219,6 +221,32 @@ Set Report = New crLaporanPendapatan
             "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
              "where pd.tglregistrasi between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' and ppd.komponenhargafk=25 " & _
              "" & str1 & " " & str2
+    ReadRs5 "select " & _
+            "sum(case when pd.objectkelompokpasienlastfk=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as umum, " & _
+            "sum(case when pd.objectkelompokpasienlastfk in (2,4) then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as bpjs, " & _
+            "sum(case when pd.objectkelompokpasienlastfk=3 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as asuransi, " & _
+            "sum(case when pd.objectkelompokpasienlastfk=5 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as perusahaan " & _
+           "from pasiendaftar_t pd " & _
+           "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec  " & _
+           "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec  " & _
+           "INNER JOIN produk_m pr on pr.id=pp.produkfk " & _
+           "INNER JOIN detailjenisproduk_m djp on djp.id=pr.objectdetailjenisprodukfk " & _
+           "INNER JOIN pasien_m ps on ps.id=pd.nocmfk " & _
+           "left JOIN strukpelayanan_t sp on sp.noregistrasifk=pd.norec " & _
+           "left JOIN strukbuktipenerimaan_t sbm on sbm.norec=sp.nosbmlastfk " & _
+           "left JOIN strukbuktipenerimaancarabayar_t sbmc on sbm.norec=sbmc.nosbmfk " & _
+           "left JOIN carabayar_m cb on cb.id=sbmc.objectcarabayarfk " & _
+           "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
+           "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
+             "where pd.tglregistrasi between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' and djp.objectjenisprodukfk <> 97 " & _
+             "" & str1 & " " & str2
+             
+    Dim D1, D2, D3, D4 As Double
+    D1 = RS5!umum
+    D2 = RS5!bpjs
+    D3 = RS5!asuransi
+    D4 = RS5!perusahaan
+    
     Dim tCash, tKk, tPj, tJm, tPm As Double
     Dim i As Integer
     
@@ -248,7 +276,7 @@ Set Report = New crLaporanPendapatan
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaPrinted
-            .txtPeriode.SetText "Periode : " & tglAwal & " 00:00 s/d " & tglAkhir & " 23:59' "
+            .txtPeriode.SetText "Periode : " & tglAwal & " 00:00 s/d " & tglAkhir & " 23:59"
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -285,6 +313,12 @@ Set Report = New crLaporanPendapatan
             .txtC5.SetText Format(tC5, "##,##0.00")
             .txtC6.SetText Format(0, "##,##0.00")
             .txtC7.SetText Format(tC7, "##,##0.00")
+            
+            .D1.SetText Format(D1, "##,##0.00")
+            .D2.SetText Format(D2, "##,##0.00")
+            .D3.SetText Format(D3, "##,##0.00")
+            .D4.SetText Format(D4, "##,##0.00")
+            .D5.SetText Format(D1 + D2 + D3 + D4, "##,##0.00")
             
             
             If view = "false" Then

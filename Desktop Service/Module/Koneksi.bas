@@ -9,6 +9,7 @@ Public RS As New ADODB.Recordset
 Public RS2 As New ADODB.Recordset
 Public RS3 As New ADODB.Recordset
 Public RS4 As New ADODB.Recordset
+Public RS5 As New ADODB.Recordset
 Public CN_String As String
 Public strSQL As String
 Public strSQL2 As String
@@ -70,6 +71,7 @@ Public Function ReadRs(sql As String)
 End Function
 
 Public Function ReadRs2(sql As String)
+    If CN.State = adStateClosed Then Call openConnection
   Set RS2 = Nothing
   RS2.Open sql, CN, adOpenStatic, adLockReadOnly
 End Function
@@ -80,4 +82,8 @@ End Function
 Public Function ReadRs4(sql As String)
   Set RS4 = Nothing
   RS4.Open sql, CN, adOpenStatic, adLockReadOnly
+End Function
+Public Function ReadRs5(sql As String)
+  Set RS5 = Nothing
+  RS5.Open sql, CN, adOpenStatic, adLockReadOnly
 End Function
