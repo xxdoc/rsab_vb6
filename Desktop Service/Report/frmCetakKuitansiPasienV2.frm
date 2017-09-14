@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRCetakKuitansiPasienV2 = Nothing
 End Sub
 
-Public Sub CetakUlangJenisKuitansi(strNoregistrasi As String, jumlahCetak As Integer, strIdPegawai As String, view As String)
+Public Sub CetakUlangJenisKuitansi(strNoregistrasi As String, jumlahCetak As Integer, strIdPegawai As String, STD As String, view As String)
 On Error GoTo errLoad
 
 Set frmCRCetakKuitansiPasienV2 = Nothing
@@ -165,7 +165,11 @@ Set Report = New crKuitansiPasien
     With Report
         If Not RS.EOF Then
             .txtNoBKM.SetText RS("noregistrasi")
-            .txtNamaPenyetor.SetText UCase(RS("namapasien"))
+            If STD = "" Then
+                .txtNamaPenyetor.SetText UCase(RS("namapasien"))
+            Else
+                .txtNamaPenyetor.SetText UCase(STD)
+            End If
             .txtNamaPasien.SetText UCase(RS("namapasien"))
             .txtKeterangan.SetText UCase("Biaya Layanan Tindakan " & RS("namaruangan"))  'RS("keteranganlainnya")
             .txtTerbilang.SetText TERBILANG(RS("totaldibayar"))
