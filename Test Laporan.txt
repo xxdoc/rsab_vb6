@@ -20,7 +20,7 @@ kwitansiv2 (di kasir - daftar penerimaan SBM)
 http://127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1707000166&strIdPegawai=1&view=true
 
 CetakPasienDaftar ( di operator - menu laporan - laporan pasien daftar)
-http://127.0.0.1:1237/printvb/Pendaftaran?cetak-pasiendaftar=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-02%2023:59:59&strIdRuangan=6&strIdDepartement=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+http://127.0.0.1:1237/printvb/Pendaftaran?cetak-pasiendaftar=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-02%2023:59:59&strIdRuangan=18&strIdDepartement=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
 
 LaporanPendapatanRuanganDetail (di login user : kasir - menu laporan - laporan pendapatan ruangan))
 127.0.0.1:1237/printvb/kasir?cetak-LaporanPendapatanRuanganDetail=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=6&strIdKelompokPasien=1&strIdPegawai=1&view=true
@@ -29,7 +29,7 @@ LaporanPendapatanPoli (belum di pasang)
 http://127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=6&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
 
 LaporanSensuBPJS (belum di pasang)
-http://127.0.0.1:1237/printvb/Pendaftaran?cetak-sensusbpjs=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-02%2023:59:59&strIdRuangan=6&strIdDepartement=18&strIdKelompokPasien=2&strIdPegawai=1&view=true
+http://127.0.0.1:1237/printvb/Pendaftaran?cetak-sensusbpjs=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-02%2023:59:59&strIdRuangan=18&strIdDepartement=18&strIdKelompokPasien=2&strIdPegawai=1&view=true
 
 RekapPenerimaan
 http://127.0.0.1:1237/printvb/kasir?cetak-rekap-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&namaKasir=DADAn&view=true
