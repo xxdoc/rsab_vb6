@@ -162,6 +162,15 @@ Set Report = New crKuitansiPasien
            "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
            "where pd.noregistrasi='" & strNoregistrasi & "'"
     
+    Dim i As Integer
+    Dim jumlahDuit As Double
+    For i = 0 To RS.RecordCount - 1
+        jumlahDuit = jumlahDuit + CDbl(RS!totaldibayar)
+        RS.MoveNext
+        
+    Next
+    RS.MoveFirst
+    
     With Report
         If Not RS.EOF Then
             .txtNoBKM.SetText RS("noregistrasi")
@@ -172,8 +181,8 @@ Set Report = New crKuitansiPasien
             End If
             .txtNamaPasien.SetText UCase(RS("namapasien"))
             .txtKeterangan.SetText UCase("Biaya Layanan Tindakan " & RS("namaruangan"))  'RS("keteranganlainnya")
-            .txtTerbilang.SetText TERBILANG(RS("totaldibayar"))
-            .txtRp.SetText "Rp. " & Format(RS("totaldibayar"), "##,##0.00")
+            .txtRp.SetText "Rp. " & Format(jumlahDuit, "##,##0.00")
+            .txtTerbilang.SetText TERBILANG(jumlahDuit)
             .txtRuangan.SetText UCase(RS("namaruangan"))
             .txtNoPen2.SetText RS("noregistrasi")
             .txtNoCM2.SetText RS("nocm")
@@ -181,12 +190,13 @@ Set Report = New crKuitansiPasien
             .txtPetugasKasir.SetText RS("namalengkap")
             .txtDesc.SetText UCase("NAMA/MR/No.REG  : " & RS("namapasien") & "/ " & RS("nocm") & "/ " & RS("noregistrasi"))
             
-            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
-            If RS2.BOF Then
-                .txtPetugasCetak.SetText "-"
-            Else
-                .txtPetugasCetak.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
-            End If
+'            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
+'            If RS2.BOF Then
+'                .txtPetugasCetak.SetText "-"
+'            Else
+'                .txtPetugasCetak.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+'            End If
+            .txtPetugasCetak.SetText strIdPegawai
             
             If view = "false" Then
                 Dim strPrinter As String
