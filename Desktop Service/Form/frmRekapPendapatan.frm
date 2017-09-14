@@ -174,8 +174,8 @@ Set Report = New crRekapPendapatan
             "from pasiendaftar_t as pd " & _
             "inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "inner JOIN produk_m as pr on pr.id=pp.produkfk inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
-            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+            "left JOIN produk_m as pr on pr.id=pp.produkfk left JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+            "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
             "left JOIN strukbuktipenerimaancarabayar_t as sbmc  on sbmc.nosbmfk=sbm.norec " & _
