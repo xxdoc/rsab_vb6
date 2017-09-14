@@ -218,7 +218,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -226,7 +226,7 @@ Set Report = New crRincianBiayaPelayanan
             .usDokterPJawab.SetUnboundFieldSource ("{ado.dokterpj}")
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .udTglPlng.SetUnboundFieldSource IIf(IsNull("{ado.tglpulang}") = True, "-", ("{ado.tglpulang}"))
-            .UsPenjamin.SetUnboundFieldSource IIf(IsNull("{ado.namarekanan}") = True, ("-"), ("{ado.namarekanan}"))
+            .usPenjamin.SetUnboundFieldSource IIf(IsNull("{ado.namarekanan}") = True, ("-"), ("{ado.namarekanan}"))
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
