@@ -251,12 +251,13 @@ Set Report = New crRincianBiayaPelayanan
 '            .ucSurplusMinusRS.SetUnboundFieldSource ("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             
-            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
-            If RS2.BOF Then
-                .txtUser.SetText "-"
-            Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
-            End If
+'            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
+'            If RS2.BOF Then
+'                .txtUser.SetText "-"
+'            Else
+'                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+'            End If
+            .txtUser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String

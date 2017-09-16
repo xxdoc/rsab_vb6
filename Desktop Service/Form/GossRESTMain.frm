@@ -54,6 +54,9 @@ Begin VB.Form GossRESTMain
          Caption         =   "Koneksi"
          Visible         =   0   'False
       End
+      Begin VB.Menu fgdgdfg 
+         Caption         =   "Version 15 September 2017"
+      End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
       End
