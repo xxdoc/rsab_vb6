@@ -180,7 +180,7 @@ Set Report = New crLaporanPenerimaan
              "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk inner JOIN produk_m as pr on pr.id=pp.produkfk " & _
              "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
              "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk inner JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
-             "where sp.tglstruk between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' and pg2.id=" & idKasir & " " & _
+             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and pg2.id=" & idKasir & " " & _
              str2 & _
              str1 & _
              "group by sp.tglstruk,pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, " & _
@@ -189,7 +189,7 @@ Set Report = New crLaporanPenerimaan
              "pd.objectkelompokpasienlastfk " & _
              "order by pd.noregistrasi"
 
-   ReadRs2 "select pg2.id,pg2.namalengkap as kasir, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap, sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as cash, " & _
+   ReadRs2 "select pd.tglregistrasi,pg2.id,pg2.namalengkap as kasir, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap, sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as cash, " & _
             "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as KK,sum(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) as JM,sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_CH," & _
             "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_KK,sum(case when pd.objectkelompokpasienlastfk > 1 then (case when sp.totalprekanan is null then 0 else sp.totalprekanan end)+(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) else 0 end)  as P_JM, " & _
             "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.strukfk=sp.norec) as M_jasa, " & _
@@ -207,33 +207,48 @@ Set Report = New crLaporanPenerimaan
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-             "where sp.tglstruk between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' " & _
+             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' " & _
              "and pg2.id=" & idKasir & " " & str1 & " " & str2 & " " & _
-             "group by pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
+             "group by pd.tglregistrasi,pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
-    Dim tCash, tKk, tPj, tJm, tPm As Double
+    Dim tCash, tKk, tPj, tJm, tRemun, tPm, tPR As Double
     Dim i As Integer
     
     For i = 0 To RS2.RecordCount - 1
         tCash = tCash + CDbl(IIf(IsNull(RS2!P_CH), 0, RS2!P_CH))
         tKk = tKk + CDbl(IIf(IsNull(RS2!P_KK), 0, RS2!P_KK))
         tPj = tPj + CDbl(IIf(IsNull(RS2!P_JM), 0, RS2!P_JM))
-        tJm = tJm + CDbl(IIf(IsNull(RS2!M_jasa), 0, RS2!M_jasa))
-        tPm = tPm + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
+        If Weekday(RS2!tglregistrasi, vbMonday) < 6 Then
+            If CDate(RS2!tglregistrasi) > CDate(Format(RS2!tglregistrasi, "yyyy-MM-dd 07:00")) And _
+                CDate(RS2!tglregistrasi) < CDate(Format(RS2!tglregistrasi, "yyyy-MM-dd 13:00")) Then
+                tJm = tJm + CDbl(IIf(IsNull(RS2!M_jasa), 0, RS2!M_jasa))
+                tPm = tPm + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
+            Else
+                tRemun = tRemun + CDbl(IIf(IsNull(RS2!P_JM), 0, RS2!P_JM))
+                tPR = tPR + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
+            End If
+        Else
+            tJm = tJm + CDbl(IIf(IsNull(RS2!M_jasa), 0, RS2!M_jasa))
+            tPm = tPm + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
+            tRemun = 0
+            tPR = 0
+        End If
+        
+        
         RS2.MoveNext
     Next
     
     Dim tAdmCc, tB3, tBPajak, tB5 As Double
     
     tAdmCc = (tKk * 3) / 100
-    tB3 = tJm
-    tBPajak = (tJm * 7.5) / 100
+    tB3 = tJm + tRemun
+    tBPajak = (tB3 * 7.5) / 100
     tB5 = tB3 - tBPajak
     
     Dim tC3, tCPajak, tC5, tC7 As Double
     
-    tC3 = tPm
-    tCPajak = (tPm * 7.5) / 100
+    tC3 = tPm + tPR
+    tCPajak = (tC3 * 7.5) / 100
     tC5 = tC3 - tCPajak
     tC7 = tC5
             
@@ -243,7 +258,7 @@ Set Report = New crLaporanPenerimaan
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaKasir
-            .txtPeriode.SetText "Periode : " & tglAwal & " 00:00 s/d " & tglAkhir & " 23:59' "
+            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & " ' "
             .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -265,7 +280,7 @@ Set Report = New crLaporanPenerimaan
             .txtA4.SetText Format(tPj, "##,##0.00")
             
             .txtB1.SetText Format(tJm, "##,##0.00")
-            .txtB2.SetText Format(0, "##,##0.00")
+            .txtB2.SetText Format(tRemun, "##,##0.00")
             .txtB3.SetText Format(tB3, "##,##0.00")
             .txtB4.SetText Format(tBPajak, "##,##0.00")
             .txtB5.SetText Format(tB5, "##,##0.00")

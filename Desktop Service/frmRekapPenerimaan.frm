@@ -205,7 +205,7 @@ Set Report = New crRekapPenerimaan
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-             "where sp.tglstruk between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' " & _
+             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' " & _
              "and pg2.id=" & idKasir & " " & str1 & " " & str2 & " " & _
              "group by pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
@@ -216,7 +216,7 @@ Set Report = New crRekapPenerimaan
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaKasir
-            .txtPeriode.SetText "Periode : " & tglAwal & " 00:00 s/d " & tglAkhir & " 23:59' "
+            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .namaDokter.SetUnboundFieldSource ("{ado.namalengkap}")

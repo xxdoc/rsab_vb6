@@ -37,12 +37,12 @@ Public Function farmasiApotik(ByVal QueryText As String) As Byte()
         Param4 = Split(arrItem(3), "=")
         Select Case Param1(0)
             Case "cek-konek"
-                lblStatus.Caption = "Cek"
+'                lblStatus.Caption = "Cek"
                 Set Root = New JNode
                 Root("Status") = "Ok!!"
                 
             Case "cetak-strukresep"
-                lblStatus.Caption = "Cetak Struk Resep"
+'                lblStatus.Caption = "Cetak Struk Resep"
                 Call frmCetakFarmasiApotik.cetakStrukResep(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
@@ -50,7 +50,7 @@ Public Function farmasiApotik(ByVal QueryText As String) As Byte()
                 Root("by") = "grh@epic"
             
             Case "cetak-label-etiket"
-                lblStatus.Caption = "Cetak Label Etiket"
+'                lblStatus.Caption = "Cetak Label Etiket"
                 Call CETAK_Etiket(Param2(1), Val(Param3(1)))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-label-etiket=1&norec=6a287c10-8cce-11e7-943b-2f7b4944&cetak=1
                 Set Root = New JNode

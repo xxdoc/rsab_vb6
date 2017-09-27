@@ -180,7 +180,7 @@ Set Report = New crRekapPendapatan
             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
             "left JOIN strukbuktipenerimaancarabayar_t as sbmc  on sbmc.nosbmfk=sbm.norec " & _
             "left JOIN carabayar_m as cb  on cb.id=sbmc.objectcarabayarfk  " & _
-             "where pd.tglregistrasi between '" & tglAwal & " 00:00' and '" & tglAkhir & " 23:59' " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' " & _
              " " & str1 & " " & str2 & " " & _
              "group by apd.norec, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
@@ -191,7 +191,7 @@ Set Report = New crRekapPendapatan
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaKasir
-            .txtPeriode.SetText "Periode : " & tglAwal & " 00:00 s/d " & tglAkhir & " 23:59' "
+            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .namaDokter.SetUnboundFieldSource ("{ado.namalengkap}")

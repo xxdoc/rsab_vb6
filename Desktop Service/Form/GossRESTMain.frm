@@ -55,7 +55,7 @@ Begin VB.Form GossRESTMain
          Visible         =   0   'False
       End
       Begin VB.Menu fgdgdfg 
-         Caption         =   "Version 15 September 2017"
+         Caption         =   "Version 22 September 2017"
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
@@ -160,7 +160,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "C:/log.txt" For Append As #LogFile
+    Open "E:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
