@@ -259,30 +259,32 @@ Set Report = New crLaporanPendapatan
     tPm = 0
     tPR = 0
     For i = 0 To RS3.RecordCount - 1
+        tJm = tJm + CDbl(IIf(IsNull(RS3!total), 0, RS3!total))
         If Weekday(RS3!tglregistrasi, vbMonday) < 6 Then
             If CDate(RS3!tglregistrasi) > CDate(Format(RS3!tglregistrasi, "yyyy-MM-dd 07:00")) And _
                 CDate(RS3!tglregistrasi) < CDate(Format(RS3!tglregistrasi, "yyyy-MM-dd 13:00")) Then
-                tJm = tJm + CDbl(IIf(IsNull(RS3!total), 0, RS3!total))
-            Else
                 tJR = tJR + CDbl(IIf(IsNull(RS3!total), 0, RS3!total))
+            Else
+                
             End If
         Else
-            tJm = tJm + CDbl(IIf(IsNull(RS3!total), 0, RS3!total))
-            tJR = 0
+'            tJm = tJm + CDbl(IIf(IsNull(RS3!total), 0, RS3!total))
+'            tJR = 0
         End If
     Next
     
     For i = 0 To RS4.RecordCount - 1
+        tPm = tPm + CDbl(IIf(IsNull(RS4!total), 0, RS4!total))
         If Weekday(RS4!tglregistrasi, vbMonday) < 6 Then
             If CDate(RS4!tglregistrasi) > CDate(Format(RS4!tglregistrasi, "yyyy-MM-dd 07:00")) And _
                 CDate(RS4!tglregistrasi) < CDate(Format(RS4!tglregistrasi, "yyyy-MM-dd 13:00")) Then
-                tPm = tPm + CDbl(IIf(IsNull(RS4!total), 0, RS4!total))
-            Else
                 tPR = tPR + CDbl(IIf(IsNull(RS4!total), 0, RS4!total))
+            Else
+                
             End If
         Else
-            tPm = tPm + CDbl(IIf(IsNull(RS4!total), 0, RS4!total))
-            tPR = 0
+'            tPm = tPm + CDbl(IIf(IsNull(RS4!total), 0, RS4!total))
+'            tPR = 0
         End If
     Next
     
@@ -296,13 +298,15 @@ Set Report = New crLaporanPendapatan
     Dim tAdmCc, tB3, tBPajak, tB5 As Double
     
     tAdmCc = (tKk * 3) / 100
-    tB3 = tJm + tJR
+    tB3 = tJm '+ tJR
+    tJR = (tJR * 10) / 100
     tBPajak = (tB3 * 7.5) / 100
     tB5 = tB3 - tBPajak
     
     Dim tC3, tCPajak, tC5, tC7 As Double
     
-    tC3 = tPm + tPR
+    tC3 = tPm '+ tPR
+    tPR = (tPR * 10) / 100
     tCPajak = (tC3 * 7.5) / 100
     tC5 = tC3 - tCPajak
     tC7 = tC5

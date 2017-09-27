@@ -110,6 +110,20 @@ On Error Resume Next
                 Root("by") = "as@epic"
                 'http://127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&view=true
             
+            Case "cetak-laporan-penerimaan-ffs"
+                Call frmCRLaporanPenerimaanFFS.CetakLaporanPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Penerimaan Kasir"
+                Root("by") = "as@epic"
+                'http://127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&view=true
+            
+            Case "cetak-laporan-penerimaan-remun"
+                Call frmCRLaporanPenerimaanRemun.CetakLaporanPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Penerimaan Kasir"
+                Root("by") = "as@epic"
+                'http://127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&view=true
+            
             Case "cetak-rekap-penerimaan"
                 Call frmRekapPenerimaan.CetakRekapPenerimaan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
                 Set Root = New JNode
@@ -120,6 +134,22 @@ On Error Resume Next
             Case "cetak-laporan-pendapatan"
                 If CN.State = adStateClosed Then Call openConnection
                 Call frmCRLaporanPendapatan.CetakLaporanPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Penerimaan Kasir"
+                Root("by") = "as@epic"
+                '127.0.0.1:1237/printvb/kasir?cetak-laporan-pendapatan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
+              
+            Case "cetak-laporan-pendapatan-ffs"
+                If CN.State = adStateClosed Then Call openConnection
+                Call frmCRLaporanPendapatanFFS.CetakLaporanPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Penerimaan Kasir"
+                Root("by") = "as@epic"
+                '127.0.0.1:1237/printvb/kasir?cetak-laporan-pendapatan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
+              
+            Case "cetak-laporan-pendapatan-remun"
+                If CN.State = adStateClosed Then Call openConnection
+                Call frmCRLaporanPendapatanRemun.CetakLaporanPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Penerimaan Kasir"
                 Root("by") = "as@epic"
