@@ -148,7 +148,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakRincianBiaya(strNoregistrasi As String, strNoStruk As String, strNoKwitansi As String, strIdPegawai As String, view As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRCetakRincianBiaya = Nothing
@@ -166,7 +166,7 @@ Dim strFilter As String
 '    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
    
 Set Report = New crRincianBiayaPelayanan
-    strSQL = "SELECT sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan as unit,kl.namakelas,   " & _
+    strSQL = "SELECT sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan as unit,ru.objectdepartemenfk,kl.namakelas,   " & _
             "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, ru2.namaruangan as ruangantindakan,pr.namaproduk,jp.jenisproduk, pg2.namalengkap as dokter,pp.jumlah,pp.hargajual,   " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
             "sp.totalharusdibayar,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as totalbiayatambahan, pg3.namalengkap as user " & _
@@ -190,7 +190,32 @@ Set Report = New crRincianBiayaPelayanan
             "left join rekanan_m  as rk on rk.id=pd.objectrekananfk   " & _
             "left join kamar_m  as kmr on kmr.id=apd.objectkamarfk  " & _
             "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk left join pegawai_m as pg3 on pg3.id=sbm.objectpegawaipenerimafk " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' or sp.nostruk='" & strNoStruk & "' or sbm.nosbm='" & strNoKwitansi & "'"
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pr.id<>402611 or sp.nostruk='" & strNoStruk & "' and pr.id<>402611 or sbm.nosbm='" & strNoKwitansi & "' and pr.id<>402611"
+    
+    ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
+            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
+            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk=402611 "
+    
+    ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
+            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
+            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
+            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611"
+    
+    Dim TotalDiskonMedis  As Double
+    Dim TotalDiskonUmum  As Double
+    Dim i As Integer
+    
+    
+    For i = 0 To RS3.RecordCount - 1
+        If RS3!komponenhargafk = 35 Then TotalDiskonMedis = TotalDiskonMedis + CDbl(RS3!hargadiscount)
+        TotalDiskonUmum = TotalDiskonUmum + CDbl(RS3!hargadiscount)
+        RS3.MoveNext
+    Next
+    
+    Dim TotalDeposit As Double
+    TotalDeposit = IIf(IsNull(RS2(0)), 0, RS2(0))
     
 '    ReadRs2 "SELECT " & _
 '            "sum((pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))) as total " & _
@@ -240,14 +265,19 @@ Set Report = New crRincianBiayaPelayanan
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usRuanganTindakan.SetUnboundFieldSource ("{ado.ruangantindakan}")
             .usNoStruk.SetUnboundFieldSource ("{ado.nobilling}")
-            .ucAdministrasi.SetUnboundFieldSource ("0") '("{ado.administrasi}")
-            .ucMaterai.SetUnboundFieldSource ("0") '("{ado.materai}")
-            .ucDeposit.SetUnboundFieldSource ("0") '("{ado.deposit}")
-            .ucDiskonUmum.SetUnboundFieldSource ("0") '("{ado.diskonumum}")
+            
+'            .ucAdministrasi.SetUnboundFieldSource ("0") '("{ado.administrasi}")
+'            .ucMaterai.SetUnboundFieldSource ("0") '("{ado.materai}")
+            
+            .ucDeposit.SetUnboundFieldSource (TotalDeposit) '("{ado.deposit}")
+            .ucDiskonJasaMedis.SetUnboundFieldSource (TotalDiskonMedis)
+            .ucDiskonUmum.SetUnboundFieldSource (TotalDiskonUmum) '("{ado.diskonumum}")
+'            .ucSisaDeposit.SetUnboundFieldSource ("0")
+            
             
             .ucDitanggungPerusahaan.SetUnboundFieldSource ("{ado.totalppenjamin}")
             .ucDitanggungRS.SetUnboundFieldSource ("0") '("{ado.totalharusdibayarrs}")
-            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
+'            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
 '            .ucSurplusMinusRS.SetUnboundFieldSource ("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             
