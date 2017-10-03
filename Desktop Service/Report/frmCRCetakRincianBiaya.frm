@@ -209,8 +209,8 @@ Set Report = New crRincianBiayaPelayanan
     
     
     For i = 0 To RS3.RecordCount - 1
-        If RS3!komponenhargafk = 35 Then TotalDiskonMedis = TotalDiskonMedis + CDbl(RS3!hargadiscount)
-        TotalDiskonUmum = TotalDiskonUmum + CDbl(RS3!hargadiscount)
+        If RS3!komponenhargafk = 35 Then TotalDiskonMedis = TotalDiskonMedis + CDbl(IIf(IsNull(RS3!hargadiscount), 0, RS3!hargadiscount))
+        TotalDiskonUmum = TotalDiskonUmum + CDbl(IIf(IsNull(RS3!hargadiscount), 0, RS3!hargadiscount))
         RS3.MoveNext
     Next
     
@@ -265,6 +265,8 @@ Set Report = New crRincianBiayaPelayanan
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usRuanganTindakan.SetUnboundFieldSource ("{ado.ruangantindakan}")
             .usNoStruk.SetUnboundFieldSource ("{ado.nobilling}")
+            .ucDepartemen.SetUnboundFieldSource ("{ado.objectdepartemenfk}")
+            
             
 '            .ucAdministrasi.SetUnboundFieldSource ("0") '("{ado.administrasi}")
 '            .ucMaterai.SetUnboundFieldSource ("0") '("{ado.materai}")

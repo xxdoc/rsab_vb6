@@ -152,15 +152,31 @@ On Error GoTo errLoad
 
 Set frmCRCetakKuitansiPasienV2 = Nothing
 
+
+
 Set Report = New crKuitansiPasien
-    ReadRs "select pd.noregistrasi,sbp.totaldibayar,ps.namapasien, sbp.keteranganlainnya,pd.nocmfk,ru.namaruangan,pg.namalengkap,ps.nocm from pasiendaftar_t as pd " & _
-           "inner join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
-           "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
-           "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
-           "inner join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
-           "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
-           "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
-           "where pd.noregistrasi='" & strNoregistrasi & "'"
+    If Len(strNoregistrasi) = 10 Then
+        ReadRs "select pd.noregistrasi,sbp.totaldibayar,ps.namapasien, sbp.keteranganlainnya,pd.nocmfk,ru.namaruangan,pg.namalengkap,ps.nocm from pasiendaftar_t as pd " & _
+               "inner join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
+               "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
+               "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
+               "inner join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
+               "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
+               "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
+               "where pd.noregistrasi='" & strNoregistrasi & "'"
+    Else
+        Dim noreg, nostruk As String
+        noreg = Left(strNoregistrasi, 10)
+        nostruk = Replace(strNoregistrasi, noreg, "")
+        ReadRs "select pd.noregistrasi,sbp.totaldibayar,ps.namapasien, sbp.keteranganlainnya,pd.nocmfk,ru.namaruangan,pg.namalengkap,ps.nocm from pasiendaftar_t as pd " & _
+               "inner join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
+               "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
+               "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
+               "inner join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
+               "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
+               "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
+               "where pd.noregistrasi='" & noreg & "' and sp.norec='" & nostruk & "'"
+    End If
     
     Dim i As Integer
     Dim jumlahDuit As Double

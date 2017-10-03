@@ -286,14 +286,14 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJk.SetUnboundFieldSource ("{ado.jk}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usNoTelpon.SetUnboundFieldSource ("{ado.mobilephone2}")
 
-            .usPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -362,9 +362,9 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
 '            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJk.SetUnboundFieldSource ("{ado.jk}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
             .udTglReg.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
@@ -535,9 +535,9 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJk.SetUnboundFieldSource ("{ado.jk}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
             
             .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
             .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -547,7 +547,7 @@ boolLembarPersetujuan = False
            ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -644,9 +644,9 @@ boolLembarPersetujuan = False
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJk.SetUnboundFieldSource ("{ado.jk}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
 
             .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
             .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -656,7 +656,7 @@ boolLembarPersetujuan = False
            ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
-            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
 
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -794,9 +794,9 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJk.SetUnboundFieldSource ("{ado.jk}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
     
             .udtgl1.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoreg1.SetUnboundFieldSource ("{ado.noregistrasi}")
@@ -888,8 +888,8 @@ boolLembarPersetujuan = False
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namaayah}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
            
@@ -935,7 +935,7 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
 'cetakLembarMasuk
@@ -1003,7 +1003,7 @@ boolLembarPersetujuan = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1016,7 +1016,7 @@ boolLembarPersetujuan = False
             
             .usTL.SetUnboundFieldSource ("{ado.tempatlahir}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             
             .usStatusPerkawinan.SetUnboundFieldSource ("{ado.statusperkawinan}")
             .usAgama.SetUnboundFieldSource ("{ado.agama}")
