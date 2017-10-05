@@ -5,11 +5,11 @@ Begin VB.Form frmCRLaporanPendapatan
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
-   ClientWidth     =   5820
+   ClientWidth     =   5790
    Icon            =   "frmLaporanPendapatan.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
-   ScaleWidth      =   5820
+   ScaleWidth      =   5790
    WindowState     =   2  'Maximized
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
