@@ -97,6 +97,7 @@ Private Sub Form_Load()
     Combo1.AddItem "BuktiLayanan"
     Combo1.AddItem "BuktiLayananRuangan"
     Combo1.AddItem "CetakAntrian"
+    Combo1.AddItem "CetakFarmasi"
     Combo1.AddItem "CetakRMK"
     Combo1.AddItem "CetakGeneral"
     Combo1.AddItem "CetakResep"
