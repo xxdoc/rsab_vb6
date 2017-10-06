@@ -149,6 +149,7 @@ Set frmCRLaporanPenerimaanKasir = Nothing
 Dim adocmd As New ADODB.Command
     Dim str1 As String
     Dim str2 As String
+    Dim str3 As String
     
     If idPegawai <> "" Then
         str1 = "and pd.objectpegawaifk=" & idPegawai & " "
@@ -156,10 +157,15 @@ Dim adocmd As New ADODB.Command
     If idRuangan <> "" Then
         str2 = " and pd.objectruanganlastfk=" & idRuangan & " "
     End If
+    If idDokter <> "" Then
+        str3 = " and pg2.id=" & idDokter & " "
+    End If
     
 Set Report = New crPenerimaanKasir1
     strSQL = "select pd.noregistrasi, sbm.tglsbm, ps.nocm, ps.namapasien, kp.kelompokpasien, ru.namaruangan, pg.namalengkap, " & _
-            "pg2.namaexternal as kasir, sbm.totaldibayar, sp.totalprekanan as hutangPenjamin, sp.totalharusdibayar, lu.namaexternal as namaLogin " & _
+            "pg2.namaexternal as kasir, sbm.totaldibayar, " & _
+            "CASE WHEN sp.totalprekanan is null then 0 else sp.totalprekanan end as hutangPenjamin, " & _
+            "sp.totalharusdibayar, lu.namaexternal as namaLogin " & _
             "from strukbuktipenerimaan_t as sbm " & _
             "INNER JOIN strukpelayanan_t as sp on sp.nosbmlastfk=sbm.norec " & _
             "LEFT JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk " & _
@@ -167,12 +173,13 @@ Set Report = New crPenerimaanKasir1
             "inner JOIN pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _
             "inner JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
             "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-            "inner JOIN pegawai_m as pg on pg.id=pd.objectpegawaifk " & _
+            "Left JOIN pegawai_m as pg on pg.id=pd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
             "INNER JOIN kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
-            "where sbm.tglsbm BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and pg2.id = '" & idDokter & "' " & _
+            "where sbm.tglsbm BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             str1 & _
             str2 & _
+            str3 & _
             "order by pd.noregistrasi"
 
    
@@ -181,13 +188,13 @@ Set Report = New crPenerimaanKasir1
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
+            .usNamaKasir.SetText idKasir
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usNamaLogin.SetUnboundFieldSource ("{ado.kasir}")
             .udtTglSBM.SetUnboundFieldSource ("{ado.tglsbm}")
-            .usRuangApotik.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usJenisPasien.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.kelompokpasien}")
