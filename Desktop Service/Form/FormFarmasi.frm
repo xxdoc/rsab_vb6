@@ -45,6 +45,10 @@ On Error Resume Next
                 Call frmCRPenjualanHarianFarmasi.CetakPenjualanHarianFarmasi(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Rekap Penjualan Harian Farmasi"
+            Case "cetak-PenjualanObatPerDokter"
+                Call frmCRPenjualanObatPerDokter.CetakPenjualanObatPerDokter(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Penjualan Obat Per Dokter"
             
             Case Else
                 Set Root = New JNode
