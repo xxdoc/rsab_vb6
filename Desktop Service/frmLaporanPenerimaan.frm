@@ -163,6 +163,10 @@ Dim adocmd As New ADODB.Command
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
+     If idKasir <> "" Then
+        str3 = " and and pg2.id=" & idKasir & " "
+    End If
+     
     
 Set Report = New crLaporanPenerimaan
     strSQL = "select sp.tglstruk,pg2.id,pg2.namalengkap as kasir, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm ,upper(ps.namapasien) as namapasien, " & _
@@ -180,9 +184,10 @@ Set Report = New crLaporanPenerimaan
              "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk inner JOIN produk_m as pr on pr.id=pp.produkfk " & _
              "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
              "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk inner JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
-             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and pg2.id=" & idKasir & " " & _
+             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "'" & _
              str2 & _
              str1 & _
+             str3 & _
              "group by sp.tglstruk,pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, " & _
              "apd.objectpegawaifk,pg.namalengkap,ps.nocm ,ps.namapasien, " & _
              "sbmc.objectcarabayarfk,cb.id,sbm.objectruanganfk,ru2.namaruangan,pd.noregistrasi, " & _
@@ -208,7 +213,7 @@ Set Report = New crLaporanPenerimaan
             "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
              "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' " & _
-             "and pg2.id=" & idKasir & " " & str1 & " " & str2 & " " & _
+             "" & str1 & " " & str2 & " " & str3 & " " & _
              "group by pd.tglregistrasi,pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
     Dim tCash, tKk, tPj, tJm, tRemun, tPm, tPR As Double

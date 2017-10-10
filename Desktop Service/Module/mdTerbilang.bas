@@ -1,5 +1,5 @@
 Attribute VB_Name = "mdTerbilang"
-Public Function TERBILANG(x As Double) As String
+Public Function TERBILANG(X As Double) As String
 Dim tampung As Double
 Dim teks As String
 Dim bagian As String
@@ -12,36 +12,36 @@ letak(2) = "JUTA "
 letak(3) = "MILYAR "
 letak(4) = "TRILYUN "
  
-If (x < 0) Then
+If (X < 0) Then
     TERBILANG = ""
 Exit Function
 End If
  
-If (x = 0) Then
+If (X = 0) Then
     TERBILANG = "NOL"
 Exit Function
 End If
  
-If (x < 2000) Then
+If (X < 2000) Then
     tanda = True
 End If
 teks = ""
  
-If (x >= 1E+15) Then
+If (X >= 1E+15) Then
     TERBILANG = "NILAI TERLALU BESAR"
 Exit Function
 End If
  
 For i = 4 To 1 Step -1
-    tampung = Int(x / (10 ^ (3 * i)))
+    tampung = Int(X / (10 ^ (3 * i)))
     If (tampung > 0) Then
         bagian = ratusan(tampung, tanda)
         teks = teks & bagian & letak(i)
     End If
-    x = x - tampung * (10 ^ (3 * i))
+    X = X - tampung * (10 ^ (3 * i))
 Next
  
-teks = teks & ratusan(x, False)
+teks = teks & ratusan(X, False)
 TERBILANG = teks & " RUPIAH"
 End Function
  
@@ -148,5 +148,39 @@ finally:
  
     hitungUmur = yearWord & monthWord & dayWord
     hitungUmur = Trim(hitungUmur)
+End Function
+
+Public Function hitungUmurTahun(dateOfBird As Date, fromData As Date) As String
+    Dim dateNow As Date
+    Dim tgl As Date
+    Dim tgl1 As Date
+ 
+    Dim years As Long
+    Dim months As Long
+    Dim days As Long
+ 
+    Dim yearWord As String
+    Dim monthWord As String
+    Dim dayWord As String
+ 
+    dateNow = fromData
+    tgl = dateOfBird
+ 
+    ' menghitung tahun
+    years = DateDiff("yyyy", tgl, dateNow)
+    If Month(tgl) > Month(dateNow) Then
+        years = years - 1
+    ElseIf Month(tgl) = Month(dateNow) Then
+        years = 0
+    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) > Day(dateNow) Then
+        years = years - 1
+    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) = Day(dateNow) Then
+        GoTo finally ' jika bulan dan tanggal sama maka perhitungan selesai
+    End If
+ 
+finally:
+ 
+    hitungUmurTahun = years
+    hitungUmurTahun = Trim(hitungUmurTahun)
 End Function
 

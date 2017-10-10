@@ -93,16 +93,13 @@ Designer=Report\crLaporanPendapatanFFS.Dsr
 Form=Form\frmLaporanPenerimaanKasir.frm
 Designer=Report\crPenerimaanKasir1.Dsr
 Form=Form\frmCRPenjualanHarianFarmasi.frm
-<<<<<<< HEAD
-Form=Form\FormFarmasi.frm
-Designer=Report\crPenjualanHarianFarmasi.Dsr
-=======
 Designer=Report\crPenjualanHarianFarmasi.Dsr
 Form=Form\FormFarmasi.frm
 Form=frmCRPenjualanObatPerDokter.frm
 Designer=crPenjualanObatPerDokter.Dsr
->>>>>>> e37c00e5a1ba4ff4cee8b53fd3220a38a2203928
-IconForm="GossRESTMain"
+Designer=Report\Cr_cetakbuktilayananruanganpertindakan.Dsr
+Designer=Report\crLaporanPendapatanPerDokter.Dsr
+Form=Form\frmLaporanPendapatanPerDokter.frm
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"

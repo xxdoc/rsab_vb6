@@ -10,6 +10,7 @@ Begin VB.Form frmCRPenjualanObatPerDokter
    ScaleHeight     =   7455
    ScaleWidth      =   6705
    StartUpPosition =   3  'Windows Default
+   WindowState     =   2  'Maximized
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
       BeginProperty Font 
@@ -97,7 +98,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crPenjualanObatPerDokter
+Dim reportPenjualanPerDokter As New crPenjualanObatPerDokter
+Dim adoReport As New ADODB.Command
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -146,6 +148,7 @@ Public Sub CetakPenjualanObatPerDokter(namaPrinted As String, tglAwal As String,
 
 Set frmCRPenjualanObatPerDokter = Nothing
 Dim adocmd As New ADODB.Command
+Dim strSQL As String
     Dim str1 As String
     Dim str2 As String
     Dim str3 As String
@@ -160,42 +163,46 @@ Dim adocmd As New ADODB.Command
         str3 = " and kp.id=" & idKelompokPasien & " "
     End If
     
-Set Report = New crPenjualanObatPerDokter
-    strSQL = "select pg.namalengkap, ru2.namaruangan,sr.tglresep, sr.noresep, pr.kdproduk, pr.namaproduk, " & _
-            "pp.jumlah, pp.hargajual, pp.jumlah*pp.hargajual as subtotal, " & _
-            "'-' as kodefarmatologi, ps.namapasien," & _
-            "kp.kelompokpasien , ps.namaibu, al.alamatlengkap " & _
-            "from strukresep_t as sr " & _
-            "LEFT JOIN pelayananpasien_t as pp on pp.strukresepfk = sr.norec " & _
-            "LEFT JOIN strukpelayanan_t as sp on sp.norec=pp.strukterimafk " & _
-            "LEFT JOIN produk_m as pr on pr.id=pp.produkfk " & _
-            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
-            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
-            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "inner join alamat_m as al on al.nocmfk= ps.id " & _
-            "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-            "inner JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
-            "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbklastfk " & _
-            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
-            "inner JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
-            "inner JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
-            "inner join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
-            "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and dp.id=16 " & _
-            str1 & _
-            str2 & _
-            str3
-   
-        adocmd.CommandText = strSQL
-        adocmd.CommandType = adCmdText
-    
-    'If RS.BOF Then
-     '  .txtUmur.SetText "-"
-    'Else
-     '   .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
-    'End If
-    With Report
-        .database.AddADOCommand CN_String, adocmd
+    With reportPenjualanPerDokter
+            Set adoReport = New ADODB.Command
+            adoReport.ActiveConnection = CN_String
+             strSQL = "select pg.namalengkap, ru2.namaruangan,sr.tglresep, sr.noresep, pr.kdproduk, pr.namaproduk, " & _
+                     "pp.jumlah, pp.hargajual, pp.jumlah*pp.hargajual as subtotal, " & _
+                     "'-' as kodefarmatologi, ps.namapasien, ps.tgllahir," & _
+                     "kp.kelompokpasien , ps.namaibu, al.alamatlengkap " & _
+                     "from strukresep_t as sr " & _
+                     "LEFT JOIN pelayananpasien_t as pp on pp.strukresepfk = sr.norec " & _
+                     "LEFT JOIN strukpelayanan_t as sp on sp.norec=pp.strukterimafk " & _
+                     "LEFT JOIN produk_m as pr on pr.id=pp.produkfk " & _
+                     "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
+                     "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
+                     "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+                     "inner join alamat_m as al on al.nocmfk= ps.id " & _
+                     "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+                     "inner JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
+                     "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbklastfk " & _
+                     "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
+                     "inner JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
+                     "inner JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
+                     "inner join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
+                     "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
+                     "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and dp.id=16 " & _
+                     str1 & _
+                     str2 & _
+                     str3
+            
+            ReadRs strSQL
+            
+            adoReport.CommandText = strSQL
+            adoReport.CommandType = adCmdUnknown
+            
+            .database.AddADOCommand CN_String, adoReport
+            If RS.BOF Then
+                .txtUmur.SetText "-"
+            Else
+                .txtUmur.SetText hitungUmurTahun(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+            End If
+            
             .txtPrinted.SetText namaPrinted
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -223,7 +230,7 @@ Set Report = New crPenjualanObatPerDokter
                 Unload Me
             Else
                 With CRViewer1
-                    .ReportSource = Report
+                    .ReportSource = reportPenjualanPerDokter
                     .ViewReport
                     .Zoom 1
                 End With

@@ -1,12 +1,12 @@
 VERSION 5.00
-Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crLaporanPendapatan 
+Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crLaporanPendapatanPerDokter 
    ClientHeight    =   9900
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   14955
-   OleObjectBlob   =   "crLaporanPendapatan.dsx":0000
+   OleObjectBlob   =   "crLaporanPendapatanPerDokter.dsx":0000
 End
-Attribute VB_Name = "crLaporanPendapatan"
+Attribute VB_Name = "crLaporanPendapatanPerDokter"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
