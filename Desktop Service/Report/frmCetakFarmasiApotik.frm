@@ -137,7 +137,7 @@ End Sub
 Private Sub CmdOption_Click()
     
     If bolStrukResep = True Then
-        ReportResep.PrinterSetup Me.hwnd
+        ReportResep.PrinterSetup Me.hWnd
     End If
     
     CRViewer1.Refresh
@@ -184,7 +184,7 @@ bolStrukResep = True
                           " ps.namapasien || ' ( ' || jk.reportdisplay || ' )' as namapasienjk , kpp.kelompokpasien, " & _
                           " ps.tgllahir, pd.tglregistrasi, ru.namaruangan AS ruanganpasien, " & _
                           " sr.noresep, pp.rke, pr.namaproduk || ' / ' || sstd.satuanstandar as namaprodukstandar, " & _
-                          " pp.jumlah , pp.hargasatuan,(pp.jumlah || ' x ' || pp.hargasatuan) as qtyhrg,(pp.jumlah * pp.hargasatuan ) as totalharga ,jnskem.jeniskemasan, pgw.namalengkap, " & _
+                          " pp.jumlah,pp.jasa , pp.hargasatuan,(pp.jumlah ) as qtyhrg,(pp.jumlah * (pp.hargasatuan-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end )) )+pp.jasa as totalharga ,jnskem.jeniskemasan, pgw.namalengkap, " & _
                           " CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end as totaldiscound, " & _
                           " ((pp.jumlah * pp.hargasatuan ) - (CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end)) as totalbiaya FROM pelayananpasien_t AS pp " & _
                           " INNER JOIN antrianpasiendiperiksa_t AS apdp ON pp.noregistrasifk = apdp.norec " & _
@@ -207,15 +207,15 @@ bolStrukResep = True
                .database.AddADOCommand CN_String, adoReport
                
               
-                .txtnopendaftaran.SetText RS("noregistrasi")
-                .txtnocm.SetText RS("nocm")
+                .txtNoPendaftaran.SetText RS("noregistrasi")
+                .txtNoCM.SetText RS("nocm")
                 .txtnmpasien.SetText RS("namapasienjk")
 '                .txtklpkpasien.SetText RS("kelompokpasien")
                 '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
                 .txtNamaRuangan.SetText RS("ruanganpasien")
                 .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
                 .txtNamaDokter.SetText RS("namalengkap")
-                .txtuser.SetText strUser
+                .txtUser.SetText strUser
                 
                 
               '  .usSatuan.SetUnboundFieldSource ("{ado.SatuanJmlK}")

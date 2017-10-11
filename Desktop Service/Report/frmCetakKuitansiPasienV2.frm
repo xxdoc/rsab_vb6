@@ -164,7 +164,16 @@ Set Report = New crKuitansiPasien
                "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
                "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
                "where pd.noregistrasi='" & strNoregistrasi & "'"
-    Else
+    End If
+    If Len(strNoregistrasi) = 14 Then
+        ReadRs "select sp.nostruk as noregistrasi,sp.totalharusdibayar as totaldibayar,sp.namapasien_klien as namapasien,pg.namalengkap, sp.keteranganlainnya,'Non Layanan' as namaruangan,'-' as nocm from  " & _
+               " strukpelayanan_t as sp  " & _
+               "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
+               "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
+               "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
+               "where sbp.nosbm='" & strNoregistrasi & "'"
+    End If
+    If Len(strNoregistrasi) > 14 Then
         Dim noreg, nostruk As String
         noreg = Left(strNoregistrasi, 10)
         nostruk = Replace(strNoregistrasi, noreg, "")
@@ -205,13 +214,6 @@ Set Report = New crKuitansiPasien
             .txtPrintTglBKM.SetText "Jakarta, " & Format(Now(), "dd MMM yyyy")
             .txtPetugasKasir.SetText RS("namalengkap")
             .txtDesc.SetText UCase("NAMA/MR/No.REG  : " & RS("namapasien") & "/ " & RS("nocm") & "/ " & RS("noregistrasi"))
-            
-'            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
-'            If RS2.BOF Then
-'                .txtPetugasCetak.SetText "-"
-'            Else
-'                .txtPetugasCetak.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
-'            End If
             .txtPetugasCetak.SetText strIdPegawai
             
             If view = "false" Then
