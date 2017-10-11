@@ -287,14 +287,14 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usNoTelpon.SetUnboundFieldSource ("{ado.mobilephone2}")
 
-            .usPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -363,7 +363,7 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
 '            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
@@ -529,15 +529,15 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtumur.SetText "-"
+                .txtUmur.SetText "-"
             Else
-                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             
@@ -546,10 +546,10 @@ boolLembarPersetujuan = False
             
             .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
-           ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
+            '.usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -640,14 +640,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtumur.SetText "-"
+                .txtUmur.SetText "-"
             Else
-                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -656,10 +656,10 @@ boolLembarPersetujuan = False
 
             .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruangakhir}")
-           ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
+            .usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
-            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
 
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -797,7 +797,7 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
     
@@ -883,16 +883,16 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtumur.SetText "-"
+                .txtUmur.SetText "-"
             Else
-                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namaayah}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
            
@@ -996,9 +996,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtumur.SetText "Umur -"
+                .txtUmur.SetText "Umur -"
             Else
-                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
+                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd/mm/yyyy")
                 .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd/mm/yyyy"))
@@ -1006,7 +1006,7 @@ boolLembarPersetujuan = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1218,14 +1218,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtumur.SetText "-"
+                .txtUmur.SetText "-"
             Else
-                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -1234,10 +1234,10 @@ boolLembarPersetujuan = False
 
             .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruangakhir}")
-           ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
+            .usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
-            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
 
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 

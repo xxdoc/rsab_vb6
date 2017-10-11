@@ -90,7 +90,6 @@ Form=Form\frmLaporanPendapatan.frm
 Form=Form\frmLaporanPendapatanFFS.frm
 Designer=Report\crLaporanPendapatan.Dsr
 Designer=Report\crLaporanPendapatanFFS.Dsr
-Form=..\..\..\TEST_JASMED\repott\PENERIMAAN\frmLaporanPenerimaanKasir.frm
 Designer=Report\crPenerimaanKasir1.Dsr
 Form=Form\frmCRPenjualanHarianFarmasi.frm
 Designer=Report\crPenjualanHarianFarmasi.Dsr

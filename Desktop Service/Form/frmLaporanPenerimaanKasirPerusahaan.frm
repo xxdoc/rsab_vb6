@@ -149,40 +149,34 @@ Set frmLaporanPenerimaanKasirPerusahaan = Nothing
 Dim adocmd As New ADODB.Command
     Dim str1 As String
     Dim str2 As String
-    Dim str3 As String
     
-    If idPegawai <> "" Then
-        str1 = "and pd.objectpegawaifk=" & idPegawai & " "
-    End If
     If idRuangan <> "" Then
-        str2 = " and pd.objectruanganlastfk=" & idRuangan & " "
+        str1 = " and ru.id=" & idRuangan & " "
     End If
     If idDokter <> "" Then
-        str3 = " and pg2.id=" & idDokter & " "
+        str2 = " and pg.id=" & idDokter & " "
     End If
     
 Set Report = New crPenerimaanKasirPerusahaan
-    strSQL = "select pd.noregistrasi, sbm.tglsbm, ps.nocm, ps.namapasien, kp.kelompokpasien, ru.namaruangan, pg.namalengkap, " & _
-            "pg2.namaexternal as kasir, sbm.totaldibayar, " & _
-            "CASE WHEN sp.totalprekanan is null then 0 else sp.totalprekanan end as hutangPenjamin, " & _
-            "sp.totalharusdibayar, lu.namaexternal as namaLogin " & _
-            "from strukbuktipenerimaan_t as sbm " & _
-            "INNER JOIN strukpelayanan_t as sp on sp.nosbmlastfk=sbm.norec " & _
-            "LEFT JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk " & _
-            "LEFT JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk " & _
-            "inner JOIN pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _
-            "inner JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
-            "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+    strSQL = "select kp.kelompokpasien, spp.norec,sp.tglstruk, pd.noregistrasi,pd.tglregistrasi,p.nocm, " & _
+            "p.namapasien, ru.namaruangan, pg.namalengkap, spp.totalppenjamin,spp.totalharusdibayar, " & _
+            "spp.totalsudahdibayar, spp.totalharusdibayar - spp.totalppenjamin as sisaBayar, spp.totalbiaya, spp.noverifikasi " & _
+            "from strukpelayananpenjamin_t as spp " & _
+            "inner join strukpelayanan_t as sp on sp.norec=spp.nostrukfk " & _
+            "inner join pelayananpasien_t as pp on pp.strukfk=sp.norec " & _
+            "inner join antrianpasiendiperiksa_t as ap on ap.norec=pp.noregistrasifk " & _
+            "inner join pasiendaftar_t as pd on pd.norec=ap.noregistrasifk " & _
+            "inner join pasien_m as p on p.id =pd.nocmfk " & _
             "Left JOIN pegawai_m as pg on pg.id=pd.objectpegawaifk " & _
-            "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
-            "INNER JOIN kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
-            "where sbm.tglsbm BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' AND kp.id=5 " & _
+            "left Join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
+            "left Join departemen_m as dept on dept.id=ru.objectdepartemenfk " & _
+            "left Join rekanan_m as r on r.id=spp.kdrekananpenjamin " & _
+            "left Join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' AND kp.id=5 " & _
             str1 & _
             str2 & _
-            str3 & _
             "order by pd.noregistrasi"
 
-   
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -190,17 +184,15 @@ Set Report = New crPenerimaanKasirPerusahaan
         .database.AddADOCommand CN_String, adocmd
             .usNamaKasir.SetText idKasir
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
-            .usNamaLogin.SetUnboundFieldSource ("{ado.kasir}")
-            .udtTglSBM.SetUnboundFieldSource ("{ado.tglsbm}")
+            .udtTglStruk.SetUnboundFieldSource ("{ado.tglstruk}")
             .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .ucTotalBiaya.SetUnboundFieldSource ("{ado.totaldibayar}")
-            .ucHutangPenjamin.SetUnboundFieldSource ("{ado.hutangPenjamin}")
-            .ucJmlBayar.SetUnboundFieldSource ("{ado.totalharusdibayar}")
+            .ucTotalHarusDibayar.SetUnboundFieldSource ("{ado.totalharusdibayar}")
+            .ucTotalPiutangPenjamin.SetUnboundFieldSource ("{ado.totalppenjamin}")
+            .ucSisaBayar.SetUnboundFieldSource ("{ado.sisaBayar}")
             
             If view = "false" Then
                 Dim strPrinter As String
