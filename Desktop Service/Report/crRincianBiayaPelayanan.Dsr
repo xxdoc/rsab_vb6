@@ -12,9 +12,9 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub Section9_Format(ByVal pFormattingInfo As Object)
-    Dim x As Double
-    x = Round(ucJumlahBill.Value)
-    txtPembulatan.SetText Format(x, "##,##0.00")
-    txtTerbilang.SetText "# " & TERBILANG(x) & " #"
+    Dim X As Double
+    X = Round(ucJumlahBill.Value)
+    txtPembulatan.SetText Format(X, "##,##0.00")
+    txtTerbilang.SetText "# " & TERBILANG(X) & " #"
     
 End Sub

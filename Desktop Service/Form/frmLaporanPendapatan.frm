@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanPendapatan = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, idKelompok As String, namaPrinted As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -163,6 +163,10 @@ Dim adocmd As New ADODB.Command
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
+    If idKelompok <> "" Then
+        str3 = " and kps.id =" & idKelompok & " "
+    End If
+    
     
 Set Report = New crLaporanPendapatan
     strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
@@ -184,9 +188,10 @@ Set Report = New crLaporanPendapatan
              "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
              "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
              "left JOIN strukbuktipenerimaancarabayar_t as sbmc  on sbmc.nosbmfk=sbm.norec left JOIN carabayar_m as cb  on cb.id=sbmc.objectcarabayarfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97  and kps.id != '4' and kps.id != '2' and  sp.statusenabled is null " & _
              str2 & _
              str1 & _
+             str3 & _
              "order by pd.noregistrasi"
 
    ReadRs2 "select " & _
@@ -205,7 +210,7 @@ Set Report = New crLaporanPendapatan
            "left JOIN carabayar_m cb on cb.id=sbmc.objectcarabayarfk " & _
            "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
            "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null " & _
              "" & str1 & " " & str2
     ReadRs3 "select pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*ppd.jumlah) as total " & _
             "from pasiendaftar_t pd " & _
@@ -238,7 +243,7 @@ Set Report = New crLaporanPendapatan
            "left JOIN carabayar_m cb on cb.id=sbmc.objectcarabayarfk " & _
            "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
            "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null " & _
              "" & str1 & " " & str2
              
     Dim D1, D2, D3, D4 As Double

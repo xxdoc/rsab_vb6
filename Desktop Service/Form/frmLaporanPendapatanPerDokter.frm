@@ -139,7 +139,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmLaporanPendapatanPerDokter = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatanPerDokter(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatanPerDokter(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, idKelompok As String, namaPrinted As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -154,6 +154,9 @@ Dim adocmd As New ADODB.Command
     End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
+    End If
+    If idKelompok <> "" Then
+        str3 = " and kps.id=" & idKelompok & " "
     End If
     
 Set Report = New crLaporanPendapatanPerDokter
@@ -179,6 +182,7 @@ Set Report = New crLaporanPendapatanPerDokter
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and kps.id != '4' and kps.id != '2' " & _
              str2 & _
              str1 & _
+             str3 & _
              "order by pd.noregistrasi"
 
    ReadRs2 "select " & _

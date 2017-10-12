@@ -28,6 +28,7 @@ On Error Resume Next
     Dim Param5() As String
     Dim Param6() As String
     Dim Param7() As String
+    Dim Param8() As String
     Dim arrItem() As String
     
    If CN.State = adStateClosed Then Call openConnection
@@ -42,6 +43,7 @@ On Error Resume Next
         Param5 = Split(arrItem(4), "=")
         Param6 = Split(arrItem(5), "=")
         Param7 = Split(arrItem(6), "=")
+        Param8 = Split(arrItem(7), "=")
 
         Select Case Param1(0)
             Case "cetak-billing"
@@ -133,7 +135,7 @@ On Error Resume Next
                 
             Case "cetak-laporan-pendapatan"
                 If CN.State = adStateClosed Then Call openConnection
-                Call frmCRLaporanPendapatan.CetakLaporanPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRLaporanPendapatan.CetakLaporanPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Penerimaan Kasir"
                 Root("by") = "as@epic"
@@ -141,7 +143,7 @@ On Error Resume Next
             
             Case "cetak-laporan-pendapatan-perdokter"
                 If CN.State = adStateClosed Then Call openConnection
-                Call frmLaporanPendapatanPerDokter.CetakLaporanPendapatanPerDokter(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmLaporanPendapatanPerDokter.CetakLaporanPendapatanPerDokter(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Penerimaan Kasir"
                 Root("by") = "as@epic"
