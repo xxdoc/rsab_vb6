@@ -114,6 +114,7 @@ Dim reportLabel As New Cr_cetakLabel
 Dim reportSumList As New Cr_cetakSummaryList
 Dim reportRmk As New Cr_cetakRMK
 Dim reportLembarGC As New Cr_cetakLembarGC
+Dim reportBuktiLayananRuanganPerTindakan As New Cr_cetakbuktilayananruanganpertindakan
 
 'Private fso As New Scripting.FileSystemObject
 Dim reportKartuPasien As New Cr_cetakKartuPasien
@@ -510,7 +511,7 @@ boolLembarPersetujuan = False
                        " LEFT JOIN pegawai_m AS pp ON pd.objectpegawaifk = pp.id " & _
                        " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
                        " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
-                       " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
+                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
                        " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
                        " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
                        " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
@@ -518,6 +519,7 @@ boolLembarPersetujuan = False
                        " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
                        " where pd.noregistrasi ='" & strNorec & "' ORDER BY tp.tglpelayanan "
+                       
             
             ReadRs strSQL
             
@@ -544,7 +546,7 @@ boolLembarPersetujuan = False
             
             .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
-           ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
+            '.usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
             .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
@@ -612,7 +614,8 @@ boolLembarPersetujuan = False
             strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
                        " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
                        " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
-                       " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan,ks.namakelas,ar.asalrujukan, " & _
+                       " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
+                       " hargasatuan*tp.jumlah as total, ks.namakelas,ar.asalrujukan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
                        " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
@@ -653,7 +656,7 @@ boolLembarPersetujuan = False
 
             .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruangakhir}")
-           ' .usKamar.SetUnboundFieldSource ("{ado.jk}")
+            .usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
             .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
@@ -661,7 +664,7 @@ boolLembarPersetujuan = False
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
             .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
+            .ucTarif.SetUnboundFieldSource ("{ado.total}")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
@@ -1155,5 +1158,118 @@ boolLembarPersetujuan = True
 Exit Sub
 errLoad:
 
+End Sub
+
+Public Sub cetakBuktiLayananRuanganPerTindakan(strNorec As String, strIdPegawai As String, strIdRuangan As String, strIdTindakan As String, view As String)
+On Error GoTo errLoad
+Set frmCetakPendaftaran = Nothing
+Dim strSQL As String
+Dim umur As String
+Dim strFilter As String
+Dim strFilter2 As String
+
+bolBuktiPendaftaran = False
+bolBuktiLayanan = False
+bolBuktiLayananRuangan = True
+bolcetakSep = False
+bolTracer1 = False
+bolKartuPasien = False
+boolLabelPasien = False
+boolSumList = False
+boolLembarRMK = False
+boolLembarPersetujuan = False
+    strSQL = ""
+    strFilter = ""
+    strFilter2 = ""
+    If strIdRuangan <> "" Then strFilter = " AND ru2.id = '" & strIdRuangan & "' "
+    If strIdTindakan <> "" Then strFilter2 = " AND tp.produkfk = '" & strIdTindakan & "' "
+    strFilter = strFilter & strFilter2 & " ORDER BY tp.tglpelayanan "
+    With reportBuktiLayananRuanganPerTindakan
+    
+            Set adoReport = New ADODB.Command
+             adoReport.ActiveConnection = CN_String
+            
+            strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
+                       " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
+                       " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
+                       " hargasatuan*tp.jumlah as total,ks.namakelas,ar.asalrujukan, " & _
+                       " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
+                       " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
+                       " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
+                       " INNER JOIN ruangan_m AS ru ON pd.objectruanganlastfk = ru.id " & _
+                       " LEFT JOIN pegawai_m AS pp ON pd.objectpegawaifk = pp.id " & _
+                       " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
+                       " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
+                       " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
+                       " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+                       " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
+                       " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
+                       " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
+                       " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
+                       " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
+                       " where pd.noregistrasi ='" & strNorec & "'" & strFilter
+            
+            ReadRs strSQL
+            
+            adoReport.CommandText = strSQL
+            adoReport.CommandType = adCmdUnknown
+            
+            
+            .database.AddADOCommand CN_String, adoReport
+            If RS.BOF Then
+                .txtUmur.SetText "-"
+            Else
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+            End If
+            
+            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
+
+            .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
+            .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
+
+            .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
+            .usruangperiksa.SetUnboundFieldSource ("{ado.ruangakhir}")
+            .usQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
+            .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+
+            .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
+
+            .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .ucTarif.SetUnboundFieldSource ("{ado.total}")
+
+            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
+            If RS2.BOF Then
+                .txtUser.SetText "-"
+            Else
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            End If
+            
+            If view = "false" Then
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "BuktiLayananRuanganPerTindakan")
+                .SelectPrinter "winspool", strPrinter1, "Ne00:"
+                .PrintOut False
+                Unload Me
+                Screen.MousePointer = vbDefault
+             Else
+                With CRViewer1
+                    .ReportSource = reportBuktiLayananRuanganPerTindakan
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+                Screen.MousePointer = vbDefault
+            End If
+     
+    End With
+Exit Sub
+errLoad:
+MsgBox "error"
 End Sub
 

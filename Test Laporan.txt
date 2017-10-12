@@ -33,3 +33,6 @@ http://127.0.0.1:1237/printvb/Pendaftaran?cetak-sensusbpjs=1&tglAwal=2017-08-01%
 
 RekapPenerimaan
 http://127.0.0.1:1237/printvb/kasir?cetak-rekap-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&namaKasir=DADAn&view=true
+
+label farmasi
+http://127.0.0.1:1237/printvb/farmasi?cetak-LabelFarmasi=9efb69b0-7d94-11e7-9890-593c8dda&view=true

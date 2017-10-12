@@ -1,15 +1,14 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRLaporanPendapatan 
+Begin VB.Form frmLaporanPendapatanPerDokter 
    Caption         =   "Medifirst2000"
-   ClientHeight    =   7005
+   ClientHeight    =   7680
    ClientLeft      =   60
    ClientTop       =   345
-   ClientWidth     =   5790
-   Icon            =   "frmLaporanPendapatan.frx":0000
+   ClientWidth     =   6960
    LinkTopic       =   "Form1"
-   ScaleHeight     =   7005
-   ScaleWidth      =   5790
+   ScaleHeight     =   7680
+   ScaleWidth      =   6960
    WindowState     =   2  'Maximized
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
@@ -24,7 +23,7 @@ Begin VB.Form frmCRLaporanPendapatan
       EndProperty
       Height          =   315
       Left            =   4920
-      TabIndex        =   4
+      TabIndex        =   2
       Top             =   480
       Width           =   975
    End
@@ -41,7 +40,7 @@ Begin VB.Form frmCRLaporanPendapatan
       EndProperty
       Height          =   315
       Left            =   3960
-      TabIndex        =   3
+      TabIndex        =   1
       Top             =   480
       Width           =   975
    End
@@ -57,16 +56,16 @@ Begin VB.Form frmCRLaporanPendapatan
       EndProperty
       Height          =   315
       Left            =   960
-      TabIndex        =   2
+      TabIndex        =   0
       Top             =   480
       Width           =   3015
    End
    Begin CRVIEWERLibCtl.CRViewer CRViewer1 
-      Height          =   7000
+      Height          =   7215
       Left            =   0
-      TabIndex        =   0
+      TabIndex        =   3
       Top             =   0
-      Width           =   5800
+      Width           =   6255
       DisplayGroupTree=   -1  'True
       DisplayToolbar  =   -1  'True
       EnableGroupTree =   -1  'True
@@ -80,32 +79,25 @@ Begin VB.Form frmCRLaporanPendapatan
       EnableRefreshButton=   -1  'True
       EnableDrillDown =   -1  'True
       EnableAnimationControl=   -1  'True
-      EnableSelectExpertButton=   -1  'True
+      EnableSelectExpertButton=   0   'False
       EnableToolbar   =   -1  'True
       DisplayBorder   =   -1  'True
       DisplayTabs     =   -1  'True
       DisplayBackgroundEdge=   -1  'True
       SelectionFormula=   ""
       EnablePopupMenu =   -1  'True
-      EnableExportButton=   -1  'True
-      EnableSearchExpertButton=   -1  'True
-      EnableHelpButton=   -1  'True
-   End
-   Begin VB.TextBox txtNamaFormPengirim 
-      Height          =   495
-      Left            =   3120
-      TabIndex        =   1
-      Top             =   600
-      Width           =   2175
+      EnableExportButton=   0   'False
+      EnableSearchExpertButton=   0   'False
+      EnableHelpButton=   0   'False
    End
 End
-Attribute VB_Name = "frmCRLaporanPendapatan"
+Attribute VB_Name = "frmLaporanPendapatanPerDokter"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanPendapatan
+Dim Report As New crLaporanPendapatanPerDokter
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,14 +136,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRLaporanPendapatan = Nothing
+    Set frmLaporanPendapatanPerDokter = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, idKelompok As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatanPerDokter(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, idKelompok As String, namaPrinted As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRLaporanPendapatan = Nothing
+Set frmLaporanPendapatanPerDokter = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
@@ -164,13 +156,12 @@ Dim adocmd As New ADODB.Command
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
     If idKelompok <> "" Then
-        str3 = " and kps.id =" & idKelompok & " "
+        str3 = " and kps.id=" & idKelompok & " "
     End If
     
-    
-Set Report = New crLaporanPendapatan
+Set Report = New crLaporanPendapatanPerDokter
     strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
-             "upper(ps.namapasien) as namapasien, " & _
+             "upper(ps.namapasien) as namapasien,pd.statuspasien, " & _
              "case when pr.id =395 then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
              "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos, " & _
              "case when kp.id = 26 then pp.hargajual* pp.jumlah else 0 end as konsul, " & _
@@ -188,7 +179,7 @@ Set Report = New crLaporanPendapatan
              "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
              "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
              "left JOIN strukbuktipenerimaancarabayar_t as sbmc  on sbmc.nosbmfk=sbm.norec left JOIN carabayar_m as cb  on cb.id=sbmc.objectcarabayarfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97  and kps.id != '4' and kps.id != '2' and  sp.statusenabled is null " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and kps.id != '4' and kps.id != '2' " & _
              str2 & _
              str1 & _
              str3 & _
@@ -210,7 +201,7 @@ Set Report = New crLaporanPendapatan
            "left JOIN carabayar_m cb on cb.id=sbmc.objectcarabayarfk " & _
            "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
            "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
              "" & str1 & " " & str2
     ReadRs3 "select pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*ppd.jumlah) as total " & _
             "from pasiendaftar_t pd " & _
@@ -243,7 +234,7 @@ Set Report = New crLaporanPendapatan
            "left JOIN carabayar_m cb on cb.id=sbmc.objectcarabayarfk " & _
            "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
            "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
              "" & str1 & " " & str2
              
     Dim D1, D2, D3, D4 As Double
@@ -329,6 +320,7 @@ Set Report = New crLaporanPendapatan
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
             .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")
             .ucEmbos.SetUnboundFieldSource ("{ado.embos}")
             .ucKonsul.SetUnboundFieldSource ("{ado.konsul}")
@@ -338,8 +330,8 @@ Set Report = New crLaporanPendapatan
             .usCC.SetUnboundFieldSource ("{ado.cc}")
             .usPJ.SetUnboundFieldSource ("{ado.pj}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usVR.SetUnboundFieldSource ("{ado.verif}")
-            .usSBM.SetUnboundFieldSource ("{ado.sbm}")
+            '.usVR.SetUnboundFieldSource ("{ado.verif}")
+            '.usSBM.SetUnboundFieldSource ("{ado.sbm}")
             
             .txtA1.SetText Format(tCash, "##,##0.00")
             .txtA2.SetText Format(tKk, "##,##0.00")
