@@ -3,40 +3,26 @@ JNode = 78, 78, 965, 530,
 GossEvent = 26, 26, 761, 478, C
 GossClient = 83, 99, 970, 551, , 156, 156, 1043, 608, C
 Gossamer = 156, 156, 1136, 547, C, 182, 182, 1069, 634, C
-<<<<<<< HEAD
-GossRESTMain = 54, 118, 941, 570, , 52, 52, 939, 504, C
-=======
 GossRESTMain = 35, 113, 922, 565, , 52, 52, 939, 504, C
->>>>>>> bc689d98de0d3a718c18a1eaaacbe8c74751bb1c
 frmSettingPrinter = 78, 78, 965, 530, C, 0, 0, 887, 452, C
 Koneksi = 130, 130, 1017, 582, 
 frmCetakAntrian = 0, 0, 887, 452, C, 52, 52, 939, 504, C
 frmSettingKoneksi = 156, 156, 1043, 608, C, 52, 52, 939, 504, C
 frmRajal = 0, 0, 0, 0, C, 0, 0, 846, 452, C
 frmTataRekening = 52, 52, 939, 504, C, 104, 104, 991, 556, C
-SavetoFile = 107, 275, 994, 727, 
+SavetoFile = 97, 138, 984, 590, 
 crRekapPendapatan = 208, 208, 1052, 660, C, 78, 78, 1140, 769, C
 frmRekapPendapatan = 104, 104, 1084, 495, C, 156, 156, 1043, 608, CZ
-<<<<<<< HEAD
-mdTerbilang = 78, 78, 1058, 469, C
-frmCRCetakKuitansiPasienV2 = 208, 208, 1095, 660, Z, 182, 182, 1069, 634, CZ
-=======
 mdTerbilang = 78, 78, 1058, 469, 
 frmCRCetakKuitansiPasienV2 = 208, 208, 1095, 660, C, 182, 182, 1069, 634, CZ
->>>>>>> bc689d98de0d3a718c18a1eaaacbe8c74751bb1c
 crKuitansiPasien = 0, 0, 887, 452, C, 104, 104, 1166, 795, C
 frmFarmasiApotik = -13, 104, 874, 556, , 0, 0, 887, 452, C
 Cr_cetakBuktiPendaftaran = 0, 0, 0, 0, C, 130, 130, 1139, 571, C
 Cr_cetakRMK = 104, 104, 956, 556, C, 156, 156, 1218, 847, C
 Cr_cetakLabelTracer = 0, 0, 852, 452, C, 182, 182, 1244, 873, C
 crCetakSJP = 0, 0, 0, 0, C, 208, 208, 1217, 874, C
-<<<<<<< HEAD
-frmCetakFarmasiApotik = 134, 48, 1021, 500, , 78, 78, 965, 530, CZ
-Cr_cetakbuktilayanan = 78, 78, 924, 530, C, 0, 0, 1062, 691, C
-=======
 frmCetakFarmasiApotik = 134, 48, 1021, 500, , 78, 78, 965, 530, C
 Cr_cetakbuktilayanan = 78, 78, 924, 530, C, 0, 0, 1005, 691, C
->>>>>>> bc689d98de0d3a718c18a1eaaacbe8c74751bb1c
 Cr_cetakLembarGC = 0, 0, 0, 0, C, 26, 26, 1035, 467, C
 crJenisKuitansiPasien = 0, 0, 0, 0, C, 52, 52, 1074, 493, C
 frmCRCetakKuitansiPasien = 0, 0, 980, 391, C, 0, 0, 887, 452, CZ
@@ -46,7 +32,7 @@ GIF = 0, 0, 0, 0, C
 Special128 = 52, 52, 939, 504, C
 Cr_cetakKartuPasien = 0, 0, 0, 0, C, 78, 78, 1087, 519, C
 frmPendaftaran = 156, 156, 1043, 608, , 52, 52, 939, 504, C
-frmCetakPendaftaran = 7, 61, 934, 434, Z, 104, 104, 991, 556, C
+frmCRLabelFarmasi = 7, 61, 934, 434, , 104, 104, 991, 556, C
 cr_RincianBiayaResep_2 = 7, 182, 894, 634, , -183, 256, 879, 815, C
 Cr_cetakSummaryList = 156, 156, 1002, 608, C, 26, 26, 1088, 717, C
 Cr_cetakLabel = 0, 0, 0, 0, C, 10, 64, 1001, 589, C
@@ -61,7 +47,7 @@ crLaporanPasienPulang = 0, 0, 0, 0, C, 100, 100, 1091, 622, C
 frmCRCetakLaporanPasienPulang = 72, 188, 926, 681, C, 0, 0, 854, 350, CZ
 crLaporanPendapatanRuangan = 0, 0, 0, 0, C, 100, 100, 1091, 625, C
 frmCRCetakLaporanPendapatanRuangan = 0, 0, 833, 344, C, 125, 125, 958, 469, CZ
-crRincianBiayaPelayanan = 104, 60, 980, 345, C, -53, 175, 1022, 866, C
+crRincianBiayaPelayanan = 104, 60, 980, 345, C, -53, 175, 952, 866, C
 frmCRCetakRincianBiaya = 131, -3, 1007, 282, C, 25, 25, 901, 310, CZ
 Cr_cetakbuktilayananruangan = 50, 50, 876, 419, , -44, 10, 832, 701, C
 crLaporanPasienDaftar = 50, 50, 914, 394, C, -14, 308, 977, 833, C
@@ -106,3 +92,4 @@ crPenjualanHarianFarmasi = 0, 0, 0, 0, C, 78, 78, 1075, 769, C
 Cr_cetakLabelFarmasi2 = 182, 182, 971, 634, , -95, 64, 910, 755, C
 frmCetakLabelFarmasi = 26, 26, 815, 478, , 0, 0, 789, 452, C
 Cr_cetakLabelFarmasi = 208, 208, 997, 660, , 182, 182, 1187, 873, C
+frmCetakPendaftaran = 0, 0, 0, 0, C, 0, 0, 0, 0, C
