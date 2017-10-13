@@ -160,7 +160,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "E:/log.txt" For Append As #LogFile
+    Open "D:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show

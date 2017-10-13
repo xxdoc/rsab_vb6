@@ -164,7 +164,7 @@ Dim adocmd As New ADODB.Command
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
      If idKasir <> "" Then
-        str3 = " and and pg2.id=" & idKasir & " "
+        str3 = " and pg2.id=" & idKasir & " "
     End If
      
     
