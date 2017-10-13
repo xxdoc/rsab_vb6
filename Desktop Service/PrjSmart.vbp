@@ -105,6 +105,7 @@ Designer=Report\Cr_cetakLabelFarmasi_2.Dsr
 Form=Form\frmCetakLabelFarmasi.frm
 Designer=Report\Cr_cetakLabelFarmasi.Dsr
 Form=Report\frmCetakPendaftaran.frm
+Form=Form\frmLaporanPenerimaanKasir.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
