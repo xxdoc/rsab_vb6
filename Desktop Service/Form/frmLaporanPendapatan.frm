@@ -148,7 +148,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, idKelompok As String, namaPrinted As String, view As String)
-'On Error GoTo errLoad
+On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRLaporanPendapatan = Nothing
@@ -163,8 +163,13 @@ Dim adocmd As New ADODB.Command
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
-    If idKelompok <> "" Then
-        str3 = " and kps.id =" & idKelompok & " "
+    
+    If idKelompok = 0 Then
+        str3 = " and kps.id in (1,3,5) "
+    Else
+        If idKelompok <> "" Then
+            str3 = " and kps.id =" & idKelompok & " "
+        End If
     End If
     
     
@@ -188,7 +193,7 @@ Set Report = New crLaporanPendapatan
              "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
              "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
              "left JOIN strukbuktipenerimaancarabayar_t as sbmc  on sbmc.nosbmfk=sbm.norec left JOIN carabayar_m as cb  on cb.id=sbmc.objectcarabayarfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97  and kps.id != '4' and kps.id != '2' and  sp.statusenabled is null " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   and  sp.statusenabled is null " & _
              str2 & _
              str1 & _
              str3 & _
@@ -199,7 +204,7 @@ Set Report = New crLaporanPendapatan
            "sum(case when sbmc.objectcarabayarfk is not null and cb.id>1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as kk, " & _
            "sum(case when pd.objectkelompokpasienlastfk >1 and sp.norec is not null then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as jm " & _
            "from pasiendaftar_t pd " & _
-           "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec  " & _
+           "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec  left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec  " & _
            "INNER JOIN produk_m pr on pr.id=pp.produkfk " & _
            "INNER JOIN detailjenisproduk_m djp on djp.id=pr.objectdetailjenisprodukfk " & _
@@ -211,28 +216,30 @@ Set Report = New crLaporanPendapatan
            "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
            "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null " & _
-             "" & str1 & " " & str2
+             "" & str1 & " " & str2 & str3
     ReadRs3 "select pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*ppd.jumlah) as total " & _
             "from pasiendaftar_t pd " & _
-            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
+            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
             "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=35 " & _
-             "" & str1 & " " & str2
+             "" & str1 & " " & str2 & str3
+             
     ReadRs4 "select pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*ppd.jumlah) as total " & _
             "from pasiendaftar_t pd " & _
-            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
+            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
             "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=25 " & _
-             "" & str1 & " " & str2
+             "" & str1 & " " & str2 & str3
+             
     ReadRs5 "select " & _
             "sum(case when pd.objectkelompokpasienlastfk=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as umum, " & _
             "sum(case when pd.objectkelompokpasienlastfk in (2,4) then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as bpjs, " & _
             "sum(case when pd.objectkelompokpasienlastfk=3 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as asuransi, " & _
             "sum(case when pd.objectkelompokpasienlastfk=5 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as perusahaan " & _
            "from pasiendaftar_t pd " & _
-           "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec  " & _
+           "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec  left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec  " & _
            "INNER JOIN produk_m pr on pr.id=pp.produkfk " & _
            "INNER JOIN detailjenisproduk_m djp on djp.id=pr.objectdetailjenisprodukfk " & _
@@ -244,7 +251,7 @@ Set Report = New crLaporanPendapatan
            "left JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
            "left JOIN pegawai_m pg on pg.id=apd.objectpegawaifk " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null " & _
-             "" & str1 & " " & str2
+             "" & str1 & " " & str2 & str3
              
     Dim D1, D2, D3, D4 As Double
     D1 = RS5!umum

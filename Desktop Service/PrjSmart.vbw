@@ -32,7 +32,11 @@ GIF = 0, 0, 0, 0, C
 Special128 = 52, 52, 939, 504, C
 Cr_cetakKartuPasien = 0, 0, 0, 0, C, 78, 78, 1087, 519, C
 frmPendaftaran = 156, 156, 1043, 608, , 52, 52, 939, 504, C
+<<<<<<< HEAD
 frmCRLabelFarmasi = 7, 61, 934, 434, , 104, 104, 991, 556, C
+=======
+frmCetakPendaftaran = 7, 61, 934, 434, , 104, 104, 991, 556, C
+>>>>>>> 8b516cdb763a12ca7c37313fcb9d8a9e46832fe8
 cr_RincianBiayaResep_2 = 7, 182, 894, 634, , -183, 256, 879, 815, C
 Cr_cetakSummaryList = 156, 156, 1002, 608, C, 26, 26, 1088, 717, C
 Cr_cetakLabel = 0, 0, 0, 0, C, 10, 64, 1001, 589, C
@@ -91,5 +95,9 @@ crPenerimaanKasirPerusahaan = 208, 208, 997, 660, , 52, 52, 1057, 743, C
 crPenjualanHarianFarmasi = 0, 0, 0, 0, C, 78, 78, 1075, 769, C
 Cr_cetakLabelFarmasi2 = 182, 182, 971, 634, , -95, 64, 910, 755, C
 frmCetakLabelFarmasi = 26, 26, 815, 478, , 0, 0, 789, 452, C
+<<<<<<< HEAD
 Cr_cetakLabelFarmasi = 208, 208, 997, 660, , 182, 182, 1187, 873, C
 frmCetakPendaftaran = 0, 0, 0, 0, C, 0, 0, 0, 0, C
+=======
+Cr_cetakLabelFarmasi = 208, 208, 997, 660, Z, 182, 182, 1187, 873, C
+>>>>>>> 8b516cdb763a12ca7c37313fcb9d8a9e46832fe8
