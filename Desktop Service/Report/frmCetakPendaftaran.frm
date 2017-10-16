@@ -873,7 +873,11 @@ boolLembarPersetujuan = False
             
             strSQL = "SELECT  ps.nocm,ps.namapasien,ps.namaayah,ps.tempatlahir,ps.tgllahir, " & _
                        " jk.jeniskelamin,ps.noidentitas,ag.agama,pk.pekerjaan,kb.name as kebangsaan, " & _
-                       " al.alamatlengkap , al.kotakabupaten, al.kecamatan, al.namadesakelurahan, al.mobilephone1, " & _
+                       " case when al.alamatlengkap is null then '-' else al.alamatlengkap end as alamatlengkap  , " & _
+                       " case when al.kotakabupaten is null then '-' else al.kotakabupaten end as kotakabupaten  , " & _
+                       " case when al.kecamatan is null then '-' else al.kecamatan end as kecamatan  , " & _
+                       " case when al.namadesakelurahan is null then '-' else al.namadesakelurahan end as namadesakelurahan  , " & _
+                       " ps.notelepon as mobilephone1, " & _
                        " sp.statusperkawinan from pasien_m ps " & _
                        " left JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
                        " left JOIN alamat_m al on ps.id=al.nocmfk " & _
