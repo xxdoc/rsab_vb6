@@ -169,7 +169,7 @@ Set Report = New crRincianBiayaPelayanan
     strSQL = "SELECT sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan as unit,ru.objectdepartemenfk,kl.namakelas,   " & _
             "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, ru2.namaruangan as ruangantindakan,pr.namaproduk,jp.jenisproduk, pg2.namalengkap as dokter,pp.jumlah,pp.hargajual,   " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
-            "sp.totalharusdibayar,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as totalbiayatambahan, pg3.namalengkap as user " & _
+            "sp.totalharusdibayar,case when sp.totalprekanan is null then 0 else sp.totalprekanan end as totalprekanan,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as totalbiayatambahan, pg3.namalengkap as user " & _
             "from pelayananpasien_t as pp left JOIN strukpelayanan_t as sp on pp.strukfk=sp.norec  " & _
             "LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec   " & _
             "LEFT JOIN strukpelayananpenjamin_t as sppj on sp.norec=sppj.nostrukfk " & _
@@ -277,10 +277,10 @@ Set Report = New crRincianBiayaPelayanan
 '            .ucSisaDeposit.SetUnboundFieldSource ("0")
             
             
-            .ucDitanggungPerusahaan.SetUnboundFieldSource ("{ado.totalppenjamin}")
+            .ucDitanggungPerusahaan.SetUnboundFieldSource ("{ado.totalprekanan}")
             .ucDitanggungRS.SetUnboundFieldSource ("0") '("{ado.totalharusdibayarrs}")
-'            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
-'            .ucSurplusMinusRS.SetUnboundFieldSource ("{ado.SurplusMinusRS}")
+            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
+            .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             
 '            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
