@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form GossRESTMain 
-   BorderStyle     =   1  'Fixed Single
+   BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Desktop Service"
    ClientHeight    =   645
    ClientLeft      =   45
@@ -12,6 +12,7 @@ Begin VB.Form GossRESTMain
    MinButton       =   0   'False
    ScaleHeight     =   645
    ScaleWidth      =   4560
+   ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Begin DesktopService.Gossamer Gossamer1 
       Left            =   120
@@ -55,7 +56,7 @@ Begin VB.Form GossRESTMain
          Visible         =   0   'False
       End
       Begin VB.Menu fgdgdfg 
-         Caption         =   "Version 20171013"
+         Caption         =   "Version 20171016"
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
@@ -160,7 +161,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "D:/log.txt" For Append As #LogFile
+    Open "E:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show

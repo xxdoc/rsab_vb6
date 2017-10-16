@@ -164,11 +164,13 @@ Dim adocmd As New ADODB.Command
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
     
-    If idKelompok = 0 Then
-        str3 = " and kps.id in (1,3,5) "
-    Else
-        If idKelompok <> "" Then
-            str3 = " and kps.id =" & idKelompok & " "
+    If idKelompok <> "" Then
+        If idKelompok = 0 Then
+            str3 = " and kps.id in (1,3,5) "
+        Else
+            If idKelompok <> "" Then
+                str3 = " and kps.id =" & idKelompok & " "
+            End If
         End If
     End If
     
@@ -393,4 +395,5 @@ Set Report = New crLaporanPendapatan
     End With
 Exit Sub
 errLoad:
+    MsgBox Err.Number & " " & Err.Description
 End Sub

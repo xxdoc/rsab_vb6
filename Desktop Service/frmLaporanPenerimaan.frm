@@ -184,7 +184,7 @@ Set Report = New crLaporanPenerimaan
              "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk inner JOIN produk_m as pr on pr.id=pp.produkfk " & _
              "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
              "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk inner JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
-             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "'" & _
+             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
              str2 & _
              str1 & _
              str3 & _
@@ -212,7 +212,7 @@ Set Report = New crLaporanPenerimaan
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' " & _
+             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
              "" & str1 & " " & str2 & " " & str3 & " " & _
              "group by pd.tglregistrasi,pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
