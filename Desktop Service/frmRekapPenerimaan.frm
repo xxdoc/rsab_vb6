@@ -189,7 +189,7 @@ Set Report = New crRekapPenerimaan
 
    strSQL = "select pg2.id,pg2.namalengkap as kasir, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap, sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as CH, " & _
             "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as KK,sum(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) as JM,sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_CH," & _
-            "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_KK,sum(case when pd.objectkelompokpasienlastfk > 1 then sp.totalharusdibayar else 0 end)  as P_JM, " & _
+            "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_KK,sum(case when pd.objectkelompokpasienlastfk > 1 then case when sp.totalprekanan is null then 0 else sp.totalprekanan end else 0 end)  as P_JM, " & _
             "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.strukfk=sp.norec) as M_jasa, " & _
             "0 as M_Pph, 0 as M_Diterima, " & _
             "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah )  from pelayananpasiendetail_t ppd where ppd.komponenhargafk=25 and ppd.strukfk=sp.norec) as Pr_Jasa, " & _
@@ -205,7 +205,7 @@ Set Report = New crRekapPenerimaan
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' " & _
+             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
              "and pg2.id=" & idKasir & " " & str1 & " " & str2 & " " & _
              "group by pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
@@ -252,6 +252,8 @@ Set Report = New crRekapPenerimaan
     End With
 Exit Sub
 errLoad:
+    MsgBox Err.Number & " " & Err.Description
+    
 End Sub
 
 'select pg2.id,pg2.namalengkap as kasir, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,

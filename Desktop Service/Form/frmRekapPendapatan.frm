@@ -165,7 +165,7 @@ Dim adocmd As New ADODB.Command
 Set Report = New crRekapPendapatan
 
    strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap, (case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as CH, " & _
-            "(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as KK,(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) as JM,sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end) as P_CH," & _
+            "(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as KK,(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) as JM,sum(case when cb.id = 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end) as P_CH," & _
             "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end) as P_KK,sum(case when pd.objectkelompokpasienlastfk > 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end)  as P_JM, " & _
             "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.noregistrasifk=apd.norec) as M_jasa, " & _
             "0 as M_Pph, 0 as M_Diterima, " & _
@@ -180,7 +180,7 @@ Set Report = New crRekapPendapatan
             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
             "left JOIN strukbuktipenerimaancarabayar_t as sbmc  on sbmc.nosbmfk=sbm.norec " & _
             "left JOIN carabayar_m as cb  on cb.id=sbmc.objectcarabayarfk  " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and sp.statusenabled is null " & _
              " " & str1 & " " & str2 & " " & _
              "group by apd.norec, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec ,(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) , " & _
              "(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) , " & _

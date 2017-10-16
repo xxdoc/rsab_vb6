@@ -893,7 +893,7 @@ boolLembarPersetujuan = False
             If RS.BOF Then
                 .txtUmur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy-MM-dd"), Format(Now, "yyyy-MM-dd"))
             End If
 
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
