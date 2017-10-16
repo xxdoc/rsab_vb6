@@ -176,7 +176,7 @@ Dim adocmd As New ADODB.Command
     
     
 Set Report = New crLaporanPendapatan
-    strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
+    'strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
              "upper(ps.namapasien) as namapasien, " & _
              "case when pr.id =395 then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
              "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos, " & _
@@ -200,8 +200,30 @@ Set Report = New crLaporanPendapatan
              str1 & _
              str3 & _
              "order by pd.noregistrasi"
+    strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
+             "upper(ps.namapasien) as namapasien, " & _
+             "case when pr.id =395 then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
+             "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos, " & _
+             "case when kp.id = 26 then pp.hargajual* pp.jumlah else 0 end as konsul, " & _
+             "case when kp.id in (1,2,3,4,8,9,10,11,13,14) then pp.hargajual* pp.jumlah else 0 end as tindakan, " & _
+             "(case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah as diskon, " & _
+             "pd.noregistrasi,kps.kelompokpasien, " & _
+             "case when pd.objectkelompokpasienlastfk > 1 then '-' else 'v' end as NonPj, case when pd.objectkelompokpasienlastfk = 1 then '-' else 'v' end as pj ,  " & _
+             "case when sp.norec is null then '-' else 'v' end as verif " & _
+             "from pasiendaftar_t as pd " & _
+             "inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+             "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+             "inner JOIN produk_m as pr on pr.id=pp.produkfk inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+             "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+             "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   and  sp.statusenabled is null " & _
+             str2 & _
+             str1 & _
+             str3 & _
+             "order by pd.noregistrasi"
 
-   ReadRs2 "select " & _
+   'ReadRs2 "select " & _
            "sum(case when sbmc.objectcarabayarfk is not null and cb.id=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as cash, " & _
            "sum(case when sbmc.objectcarabayarfk is not null and cb.id>1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as kk, " & _
            "sum(case when pd.objectkelompokpasienlastfk >1 and sp.norec is not null then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as jm " & _
@@ -235,7 +257,7 @@ Set Report = New crLaporanPendapatan
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=25 " & _
              "" & str1 & " " & str2 & str3
              
-    ReadRs5 "select " & _
+    'ReadRs5 "select " & _
             "sum(case when pd.objectkelompokpasienlastfk=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as umum, " & _
             "sum(case when pd.objectkelompokpasienlastfk in (2,4) then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as bpjs, " & _
             "sum(case when pd.objectkelompokpasienlastfk=3 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah else 0 end) as asuransi, " & _
@@ -255,18 +277,18 @@ Set Report = New crLaporanPendapatan
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null " & _
              "" & str1 & " " & str2 & str3
              
-    Dim D1, D2, D3, D4 As Double
-    D1 = RS5!umum
-    D2 = RS5!bpjs
-    D3 = RS5!asuransi
-    D4 = RS5!perusahaan
+'    Dim D1, D2, D3, D4 As Double
+'    D1 = RS5!umum
+'    D2 = RS5!bpjs
+'    D3 = RS5!asuransi
+'    D4 = RS5!perusahaan
     
     Dim tCash, tKk, tPj, tJm, tJR, tPm, tPR As Double
     Dim i As Integer
     
-    tCash = RS2!cash
-    tKk = IIf(IsNull(RS2!kk), 0, RS2!kk)
-    tPj = IIf(IsNull(RS2!jm), 0, RS2!jm)
+'    tCash = RS2!cash
+'    tKk = IIf(IsNull(RS2!kk), 0, RS2!kk)
+'    tPj = IIf(IsNull(RS2!jm), 0, RS2!jm)
     
     tJm = 0
     tJR = 0
@@ -285,6 +307,8 @@ Set Report = New crLaporanPendapatan
 '            tJm = tJm + CDbl(IIf(IsNull(RS3!total), 0, RS3!total))
 '            tJR = 0
         End If
+        RS3.MoveNext
+        
     Next
     
     For i = 0 To RS4.RecordCount - 1
@@ -300,6 +324,7 @@ Set Report = New crLaporanPendapatan
 '            tPm = tPm + CDbl(IIf(IsNull(RS4!total), 0, RS4!total))
 '            tPR = 0
         End If
+        RS4.MoveNext
     Next
     
     
@@ -344,11 +369,11 @@ Set Report = New crLaporanPendapatan
             .ucTindakan.SetUnboundFieldSource ("{ado.tindakan}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.kasir}")
-            .usCC.SetUnboundFieldSource ("{ado.cc}")
+            .usCC.SetUnboundFieldSource ("{ado.NonPj}")
             .usPJ.SetUnboundFieldSource ("{ado.pj}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usVR.SetUnboundFieldSource ("{ado.verif}")
-            .usSBM.SetUnboundFieldSource ("{ado.sbm}")
+'            .usSBM.SetUnboundFieldSource ("{ado.sbm}")
             
             .txtA1.SetText Format(tCash, "##,##0.00")
             .txtA2.SetText Format(tKk, "##,##0.00")
