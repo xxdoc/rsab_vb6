@@ -120,8 +120,6 @@ Dim msg As String
 '    TerminateProcess ("Desktop ServiceC.exe")
 '    TerminateProcess ("Desktop ServiceD.exe")
 '    TerminateProcess ("Desktop ServiceE.exe")
-
-    'Shell "tskill ""Desktop ServiceE.exe"""
     
     GossRESTDB.InitializeDB
     GetGraphicsDllVersion graphicSDKVersion
@@ -163,7 +161,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "C:/log.txt" For Append As #LogFile
+    Open "E:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
@@ -173,10 +171,9 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    Cancel = 1
     Gossamer1.StopListening
     
-'    Close #LogFile
+    Close #LogFile
     'To Tray
     Shell_NotifyIcon NIM_DELETE, nid
     If CN.State = adStateOpen Then CN.Close
@@ -257,7 +254,7 @@ Private Sub Gossamer1_DynamicRequest( _
             On Error GoTo 0
             RespStatus = 500
             RespStatusText = "Internal Server Error"
-'            Print #LogFile, _
+            Print #LogFile, _
                   "Error "; _
                   CStr(ErrNumber); _
                   " (&H"; Right$("0000000" & Hex$(ErrNumber), 8); ") "; _
@@ -280,7 +277,7 @@ End Sub
 
 Private Sub Gossamer1_LogEvent(ByVal GossEvent As GossEvent, ByVal ClientIndex As Integer)
     With GossEvent
-'        Print #LogFile, _
+        Print #LogFile, _
               Format$(.Timestamp, "YYYY-MM-DD HH:NN:SS, "); _
               CStr(ClientIndex); ", "; _
               ", "; _
@@ -380,11 +377,6 @@ End Sub
 
 Private Sub mnuExit_Click()
     Shell_NotifyIcon NIM_DELETE, nid
-    Gossamer1.StopListening
-    
-'    Close #LogFile
-    If CN.State = adStateOpen Then CN.Close
-    
     End
 End Sub
 
