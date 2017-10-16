@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hwnd
+    Report.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -148,7 +148,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakLaporanPasienPulang(tglAwal As String, tglAkhir As String, strIdRuangan As String, _
-                                        strIdKelompokPasien As String, strIdPegawai As String, view As String)
+                                        strIdKelompokPasien As String, strIdPegawai As String, strIdPerusahaan As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -167,10 +167,12 @@ Set Report = New crLaporanPasienPulang
     
     If strIdRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
-        
+    If strIdPerusahaan <> "" Then strFilter = strFilter & " AND rk.id = '" & strIdPerusahaan & "' "
+  
     orderby = strFilter & "group by pd.tglregistrasi,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru2.namaruangan, " & _
             "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya,ru.objectdepartemenfk " & _
-            "order by sp.tglstruk"
+            "order by ps.namapasien"
+            'sp.tglstruk"
 
         
     strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru2.namaruangan,kl.namakelas,sp.nostruk as nobilling,sbm.nosbm as nokwitansi,sum(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
