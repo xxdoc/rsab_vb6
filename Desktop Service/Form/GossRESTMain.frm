@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form GossRESTMain 
-   BorderStyle     =   1  'Fixed Single
+   BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Desktop Service"
    ClientHeight    =   645
    ClientLeft      =   45
@@ -12,6 +12,7 @@ Begin VB.Form GossRESTMain
    MinButton       =   0   'False
    ScaleHeight     =   645
    ScaleWidth      =   4560
+   ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Begin DesktopService.Gossamer Gossamer1 
       Left            =   120
@@ -55,7 +56,7 @@ Begin VB.Form GossRESTMain
          Visible         =   0   'False
       End
       Begin VB.Menu fgdgdfg 
-         Caption         =   "Version 20171013"
+         Caption         =   "Version 20171016"
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
@@ -119,6 +120,8 @@ Dim msg As String
 '    TerminateProcess ("Desktop ServiceC.exe")
 '    TerminateProcess ("Desktop ServiceD.exe")
 '    TerminateProcess ("Desktop ServiceE.exe")
+
+    'Shell "tskill ""Desktop ServiceE.exe"""
     
     GossRESTDB.InitializeDB
     GetGraphicsDllVersion graphicSDKVersion
@@ -160,7 +163,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "E:/log.txt" For Append As #LogFile
+'    Open "C:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
@@ -170,9 +173,10 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
+    Cancel = 1
     Gossamer1.StopListening
     
-    Close #LogFile
+'    Close #LogFile
     'To Tray
     Shell_NotifyIcon NIM_DELETE, nid
     If CN.State = adStateOpen Then CN.Close
@@ -253,7 +257,7 @@ Private Sub Gossamer1_DynamicRequest( _
             On Error GoTo 0
             RespStatus = 500
             RespStatusText = "Internal Server Error"
-            Print #LogFile, _
+'            Print #LogFile, _
                   "Error "; _
                   CStr(ErrNumber); _
                   " (&H"; Right$("0000000" & Hex$(ErrNumber), 8); ") "; _
@@ -276,7 +280,7 @@ End Sub
 
 Private Sub Gossamer1_LogEvent(ByVal GossEvent As GossEvent, ByVal ClientIndex As Integer)
     With GossEvent
-        Print #LogFile, _
+'        Print #LogFile, _
               Format$(.Timestamp, "YYYY-MM-DD HH:NN:SS, "); _
               CStr(ClientIndex); ", "; _
               ", "; _
@@ -376,6 +380,11 @@ End Sub
 
 Private Sub mnuExit_Click()
     Shell_NotifyIcon NIM_DELETE, nid
+    Gossamer1.StopListening
+    
+'    Close #LogFile
+    If CN.State = adStateOpen Then CN.Close
+    
     End
 End Sub
 

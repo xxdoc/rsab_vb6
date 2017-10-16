@@ -320,6 +320,7 @@ boolLembarPersetujuan = False
 Exit Sub
 errLoad:
 
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
 
@@ -348,7 +349,7 @@ boolLembarPersetujuan = False
                         " ru.namaruangan as ruanganPeriksa,pp.namalengkap as namadokter,kp.kelompokpasien, " & _
                         " apdp.noantrian,pd.statuspasien,ps.namaayah  From  pasiendaftar_t pd " & _
                         " INNER JOIN pasien_m ps ON pd.nocmfk = ps.id " & _
-                        " INNER JOIN alamat_m ap ON ap.nocmfk = ps.id " & _
+                        " LEFT JOIN alamat_m ap ON ap.nocmfk = ps.id " & _
                         " INNER JOIN jeniskelamin_m jk ON ps.objectjeniskelaminfk = jk.id " & _
                         " INNER JOIN ruangan_m ru ON pd.objectruanganlastfk = ru.id " & _
                         " LEFT JOIN pegawai_m pp ON pd.objectpegawaifk = pp.id " & _
@@ -394,6 +395,7 @@ boolLembarPersetujuan = False
 Exit Sub
 errLoad:
 
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
 
@@ -422,11 +424,11 @@ boolLembarPersetujuan = False
                        " (CASE WHEN rp.objectdepartemenfk=16 then 'Rawat Inap' else 'Rawat Jalan' END) as jenisrawat," & _
                        " dg.kddiagnosa, (case when dg.namadiagnosa is null then '-' else dg.namadiagnosa end) as namadiagnosa , " & _
                        " pi.nocm, ap.jenispeserta,ap.kdprovider,ap.nmprovider,kls.namakelas from pemakaianasuransi_t pa " & _
-                       " INNER JOIN asuransipasien_m ap on pa.objectasuransipasienfk= ap.id " & _
-                       " INNER JOIN pasiendaftar_t pd on pd.norec=pa.noregistrasifk " & _
-                       " INNER JOIN pasien_m pi on pi.id=pd.nocmfk " & _
-                       " INNER JOIN jeniskelamin_m jk on jk.id=pi.objectjeniskelaminfk " & _
-                       " INNER JOIN ruangan_m rp on rp.id=pd.objectruanganlastfk " & _
+                       " LEFT JOIN asuransipasien_m ap on pa.objectasuransipasienfk= ap.id " & _
+                       " LEFT JOIN pasiendaftar_t pd on pd.norec=pa.noregistrasifk " & _
+                       " LEFT JOIN pasien_m pi on pi.id=pd.nocmfk " & _
+                       " LEFT JOIN jeniskelamin_m jk on jk.id=pi.objectjeniskelaminfk " & _
+                       " LEFT JOIN ruangan_m rp on rp.id=pd.objectruanganlastfk " & _
                        " LEFT JOIN diagnosa_m dg on pa.diagnosisfk=dg.id" & _
                        " LEFT JOIN kelas_m kls on kls.id=ap.objectkelasdijaminfk " & _
                        " where pd.noregistrasi ='" & strNorec & "' "
@@ -439,19 +441,19 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
              If Not RS.EOF Then
-              .txtnosjp.SetText RS("nosep")
+              .txtnosjp.SetText IIf(IsNull(RS("nosep")), "-", RS("nosep")) 'RS("nosep")
               .txtTglSep.SetText Format(RS("tanggalsep"), "dd/mm/yyyy")
               .txtNomorKartuAskes.SetText IIf(IsNull(RS("nokepesertaan")), "-", RS("nokepesertaan"))
-              .txtNamaPasien.SetText RS("namapeserta")
-              .txtkelamin.SetText RS("jeniskelamin")
-              .txtTanggalLahir.SetText Format(RS("tgllahir"), "dd/mm/yyyy")
+              .txtNamaPasien.SetText IIf(IsNull(RS("namapeserta")), "-", RS("namapeserta")) 'RS("namapeserta")
+              .txtkelamin.SetText IIf(IsNull(RS("jeniskelamin")), "-", RS("jeniskelamin")) 'RS("jeniskelamin")
+              .txtTanggalLahir.SetText IIf(IsNull(RS("tgllahir")), "-", Format(RS("tgllahir"), "dd/mm/yyyy")) 'Format(RS("tgllahir"), "dd/mm/yyyy")
               .txtTujuan.SetText RS("namapoliBpjs") & " / " & RS("namaruangan")
               .txtAsalRujukan.SetText IIf(IsNull(RS("nmprovider")), "-", RS("nmprovider"))
               .txtPeserta.SetText IIf(IsNull(RS("jenispeserta")), "-", RS("jenispeserta"))
-              .txtJenisrawat.SetText RS("jenisrawat")
-              .txtNoCM2.SetText RS("nocm")
-              .txtdiagnosa.SetText RS("namadiagnosa")
-              .txtKelasrawat.SetText RS("namakelas")
+              .txtJenisrawat.SetText IIf(IsNull(RS("jenisrawat")), "-", RS("jenisrawat")) 'RS("jenisrawat")
+              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
+              .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
+              .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
               .txtCatatan.SetText "-"
              End If
 
@@ -476,6 +478,7 @@ boolLembarPersetujuan = False
 Exit Sub
 errLoad:
 
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
 
@@ -582,7 +585,8 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-
+    MsgBox Err.Number & " " & Err.Description
+    
 End Sub
 
 Public Sub cetakBuktiLayananRuangan(strNorec As String, strIdPegawai As String, strIdRuangan As String, view As String)
@@ -618,11 +622,11 @@ boolLembarPersetujuan = False
                        " hargasatuan*tp.jumlah as total, ks.namakelas,ar.asalrujukan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
-                       " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
-                       " INNER JOIN ruangan_m AS ru ON pd.objectruanganlastfk = ru.id " & _
+                       " LEFT JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
+                       " LEFT JOIN ruangan_m AS ru ON pd.objectruanganlastfk = ru.id " & _
                        " LEFT JOIN pegawai_m AS pp ON pd.objectpegawaifk = pp.id " & _
-                       " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
-                       " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
+                       " LEFT JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
+                       " LEFT JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
                        " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
                        " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
@@ -663,8 +667,9 @@ boolLembarPersetujuan = False
 
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
-            .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .ucTarif.SetUnboundFieldSource ("{ado.total}")
+            .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}") '
+            .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
+            .ucTotal.SetUnboundFieldSource ("{ado.total}")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
@@ -692,7 +697,8 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-MsgBox "error"
+
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
 Public Sub cetakKartuPasien(strNocm As String, strNamaPasien As String, strTglLahir As String, strJk As String, view As String)
@@ -743,7 +749,8 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-'MsgBox Err.Description
+
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
 Public Sub cetakLabelPasien(strNorec As String, view As String, qty As String)
@@ -840,6 +847,7 @@ boolLembarPersetujuan = False
 Exit Sub
 errLoad:
 
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
 Public Sub cetakSummaryList(strNorec As String, view As String)
@@ -1065,6 +1073,7 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
+    MsgBox Err.Number & " " & Err.Description
 '    MsgBox Err.Description, vbInformation
 End Sub
 
@@ -1157,6 +1166,7 @@ boolLembarPersetujuan = True
     End With
 Exit Sub
 errLoad:
+    MsgBox Err.Number & " " & Err.Description
 
 End Sub
 
@@ -1242,7 +1252,8 @@ boolLembarPersetujuan = False
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
             .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .ucTarif.SetUnboundFieldSource ("{ado.total}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
+            .ucTotal.SetUnboundFieldSource ("{ado.total}")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
@@ -1270,6 +1281,6 @@ boolLembarPersetujuan = False
     End With
 Exit Sub
 errLoad:
-MsgBox "error"
+    MsgBox Err.Number & " " & Err.Description
 End Sub
 
