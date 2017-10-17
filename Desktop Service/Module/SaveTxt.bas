@@ -23,10 +23,7 @@ Public Function GetTxt(FileNm As String, Table As String, Field As String) As St
 End Function
 
 Public Function SaveTxt(FileNm As String, Table As String, Field As String, teks As String)
-<<<<<<< HEAD
-=======
 
->>>>>>> 18ed343666d101149f88d0c48d99764a856f29ae
   IniFilename = "E:\" & FileNm
     
   result = WritePrivateProfileString("" & Table & "", "" & Field & "", "" & teks & "~", IniFilename)

@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmRekapPendapatan = Nothing
 End Sub
 
-Public Sub CetakRekapPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, namaKasir As String, view As String)
+Public Sub CetakRekapPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, idKelompok As String, namaKasir As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -155,12 +155,22 @@ Set frmRekapPendapatan = Nothing
 Dim adocmd As New ADODB.Command
     Dim str1 As String
     Dim str2 As String
+    Dim str3 As String
     
     If idDokter <> "" Then
         str1 = "and apd.objectpegawaifk=" & idDokter & " "
     End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
+    End If
+    If idKelompok <> "" Then
+        If idKelompok = 0 Then
+            str3 = " and kps.id in (1,3,5) "
+        Else
+            If idKelompok <> "" Then
+                str3 = " and kps.id =" & idKelompok & " "
+            End If
+        End If
     End If
 Set Report = New crRekapPendapatan
 
@@ -196,14 +206,14 @@ Set Report = New crRekapPendapatan
             "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah )  from pelayananpasiendetail_t ppd where ppd.komponenhargafk=25 and ppd.pelayananpasien=pp.norec) as Pr_Jasa, " & _
             "0 as Pr_Pph,0 as Pr_Diterima " & _
             "from pasiendaftar_t as pd " & _
-            "inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec inner JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+            "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left JOIN produk_m as pr on pr.id=pp.produkfk left JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+            "left JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and sp.statusenabled is null " & _
-             " " & str1 & " " & str2 & " " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   and sp.statusenabled is null " & _
+             " " & str1 & " " & str2 & " " & str3 & " " & _
              "group by apd.norec,pp.norec,pd.noregistrasi, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec , " & _
              "pd.objectkelompokpasienlastfk  " & _
             "order by pg.namalengkap"
