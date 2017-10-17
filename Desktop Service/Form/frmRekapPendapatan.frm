@@ -164,7 +164,7 @@ Dim adocmd As New ADODB.Command
     End If
 Set Report = New crRekapPendapatan
 
-   strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap, (case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as CH, " & _
+   'strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap, (case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as CH, " & _
             "(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as KK,(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) as JM,sum(case when cb.id = 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end) as P_CH," & _
             "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end) as P_KK,sum(case when pd.objectkelompokpasienlastfk > 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end)  as P_JM, " & _
             "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.noregistrasifk=apd.norec) as M_jasa, " & _
@@ -186,6 +186,27 @@ Set Report = New crRekapPendapatan
              "(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) , " & _
              "(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) " & _
             "order by pg.namalengkap"
+    
+    strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,  " & _
+            "(case when pd.objectkelompokpasienlastfk=1 then pd.noregistrasi else null end) as NonPJ,(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as JM," & _
+            "sum(case when pd.objectkelompokpasienlastfk = 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end)  as P_NonJM, " & _
+            "sum(case when pd.objectkelompokpasienlastfk > 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end)  as P_JM, " & _
+            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.pelayananpasien=pp.norec) as M_jasa, " & _
+            "0 as M_Pph, 0 as M_Diterima, " & _
+            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah )  from pelayananpasiendetail_t ppd where ppd.komponenhargafk=25 and ppd.pelayananpasien=pp.norec) as Pr_Jasa, " & _
+            "0 as Pr_Pph,0 as Pr_Diterima " & _
+            "from pasiendaftar_t as pd " & _
+            "inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec inner JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+            "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left JOIN produk_m as pr on pr.id=pp.produkfk left JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+            "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+            "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and sp.statusenabled is null " & _
+             " " & str1 & " " & str2 & " " & _
+             "group by apd.norec,pp.norec,pd.noregistrasi, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec , " & _
+             "pd.objectkelompokpasienlastfk  " & _
+            "order by pg.namalengkap"
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -197,11 +218,11 @@ Set Report = New crRekapPendapatan
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .namaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .jCH.SetUnboundFieldSource ("{ado.CH}")
-            .jKK.SetUnboundFieldSource ("{ado.KK}")
+            .jCH.SetUnboundFieldSource ("{ado.NonPJ}")
+            '.jKK.SetUnboundFieldSource ("{ado.KK}")
             .jJM.SetUnboundFieldSource ("{ado.JM}")
-            .pCH.SetUnboundFieldSource ("{ado.P_CH}")
-            .pKK.SetUnboundFieldSource ("{ado.P_KK}")
+            '.pCH.SetUnboundFieldSource ("{ado.P_CH}")
+            .pKK.SetUnboundFieldSource ("{ado.P_NonJM}")
             .pJM.SetUnboundFieldSource ("{ado.P_JM}")
             .mJasa.SetUnboundFieldSource ("{ado.M_Jasa}")
             '.mPph.SetUnboundFieldSource ("{ado.M_Pph}")
