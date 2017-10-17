@@ -213,7 +213,7 @@ Set Report = New crLaporanPenerimaan
             "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
              "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
-             "" & str1 & " " & str2 & " " & str3 & " " & _
+             "" & str1 & " " & str2 & " " & _
              "group by pd.tglregistrasi,pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
     Dim tCash, tKk, tPj, tJm, tRemun, tPm, tPR As Double
