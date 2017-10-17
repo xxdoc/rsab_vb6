@@ -15,11 +15,7 @@ lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName As String) As Long
 
 Public Function GetTxt(FileNm As String, Table As String, Field As String) As String
   On Error Resume Next
-<<<<<<< HEAD
   IniFilename = "E:\" & FileNm
-=======
-  IniFilename = "C:\" & FileNm
->>>>>>> bb3e31722420c66b64faa792308e17bf2ae34700
     
   result = GetPrivateProfileString("" & Table & "", "" & Field & "", "Empty", mYvalue, Len(mYvalue), IniFilename)
   GetTxt = Mid(mYvalue, 1, InStr(1, mYvalue, "~", vbTextCompare) - 1)
@@ -27,11 +23,8 @@ Public Function GetTxt(FileNm As String, Table As String, Field As String) As St
 End Function
 
 Public Function SaveTxt(FileNm As String, Table As String, Field As String, teks As String)
-<<<<<<< HEAD
+
   IniFilename = "E:\" & FileNm
-=======
-  IniFilename = "C:\" & FileNm
->>>>>>> bb3e31722420c66b64faa792308e17bf2ae34700
     
   result = WritePrivateProfileString("" & Table & "", "" & Field & "", "" & teks & "~", IniFilename)
 End Function
