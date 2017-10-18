@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form GossRESTMain 
    BorderStyle     =   4  'Fixed ToolWindow
-   Caption         =   "Desktop Service"
+   Caption         =   "'"
    ClientHeight    =   645
    ClientLeft      =   45
    ClientTop       =   690
@@ -161,7 +161,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "E:/log.txt" For Append As #LogFile
+    Open "C:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show

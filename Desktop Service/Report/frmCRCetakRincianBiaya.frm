@@ -168,7 +168,7 @@ Dim strFilter As String
 Set Report = New crRincianBiayaPelayanan
     strSQL = "SELECT sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan as unit,ru.objectdepartemenfk,kl.namakelas,   " & _
             "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, ru2.namaruangan as ruangantindakan,pr.namaproduk,jp.jenisproduk, pg2.namalengkap as dokter,pp.jumlah,pp.hargajual,   " & _
-            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
+            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
             "sp.totalharusdibayar,case when sp.totalprekanan is null then 0 else sp.totalprekanan end as totalprekanan,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as totalbiayatambahan, pg3.namalengkap as user " & _
             "from pelayananpasien_t as pp left JOIN strukpelayanan_t as sp on pp.strukfk=sp.norec  " & _
             "LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec   " & _
@@ -186,22 +186,24 @@ Set Report = New crRincianBiayaPelayanan
             "INNER join ruangan_m  as ru2 on ru2.id=apd.objectruanganfk   " & _
             "left join kelas_m  as kl on kl.id=pd.objectkelasfk   " & _
             "left join pegawai_m  as pg on pg.id=pd.objectpegawaifk   " & _
-            "left join pegawai_m  as pg2 on pg2.id=apd.objectpegawaifk   " & _
+            "left join pegawai_m  as pg2 on pg2.id=pd.objectpegawaifk   " & _
             "left join rekanan_m  as rk on rk.id=pd.objectrekananfk   " & _
             "left join kamar_m  as kmr on kmr.id=apd.objectkamarfk  " & _
             "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk left join pegawai_m as pg3 on pg3.id=sbm.objectpegawaipenerimafk " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' and pr.id<>402611 or sp.nostruk='" & strNoStruk & "' and pr.id<>402611 or sbm.nosbm='" & strNoKwitansi & "' and pr.id<>402611"
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pr.id<>402611   or sp.nostruk='" & strNoStruk & "' and pr.id<>402611  or sbm.nosbm='" & strNoKwitansi & "' and pr.id<>402611  "
     
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk=402611 "
+            "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk=402611 and ppp.objectjenispetugaspefk=4 "
     
     ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
+            "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611"
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611 and ppp.objectjenispetugaspefk=4 "
     
     Dim TotalDiskonMedis  As Double
     Dim TotalDiskonUmum  As Double

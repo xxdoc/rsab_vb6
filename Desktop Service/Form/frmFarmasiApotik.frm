@@ -19,7 +19,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Function farmasiApotik(ByVal QueryText As String) As Byte()
-    On Error GoTo errLoad
+    On Error Resume Next
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
