@@ -1,6 +1,5 @@
 VERSION 5.00
-Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRLaporanTagihanPenjamin 
+Begin VB.Form frmCRLaporanTagihanPenjaminSurat 
    Caption         =   "Medifirst2000"
    ClientHeight    =   6705
    ClientLeft      =   60
@@ -60,35 +59,14 @@ Begin VB.Form frmCRLaporanTagihanPenjamin
       Top             =   480
       Width           =   3015
    End
-   Begin CRVIEWERLibCtl.CRViewer CRViewer1 
+   Begin VB.PictureBox CRViewer1 
       Height          =   6735
       Left            =   0
+      ScaleHeight     =   6675
+      ScaleWidth      =   6195
       TabIndex        =   4
       Top             =   0
       Width           =   6255
-      DisplayGroupTree=   -1  'True
-      DisplayToolbar  =   -1  'True
-      EnableGroupTree =   -1  'True
-      EnableNavigationControls=   -1  'True
-      EnableStopButton=   -1  'True
-      EnablePrintButton=   -1  'True
-      EnableZoomControl=   -1  'True
-      EnableCloseButton=   -1  'True
-      EnableProgressControl=   -1  'True
-      EnableSearchControl=   -1  'True
-      EnableRefreshButton=   -1  'True
-      EnableDrillDown =   -1  'True
-      EnableAnimationControl=   -1  'True
-      EnableSelectExpertButton=   0   'False
-      EnableToolbar   =   -1  'True
-      DisplayBorder   =   -1  'True
-      DisplayTabs     =   -1  'True
-      DisplayBackgroundEdge=   -1  'True
-      SelectionFormula=   ""
-      EnablePopupMenu =   -1  'True
-      EnableExportButton=   0   'False
-      EnableSearchExpertButton=   0   'False
-      EnableHelpButton=   0   'False
    End
    Begin VB.TextBox txtNamaFormPengirim 
       Height          =   495
@@ -98,13 +76,13 @@ Begin VB.Form frmCRLaporanTagihanPenjamin
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRLaporanTagihanPenjamin"
+Attribute VB_Name = "frmCRLaporanTagihanPenjaminSurat"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
     Option Explicit
-Dim Report As New crLaporanTagihanPenjamin
+Dim Report As New crLaporanTagihanPenjaminSurat
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -143,14 +121,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRLaporanTagihanPenjamin = Nothing
+    Set frmCRLaporanTagihanPenjaminSurat = Nothing
 End Sub
 
-Public Sub CetakLaporanTagihanPenjamin(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompok As String, idPenjamin As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanTagihanPenjaminSura(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompok As String, idPenjamin As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRLaporanTagihanPenjamin = Nothing
+Set frmCRLaporanTagihanPenjaminSurat = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim strFilter As String
@@ -164,7 +142,6 @@ Dim adocmd As New ADODB.Command
     Format(tglAkhir) & "'"
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
-    If idRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & idRuangan & "' "
     If idKelompok <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & idKelompok & "' "
     If idPenjamin <> "" Then strFilter = strFilter & " AND rk.id = '" & idPenjamin & "' "
   
@@ -173,7 +150,7 @@ Dim adocmd As New ADODB.Command
             "ORDER BY pd.tglregistrasi"
             'sp.tglstruk"
     
-Set Report = New crLaporanTagihanPenjamin
+Set Report = New crLaporanTagihanPenjaminSurat
     strSQL = "SELECT pd.tglregistrasi, pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, ru.namaruangan, " & _
             "case when pr.id =395 then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
             "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos,  " & _
@@ -207,7 +184,7 @@ Set Report = New crLaporanTagihanPenjamin
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             '.usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")

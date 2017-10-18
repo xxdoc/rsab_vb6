@@ -287,14 +287,14 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usNoTelpon.SetUnboundFieldSource ("{ado.mobilephone2}")
 
-            .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -364,7 +364,7 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
 '            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
@@ -532,15 +532,15 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
 
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             
@@ -552,7 +552,7 @@ boolLembarPersetujuan = False
             '.usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
@@ -624,6 +624,7 @@ boolLembarPersetujuan = False
                        " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
                        " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
                        " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
+                       " (case when tp.hargadiscount is null then 0 else tp.hargadiscount end)* tp.jumlah as diskon, " & _
                        " hargasatuan*tp.jumlah as total, ks.namakelas,ar.asalrujukan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
@@ -649,14 +650,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -668,12 +669,13 @@ boolLembarPersetujuan = False
             .usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
 
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
             .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}") '
             .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
@@ -809,7 +811,7 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
     
@@ -900,16 +902,16 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy-MM-dd"), Format(Now, "yyyy-MM-dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy-MM-dd"), Format(Now, "yyyy-MM-dd"))
             End If
 
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namaayah}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
            
@@ -1013,9 +1015,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "Umur -"
+                .txtumur.SetText "Umur -"
             Else
-                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
+                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(RS!tglregistrasi, "dd/mm/yyyy"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd/mm/yyyy")
                 .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd/mm/yyyy"))
@@ -1023,7 +1025,7 @@ boolLembarPersetujuan = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1212,6 +1214,7 @@ boolLembarPersetujuan = False
                        " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
                        " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
                        " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
+                       " (case when tp.hargadiscount is null then 0 else tp.hargadiscount end)* tp.jumlah as diskon, " & _
                        " hargasatuan*tp.jumlah as total,ks.namakelas,ar.asalrujukan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
@@ -1237,14 +1240,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -1256,12 +1259,13 @@ boolLembarPersetujuan = False
             .usQty.SetUnboundFieldSource ("{ado.jumlah}")
             .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
 
             .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
 
             .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
