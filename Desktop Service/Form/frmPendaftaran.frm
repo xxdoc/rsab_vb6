@@ -37,7 +37,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 Public Function Pendaftaran(ByVal QueryText As String) As Byte()
-    On Error GoTo cetak   'Resume Next
+    On Error Resume Next
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
@@ -48,6 +48,7 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
     Dim Param7() As String
     Dim Param8() As String
     Dim arrItem() As String
+    
    
     If CN.State = adStateClosed Then Call openConnection
         
@@ -189,6 +190,18 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
+                
+            Case "RIS"
+                Dim lngReturnCode As Long
+                Dim strShellCommand As String
+                
+                
+                strShellCommand = "c:\Program Files\Mozilla Firefox\firefox.exe zetta://URL=http://192.168.12.11&LID=dok&LPW=dok&LICD=003&PID=" & Param2(1) & "&VTYPE=" & Param3(1) & ""
+                
+                 lngReturnCode = shell(strShellCommand, vbNormalFocus)
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "as@epic"
              
             Case Else
                 Set Root = New JNode

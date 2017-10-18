@@ -521,7 +521,7 @@ boolLembarPersetujuan = False
                        " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
                        " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
-                       " where pd.noregistrasi ='" & strNorec & "' ORDER BY tp.tglpelayanan "
+                       " where pd.noregistrasi ='" & strNorec & "'   ORDER BY tp.tglpelayanan "
                        
             
             ReadRs strSQL
@@ -608,7 +608,12 @@ boolLembarRMK = False
 boolLembarPersetujuan = False
     strSQL = ""
     strFilter = ""
-    If strIdRuangan <> "" Then strFilter = " AND ru2.id = '" & strIdRuangan & "' "
+    If Left(strIdRuangan, 14) = "ORDERRADIOLOGI" Then
+        strIdRuangan = Replace(strIdRuangan, "ORDERRADIOLOGI", "")
+        strFilter = " AND apdp.norec = '" & strIdRuangan & "' "
+    Else
+        If strIdRuangan <> "" Then strFilter = " AND ru2.id = '" & strIdRuangan & "' "
+    End If
     strFilter = strFilter & " ORDER BY tp.tglpelayanan "
     With reportBuktiLayananRuangan
     
@@ -624,10 +629,10 @@ boolLembarPersetujuan = False
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
                        " LEFT JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
                        " LEFT JOIN ruangan_m AS ru ON pd.objectruanganlastfk = ru.id " & _
-                       " LEFT JOIN pegawai_m AS pp ON pd.objectpegawaifk = pp.id " & _
                        " LEFT JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
                        " LEFT JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
+                       " LEFT JOIN pegawai_m AS pp ON apdp.objectpegawaifk = pp.id " & _
                        " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
                        " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
                        " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _

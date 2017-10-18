@@ -201,9 +201,9 @@ Set Report = New crRekapPendapatan
             "(case when pd.objectkelompokpasienlastfk=1 then pd.noregistrasi else null end) as NonPJ,(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as JM," & _
             "sum(case when pd.objectkelompokpasienlastfk = 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end)  as P_NonJM, " & _
             "sum(case when pd.objectkelompokpasienlastfk > 1 then (pp.hargajual-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end ))*pp.jumlah  else 0 end)  as P_JM, " & _
-            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.pelayananpasien=pp.norec) as M_jasa, " & _
+            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*pp.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.pelayananpasien=pp.norec) as M_jasa, " & _
             "0 as M_Pph, 0 as M_Diterima, " & _
-            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah )  from pelayananpasiendetail_t ppd where ppd.komponenhargafk=25 and ppd.pelayananpasien=pp.norec) as Pr_Jasa, " & _
+            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*pp.jumlah )  from pelayananpasiendetail_t ppd where ppd.komponenhargafk=25 and ppd.pelayananpasien=pp.norec) as Pr_Jasa, " & _
             "0 as Pr_Pph,0 as Pr_Diterima " & _
             "from pasiendaftar_t as pd " & _
             "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _

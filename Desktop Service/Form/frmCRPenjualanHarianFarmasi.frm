@@ -165,7 +165,8 @@ Set Report = New crPenjualanHarianFarmasi
             "case when jk.jeniskelamin = 'Laki-laki' then 'L' else 'P' end as jeniskelamin, " & _
             "kp.kelompokpasien, pg.namalengkap, ru2.namaruangan, pp.jumlah, pp.hargajual,  " & _
             "(pp.jumlah)*(pp.hargajual) as subtotal," & _
-            "0 as diskon, 0 as jasa, 0 as ppn, (pp.jumlah*pp.hargajual)-0-0-0 as total, " & _
+            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon, " & _
+            "case when pp.jasa is null then 0 else pp.jasa end as jasa, 0 as ppn, (pp.jumlah*pp.hargajual)-0-0-0 as total, " & _
             "case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, pg2.namalengkap as kasir " & _
             "from strukresep_t as sr " & _
             "LEFT JOIN pelayananpasien_t as pp on pp.strukresepfk = sr.norec " & _
@@ -205,7 +206,7 @@ Set Report = New crPenjualanHarianFarmasi
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPPN.SetUnboundFieldSource ("{ado.ppn}")
-            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
             .usKasir.SetUnboundFieldSource ("{ado.kasir}")
             
