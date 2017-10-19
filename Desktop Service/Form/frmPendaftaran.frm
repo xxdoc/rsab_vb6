@@ -358,7 +358,7 @@ Private Sub cetak_KartuPasien(strNocm As String)
 '    Printer.CurrentX = 2900
 '    Printer.CurrentY = 2250
     Call make128(RS!nocm)
-    Printer.PaintPicture Picture1.Image, 2900, 2250
+    Printer.PaintPicture Picture1.Image, 2500, 2250
     
     Printer.FontBold = True
     Printer.FontName = "Tahoma"
@@ -381,7 +381,7 @@ End Sub
 
 
 Private Sub make128(angka As Double)
-Dim x As Long, y As Long, pos As Long
+Dim X As Long, y As Long, pos As Long
 Dim Bardata As String
 Dim Cur As String
 Dim CurVal As Long
@@ -504,15 +504,15 @@ Dim BC(106) As String
     Bardata = angka 'Text1.Text
 
     'Check for invalid characters, calculate check sum & build temp string
-    For x = 1 To Len(Bardata)
-        Cur = Mid$(Bardata, x, 1)
+    For X = 1 To Len(Bardata)
+        Cur = Mid$(Bardata, X, 1)
         If Cur < " " Or Cur > "~" Then
             Picture1.Print "Invalid Character(s)"
             Exit Sub
         End If
         CurVal = Asc(Cur) - 32
         temp = temp + BC(CurVal)
-        chksum = chksum + CurVal * x
+        chksum = chksum + CurVal * X
     Next
     
     'Add start, stop & check characters
@@ -520,13 +520,13 @@ Dim BC(106) As String
     temp = BC(104) & temp & BC(chksum) & BC(106)
 
     'Generate Barcode
-    For x = 1 To Len(temp)
-        If x Mod 2 = 0 Then
+    For X = 1 To Len(temp)
+        If X Mod 2 = 0 Then
                 'SPACE
-                pos = pos + (Val(Mid$(temp, x, 1))) + 1
+                pos = pos + (Val(Mid$(temp, X, 1))) + 1
         Else
                 'BAR
-                For y = 1 To (Val(Mid$(temp, x, 1)))
+                For y = 1 To (Val(Mid$(temp, X, 1)))
                     Picture1.Line (pos, 1)-(pos, 58 - 0 * 8)
                     pos = pos + 1
                 Next
