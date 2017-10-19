@@ -193,54 +193,45 @@ Public Sub PrintFrontSideOnly(ByVal prnDriver As String, ByVal Text As String, B
 '        GoTo PrintFrontSideOnly_CloseGraphicsDevice
 '    End If
     
-    If ZBRGDIDrawText(500, 220, namaayah, "Arial", 11, 0, &HFF0000, errValue) = 0 Then
-        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
-        GoTo PrintFrontSideOnly_CloseGraphicsDevice
-    End If
-    If ZBRGDIDrawText(500, 270, namapasien, "Arial", 13, 0, &HFF0000, errValue) = 0 Then
-        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
-        GoTo PrintFrontSideOnly_CloseGraphicsDevice
-    End If
-    If ZBRGDIDrawText(500, 330, tgllahir, "Arial", 11, 0, &HFF0000, errValue) = 0 Then
-        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
-        GoTo PrintFrontSideOnly_CloseGraphicsDevice
-    End If
-    If ZBRGDIDrawText(45, 540, nocm, "Arial", 16, 0, &HFF0000, errValue) = 0 Then
-        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
-        GoTo PrintFrontSideOnly_CloseGraphicsDevice
-    End If
-'    If ZBRGDIDrawText(650, 575, nocm, "Tahoma", 10, 0, &HFF0000, errValue) = 0 Then
+'    If ZBRGDIDrawText(500, 220, namaayah, "Tahoma", 11, 0, &HFF0000, errValue) = 0 Then
 '        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
 '        GoTo PrintFrontSideOnly_CloseGraphicsDevice
 '    End If
-If ZBRGDIDrawBarCode(630, 550, 0, 0, 1, 2, 60, 1, nocm, errValue) = 0 Then
-        msg = "Printing : DrawBarCode : Error[" & CStr(errValue) & "]"
-        GoTo PrintFrontSideOnly_CloseGraphicsDevice
-    End If
-'     If ZBRGDIDrawBarCode(580, 550, 0, 0, 1, 3, 40, 1, nocm, errValue) = 0 Then '35, 500, 0, 0, 1, 3, 30, 1, "123456789", errValue)
+'    If ZBRGDIDrawText(500, 270, namapasien, "Tahoma", 13, 0, &HFF0000, errValue) = 0 Then
+'        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
+'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
+'    End If
+'    If ZBRGDIDrawText(500, 330, tgllahir, "Tahoma", 11, 4, &HFF0000, errValue) = 0 Then
+'        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
+'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
+'    End If
+'    If ZBRGDIDrawText(45, 540, nocm, "Tahoma", 16, 0, &HFF0000, errValue) = 0 Then
+'        msg = "Printing : DrawText : Error[" & CStr(errValue) & "]"
+'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
+'    End If
+'    If ZBRGDIDrawBarCode(500, 220, 0, 0, 1, 2, 1, 1, namaayah, errValue) = 0 Then
+'        msg = "Printing : DrawBarCode : Error[" & CStr(errValue) & "]"
+'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
+'    End If
+'    If ZBRGDIDrawBarCode(500, 270, 0, 0, 1, 2, 1, 1, namapasien, errValue) = 0 Then
+'        msg = "Printing : DrawBarCode : Error[" & CStr(errValue) & "]"
+'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
+'    End If
+'    If ZBRGDIDrawBarCode(500, 330, 0, 0, 1, 2, 1, 1, tgllahir, errValue) = 0 Then
+'        msg = "Printing : DrawBarCode : Error[" & CStr(errValue) & "]"
+'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
+'    End If
+'    If ZBRGDIDrawBarCode(45, 540, 0, 0, 1, 2, 1, 1, nocm, errValue) = 0 Then
 '        msg = "Printing : DrawBarCode : Error[" & CStr(errValue) & "]"
 '        GoTo PrintFrontSideOnly_CloseGraphicsDevice
 '    End If
     
-    'Draws a Line into the graphics buffer
     
-'    If ZBRGDIDrawLine(35, 300, 300, 300, &HFF0000, 5#, errValue) = 0 Then
-'        msg = "Printing : DrawLine : Error[" & CStr(errValue) & "]"
-'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
-'    End If
+    If ZBRGDIDrawBarCode(630, 550, 0, 0, 1, 2, 60, 1, nocm, errValue) = 0 Then
+        msg = "Printing : DrawBarCode : Error[" & CStr(errValue) & "]"
+        GoTo PrintFrontSideOnly_CloseGraphicsDevice
+    End If
     
-    ' Places an image into the graphics buffer
-    
-'    If ZBRGDIDrawImageRect(imgPath, 30, 30, 200, 150, errValue) = 0 Then
-'        msg = "Printing : DrawImage : Error[" & CStr(errValue) & "]"
-'        GoTo PrintFrontSideOnly_CloseGraphicsDevice
-'    End If
-    
-    ' Sends barcode data to the monochrome buffer
-    
-   
-    
-    ' Prints the graphics buffer (front side)
     
     If ZBRGDIPrintGraphics(hDC, errValue) = 0 Then
         msg = "Printing : PrintGraphics : Error[" & CStr(errValue) & "]"

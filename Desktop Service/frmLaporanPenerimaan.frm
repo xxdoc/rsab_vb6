@@ -156,6 +156,7 @@ Dim adocmd As New ADODB.Command
 
     Dim str1 As String
     Dim str2 As String
+    Dim str3 As String
     
     If idDokter <> "" Then
         str1 = "and apd.objectpegawaifk=" & idDokter & " "
