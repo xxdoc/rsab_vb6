@@ -17,9 +17,9 @@ Begin VB.Form GossRESTMain
    Begin DesktopService.Gossamer Gossamer1 
       Left            =   120
       Top             =   120
-      _ExtentX        =   741
-      _ExtentY        =   741
-      VDir            =   "VDir"
+      _extentx        =   741
+      _extenty        =   741
+      vdir            =   "VDir"
    End
    Begin VB.Label Label2 
       Caption         =   "."
@@ -178,11 +178,11 @@ Private Sub Form_Unload(Cancel As Integer)
     Shell_NotifyIcon NIM_DELETE, nid
     If CN.State = adStateOpen Then CN.Close
 End Sub
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, y As Single)
     Dim msg As Long
     Dim sFilter As String
     
-    msg = x / Screen.TwipsPerPixelX
+    msg = X / Screen.TwipsPerPixelX
     Select Case msg
         Case WM_LBUTTONDOWN
             Me.Show ' tampilkan form
