@@ -17,9 +17,9 @@ Begin VB.Form GossRESTMain
    Begin DesktopService.Gossamer Gossamer1 
       Left            =   120
       Top             =   120
-      _ExtentX        =   741
-      _ExtentY        =   741
-      VDir            =   "VDir"
+      _extentx        =   741
+      _extenty        =   741
+      vdir            =   "VDir"
    End
    Begin VB.Label Label2 
       Caption         =   "."
