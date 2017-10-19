@@ -285,6 +285,8 @@ Set Report = New crRincianBiayaPelayanan
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             
+            
+            
 '            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
 '            If RS2.BOF Then
 '                .txtUser.SetText "-"
