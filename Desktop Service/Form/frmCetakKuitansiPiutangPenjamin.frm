@@ -1,14 +1,14 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRLaporanTagihanPenjaminSurat 
+Begin VB.Form frmCetakKuitansiPiutangPenjamin 
    Caption         =   "Medifirst2000"
-   ClientHeight    =   6705
+   ClientHeight    =   7470
    ClientLeft      =   60
    ClientTop       =   345
-   ClientWidth     =   6330
+   ClientWidth     =   6390
    LinkTopic       =   "Form1"
-   ScaleHeight     =   6705
-   ScaleWidth      =   6330
+   ScaleHeight     =   7470
+   ScaleWidth      =   6390
    WindowState     =   2  'Maximized
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
@@ -61,11 +61,11 @@ Begin VB.Form frmCRLaporanTagihanPenjaminSurat
       Width           =   3015
    End
    Begin CRVIEWERLibCtl.CRViewer CRViewer1 
-      Height          =   6735
+      Height          =   7455
       Left            =   0
       TabIndex        =   4
       Top             =   0
-      Width           =   6255
+      Width           =   6375
       DisplayGroupTree=   -1  'True
       DisplayToolbar  =   -1  'True
       EnableGroupTree =   -1  'True
@@ -98,18 +98,18 @@ Begin VB.Form frmCRLaporanTagihanPenjaminSurat
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRLaporanTagihanPenjaminSurat"
+Attribute VB_Name = "frmCetakKuitansiPiutangPenjamin"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanTagihanPenjaminSurat
-'Dim bolSuppresDetailSection10 As Boolean
-'Dim ii As Integer
-'Dim tempPrint1 As String
-'Dim p As Printer
-'Dim p2 As Printer
+Dim Report As New crKuitansiPiutangPenjamin
+Dim bolSuppresDetailSection10 As Boolean
+Dim ii As Integer
+Dim tempPrint1 As String
+Dim p As Printer
+Dim p2 As Printer
 Dim strDeviceName As String
 Dim strDriverName As String
 Dim strPort As String
@@ -131,7 +131,7 @@ Private Sub Form_Load()
     For Each p In Printers
         cboPrinter.AddItem p.DeviceName
     Next
-    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "Kwitansi")
 End Sub
 
 Private Sub Form_Resize()
@@ -143,13 +143,13 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRLaporanTagihanPenjaminSurat = Nothing
+    Set frmCetakKuitansiPiutangPenjamin = Nothing
 End Sub
 
-Public Sub CetakLaporanTagihanPenjaminSurat(idKasir As String, tglAwal As String, tglAkhir As String, login As String, idKelompok As String, idPerusahaan As String, view As String)
+Public Sub CetakKuitansiPiutangPenjamin(idKasir As String, tglAwal As String, tglAkhir As String, idKelompok As String, idPerusahaan As String, login As String, view As String)
 'On Error GoTo errLoad
 
-Set frmCRLaporanTagihanPenjaminSurat = Nothing
+Set frmCetakKuitansiPiutangPenjamin = Nothing
 
 Dim adocmd As New ADODB.Command
     Dim str1 As String
@@ -158,7 +158,7 @@ Dim adocmd As New ADODB.Command
         str1 = "and rk.id=" & idPerusahaan & " "
     End If
     
-    Set Report = New crLaporanTagihanPenjaminSurat
+    Set Report = New crKuitansiPiutangPenjamin
         strSQL = "SELECT (case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin, " & _
                 "case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan " & _
                 "FROM strukpelayanan_t as sp " & _
@@ -174,18 +174,17 @@ Dim adocmd As New ADODB.Command
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            '.txtPrinted.SetText login
-            .txtTgl.SetText "" & tglAwal & " s/d " & tglAkhir & ""
+            .txtPrinted.SetText login
+            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
             .ucJumlah.SetUnboundFieldSource ("{ado.totalppenjamin}")
-            
             
             If view = "false" Then
                 Dim strPrinter As String
 '
-                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanTagihanPenjamin")
-                .SelectPrinter "winspool", strPrinter, "Ne00:"
-                .PrintOut False
+                strPrinter = GetTxt("Setting.ini", "Printer", "Kwitansi")
+                Report.SelectPrinter "winspool", strPrinter, "Ne00:"
+                Report.PrintOut False
                 Unload Me
             Else
                 With CRViewer1
@@ -195,9 +194,8 @@ Dim adocmd As New ADODB.Command
                 End With
                 Me.Show
             End If
-        'End If
     End With
 Exit Sub
 errLoad:
-    MsgBox Err.Number & " " & Err.Description
 End Sub
+

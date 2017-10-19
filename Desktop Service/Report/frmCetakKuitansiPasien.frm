@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hwnd
+    Report.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -148,7 +148,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakUlangJenisKuitansi(strNoregistrasi As String, jumlahCetak As Integer, view As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 
 Set frmCRCetakKuitansiPasien = Nothing
 
