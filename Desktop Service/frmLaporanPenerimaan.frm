@@ -195,7 +195,7 @@ Set Report = New crLaporanPenerimaan
              "pd.objectkelompokpasienlastfk " & _
              "order by pd.noregistrasi"
 
-   ReadRs2 "select pd.tglregistrasi,pg2.id,pg2.namalengkap as kasir, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap, sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as cash, " & _
+   ReadRs2 "select pd.tglregistrasi,pg2.id,pg2.namalengkap as kasir,  apd.objectpegawaifk,pg.namalengkap, sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as cash, " & _
             "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as KK,sum(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) as JM,sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_CH," & _
             "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_KK,sum(case when pd.objectkelompokpasienlastfk > 1 then (case when sp.totalprekanan is null then 0 else sp.totalprekanan end)+(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) else 0 end)  as P_JM, " & _
             "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.strukfk=sp.norec) as M_jasa, " & _
@@ -208,14 +208,13 @@ Set Report = New crLaporanPenerimaan
             "left JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk " & _
             "left JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk " & _
             "left JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk " & _
-            "left JOIN ruangan_m as ru2 on ru2.id=sbm.objectruanganfk " & _
             "inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=sp.noregistrasifk " & _
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
              "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
              "" & str1 & " " & str2 & " " & _
-             "group by pd.tglregistrasi,pg2.id,pg2.namalengkap , apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
+             "group by pd.tglregistrasi,pg2.id,pg2.namalengkap ,  apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
             "order by pg.namalengkap"
     Dim tCash, tKk, tPj, tJm, tRemun, tPm, tPR As Double
     Dim i As Integer

@@ -162,11 +162,15 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crPenerimaanKasir1
-    strSQL = "select pd.noregistrasi, sbm.tglsbm, ps.nocm, ps.namapasien, kp.kelompokpasien, ru.namaruangan, pg.namalengkap, " & _
+    strSQL = "select " & _
+            "case when cb.id = 1 then sbm.totaldibayar else 0 end as tunai, " & _
+            "case when cb.id > 1 then sbm.totaldibayar else 0 end as nontunai,pd.noregistrasi, sbm.tglsbm, ps.nocm, ps.namapasien, kp.kelompokpasien, ru.namaruangan, pg.namalengkap, " & _
             "pg2.namaexternal as kasir, sbm.totaldibayar, " & _
             "CASE WHEN sp.totalprekanan is null then 0 else sp.totalprekanan end as hutangPenjamin, " & _
             "sp.totalharusdibayar, lu.namaexternal as namaLogin " & _
             "from strukbuktipenerimaan_t as sbm " & _
+            "left JOIN strukbuktipenerimaancarabayar_t as sbmc on sbmc.nosbmfk=sbm.norec " & _
+            "LEFT JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk " & _
             "INNER JOIN strukpelayanan_t as sp on sp.nosbmlastfk=sbm.norec " & _
             "LEFT JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk " & _
             "LEFT JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk " & _
@@ -201,7 +205,8 @@ Set Report = New crPenerimaanKasir1
             .ucTotalBiaya.SetUnboundFieldSource ("{ado.totaldibayar}")
             .ucHutangPenjamin.SetUnboundFieldSource ("{ado.hutangPenjamin}")
             .ucJmlBayar.SetUnboundFieldSource ("{ado.totalharusdibayar}")
-            
+            .ucTunai.SetUnboundFieldSource ("{ado.tunai}")
+            .ucCard.SetUnboundFieldSource ("{ado.nontunai}")
             If view = "false" Then
                 Dim strPrinter As String
 '
