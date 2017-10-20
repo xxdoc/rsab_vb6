@@ -676,7 +676,8 @@ boolLembarPersetujuan = False
             .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}") '
             .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
-            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            .usJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
@@ -1266,7 +1267,8 @@ boolLembarPersetujuan = False
             .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
-            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            .usJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
