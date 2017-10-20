@@ -306,7 +306,8 @@ Private Sub cetak_KartuPasien(strNocm As String)
     Dim prn As Printer
     Dim strPrinter As String
     
-    strSQL = "SELECT ps.namapasien || ' ( ' ||  jk.reportdisplay || ' ) ' as namapasien ,ps.nocm, ps.tgllahir,ps.namaayah  " & _
+    strSQL = "SELECT ps.namapasien || ' ( ' ||  jk.reportdisplay || ' ) ' as namapasien ,ps.nocm, ps.tgllahir," & _
+            "ps.namaayah,ps.namasuamiistri ,ps.objectjeniskelaminfk,ps.objectstatusperkawinanfk " & _
             " from pasien_m ps INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
             " where ps.id=" & strNocm & " "
       
@@ -328,18 +329,20 @@ Private Sub cetak_KartuPasien(strNocm As String)
     Dim ayah As String
     Dim ayah2 As String
     
-    'Special128
-    If IsNull(RS!namaayah) = True Then
-    ayah = ""
+    If IsNull(RS!objectjeniskelaminfk) <> 1 Then
+        If RS!objectstatusperkawinanfk = 2 Then 'kawin
+            ayah = IIf(IsNull(RS!namasuamiistri) = True, "", RS!namasuamiistri)
+        Else
+            ayah = IIf(IsNull(RS!namaayah) = True, "", RS!namaayah)
+        End If
     Else
-    ayah = RS!namaayah
+        If RS!objectstatusperkawinanfk = 2 Then 'kawin
+            ayah = ""
+        Else
+            ayah = IIf(IsNull(RS!namaayah) = True, "", RS!namaayah)
+        End If
     End If
-    If IsNull(RS!tgllahir) = True Then
-    ayah2 = ""
-    Else
-    ayah2 = Format(RS!tgllahir, "dd-MMM-yyyy")
-    End If
-'    "Free 3 of 9 Extended"
+    ayah2 = IIf(IsNull(RS!tgllahir) = True, "", Format(RS!tgllahir, "dd-MMM-yyyy"))
     Printer.FontName = "Tahoma"
     Printer.fontSize = 10
     Printer.Print ""
@@ -347,9 +350,12 @@ Private Sub cetak_KartuPasien(strNocm As String)
     Printer.Print ""
     Printer.Print ""
     Printer.FontBold = True
-    Printer.Print "                                         " & Left(ayah, 17)
+    Printer.fontSize = 8
+    Printer.Print "                                                    " & Left(ayah, 17)
+    Printer.fontSize = 10
     Printer.Print "                                         " & Left(RS!namapasien, 17)
-    Printer.Print "                                         " & ayah2
+    Printer.fontSize = 8
+    Printer.Print "                                                    " & ayah2
     Printer.Print ""
     
     Printer.FontBold = False
