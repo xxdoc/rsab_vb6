@@ -183,12 +183,12 @@ Dim adocmd As New ADODB.Command
     If idKelompok <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & idKelompok & "' "
     If idPenjamin <> "" Then strFilter = strFilter & " AND rk.id = '" & idPenjamin & "' "
             
-    orderby = strFilter & "group by pd.noregistrasi, sp.totalharusdibayar,sp.totalprekanan ,pd.tglpulang " & _
+    orderby = strFilter & "group by pd.noregistrasi, rk.namarekanan, sp.totalharusdibayar,sp.totalprekanan ,pd.tglpulang " & _
             "order by pd.tglpulang"
             
     Set Report = New crLaporanTagihanPenjaminSurat
     
-    ReadRs2 "select pd.noregistrasi, " & _
+    ReadRs2 "select pd.noregistrasi, rk.namarekanan, " & _
             "(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) as cash, " & _
             "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalpiutangpenjamin " & _
             "from strukpelayanan_t as sp " & _
@@ -198,25 +198,29 @@ Dim adocmd As New ADODB.Command
             "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
             "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby
     
-    Dim tCash, tPiutang As Double
+    Dim tCash, tPiutang, tMaterai, X As Double
+    Dim tRekanan As String
     Dim i As Integer
+    tMaterai = 3000
     
     For i = 0 To RS2.RecordCount - 1
-        tCash = tCash + CDbl(IIf(IsNull(RS2!cash), 0, RS2!cash))
         tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalpiutangpenjamin), 0, RS2!totalpiutangpenjamin))
+        'tRekanan = IIf(IsNull(RS2!namarekanan), "-", RS2!namarekanan)
         RS2.MoveNext
     Next
-    
-    adocmd.CommandText = strSQL
-    adocmd.CommandType = adCmdText
         
     With Report
-        .database.AddADOCommand CN_String, adocmd
-            '.txtPrinted.SetText login
-            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
-            '.usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
+        If Not RS2.BOF Then
             .ucJumlah.SetUnboundFieldSource (tPiutang)
-            .ucMaterai.SetUnboundFieldSource 3000
+            .ucMaterai.SetUnboundFieldSource (tMaterai)
+        End If
+            
+        ReadRs3 "SELECT namarekanan FROM rekanan_m where id='" & idPenjamin & "' "
+        If RS3.BOF Then
+            .txtPenjamin.SetText "-"
+        Else
+            .txtPenjamin.SetText UCase(IIf(IsNull(RS3("namarekanan")), "-", RS3("namarekanan")))
+        End If
             
             
             If view = "false" Then
