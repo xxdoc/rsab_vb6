@@ -328,6 +328,7 @@ Private Sub cetak_KartuPasien(strNocm As String)
     Dim msg As String
     Dim ayah As String
     Dim ayah2 As String
+    Dim splt() As String
     
     If IsNull(RS!objectjeniskelaminfk) <> 1 Then
         If RS!objectstatusperkawinanfk = 2 Then 'kawin
@@ -341,6 +342,10 @@ Private Sub cetak_KartuPasien(strNocm As String)
         Else
             ayah = IIf(IsNull(RS!namaayah) = True, "", RS!namaayah)
         End If
+    End If
+    If ayah <> "" Then
+        splt = Split(ayah, " ")
+        ayah = splt(0)
     End If
     ayah2 = IIf(IsNull(RS!tgllahir) = True, "", Format(RS!tgllahir, "dd-MMM-yyyy"))
     Printer.FontName = "Tahoma"

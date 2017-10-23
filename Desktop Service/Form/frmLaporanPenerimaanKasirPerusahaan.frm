@@ -158,7 +158,7 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crPenerimaanKasirPerusahaan
-    strSQL = "select kp.kelompokpasien, spp.norec,sp.tglstruk, pd.noregistrasi,pd.tglregistrasi,p.nocm, " & _
+    strSQL = "select distinct kp.kelompokpasien, spp.norec,sp.tglstruk, pd.noregistrasi,pd.tglregistrasi,p.nocm, " & _
             "p.namapasien, ru.namaruangan, pg.namalengkap, spp.totalppenjamin,spp.totalharusdibayar, " & _
             "spp.totalsudahdibayar, spp.totalharusdibayar - spp.totalppenjamin as sisaBayar, spp.totalbiaya, spp.noverifikasi " & _
             "from strukpelayananpenjamin_t as spp " & _
