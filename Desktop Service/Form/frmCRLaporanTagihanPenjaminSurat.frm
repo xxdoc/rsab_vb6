@@ -146,28 +146,66 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanTagihanPenjaminSurat = Nothing
 End Sub
 
-Public Sub CetakLaporanTagihanPenjaminSurat(idKasir As String, tglAwal As String, tglAkhir As String, login As String, idKelompok As String, idPerusahaan As String, view As String)
+Public Sub CetakLaporanTagihanPenjaminSurat(idKasir As String, tglAwal As String, tglAkhir As String, login As String, idKelompok As String, idPenjamin As String, view As String)
 'On Error GoTo errLoad
 
 Set frmCRLaporanTagihanPenjaminSurat = Nothing
 
 Dim adocmd As New ADODB.Command
-    Dim str1 As String
+    'Dim str1 As String
     
-    If idPerusahaan <> "" Then
-        str1 = "and rk.id=" & idPerusahaan & " "
-    End If
+    'if idPerusahaan <> "" Then
+     '   str1 = "and rk.id=" & idPerusahaan & " "
+    'End If
     
-    Set Report = New crLaporanTagihanPenjaminSurat
-        strSQL = "SELECT (case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin, " & _
-                "case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan " & _
-                "FROM strukpelayanan_t as sp " & _
-                "left join pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _
-                "left JOIN rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
-                "INNER JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
-                "where sp.tglstruk BETWEEN '2017-10-01' and '2017-10-19' and kps.id in (1,3,5) " & _
-                str1
+    'Set Report = New crLaporanTagihanPenjaminSurat
+     '   strSQL = "SELECT (case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin, " & _
+      '          "case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan " & _
+       '         "FROM strukpelayanan_t as sp " & _
+        '        "left join pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _
+         '       "left JOIN rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
+          '      "INNER JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+           '     "where sp.tglstruk BETWEEN '2017-10-01' and '2017-10-19' and kps.id in (1,3,5) " & _
+            '    str1
 
+    
+    Dim strFilter As String
+    Dim orderby As String
+    
+    strFilter = ""
+    orderby = ""
+
+    strFilter = " where pd.tglpulang BETWEEN '" & _
+    tglAwal & "' AND '" & _
+    tglAkhir & "'"
+'    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
+    
+    If idKelompok <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & idKelompok & "' "
+    If idPenjamin <> "" Then strFilter = strFilter & " AND rk.id = '" & idPenjamin & "' "
+            
+    orderby = strFilter & "group by pd.noregistrasi, sp.totalharusdibayar,sp.totalprekanan ,pd.tglpulang " & _
+            "order by pd.tglpulang"
+            
+    Set Report = New crLaporanTagihanPenjaminSurat
+    
+    ReadRs2 "select pd.noregistrasi, " & _
+            "(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) as cash, " & _
+            "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalpiutangpenjamin " & _
+            "from strukpelayanan_t as sp " & _
+            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
+            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
+            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
+            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
+            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby
+    
+    Dim tCash, tPiutang As Double
+    Dim i As Integer
+    
+    For i = 0 To RS2.RecordCount - 1
+        tCash = tCash + CDbl(IIf(IsNull(RS2!cash), 0, RS2!cash))
+        tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalpiutangpenjamin), 0, RS2!totalpiutangpenjamin))
+        RS2.MoveNext
+    Next
     
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -175,9 +213,10 @@ Dim adocmd As New ADODB.Command
     With Report
         .database.AddADOCommand CN_String, adocmd
             '.txtPrinted.SetText login
-            .txtTgl.SetText "" & tglAwal & " s/d " & tglAkhir & ""
-            .usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
-            .ucJumlah.SetUnboundFieldSource ("{ado.totalppenjamin}")
+            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
+            '.usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
+            .ucJumlah.SetUnboundFieldSource (tPiutang)
+            .ucMaterai.SetUnboundFieldSource 3000
             
             
             If view = "false" Then

@@ -17,9 +17,9 @@ Begin VB.Form GossRESTMain
    Begin DesktopService.Gossamer Gossamer1 
       Left            =   120
       Top             =   120
-      _extentx        =   741
-      _extenty        =   741
-      vdir            =   "VDir"
+      _ExtentX        =   741
+      _ExtentY        =   741
+      VDir            =   "VDir"
    End
    Begin VB.Label Label2 
       Caption         =   "."
@@ -161,7 +161,7 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "C:/log.txt" For Append As #LogFile
+    Open "E:/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show

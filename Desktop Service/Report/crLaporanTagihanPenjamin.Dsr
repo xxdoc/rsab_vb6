@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crLaporanTagihanPenjamin 
-   ClientHeight    =   9885
+   ClientHeight    =   9900
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   15480
@@ -21,5 +21,6 @@ End Sub
 Private Sub Section2_Format(ByVal pFormattingInfo As Object)
     Dim X As Double
     X = Round(ucTotalTagihan.Value)
+    txtPembulatan.SetText Format(X, "##,##0.00")
     txtTerbilang.SetText "# " & TERBILANG(X) & " #"
 End Sub
