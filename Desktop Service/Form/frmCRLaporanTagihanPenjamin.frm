@@ -155,22 +155,28 @@ Dim adocmd As New ADODB.Command
 
     Dim strFilter As String
     Dim orderby As String
+    Dim orderby2 As String
     
     strFilter = ""
     orderby = ""
+    orderby2 = ""
 
-    strFilter = " where pd.tglregistrasi BETWEEN '" & _
-    Format(tglAwal) & "' AND '" & _
-    Format(tglAkhir) & "'"
+    strFilter = " where pd.tglpulang BETWEEN '" & _
+    tglAwal & "' AND '" & _
+    tglAkhir & "'"
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
     If idRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & idRuangan & "' "
     If idKelompok <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & idKelompok & "' "
     If idPenjamin <> "" Then strFilter = strFilter & " AND rk.id = '" & idPenjamin & "' "
   
-    orderby = strFilter & "group by pd.tglregistrasi, pd.noregistrasi, ps.nocm, ps.namapasien, ru.namaruangan, " & _
+    orderby = strFilter & "group by pd.tglpulang, pd.tglregistrasi, pd.noregistrasi, ps.nocm, ps.namapasien, ru.namaruangan, " & _
             "pr.id, pp.hargajual, pp.jumlah, kp.id, pp.hargadiscount , rk.namarekanan, sp.totalharusdibayar, sp.totalprekanan " & _
-            "ORDER BY pd.tglregistrasi"
+            "ORDER BY pd.tglpulang"
+            'sp.tglstruk"
+            
+    orderby2 = strFilter & "group by pd.noregistrasi, sp.totalharusdibayar,sp.totalprekanan ,pd.tglpulang " & _
+            "order by pd.tglpulang"
             'sp.tglstruk"
     
 Set Report = New crLaporanTagihanPenjamin
@@ -180,13 +186,14 @@ Set Report = New crLaporanTagihanPenjamin
             "case when kp.id = 26 then pp.hargajual* pp.jumlah else 0 end as konsul, " & _
             "case when kp.id in (1,2,3,4,8,9,10,11,13,14) then pp.hargajual* pp.jumlah else 0 end as tindakan, " & _
             "(case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah as diskon, " & _
-            "sum(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
-            "(case when sp.totalprekanan is null then 0 else sp.totalharusdibayar end) as totalharusdibayar, " & _
+            "(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
+            "(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) as totalharusdibayar, " & _
             "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin, " & _
             "case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan " & _
-            "FROM pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec  " & _
-            "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+            "FROM  strukpelayanan_t as sp " & _
+            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
+            "left JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
+            "left join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "left JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left JOIN produk_m as pr on pr.id=pp.produkfk " & _
@@ -196,7 +203,32 @@ Set Report = New crLaporanTagihanPenjamin
             "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
             "INNER JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & orderby
 
-            
+
+        
+    ReadRs2 "select pd.noregistrasi, " & _
+            "(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) as cash, " & _
+            "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalpiutangpenjamin " & _
+            "from strukpelayanan_t as sp " & _
+            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
+            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
+            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
+            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
+            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby2
+    
+    Dim tCash, tPiutang As Double
+    Dim i As Integer
+    
+    For i = 0 To RS2.RecordCount - 1
+        tCash = tCash + CDbl(IIf(IsNull(RS2!cash), 0, RS2!cash))
+        tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalpiutangpenjamin), 0, RS2!totalpiutangpenjamin))
+        
+        RS2.MoveNext
+    Next i
+    
+    'tCash = RS2!cash
+    'tPiutang = RS2!totalpiutangpenjamin
+    
+    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -223,6 +255,12 @@ Set Report = New crLaporanTagihanPenjamin
             .usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
             .ucMaterai.SetUnboundFieldSource 3000
             
+            .ucCash2.SetUnboundFieldSource (tCash)
+            .ucTagihan2.SetUnboundFieldSource (tPiutang)
+            '.ucCash2.SetUnboundFieldSource (RS2!cash)
+            '.ucTagihan2.SetUnboundFieldSource (RS2!totalpiutangpenjamin)
+            '.txtA1.SetText Format(RS2!cash, "##,##0.00")
+            '.txtA2.SetText Format(RS2!totalpiutangpenjamin, "##,##0.00")
             
             If view = "false" Then
                 Dim strPrinter As String
