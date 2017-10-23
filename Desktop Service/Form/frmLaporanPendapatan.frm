@@ -201,7 +201,7 @@ Set Report = New crLaporanPendapatan
              str1 & _
              str3 & _
              "order by pd.noregistrasi"
-    strSQL = "select  apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
+    strSQL = "select distinct apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
              "upper(ps.namapasien) as namapasien, " & _
              "case when pr.id =395 then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
              "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos, " & _
@@ -219,6 +219,7 @@ Set Report = New crLaporanPendapatan
              "left JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
              "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   and  sp.statusenabled is null " & _
+             " and ru.objectdepartemenfk=18" & _
              str2 & _
              str1 & _
              str3 & _

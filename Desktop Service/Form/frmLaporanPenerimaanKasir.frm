@@ -162,20 +162,26 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crPenerimaanKasir1
-    strSQL = "select pd.noregistrasi, sbm.tglsbm, ps.nocm, ps.namapasien, kp.kelompokpasien, ru.namaruangan, pg.namalengkap, " & _
+    strSQL = "select " & _
+            "case when cb.id = 1 then sbm.totaldibayar else 0 end as tunai, " & _
+            "case when cb.id > 1 then sbm.totaldibayar else 0 end as nontunai,case when pd.noregistrasi is null then sp.nostruk else pd.noregistrasi end as noregistrasi, sbm.tglsbm, ps.nocm, " & _
+            "case when ps.namapasien is null then sp.namapasien_klien else ps.namapasien end as namapasien, " & _
+            "case when kp.kelompokpasien is null then 'Non Layanan' else kp.kelompokpasien end as kelompokpasien, ru.namaruangan, pg.namalengkap, " & _
             "pg2.namaexternal as kasir, sbm.totaldibayar, " & _
             "CASE WHEN sp.totalprekanan is null then 0 else sp.totalprekanan end as hutangPenjamin, " & _
             "sp.totalharusdibayar, lu.namaexternal as namaLogin " & _
             "from strukbuktipenerimaan_t as sbm " & _
+            "left JOIN strukbuktipenerimaancarabayar_t as sbmc on sbmc.nosbmfk=sbm.norec " & _
+            "LEFT JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk " & _
             "INNER JOIN strukpelayanan_t as sp on sp.nosbmlastfk=sbm.norec " & _
             "LEFT JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk " & _
             "LEFT JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk " & _
-            "inner JOIN pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _
-            "inner JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
-            "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+            "LEFT JOIN pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _
+            "LEFT JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
+            "LEFT join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
             "Left JOIN pegawai_m as pg on pg.id=pd.objectpegawaifk " & _
-            "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
-            "INNER JOIN kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
+            "LEFT JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
+            "LEFT JOIN kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
             "where sbm.tglsbm BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             str1 & _
             str2 & _
@@ -201,7 +207,8 @@ Set Report = New crPenerimaanKasir1
             .ucTotalBiaya.SetUnboundFieldSource ("{ado.totaldibayar}")
             .ucHutangPenjamin.SetUnboundFieldSource ("{ado.hutangPenjamin}")
             .ucJmlBayar.SetUnboundFieldSource ("{ado.totalharusdibayar}")
-            
+            .ucTunai.SetUnboundFieldSource ("{ado.tunai}")
+            .ucCard.SetUnboundFieldSource ("{ado.nontunai}")
             If view = "false" Then
                 Dim strPrinter As String
 '
