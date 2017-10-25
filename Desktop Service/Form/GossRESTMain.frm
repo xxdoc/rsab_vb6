@@ -250,7 +250,8 @@ Private Sub Gossamer1_DynamicRequest( _
         If URI = "\formvb\rawat-jalan" Then RespBody = frmRajal.RawatJalan(Gossamer1.URLDecode(Params))
         If URI = "\printvb\farmasi" Then RespBody = FormFarmasi.Farmasi(Gossamer1.URLDecode(Params))
         If URI = "\printvb\Piutang" Then RespBody = frmPiutang.Piutang(Gossamer1.URLDecode(Params))
-        
+        If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.Akuntansi(Gossamer1.URLDecode(Params))
+       
         If Err Then
             ErrNumber = Err.Number
             ErrDescription = Err.Description
