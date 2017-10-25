@@ -423,7 +423,7 @@ boolLembarPersetujuan = False
                        " rp.namaruangan,rp.kodeexternal as namapoliBpjs,pa.ppkrujukan, " & _
                        " (CASE WHEN rp.objectdepartemenfk=16 then 'Rawat Inap' else 'Rawat Jalan' END) as jenisrawat," & _
                        " dg.kddiagnosa, (case when dg.namadiagnosa is null then '-' else dg.namadiagnosa end) as namadiagnosa , " & _
-                       " pi.nocm, ap.jenispeserta,ap.kdprovider,ap.nmprovider,kls.namakelas from pemakaianasuransi_t pa " & _
+                       " pi.nocm, ap.jenispeserta,ap.kdprovider,ap.nmprovider,kls.namakelas, pa.catatan from pemakaianasuransi_t pa " & _
                        " LEFT JOIN asuransipasien_m ap on pa.objectasuransipasienfk= ap.id " & _
                        " LEFT JOIN pasiendaftar_t pd on pd.norec=pa.noregistrasifk " & _
                        " LEFT JOIN pasien_m pi on pi.id=pd.nocmfk " & _
@@ -454,7 +454,7 @@ boolLembarPersetujuan = False
               .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
               .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
               .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
-              .txtCatatan.SetText "-"
+              .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
              End If
 
             If view = "false" Then
