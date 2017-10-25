@@ -146,7 +146,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanTagihanPenjamin = Nothing
 End Sub
 
-Public Sub CetakLaporanTagihanPenjamin(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompok As String, idPenjamin As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanTagihanPenjamin(idKasir As String, noposting As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -159,83 +159,76 @@ Dim adocmd As New ADODB.Command
     
     strFilter = ""
     orderby = ""
-    orderby2 = ""
-
-    strFilter = " where pd.tglpulang BETWEEN '" & _
-    tglAwal & "' AND '" & _
-    tglAkhir & "'"
-'    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
+           
+    strFilter = " where spp.noverifikasi is not null and php.noposting = '" & noposting & "' "
+    orderby = strFilter & " group by sp.totalharusdibayar, sp.totalprekanan, kp.kelompokpasien, spp.norec, stp.tglposting, pd.noregistrasi, pd.tglregistrasi, " & _
+                "p.nocm , p.namapasien, ru.namaruangan, pr.ID, pp.hargajual, pp.jumlah, pp.hargadiscount, kpr.ID, " & _
+                "pr.objectdetailjenisprodukfk, spp.totalppenjamin , spp.totalharusdibayar, spp.totalsudahdibayar, " & _
+                "r.namarekanan , spp.totalbiaya, spp.noverifikasi, php.noposting, stp.kdhistorylogins " & _
+                "order by pd.tglregistrasi"
     
-    If idRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & idRuangan & "' "
-    If idKelompok <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & idKelompok & "' "
-    If idPenjamin <> "" Then strFilter = strFilter & " AND rk.id = '" & idPenjamin & "' "
-  
-    orderby = strFilter & "group by pd.tglpulang, pd.tglregistrasi, pd.noregistrasi, ps.nocm, ps.namapasien, ru.namaruangan, " & _
-            "pr.id, pp.hargajual, pp.jumlah, kp.id, pp.hargadiscount , rk.namarekanan, sp.totalharusdibayar, sp.totalprekanan " & _
-            "ORDER BY pd.tglpulang"
-            'sp.tglstruk"
-            
-    orderby2 = strFilter & "group by pd.noregistrasi, sp.totalharusdibayar,sp.totalprekanan ,pd.tglpulang " & _
-            "order by pd.tglpulang"
-            'sp.tglstruk"
+    orderby2 = strFilter & " group by kp.kelompokpasien, spp.norec, stp.tglposting, pd.noregistrasi, pd.tglregistrasi, " & _
+                "p.nocm , p.namapasien, " & _
+                "spp.totalppenjamin , spp.totalharusdibayar, spp.totalsudahdibayar, " & _
+                "r.namarekanan , spp.totalbiaya, spp.noverifikasi, php.noposting, stp.kdhistorylogins " & _
+                "order by pd.tglregistrasi"
+                
+    Set Report = New crLaporanTagihanPenjamin
     
-Set Report = New crLaporanTagihanPenjamin
-    strSQL = "SELECT pd.tglregistrasi, pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, ru.namaruangan, " & _
+    strSQL = "select kp.kelompokpasien, spp.norec, stp.tglposting, pd.noregistrasi, pd.tglregistrasi, " & _
+            "p.nocm, p.namapasien, ru.namaruangan, " & _
             "case when pr.id =395 then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
-            "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos,  " & _
-            "case when kp.id = 26 then pp.hargajual* pp.jumlah else 0 end as konsul, " & _
-            "case when kp.id in (1,2,3,4,8,9,10,11,13,14) then pp.hargajual* pp.jumlah else 0 end as tindakan, " & _
+            "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos, " & _
+            "case when kpr.id = 26 then pp.hargajual* pp.jumlah else 0 end as konsul, " & _
+            "case when kpr.id in (1,2,3,4,8,9,10,11,13,14) then pp.hargajual* pp.jumlah else 0 end as tindakan, " & _
             "(case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah as diskon, " & _
             "(case when pr.objectdetailjenisprodukfk=474 then pp.hargajual* pp.jumlah else 0 end) as totalresep, " & _
-            "(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) as totalharusdibayar, " & _
-            "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin, " & _
-            "case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan " & _
-            "FROM  strukpelayanan_t as sp " & _
-            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
-            "left JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
-            "left join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
-            "left JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left JOIN produk_m as pr on pr.id=pp.produkfk " & _
+            "sp.totalharusdibayar as aa, sp.totalprekanan as bb, spp.totalppenjamin, spp.totalharusdibayar, spp.totalsudahdibayar, r.namarekanan, " & _
+            "spp.totalbiaya , spp.noverifikasi, php.noposting, stp.kdhistorylogins " & _
+            "from strukpelayananpenjamin_t as spp inner join strukpelayanan_t as sp on sp.norec = spp.nostrukfk " & _
+            "inner join pelayananpasien_t as pp on pp.strukfk = sp.norec " & _
+            "LEFT JOIN produk_m as pr on pr.id=pp.produkfk " & _
+            "inner join antrianpasiendiperiksa_t as ap on ap.norec = pp.noregistrasifk " & _
+            "inner join pasiendaftar_t as pd on pd.norec = ap.noregistrasifk " & _
+            "left JOIN ruangan_m as ru on ru.id=ap.objectruanganfk " & _
+            "inner join pasien_m as p on p.id = pd.nocmfk " & _
+            "inner join postinghutangpiutang_t as php on php.nostrukfk = spp.norec " & _
+            "inner join strukposting_t as stp on stp.noposting = php.noposting " & _
+            "left join rekanan_m as r on r.id = pd.objectrekananfk  " & _
+            "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
-            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
-            "INNER JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & orderby
+            "left JOIN kelompokproduk_m as kpr on kpr.id=jp.objectkelompokprodukfk " & _
+            orderby
 
-
-        
-    ReadRs2 "select pd.noregistrasi, " & _
-            "(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) as cash, " & _
-            "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalpiutangpenjamin " & _
-            "from strukpelayanan_t as sp " & _
-            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
-            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
-            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
-            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
-            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby2
-    
+    ReadRs2 "select kp.kelompokpasien, spp.norec, stp.tglposting, pd.noregistrasi, pd.tglregistrasi, " & _
+            "p.nocm, p.namapasien, spp.totalppenjamin, spp.totalharusdibayar, spp.totalsudahdibayar, r.namarekanan, " & _
+            "spp.totalbiaya , spp.noverifikasi, php.noposting, stp.kdhistorylogins " & _
+            "from strukpelayananpenjamin_t as spp inner join strukpelayanan_t as sp on sp.norec = spp.nostrukfk " & _
+            "inner join pelayananpasien_t as pp on pp.strukfk = sp.norec " & _
+            "inner join antrianpasiendiperiksa_t as ap on ap.norec = pp.noregistrasifk " & _
+            "inner join pasiendaftar_t as pd on pd.norec = ap.noregistrasifk " & _
+            "inner join pasien_m as p on p.id = pd.nocmfk " & _
+            "inner join postinghutangpiutang_t as php on php.nostrukfk = spp.norec " & _
+            "inner join strukposting_t as stp on stp.noposting = php.noposting " & _
+            "left join rekanan_m as r on r.id = pd.objectrekananfk " & _
+            "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
+            orderby2
     Dim tCash, tPiutang As Double
     Dim i As Integer
     
     For i = 0 To RS2.RecordCount - 1
-        tCash = tCash + CDbl(IIf(IsNull(RS2!cash), 0, RS2!cash))
-        tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalpiutangpenjamin), 0, RS2!totalpiutangpenjamin))
+        tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
         
         RS2.MoveNext
     Next i
-    
-    'tCash = RS2!cash
-    'tPiutang = RS2!totalpiutangpenjamin
-    
-    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaPrinted
-            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
+            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             '.usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -249,13 +242,13 @@ Set Report = New crLaporanTagihanPenjamin
             .ucTindakan.SetUnboundFieldSource ("{ado.tindakan}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucResep.SetUnboundFieldSource ("{ado.totalresep}")
-            .ucCash.SetUnboundFieldSource ("{ado.totalharusdibayar}")
-            .ucTagihan.SetUnboundFieldSource ("{ado.totalppenjamin}")
+            .ucCash.SetUnboundFieldSource ("{ado.aa}")
+            .ucTagihan.SetUnboundFieldSource ("{ado.bb}")
             '.usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
             .ucMaterai.SetUnboundFieldSource 3000
             
-            .ucCash2.SetUnboundFieldSource (tCash)
+            '.ucCash2.SetUnboundFieldSource (tCash)
             .ucTagihan2.SetUnboundFieldSource (tPiutang)
             '.ucCash2.SetUnboundFieldSource (RS2!cash)
             '.ucTagihan2.SetUnboundFieldSource (RS2!totalpiutangpenjamin)

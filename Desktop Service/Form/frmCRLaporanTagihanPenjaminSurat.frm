@@ -146,7 +146,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanTagihanPenjaminSurat = Nothing
 End Sub
 
-Public Sub CetakLaporanTagihanPenjaminSurat(idKasir As String, tglAwal As String, tglAkhir As String, login As String, idKelompok As String, idPenjamin As String, view As String)
+Public Sub CetakLaporanTagihanPenjaminSurat(idKasir As String, noposting As String, namaPrinted As String, view As String)
 'On Error GoTo errLoad
 
 Set frmCRLaporanTagihanPenjaminSurat = Nothing
@@ -174,52 +174,48 @@ Dim adocmd As New ADODB.Command
     
     strFilter = ""
     orderby = ""
-
-    strFilter = " where pd.tglpulang BETWEEN '" & _
-    tglAwal & "' AND '" & _
-    tglAkhir & "'"
-'    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
+  
+    strFilter = " where spp.noverifikasi is not null and php.noposting = '" & noposting & "' "
     
-    If idKelompok <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & idKelompok & "' "
-    If idPenjamin <> "" Then strFilter = strFilter & " AND rk.id = '" & idPenjamin & "' "
-            
-    orderby = strFilter & "group by pd.noregistrasi, rk.namarekanan, sp.totalharusdibayar,sp.totalprekanan ,pd.tglpulang " & _
-            "order by pd.tglpulang"
+    orderby = strFilter & " group by kp.kelompokpasien, spp.norec, stp.tglposting, pd.noregistrasi, pd.tglregistrasi, " & _
+                "p.nocm , p.namapasien, " & _
+                "spp.totalppenjamin , spp.totalharusdibayar, spp.totalsudahdibayar, " & _
+                "r.namarekanan , spp.totalbiaya, spp.noverifikasi, php.noposting, stp.kdhistorylogins " & _
+                "order by pd.tglregistrasi"
             
     Set Report = New crLaporanTagihanPenjaminSurat
     
-    ReadRs2 "select pd.noregistrasi, rk.namarekanan, " & _
-            "(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) as cash, " & _
-            "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalpiutangpenjamin " & _
-            "from strukpelayanan_t as sp " & _
-            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  " & _
-            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
-            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
-            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
-            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby
-    
-    Dim tCash, tPiutang, tMaterai, X As Double
-    Dim tRekanan As String
-    Dim i As Integer
+    ReadRs2 "select kp.kelompokpasien, spp.norec, stp.tglposting, pd.noregistrasi, pd.tglregistrasi, " & _
+            "p.nocm, p.namapasien, spp.totalppenjamin, spp.totalharusdibayar, spp.totalsudahdibayar, r.namarekanan, " & _
+            "spp.totalbiaya , spp.noverifikasi, php.noposting, stp.kdhistorylogins " & _
+            "from strukpelayananpenjamin_t as spp inner join strukpelayanan_t as sp on sp.norec = spp.nostrukfk " & _
+            "inner join pelayananpasien_t as pp on pp.strukfk = sp.norec " & _
+            "inner join antrianpasiendiperiksa_t as ap on ap.norec = pp.noregistrasifk " & _
+            "inner join pasiendaftar_t as pd on pd.norec = ap.noregistrasifk " & _
+            "inner join pasien_m as p on p.id = pd.nocmfk " & _
+            "inner join postinghutangpiutang_t as php on php.nostrukfk = spp.norec " & _
+            "inner join strukposting_t as stp on stp.noposting = php.noposting " & _
+            "left join rekanan_m as r on r.id = pd.objectrekananfk  " & _
+            "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
+            orderby
+    Dim tCash, tPiutang, tMaterai As Double
+    Dim tRekanan, tPosting As String
     tMaterai = 3000
+    Dim i As Integer
     
     For i = 0 To RS2.RecordCount - 1
-        tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalpiutangpenjamin), 0, RS2!totalpiutangpenjamin))
-        'tRekanan = IIf(IsNull(RS2!namarekanan), "-", RS2!namarekanan)
+        tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
+        tRekanan = UCase(IIf(IsNull(RS2("namarekanan")), "-", RS2("namarekanan")))
         RS2.MoveNext
-    Next
+    Next i
         
     With Report
         If Not RS2.BOF Then
+            '.txtPrinted.SetText namaPrinted
+           ' .usNamaPenjamin.SetUnboundFieldSource (tRekanan)
             .ucJumlah.SetUnboundFieldSource (tPiutang)
             .ucMaterai.SetUnboundFieldSource (tMaterai)
-        End If
-            
-        ReadRs3 "SELECT namarekanan FROM rekanan_m where id='" & idPenjamin & "' "
-        If RS3.BOF Then
-            .txtPenjamin.SetText "-"
-        Else
-            .txtPenjamin.SetText UCase(IIf(IsNull(RS3("namarekanan")), "-", RS3("namarekanan")))
+            .txtPenjamin.SetText (tRekanan)
         End If
             
             
