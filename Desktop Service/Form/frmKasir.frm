@@ -178,6 +178,13 @@ On Error Resume Next
                 Root("by") = "as@epic"
                 '127.0.0.1:1237/printvb/kasir?cetak-rekap-pendapatan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
                 
+            Case "cetak-rekap-pendapatan-keuangan"
+                Call frmRekapPendapatanKeuangan.CetakRekapPendapatanKeuangan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Rekap Pendapatan"
+                Root("by") = "as@epic"
+                '127.0.0.1:1237/printvb/kasir?cetak-rekap-pendapatan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
+                
             Case "cetak-laporan-penerimaan-kasir"
                 Call frmCRLaporanPenerimaanKasir.CetakLaporanPenerimaanKasir(Param1(1), Param2(1), Param3(1), Param6(1), Param5(1), Param4(1), Param7(1))
                 Set Root = New JNode
