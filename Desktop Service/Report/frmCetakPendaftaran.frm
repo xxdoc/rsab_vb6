@@ -419,7 +419,7 @@ boolLembarPersetujuan = False
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
             
-            strSQL = "select pa.nosep,pa.tanggalsep,pa.nokepesertaan,pa.norujukan,ap.namapeserta,ap.tgllahir,jk.jeniskelamin," & _
+            strSQL = "select pa.nosep,pa.tanggalsep,pa.nokepesertaan,pa.norujukan,ap.namapeserta,pi.tgllahir,jk.jeniskelamin," & _
                        " rp.namaruangan,rp.kodeexternal as namapoliBpjs,pa.ppkrujukan, " & _
                        " (CASE WHEN rp.objectdepartemenfk=16 then 'Rawat Inap' else 'Rawat Jalan' END) as jenisrawat," & _
                        " dg.kddiagnosa, (case when dg.namadiagnosa is null then '-' else dg.namadiagnosa end) as namadiagnosa , " & _
