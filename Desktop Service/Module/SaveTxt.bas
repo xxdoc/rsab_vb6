@@ -13,9 +13,12 @@ Public Declare Function WritePrivateProfileString Lib "kernel32" Alias _
 lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName As String) As Long
 
 
+Dim fso As New FileSystemObject
+
+
 Public Function GetTxt(FileNm As String, Table As String, Field As String) As String
   On Error Resume Next
-  IniFilename = "E:\" & FileNm
+  IniFilename = UCase(fso.GetDriveName(App.Path)) & "\" & FileNm
     
   result = GetPrivateProfileString("" & Table & "", "" & Field & "", "Empty", mYvalue, Len(mYvalue), IniFilename)
   GetTxt = Mid(mYvalue, 1, InStr(1, mYvalue, "~", vbTextCompare) - 1)
@@ -24,7 +27,7 @@ End Function
 
 Public Function SaveTxt(FileNm As String, Table As String, Field As String, teks As String)
 
-  IniFilename = "E:\" & FileNm
+  IniFilename = UCase(fso.GetDriveName(App.Path)) & "\" & FileNm
     
   result = WritePrivateProfileString("" & Table & "", "" & Field & "", "" & teks & "~", IniFilename)
 End Function

@@ -56,7 +56,7 @@ Begin VB.Form GossRESTMain
          Visible         =   0   'False
       End
       Begin VB.Menu fgdgdfg 
-         Caption         =   "Version 20171023-"
+         Caption         =   "Version 20171025.1"
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
@@ -87,6 +87,7 @@ Private graphicSDKVersion   As String
 Private prnSDKVersion       As String
 
 Public urlLengkap As String
+Dim fso As New FileSystemObject
 
 
 Private Sub SanitizeInit()
@@ -161,7 +162,8 @@ Private Sub Form_Load()
     Set STM = New ADODB.Stream
     
     LogFile = FreeFile(0)
-    Open "E:/log.txt" For Append As #LogFile
+    
+    Open UCase(fso.GetDriveName(App.Path)) & "/log.txt" For Append As #LogFile
     Gossamer1.StartListening
     
 '    Show
