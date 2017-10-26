@@ -1,9 +1,8 @@
 VERSION 5.00
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form Form1 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "FTP Updater"
-   ClientHeight    =   690
+   ClientHeight    =   765
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   4500
@@ -11,31 +10,10 @@ Begin VB.Form Form1
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   690
+   ScaleHeight     =   765
    ScaleWidth      =   4500
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
-   Begin InetCtlsObjects.Inet Inet3 
-      Left            =   2520
-      Top             =   840
-      _ExtentX        =   1005
-      _ExtentY        =   1005
-      _Version        =   393216
-   End
-   Begin InetCtlsObjects.Inet Inet2 
-      Left            =   1920
-      Top             =   840
-      _ExtentX        =   1005
-      _ExtentY        =   1005
-      _Version        =   393216
-   End
-   Begin InetCtlsObjects.Inet Inet1 
-      Left            =   1320
-      Top             =   840
-      _ExtentX        =   1005
-      _ExtentY        =   1005
-      _Version        =   393216
-   End
    Begin VB.CommandButton Command1 
       Caption         =   "Command1"
       Height          =   495
@@ -128,7 +106,13 @@ End Sub
 Private Sub Command1_Click()
 '    Dim stt As Boolean
 '
-    TerminateProcess ("DesktopService.exe")
+'    TerminateProcess ("DesktopService.exe")
+    
+    
+    TerminateProcess ("Desktop ServiceC.exe")
+    TerminateProcess ("Desktop ServiceD.exe")
+    TerminateProcess ("Desktop ServiceE.exe")
+    
 '    If fso.FileExists(UCase(fso.GetDriveName(App.Path)) & "\DesktopService\app.exe") = True Then
 '        fso.DeleteFile UCase(fso.GetDriveName(App.Path)) & "\app" & Format(Now(), "yyyy-MM-dd") & ".exe", True
 '        fso.MoveFile UCase(fso.GetDriveName(App.Path)) & "\DesktopService\app.exe", UCase(fso.GetDriveName(App.Path)) & "\app" & Format(Now(), "yyyy-MM-dd") & ".exe"
@@ -139,7 +123,7 @@ Private Sub Command1_Click()
     
     Dim lngReturnCode As Long
 '    lngReturnCode = Shell("git pull", vbNormalFocus)
-    lngReturnCode = Shell(UCase(fso.GetDriveName(App.Path)) & "\DS\DesktopService.exe", vbNormalFocus)
+'    lngReturnCode = Shell(UCase(fso.GetDriveName(App.Path)) & "\DS\DesktopService.exe", vbNormalFocus)
     End
     
 '    Label1.Caption = fso.GetFile("c:\temp\DesktopService.exe").DateLastModified

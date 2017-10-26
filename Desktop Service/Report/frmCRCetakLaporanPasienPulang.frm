@@ -175,7 +175,7 @@ Set Report = New crLaporanPasienPulang
             'sp.tglstruk"
 
         
-    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru2.namaruangan,kl.namakelas,sp.nostruk as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
+    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru2.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
             "sum((pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end) as jumlahbiaya, sum((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah) as diskon,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
             "sp.totalharusdibayar,(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap " & _
             "from strukpelayanan_t as sp " & _
@@ -212,7 +212,7 @@ Set Report = New crLaporanPasienPulang
             .usNoCM.SetUnboundFieldSource ("{ado.nodaftar}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .usJenisPasien.SetUnboundFieldSource ("{ado.namarekanan}") '("{ado.kelompokpasien}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
             .usNoBilling.SetUnboundFieldSource ("{ado.nobilling}")
             .usNoKwitansi.SetUnboundFieldSource ("{ado.nokwitansi}")
