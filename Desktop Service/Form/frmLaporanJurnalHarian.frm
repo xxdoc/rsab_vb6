@@ -1,14 +1,14 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmLaporanPenerimaanKasirPerusahaan 
+Begin VB.Form frmLaporanJurnalHarian 
    Caption         =   "Medifirst2000"
-   ClientHeight    =   6480
+   ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
-   ClientWidth     =   6225
+   ClientWidth     =   5790
    LinkTopic       =   "Form1"
-   ScaleHeight     =   6480
-   ScaleWidth      =   6225
+   ScaleHeight     =   7005
+   ScaleWidth      =   5790
    WindowState     =   2  'Maximized
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
@@ -23,7 +23,7 @@ Begin VB.Form frmLaporanPenerimaanKasirPerusahaan
       EndProperty
       Height          =   315
       Left            =   4920
-      TabIndex        =   2
+      TabIndex        =   3
       Top             =   480
       Width           =   975
    End
@@ -40,7 +40,7 @@ Begin VB.Form frmLaporanPenerimaanKasirPerusahaan
       EndProperty
       Height          =   315
       Left            =   3960
-      TabIndex        =   1
+      TabIndex        =   2
       Top             =   480
       Width           =   975
    End
@@ -56,16 +56,16 @@ Begin VB.Form frmLaporanPenerimaanKasirPerusahaan
       EndProperty
       Height          =   315
       Left            =   960
-      TabIndex        =   0
+      TabIndex        =   1
       Top             =   480
       Width           =   3015
    End
    Begin CRVIEWERLibCtl.CRViewer CRViewer1 
-      Height          =   6615
+      Height          =   6975
       Left            =   0
-      TabIndex        =   3
+      TabIndex        =   4
       Top             =   0
-      Width           =   6255
+      Width           =   5775
       DisplayGroupTree=   -1  'True
       DisplayToolbar  =   -1  'True
       EnableGroupTree =   -1  'True
@@ -90,14 +90,21 @@ Begin VB.Form frmLaporanPenerimaanKasirPerusahaan
       EnableSearchExpertButton=   0   'False
       EnableHelpButton=   0   'False
    End
+   Begin VB.TextBox txtNamaFormPengirim 
+      Height          =   495
+      Left            =   3120
+      TabIndex        =   0
+      Top             =   600
+      Width           =   2175
+   End
 End
-Attribute VB_Name = "frmLaporanPenerimaanKasirPerusahaan"
+Attribute VB_Name = "frmLaporanJurnalHarian"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crPenerimaanKasirPerusahaan
+Dim Report As New crLaporanJurnalHarian
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -118,8 +125,6 @@ Private Sub CmdOption_Click()
     CRViewer1.Refresh
 End Sub
 
-
-
 Private Sub Form_Load()
     Dim p As Printer
     cboPrinter.Clear
@@ -138,66 +143,73 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmLaporanPenerimaanKasirPerusahaan = Nothing
+    Set frmLaporanJurnalHarian = Nothing
 End Sub
 
-Public Sub CetakLaporanPenerimaanKasirPerusahaan(idKasir As String, tglAwal As String, tglAkhir As String, idPegawai As String, idRuangan As String, idDokter As String, view As String)
-'On Error GoTo errLoad
+Public Sub CetakLaporanJurnal(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
+On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmLaporanPenerimaanKasirPerusahaan = Nothing
+Set frmLaporanJurnalHarian = Nothing
 Dim adocmd As New ADODB.Command
+
     Dim str1 As String
     Dim str2 As String
     
-    If idRuangan <> "" Then
-        str1 = " and ru.id=" & idRuangan & " "
+    If idDepartemen <> "" Then
+        str1 = "and ru.objectdepartemenfk=" & idDepartemen & " "
     End If
-    If idPegawai <> "" Then
-        str2 = " and pg.id=" & idPegawai & " "
+    If idRuangan <> "" Then
+        str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
     
-Set Report = New crPenerimaanKasirPerusahaan
-    strSQL = "select distinct kp.kelompokpasien, spp.norec,sp.tglstruk, pd.noregistrasi,pd.tglregistrasi,p.nocm, " & _
-            "p.namapasien, ru.namaruangan, pg.namalengkap, spp.totalppenjamin,spp.totalharusdibayar, " & _
-            "spp.totalsudahdibayar, spp.totalharusdibayar - spp.totalppenjamin as sisaBayar, spp.totalbiaya, spp.noverifikasi " & _
-            "from strukpelayananpenjamin_t as spp " & _
-            "inner join strukpelayanan_t as sp on sp.norec=spp.nostrukfk " & _
-            "inner join pelayananpasien_t as pp on pp.strukfk=sp.norec " & _
-            "inner join antrianpasiendiperiksa_t as ap on ap.norec=pp.noregistrasifk " & _
-            "inner join pasiendaftar_t as pd on pd.norec=ap.noregistrasifk " & _
-            "inner join pasien_m as p on p.id =pd.nocmfk " & _
-            "Left JOIN pegawai_m as pg on pg.id=pd.objectpegawaifk " & _
-            "left Join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
-            "left Join departemen_m as dept on dept.id=ru.objectdepartemenfk " & _
-            "left Join rekanan_m as r on r.id=spp.kdrekananpenjamin " & _
-            "left Join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' AND kp.id=5 " & _
+    
+Set Report = New crLaporanJurnalHarian
+    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk," & _
+            "case " & _
+            "when pro.namaproduk ilike '%konsul%' then 'Pendt.Konsultasi' " & _
+            "when pro.namaproduk ilike '%karcis%' then 'Pendt.Administrasi' " & _
+            "Else 'Pendt.Tindakan' " & _
+            "end as namaperkiraan , " & _
+            "(sum(case when pd.objectkelompokpasienlastfk = 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))+ " & _
+            "(sum(case when pd.objectkelompokpasienlastfk > 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))  as total, " & _
+            "'Pendapatan R.Jalan' as keterangan " & _
+            "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
+            "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+            "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
+            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             str1 & _
             str2 & _
+            "group by pd.noregistrasi, ru.namaruangan, tp.produkfk,  pro.namaproduk " & _
             "order by pd.noregistrasi"
 
+   
+            
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .usNamaKasir.SetText idKasir
-            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
-            .udtTglStruk.SetUnboundFieldSource ("{ado.tglstruk}")
-            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .txtPrinted.SetText namaPrinted
+            .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
+            .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
+            .txtDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
+            .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .ucTotalHarusDibayar.SetUnboundFieldSource ("{ado.totalharusdibayar}")
-            .ucTotalPiutangPenjamin.SetUnboundFieldSource ("{ado.totalppenjamin}")
-            .ucSisaBayar.SetUnboundFieldSource ("{ado.sisaBayar}")
+            .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
+            .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
+            '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
+            '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
+            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            
             
             If view = "false" Then
                 Dim strPrinter As String
 '
-                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanJurnal")
                 .SelectPrinter "winspool", strPrinter, "Ne00:"
                 .PrintOut False
                 Unload Me
@@ -213,4 +225,5 @@ Set Report = New crPenerimaanKasirPerusahaan
     End With
 Exit Sub
 errLoad:
+    MsgBox Err.Number & " " & Err.Description
 End Sub

@@ -6,7 +6,6 @@ Begin VB.Form frmLaporanJurnal
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5790
-   Icon            =   "frmLaporanJurnal.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5790
