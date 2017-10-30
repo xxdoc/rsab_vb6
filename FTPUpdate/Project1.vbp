@@ -1,12 +1,11 @@
 Type=Exe
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\Windows\SysWOW64\stdole2.tlb#OLE Automation
 Reference=*\G{420B2830-E718-11CF-893D-00A0C9054228}#1.0#0#C:\Windows\SysWOW64\scrrun.dll#Microsoft Scripting Runtime
-Object={48E59290-9880-11CF-9754-00AA00C00908}#1.0#0; MSINET.OCX
 Form=Form1.frm
 IconForm="Form1"
 Startup="Form1"
 HelpFile=""
-ExeName32="app.exe"
+ExeName32="kill_DSC.exe"
 Command32=""
 Name="Project1"
 HelpContextID="0"
