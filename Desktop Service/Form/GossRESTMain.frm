@@ -56,7 +56,7 @@ Begin VB.Form GossRESTMain
          Visible         =   0   'False
       End
       Begin VB.Menu fgdgdfg 
-         Caption         =   "Version 20171025.1"
+         Caption         =   "Version 20171031"
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
@@ -250,7 +250,7 @@ Private Sub Gossamer1_DynamicRequest( _
         If URI = "\formvb\rawat-jalan" Then RespBody = frmRajal.RawatJalan(Gossamer1.URLDecode(Params))
         If URI = "\printvb\farmasi" Then RespBody = FormFarmasi.Farmasi(Gossamer1.URLDecode(Params))
         If URI = "\printvb\Piutang" Then RespBody = frmPiutang.Piutang(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.Akuntansi(Gossamer1.URLDecode(Params))
+        If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.akuntansi(Gossamer1.URLDecode(Params))
        
         If Err Then
             ErrNumber = Err.Number

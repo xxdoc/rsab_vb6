@@ -3,7 +3,7 @@ Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
 Begin VB.Form Form2 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Panggil Antrian"
-   ClientHeight    =   4290
+   ClientHeight    =   5070
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   5310
@@ -20,9 +20,39 @@ Begin VB.Form Form2
    LinkTopic       =   "Form2"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4290
+   ScaleHeight     =   5070
    ScaleWidth      =   5310
    StartUpPosition =   3  'Windows Default
+   Begin VB.TextBox D4 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   3240
+      TabIndex        =   32
+      Text            =   "0"
+      Top             =   4080
+      Width           =   855
+   End
+   Begin VB.TextBox D2 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   1680
+      TabIndex        =   31
+      Text            =   "0"
+      Top             =   4080
+      Width           =   1575
+   End
+   Begin VB.TextBox D1 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   960
+      TabIndex        =   30
+      Text            =   "D"
+      Top             =   4080
+      Width           =   735
+   End
    Begin VB.Timer Timer1 
       Interval        =   1000
       Left            =   4680
@@ -215,7 +245,7 @@ Begin VB.Form Form2
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   1935
+      Height          =   2535
       Left            =   0
       TabIndex        =   13
       Top             =   2280
@@ -513,6 +543,10 @@ Private Sub infotainment()
     C2 = 0
     C3 = 0
     C4 = 0
+    
+    D2 = 0
+    D3 = 0
+    D4 = 0
     For i = 0 To RS.RecordCount - 1
         If RS!jenis = A1 Then
             A2 = RS!Last
@@ -523,9 +557,13 @@ Private Sub infotainment()
         If RS!jenis = C1 Then
             C2 = RS!Last
         End If
-            A3 = Val(A2) + 1
-            B3 = Val(B2) + 1
-            C3 = Val(C2) + 1
+        If RS!jenis = D1 Then
+            D2 = RS!Last
+        End If
+        A3 = Val(A2) + 1
+        B3 = Val(B2) + 1
+        C3 = Val(C2) + 1
+        D3 = Val(D2) + 1
         RS.MoveNext
     Next
     For i = 0 To RS2.RecordCount - 1
@@ -537,6 +575,9 @@ Private Sub infotainment()
         End If
         If RS2!jenis = C1 Then
             C4 = RS2!sisa
+        End If
+        If RS2!jenis = D1 Then
+            D4 = RS2!sisa
         End If
         RS2.MoveNext
     Next
