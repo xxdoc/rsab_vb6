@@ -45,7 +45,7 @@ teks = teks & ratusan(X, False)
 TERBILANG = teks & " RUPIAH"
 End Function
  
-Function ratusan(ByVal Y As Double, ByVal flag As Boolean) As String
+Function ratusan(ByVal y As Double, ByVal flag As Boolean) As String
 Dim tmp As Double
 Dim bilang As String
 Dim bag As String
@@ -68,120 +68,124 @@ posisi(2) = "RATUS "
  
 bilang = ""
 For j = 2 To 1 Step -1
-    tmp = Int(Y / (10 ^ j))
+    tmp = Int(y / (10 ^ j))
     If (tmp > 0) Then
         bag = angka(tmp)
         If (j = 1 And tmp = 1) Then
-            Y = Y - tmp * 10 ^ j
-            If (Y >= 1) Then
+            y = y - tmp * 10 ^ j
+            If (y >= 1) Then
                 posisi(j) = "BELAS "
             Else
-                angka(Y) = "SE"
+                angka(y) = "SE"
             End If
-            bilang = bilang & angka(Y) & posisi(j)
+            bilang = bilang & angka(y) & posisi(j)
             ratusan = bilang
             Exit Function
         Else
             bilang = bilang & bag & posisi(j)
     End If
 End If
-Y = Y - tmp * 10 ^ j
+y = y - tmp * 10 ^ j
 Next
  
 If (flag = False) Then
     angka(1) = "SATU "
 End If
-bilang = bilang & angka(Y)
+bilang = bilang & angka(y)
 ratusan = bilang
 End Function
 
 
-Public Function hitungUmur(dateOfBird As Date, fromData As Date) As String
-    Dim dateNow As Date
-    Dim tgl As Date
-    Dim tgl1 As Date
- 
-    Dim years As Long
-    Dim months As Long
-    Dim days As Long
- 
-    Dim yearWord As String
-    Dim monthWord As String
-    Dim dayWord As String
- 
-    dateNow = fromData
-    tgl = dateOfBird
- 
-    ' menghitung tahun
-    years = DateDiff("yyyy", tgl, dateNow)
-    If Month(tgl) > Month(dateNow) Then
-        years = years - 1
-    ElseIf Month(tgl) = Month(dateNow) Then
-        years = 0
-    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) > Day(dateNow) Then
-        years = years - 1
-    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) = Day(dateNow) Then
-        GoTo finally ' jika bulan dan tanggal sama maka perhitungan selesai
-    End If
- 
-    ' menghitung bulan
-    tgl = DateAdd("yyyy", years, tgl)
-    months = DateDiff("m", tgl, dateNow)
-    If Day(tgl) > Day(dateNow) Then
-        months = months - 1
+Public Function hitungUmur(dateOfBird As String, fromData As String) As String
+    hitungUmur = DateDiff("yyyy", dateOfBird, fromData) & " thn " & DateDiff("M", dateOfBird, fromData) Mod 12 & " bln " & DateDiff("d", dateOfBird, fromData) Mod 365 & " hari"
     
-    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) > Day(dateNow) Then
-        months = months - 1
-    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) = Day(dateNow) Then
-        months = 0
-    End If
- 
-    tgl = DateAdd("m", months, tgl)
- 
-    ' menghitung hari
-    days = DateDiff("d", tgl, dateNow)
- 
-finally:
-    yearWord = IIf(years = 0, "", years & " Th ")
-    monthWord = IIf(months = 0, "", months & " Bl ")
-    dayWord = days & " Hr "
- 
-    hitungUmur = yearWord & monthWord & dayWord
-    hitungUmur = Trim(hitungUmur)
+    
+'    Dim dateNow As Date
+'    Dim tgl As Date
+'    Dim tgl1 As Date
+'
+'    Dim years As Long
+'    Dim months As Long
+'    Dim days As Long
+'
+'    Dim yearWord As String
+'    Dim monthWord As String
+'    Dim dayWord As String
+'
+''    dateNow = fromData
+''    tgl = dateOfBird
+'
+'    ' menghitung tahun
+'    years = DateDiff("yyyy", dateOfBird, fromData)
+'    If Month(dateOfBird) > Month(fromData) Then
+'        years = years - 1
+''    ElseIf Month(dateOfBird) = Month(fromData) Then
+''        years = 0
+'    ElseIf Month(dateOfBird) = Month(fromData) And Day(dateOfBird) > Day(fromData) Then
+'        years = years - 1
+'    ElseIf Month(dateOfBird) = Month(fromData) And Day(dateOfBird) = Day(fromData) Then
+'        GoTo finally ' jika bulan dan tanggal sama maka perhitungan selesai
+'    End If
+'
+'    ' menghitung bulan
+'    tgl = DateAdd("yyyy", years, dateOfBird)
+'    months = DateDiff("m", tgl, fromData)
+'    If Day(tgl) > Day(fromData) Then
+'        months = months - 1
+'
+'    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) > Day(dateNow) Then
+'        months = months - 1
+'    ElseIf Month(tgl) = Month(fromData) And Day(tgl) = Day(fromData) Then
+'        months = 0
+'    End If
+'
+'    tgl = DateAdd("m", months, tgl)
+'
+'    ' menghitung hari
+'    days = DateDiff("d", tgl, dateNow)
+'
+'finally:
+'    yearWord = IIf(years = 0, "", years & " Th ")
+'    monthWord = IIf(months = 0, "", months & " Bl ")
+'    dayWord = days & " Hr "
+'
+'    hitungUmur = yearWord & monthWord & dayWord
+'    hitungUmur = Trim(hitungUmur)
 End Function
 
 Public Function hitungUmurTahun(dateOfBird As Date, fromData As Date) As String
-    Dim dateNow As Date
-    Dim tgl As Date
-    Dim tgl1 As Date
- 
-    Dim years As Long
-    Dim months As Long
-    Dim days As Long
- 
-    Dim yearWord As String
-    Dim monthWord As String
-    Dim dayWord As String
- 
-    dateNow = fromData
-    tgl = dateOfBird
- 
-    ' menghitung tahun
-    years = DateDiff("yyyy", tgl, dateNow)
-    If Month(tgl) > Month(dateNow) Then
-        years = years - 1
-    ElseIf Month(tgl) = Month(dateNow) Then
-        years = 0
-    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) > Day(dateNow) Then
-        years = years - 1
-    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) = Day(dateNow) Then
-        GoTo finally ' jika bulan dan tanggal sama maka perhitungan selesai
-    End If
- 
-finally:
- 
-    hitungUmurTahun = years
-    hitungUmurTahun = Trim(hitungUmurTahun)
+    hitungUmur = DateDiff("yyyy", dateOfBird, fromData) & " thn"
+'    Dim dateNow As Date
+'    Dim tgl As Date
+'    Dim tgl1 As Date
+'
+'    Dim years As Long
+'    Dim months As Long
+'    Dim days As Long
+'
+'    Dim yearWord As String
+'    Dim monthWord As String
+'    Dim dayWord As String
+'
+'    dateNow = fromData
+'    tgl = dateOfBird
+'
+'    ' menghitung tahun
+'    years = DateDiff("yyyy", tgl, dateNow)
+'    If Month(tgl) > Month(dateNow) Then
+'        years = years - 1
+'    ElseIf Month(tgl) = Month(dateNow) Then
+'        years = 0
+'    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) > Day(dateNow) Then
+'        years = years - 1
+'    ElseIf Month(tgl) = Month(dateNow) And Day(tgl) = Day(dateNow) Then
+'        GoTo finally ' jika bulan dan tanggal sama maka perhitungan selesai
+'    End If
+'
+'finally:
+'
+'    hitungUmurTahun = years
+'    hitungUmurTahun = Trim(hitungUmurTahun)
 End Function
 
 Public Function TerbilangDesimal(InputCurrency As String, Optional MataUang As String = "rupiah") As String
@@ -282,17 +286,17 @@ End Function
 'Ini untuk mengkonversi nilai bilangan sebelum pecahan
 Private Function KonversiBilangan(strAngka As String) As String
 Dim strJmlHuruf$, intPecahan As Integer, strPecahan$, Urai$, Bil1$, strTot$, Bil2$
- Dim X, Y, z As Integer
+ Dim X, y, z As Integer
  
  If strAngka = "" Then Exit Function
     strJmlHuruf = Trim(strAngka)
     X = 0
-    Y = 0
+    y = 0
     Urai = ""
     While (X < Len(strJmlHuruf))
       X = X + 1
       strTot = Mid(strJmlHuruf, X, 1)
-      Y = Y + Val(strTot)
+      y = y + Val(strTot)
       z = Len(strJmlHuruf) - X + 1
       Select Case Val(strTot)
       'Case 0
@@ -368,20 +372,20 @@ Dim strJmlHuruf$, intPecahan As Integer, strPecahan$, Urai$, Bil1$, strTot$, Bil
       Else
          Bil2 = ""
       End If
-      If (Y > 0) Then
+      If (y > 0) Then
           Select Case z
           Case 4
               Bil2 = Bil2 + "ribu "
-              Y = 0
+              y = 0
           Case 7
               Bil2 = Bil2 + "juta "
-              Y = 0
+              y = 0
           Case 10
               Bil2 = Bil2 + "milyar "
-              Y = 0
+              y = 0
           Case 13
               Bil2 = Bil2 + "trilyun "
-              Y = 0
+              y = 0
           End Select
       End If
       Urai = Urai + Bil1 + Bil2
