@@ -34,13 +34,13 @@ Public Sub openConnection()
         If .State = adStateOpen Then Exit Sub
         .CursorLocation = adUseClient
         
-        '.ConnectionString = "DRIVER={PostgreSQL Unicode};" & _
-                            "SERVER=192.168.12.1;" & _
+        .ConnectionString = "DRIVER={PostgreSQL Unicode};" & _
+                            "SERVER=192.168.12.4;" & _
                             "port=5432;" & _
-                            "DATABASE=rsab_hk_production;" & _
+                            "DATABASE=rsab_hk_development;" & _
                             "UID=postgres;" & _
                             "PWD=root": StatusCN = "192.168.12.1"
-        .ConnectionString = "DRIVER={PostgreSQL Unicode};" & _
+        '.ConnectionString = "DRIVER={PostgreSQL Unicode};" & _
                             "SERVER=" & host & ";" & _
                             "port=" & port & ";" & _
                             "DATABASE=" & database & ";" & _

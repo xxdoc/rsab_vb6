@@ -154,7 +154,7 @@ Public Function hitungUmur(dateOfBird As String, fromData As String) As String
 End Function
 
 Public Function hitungUmurTahun(dateOfBird As Date, fromData As Date) As String
-    hitungUmur = DateDiff("yyyy", dateOfBird, fromData) & " thn"
+    hitungUmurTahun = DateDiff("yyyy", dateOfBird, fromData) & " thn"
 '    Dim dateNow As Date
 '    Dim tgl As Date
 '    Dim tgl1 As Date

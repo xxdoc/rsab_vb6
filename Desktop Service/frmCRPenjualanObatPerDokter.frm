@@ -186,10 +186,11 @@ Dim strSQL As String
                      "inner JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
                      "inner join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
                      "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
-                     "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and dp.id=16 " & _
+                     "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
                      str1 & _
                      str2 & _
                      str3
+                     ''and dp.id=16 "
             
             ReadRs strSQL
             
