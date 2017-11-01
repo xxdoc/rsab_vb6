@@ -1,12 +1,11 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakFarmasiApotik 
+Begin VB.Form frmCetakFarmasiApotikPenjualan 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   9075
-   Icon            =   "frmCetakFarmasiApotik.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   9075
@@ -24,7 +23,7 @@ Begin VB.Form frmCetakFarmasiApotik
       EndProperty
       Height          =   315
       Left            =   4920
-      TabIndex        =   4
+      TabIndex        =   3
       Top             =   480
       Width           =   975
    End
@@ -41,7 +40,7 @@ Begin VB.Form frmCetakFarmasiApotik
       EndProperty
       Height          =   315
       Left            =   3960
-      TabIndex        =   3
+      TabIndex        =   2
       Top             =   480
       Width           =   975
    End
@@ -57,19 +56,19 @@ Begin VB.Form frmCetakFarmasiApotik
       EndProperty
       Height          =   315
       Left            =   960
-      TabIndex        =   2
+      TabIndex        =   1
       Top             =   480
       Width           =   3015
    End
    Begin CRVIEWERLibCtl.CRViewer CRViewer1 
-      Height          =   7005
+      Height          =   6975
       Left            =   0
-      TabIndex        =   0
+      TabIndex        =   4
       Top             =   0
-      Width           =   9045
+      Width           =   9135
       DisplayGroupTree=   -1  'True
       DisplayToolbar  =   -1  'True
-      EnableGroupTree =   0   'False
+      EnableGroupTree =   -1  'True
       EnableNavigationControls=   -1  'True
       EnableStopButton=   -1  'True
       EnablePrintButton=   -1  'True
@@ -80,32 +79,32 @@ Begin VB.Form frmCetakFarmasiApotik
       EnableRefreshButton=   -1  'True
       EnableDrillDown =   -1  'True
       EnableAnimationControl=   -1  'True
-      EnableSelectExpertButton=   -1  'True
+      EnableSelectExpertButton=   0   'False
       EnableToolbar   =   -1  'True
       DisplayBorder   =   -1  'True
       DisplayTabs     =   -1  'True
       DisplayBackgroundEdge=   -1  'True
       SelectionFormula=   ""
       EnablePopupMenu =   -1  'True
-      EnableExportButton=   -1  'True
-      EnableSearchExpertButton=   -1  'True
-      EnableHelpButton=   -1  'True
+      EnableExportButton=   0   'False
+      EnableSearchExpertButton=   0   'False
+      EnableHelpButton=   0   'False
    End
    Begin VB.TextBox txtNamaFormPengirim 
       Height          =   495
       Left            =   3120
-      TabIndex        =   1
+      TabIndex        =   0
       Top             =   600
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakFarmasiApotik"
+Attribute VB_Name = "frmCetakFarmasiApotikPenjualan"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim ReportResep As New cr_RincianBiayaResep_2
+Dim ReportResep As New cr_RincianPenjualanFarmasi
 
 Dim ii As Integer
 Dim tempPrint1 As String
@@ -181,10 +180,10 @@ bolStrukResep = True
                  adoReport.ActiveConnection = CN_String
                 
                 strSQL = "SELECT pd.noregistrasi, ps.nocm, " & _
-                          " ps.namapasien || ' ( ' || jk.reportdisplay || ' )' as namapasienjk , kpp.kelompokpasien || ' ( ' || rek.namarekanan || ' ) ' as penjamin, " & _
+                          " ps.namapasien || ' ( ' || jk.reportdisplay || ' )' as namapasienjk, " & _
                           " ps.tgllahir, pd.tglregistrasi, ru.namaruangan AS ruanganpasien, " & _
-                          " sr.noresep, pp.rke, pr.namaproduk || ' / ' || sstd.satuanstandar as namaprodukstandar, " & _
-                          " pp.jumlah,case when pp.jasa is null then 0 else pp.jasa end as jasa , pp.hargasatuan,(pp.jumlah ) as qtyhrg,(pp.jumlah * (pp.hargasatuan-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end )) )+case when pp.jasa is null then 0 else pp.jasa end as totalharga ,jnskem.jeniskemasan, pgw.namalengkap, " & _
+                          " pp.rke, pr.namaproduk || ' / ' || sstd.satuanstandar as namaprodukstandar, " & _
+                          " pp.jumlah,case when pp.jasa is null then 0 else pp.jasa end as jasa , pp.hargasatuan,(pp.jumlah ) as qtyhrg,(pp.jumlah * (pp.hargasatuan-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end )) )+case when pp.jasa is null then 0 else pp.jasa end as totalharga ,jnskem.jeniskemasan, " & _
                           " CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end as totaldiscound, " & _
                           " ((pp.jumlah * pp.hargasatuan ) - (CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end))+case when pp.jasa is null then 0 else pp.jasa end as totalbiaya FROM pelayananpasien_t AS pp " & _
                           " INNER JOIN antrianpasiendiperiksa_t AS apdp ON pp.noregistrasifk = apdp.norec " & _
@@ -192,14 +191,11 @@ bolStrukResep = True
                           " INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
                           " INNER JOIN produk_m AS pr ON pp.produkfk = pr.id " & _
                           " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
-                          " INNER JOIN strukresep_t AS sr ON pp.strukresepfk = sr.norec " & _
                           " INNER JOIN jeniskemasan_m AS jnskem ON pp.jeniskemasanfk = jnskem.id " & _
-                          " INNER JOIN pegawai_m AS pgw ON sr.penulisresepfk = pgw.id " & _
                           " INNER JOIN satuanstandar_m AS sstd ON pp.satuanviewfk = sstd.id " & _
                           " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
                           " INNER JOIN kelompokpasien_m AS kpp ON pd.objectkelompokpasienlastfk = kpp.id " & _
-                          " INNER JOIN rekanan_m as rek on rek.id=pd.objectrekananfk " & _
-                          " WHERE sr.norec='" & strNores & "'"
+                          " WHERE pp.strukresepfk='" & strNores & "'"
             
                 ReadRs strSQL & " limit 1 "
                 
@@ -214,9 +210,7 @@ bolStrukResep = True
 '                .txtklpkpasien.SetText RS("kelompokpasien")
                 '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
                 .txtNamaRuangan.SetText RS("ruanganpasien")
-                .txtPenjamin.SetText RS("penjamin")
                 .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
-                .txtNamaDokter.SetText RS("namalengkap")
                 .txtuser.SetText strUser
                 
                 
