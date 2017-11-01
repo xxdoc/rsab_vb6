@@ -53,6 +53,18 @@ On Error Resume Next
                 Call frmCetakLabelFarmasi.CetakLabelFarmasi(Param1(1), Param2(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Label Farmasi"
+            Case "cetak-LabelFarmasiAdmin"
+                Call frmCetakLabelFarmasiAdmin.CetakLabelFarmasi(Param1(1), Param2(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Label Farmasi"
+            Case "cetak-LabelFarmasiKemo"
+                Call frmCetakLabelFarmasiKemo.CetakLabelFarmasi(Param1(1), Param2(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Label Farmasi"
+            Case "cetak-LabelFarmasiTPN"
+                Call frmCetakLabelFarmasiTPN.CetakLabelFarmasi(Param1(1), Param2(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Label Farmasi"
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
