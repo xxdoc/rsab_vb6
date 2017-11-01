@@ -56,7 +56,7 @@ Begin VB.Form GossRESTMain
          Visible         =   0   'False
       End
       Begin VB.Menu fgdgdfg 
-         Caption         =   "Version 20171031"
+         Caption         =   "Version 20171101"
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
