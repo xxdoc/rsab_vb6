@@ -375,8 +375,8 @@ Set Report3 = New crLaporanPendapatanPoli
     orderby = ""
 
     strFilter = " where pp.tglpelayanan BETWEEN '" & _
-    Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and (apd.statusenabled is null or apd.statusenabled ='t') "
+    Format(tglAwal, "yyyy-MM-dd HH:mm:ss") & "' AND '" & _
+    Format(tglAkhir, "yyyy-MM-dd HH:mm:ss") & "' and (apd.statusenabled is null or apd.statusenabled ='t') "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
 
     If strIdRuangan <> "" Then strFilter = strFilter & " AND apd.objectruanganfk = '" & strIdRuangan & "' "
@@ -417,7 +417,7 @@ Set Report3 = New crLaporanPendapatanPoli
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .unJmlKarcis.SetUnboundFieldSource ("{ado.jmlkarcis}")
             .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")
             .unJmlEmbos.SetUnboundFieldSource ("{ado.jmlembos}")
@@ -428,7 +428,7 @@ Set Report3 = New crLaporanPendapatanPoli
             .ucTindakan.SetUnboundFieldSource ("{ado.tindakan}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usUmur.SetUnboundFieldSource ("{ado.umur}")
@@ -440,9 +440,9 @@ Set Report3 = New crLaporanPendapatanPoli
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
 
 
