@@ -416,6 +416,7 @@ Set Report3 = New crLaporanPendapatanPoli
     With Report3
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
+            
             .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .unJmlKarcis.SetUnboundFieldSource ("{ado.jmlkarcis}")
@@ -435,8 +436,8 @@ Set Report3 = New crLaporanPendapatanPoli
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuskunjungan}")
             .usDokter.SetUnboundFieldSource ("if isnull({ado.namadokter})  then "" - "" else {ado.namadokter} ") '("{ado.namadokter}")
 
-
-            .txtTgl.SetText Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
+            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
+            .txtPeriode.SetText Format(tglAwal, "dd-MM-yyyy HH:mm") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy HH:mm")
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then

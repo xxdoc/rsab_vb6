@@ -86,7 +86,7 @@ Begin VB.Form frmLaporanJurnalPenjamin
       DisplayBackgroundEdge=   -1  'True
       SelectionFormula=   ""
       EnablePopupMenu =   -1  'True
-      EnableExportButton=   0   'False
+      EnableExportButton=   -1  'True
       EnableSearchExpertButton=   0   'False
       EnableHelpButton=   0   'False
    End

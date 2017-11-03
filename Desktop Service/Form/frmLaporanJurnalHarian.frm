@@ -86,7 +86,7 @@ Begin VB.Form frmLaporanJurnalHarian
       DisplayBackgroundEdge=   -1  'True
       SelectionFormula=   ""
       EnablePopupMenu =   -1  'True
-      EnableExportButton=   0   'False
+      EnableExportButton=   -1  'True
       EnableSearchExpertButton=   0   'False
       EnableHelpButton=   0   'False
    End
@@ -157,7 +157,7 @@ Dim adocmd As New ADODB.Command
     Dim str2 As String
     
     If idDepartemen <> "" Then
-        str1 = "and ru.objectdepartemenfk=" & idDepartemen & " "
+        str1 = "and ru.objectdepartemenfk = " & idDepartemen & " "
     End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
@@ -166,11 +166,9 @@ Dim adocmd As New ADODB.Command
     
 Set Report = New crLaporanJurnalHarian
     strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk," & _
-            "case " & _
-            "when pro.namaproduk ilike '%konsul%' then 'Pendt.Konsultasi' " & _
-            "when pro.namaproduk ilike '%karcis%' then 'Pendt.Administrasi' " & _
-            "Else 'Pendt.Tindakan' " & _
-            "end as namaperkiraan , " & _
+            "case when pro.id = 395 then 'Pendt. Administrasi' " & _
+            "when kp.id = 26 then 'Pendt. Konsultasi' " & _
+            "when kp.id in (1,2,3,4,8,9,10,11,13,14) then 'Pendt. Tindakan' end as namaperkiraan, " & _
             "(sum(case when pd.objectkelompokpasienlastfk = 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))+ " & _
             "(sum(case when pd.objectkelompokpasienlastfk > 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))  as total, " & _
             "'Pendapatan R.Jalan' as keterangan " & _
@@ -178,13 +176,15 @@ Set Report = New crLaporanJurnalHarian
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
+            "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             str1 & _
             str2 & _
-            "group by pd.noregistrasi, ru.namaruangan, tp.produkfk,  pro.namaproduk " & _
-            "order by pd.noregistrasi"
+            "group by pd.noregistrasi, ru.namaruangan, tp.produkfk, kp.id, pro.id, pro.namaproduk " & _
+            "order by pro.namaproduk"
 
    
             
