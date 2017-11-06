@@ -262,6 +262,7 @@ Dim strSQL As String
 bolBuktiPendaftaran = True
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -339,6 +340,7 @@ Dim strSQL As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = True
 bolKartuPasien = False
@@ -414,6 +416,7 @@ Dim strSQL As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = True
 bolTracer1 = False
 bolKartuPasien = False
@@ -498,6 +501,7 @@ Dim umur As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = True
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -606,6 +610,7 @@ Dim strFilter As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = True
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -724,6 +729,7 @@ Dim strSQL As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = True
@@ -780,6 +786,7 @@ Dim jml As Integer
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -876,6 +883,7 @@ Dim strSQL As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -982,6 +990,7 @@ Dim strSQL As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
@@ -1111,6 +1120,7 @@ Dim strSQL As String
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
 bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
