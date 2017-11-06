@@ -206,6 +206,7 @@ Set Report = New crLaporanPasienPulang
     With Report
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
+            
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
             .udTglBayar.SetUnboundFieldSource ("{ado.tglstruk}")

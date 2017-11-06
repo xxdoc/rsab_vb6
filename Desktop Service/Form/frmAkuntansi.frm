@@ -45,6 +45,16 @@ On Error Resume Next
                 Call frmLaporanJurnalHarian.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Jurnal"
+                
+            Case "cetak-jurnal-detail"
+                Call frmLaporanJurnalDetail.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Jurnal"
+                
+            Case "cetak-jurnal-penjamin"
+                Call frmLaporanJurnalPenjamin.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Jurnal"
 
             Case Else
                 Set Root = New JNode

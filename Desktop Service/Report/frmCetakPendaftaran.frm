@@ -132,6 +132,7 @@ Dim strPort As String
 Dim bolBuktiPendaftaran As Boolean
 Dim bolBuktiLayanan  As Boolean
 Dim bolBuktiLayananRuangan  As Boolean
+Dim bolBuktiLayananRuanganPerTindakan  As Boolean
 Dim bolcetakSep  As Boolean
 Dim bolTracer1  As Boolean
 Dim bolKartuPasien  As Boolean
@@ -161,6 +162,10 @@ Private Sub cmdCetak_Click()
         reportBuktiLayananRuangan.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
         PrinterNama = cboPrinter.Text
         reportBuktiLayananRuangan.PrintOut False
+    ElseIf bolBuktiLayananRuanganPerTindakan = True Then
+        reportBuktiLayananRuanganPerTindakan.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+        PrinterNama = cboPrinter.Text
+        reportBuktiLayananRuanganPerTindakan.PrintOut False
     ElseIf bolcetakSep = True Then
         reportSep.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
         PrinterNama = cboPrinter.Text
@@ -201,6 +206,8 @@ Private Sub CmdOption_Click()
         reportBuktiLayanan.PrinterSetup Me.hWnd
     ElseIf bolBuktiLayananRuangan = True Then
         reportBuktiLayananRuangan.PrinterSetup Me.hWnd
+    ElseIf bolBuktiLayananRuanganPerTindakan = True Then
+        reportBuktiLayananRuanganPerTindakan.PrinterSetup Me.hWnd
     ElseIf bolcetakSep = True Then
         reportSep.PrinterSetup Me.hWnd
     ElseIf bolTracer1 = True Then
@@ -1421,7 +1428,8 @@ Dim strFilter2 As String
 
 bolBuktiPendaftaran = False
 bolBuktiLayanan = False
-bolBuktiLayananRuangan = True
+bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = True
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False

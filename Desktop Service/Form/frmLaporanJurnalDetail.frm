@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmLaporanJurnal 
+Begin VB.Form frmLaporanJurnalDetail 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
@@ -61,7 +61,7 @@ Begin VB.Form frmLaporanJurnal
       Width           =   3015
    End
    Begin CRVIEWERLibCtl.CRViewer CRViewer1 
-      Height          =   6975
+      Height          =   6855
       Left            =   0
       TabIndex        =   4
       Top             =   0
@@ -98,13 +98,13 @@ Begin VB.Form frmLaporanJurnal
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmLaporanJurnal"
+Attribute VB_Name = "frmLaporanJurnalDetail"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanJurnal
+Dim Report As New crLaporanJurnalDetail
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -143,14 +143,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmLaporanJurnal = Nothing
+    Set frmLaporanJurnalDetail = Nothing
 End Sub
 
 Public Sub CetakLaporanJurnal(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmLaporanJurnal = Nothing
+Set frmLaporanJurnalDetail = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
@@ -164,27 +164,30 @@ Dim adocmd As New ADODB.Command
     End If
     
     
-Set Report = New crLaporanJurnal
-    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk," & _
-            "case " & _
-            "when pro.namaproduk ilike '%konsul%' then 'Pendt.Konsultasi' " & _
-            "when pro.namaproduk ilike '%karcis%' then 'Pendt.Administrasi' " & _
-            "Else 'Pendt.Tindakan' " & _
-            "end as namaperkiraan , " & _
-            "sum(case when pd.objectkelompokpasienlastfk = 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end)  as P_NonJM, " & _
-            "sum(case when pd.objectkelompokpasienlastfk > 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end)  as P_JM, " & _
+Set Report = New crLaporanJurnalDetail
+    strSQL = "select pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, " & _
+            "pro.namaproduk as layanan, tp.hargajual, tp.jumlah, " & _
+            "case when pro.id = 395 then 'Pendt. Administrasi' " & _
+            "when kp.id = 26 then 'Pendt. Konsultasi' " & _
+            "when kp.id in (1,2,3,4,8,9,10,11,13,14) then 'Pendt. Tindakan' end as namaperkiraan, " & _
+            "(sum(case when pd.objectkelompokpasienlastfk = 1 then tp.hargajual*tp.jumlah  else 0 end))+ " & _
+            "(sum(case when pd.objectkelompokpasienlastfk > 1 then tp.hargajual*tp.jumlah  else 0 end))  as total, " & _
             "'Pendapatan R.Jalan' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
-            "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
-            "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+            "inner JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+            "inner JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
+            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+            "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+            "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "inner join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             str1 & _
             str2 & _
-            "group by pd.noregistrasi, ru.namaruangan, tp.produkfk,  pro.namaproduk " & _
-            "order by pd.noregistrasi"
+            "group by pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, " & _
+            "ru.namaruangan, tp.produkfk, pro.namaproduk, pro.id, kp.id  " & _
+            "order by ps.namapasien"
 
    
             
@@ -194,15 +197,19 @@ Set Report = New crLaporanJurnal
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtPrinted.SetText namaPrinted
-            .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
-            .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
-            .txtDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
+            .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
+            .usNmPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
-            .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
-            .unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
-            .unKredit.SetUnboundFieldSource ("{ado.P_JM}")
+            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRegMR.SetUnboundFieldSource ("{ado.regcm}")
+            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usLayanan.SetUnboundFieldSource ("{ado.layanan}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+            .unKode.SetUnboundFieldSource ("{ado.kode}")
+            '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
+            '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
+            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             
             
             If view = "false" Then
