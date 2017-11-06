@@ -166,37 +166,36 @@ Dim strFilter As String
 '    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
    
 Set Report = New crRincianBiayaPelayanan
-    strSQL = "SELECT sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan as unit,ru.objectdepartemenfk,kl.namakelas,   " & _
-            "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, ru2.namaruangan as ruangantindakan,pr.namaproduk,jp.jenisproduk, pg2.namalengkap as dokter,pp.jumlah,pp.hargajual,   " & _
+    strSQL = "SELECT pp.norec as norec_pp, sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan  as unit,ru.objectdepartemenfk,case when sr.noresep is not null then '' else kl.namakelas end as namakelas,   " & _
+            "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, case when sr.noresep is not null then ru_sr.namaruangan || '     Resep No: ' || sr.noresep  else ru2.namaruangan  end as ruangantindakan, case when pp.rke is not null then 'R/' || pp.rke || ' ' || pr.namaproduk else pr.namaproduk end as namaproduk,pg_sr.namalengkap as penulisresep,case when sr.noresep is not null then 'Resep' else jp.jenisproduk end as jenisproduk, case when sr.noresep is not null then '' else pg2.namalengkap end as dokter,pp.jumlah,pp.hargajual,   " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
             "sp.totalharusdibayar,case when sp.totalprekanan is null then 0 else sp.totalprekanan end as totalprekanan,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as totalbiayatambahan, pg3.namalengkap as user " & _
-            "from pelayananpasien_t as pp left JOIN strukpelayanan_t as sp on pp.strukfk=sp.norec  " & _
+            "from pelayananpasien_t as pp left JOIN strukpelayanan_t as sp on pp.strukfk=sp.norec LEFT JOIN strukresep_t as sr on sr.norec=pp.strukresepfk  " & _
             "LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec   " & _
             "LEFT JOIN strukpelayananpenjamin_t as sppj on sp.norec=sppj.nostrukfk " & _
             "LEFT JOIN strukbuktipenerimaancarabayar_t as sbmc on sbm.norec=sbmc.nosbmfk  " & _
             "left JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk                  " & _
-            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
-            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk   " & _
-            "INNER join produk_m as pr on pr.id=pp.produkfk   " & _
-            "INNER join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk   " & _
-            "INNER join jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk   " & _
-            "INNER join pasien_m as ps on ps.id=pd.nocmfk   " & _
-            "INNER join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk   " & _
-            "INNER join ruangan_m  as ru on ru.id=pd.objectruanganlastfk   " & _
-            "INNER join ruangan_m  as ru2 on ru2.id=apd.objectruanganfk   " & _
-            "left join kelas_m  as kl on kl.id=pd.objectkelasfk   " & _
+            "left JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
+            "left JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk   " & _
+            "left join produk_m as pr on pr.id=pp.produkfk   " & _
+            "left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk   " & _
+            "left join jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk   left join pasien_m as ps on ps.id=pd.nocmfk   " & _
+            "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk   left join ruangan_m  as ru on ru.id=pd.objectruanganlastfk  left join ruangan_m  as ru_sr on ru_sr.id=sr.ruanganfk  " & _
+            "left join ruangan_m  as ru2 on ru2.id=apd.objectruanganfk   left join kelas_m  as kl on kl.id=pd.objectkelasfk   " & _
             "left join pegawai_m  as pg on pg.id=pd.objectpegawaifk   " & _
-            "left join pegawai_m  as pg2 on pg2.id=pd.objectpegawaifk   " & _
+            "left join pegawai_m  as pg2 on pg2.id=pd.objectpegawaifk  left join pegawai_m  as pg_sr on pg_sr.id=sr.penulisresepfk   " & _
             "left join rekanan_m  as rk on rk.id=pd.objectrekananfk   " & _
             "left join kamar_m  as kmr on kmr.id=apd.objectkamarfk  " & _
-            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk left join pegawai_m as pg3 on pg3.id=sbm.objectpegawaipenerimafk " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' and pr.id<>402611   or sp.nostruk='" & strNoStruk & "' and pr.id<>402611  or sbm.nosbm='" & strNoKwitansi & "' and pr.id<>402611  "
+            "left JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk left join pegawai_m as pg3 on pg3.id=sbm.objectpegawaipenerimafk " & _
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pr.id not in (402611,10011572,10011571)   or " & _
+            "sp.nostruk='" & strNoStruk & "' and pr.id not in (402611,10011572,10011571)  or " & _
+            "sbm.nosbm='" & strNoKwitansi & "' and pr.id not in (402611,10011572,10011571)  order by pp.rke"
     
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
             "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk=402611 and ppp.objectjenispetugaspefk=4 "
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk=402611 "
     
     ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
@@ -245,7 +244,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -253,11 +252,12 @@ Set Report = New crRincianBiayaPelayanan
             .usDokterPJawab.SetUnboundFieldSource ("{ado.dokterpj}")
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .udTglPlng.SetUnboundFieldSource IIf(IsNull("{ado.tglpulang}") = True, "-", ("{ado.tglpulang}"))
-            .UsPenjamin.SetUnboundFieldSource IIf(IsNull("{ado.namarekanan}") = True, ("-"), ("{ado.namarekanan}"))
+            .usPenjamin.SetUnboundFieldSource IIf(IsNull("{ado.namarekanan}") = True, ("-"), ("{ado.namarekanan}"))
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
             .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .usTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
             .usDokter.SetUnboundFieldSource ("{ado.dokter}")
@@ -268,12 +268,15 @@ Set Report = New crRincianBiayaPelayanan
             .usRuanganTindakan.SetUnboundFieldSource ("{ado.ruangantindakan}")
             .usNoStruk.SetUnboundFieldSource ("{ado.nobilling}")
             .ucDepartemen.SetUnboundFieldSource ("{ado.objectdepartemenfk}")
+            .usNorecpp.SetUnboundFieldSource ("{ado.norec_pp}")
+            .usPenulisResep.SetUnboundFieldSource ("{ado.penulisresep}")
             
             
 '            .ucAdministrasi.SetUnboundFieldSource ("0") '("{ado.administrasi}")
 '            .ucMaterai.SetUnboundFieldSource ("0") '("{ado.materai}")
             
             .ucDeposit.SetUnboundFieldSource (TotalDeposit) '("{ado.deposit}")
+            '.ucDeposit.SetUnboundFieldSource 0 '(TotalDeposit) '("{ado.deposit}")
             .ucDiskonJasaMedis.SetUnboundFieldSource (TotalDiskonMedis)
             .ucDiskonUmum.SetUnboundFieldSource (TotalDiskonUmum) '("{ado.diskonumum}")
 '            .ucSisaDeposit.SetUnboundFieldSource ("0")
@@ -282,6 +285,7 @@ Set Report = New crRincianBiayaPelayanan
             .ucDitanggungPerusahaan.SetUnboundFieldSource ("{ado.totalprekanan}")
             .ucDitanggungRS.SetUnboundFieldSource ("0") '("{ado.totalharusdibayarrs}")
             .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
+'            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             

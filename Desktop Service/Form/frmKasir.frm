@@ -65,6 +65,13 @@ On Error Resume Next
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&strIdPegawai=1&view=false
             
+            Case "cetak-kip"
+                Param4 = Split(arrItem(3), "=")
+                Call frmCRCetakKIP.CetakKIP(Param2(1), Val(Param1(1)), Param3(1), Param4(1), Param5(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kwitansi"
+                '127.0.0.1:1237/printvb/kasir?cetak-kip=1&noregistrasi=1708000446&strIdPegawai=1&view=false
+            
             Case "cetak-LaporanPasienPulang"
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")

@@ -521,7 +521,7 @@ boolLembarPersetujuan = False
                        " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
                        " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
-                       " where pd.noregistrasi ='" & strNorec & "'   ORDER BY tp.tglpelayanan "
+                       " where pd.noregistrasi ='" & strNorec & "' and pro.id <> 402611  ORDER BY tp.tglpelayanan "
                        
             
             ReadRs strSQL
@@ -561,9 +561,9 @@ boolLembarPersetujuan = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -614,7 +614,7 @@ boolLembarPersetujuan = False
     Else
         If strIdRuangan <> "" Then strFilter = " AND ru2.id = '" & strIdRuangan & "' "
     End If
-    strFilter = strFilter & " ORDER BY tp.tglpelayanan "
+    strFilter = strFilter & " and pro.id <> 402611 ORDER BY tp.tglpelayanan "
     With reportBuktiLayananRuangan
     
             Set adoReport = New ADODB.Command
@@ -681,9 +681,9 @@ boolLembarPersetujuan = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -737,7 +737,7 @@ boolLembarPersetujuan = False
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
 
         .txtTgl.SetText strTglLahir
-        .txtNoCM.SetText strNocm
+        .txtnocm.SetText strNocm
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
@@ -860,6 +860,104 @@ errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
 
+Public Sub cetakLabelPasienZebra(strNorec As String, view As String, qty As String)
+On Error GoTo errLoad
+Set frmCetakPendaftaran = Nothing
+Dim strSQL As String
+Dim i As Integer
+Dim str As String
+Dim jml As Integer
+    
+    
+bolBuktiPendaftaran = False
+bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
+bolcetakSep = False
+bolTracer1 = False
+bolKartuPasien = False
+boolLabelPasien = True
+boolSumList = False
+boolLembarRMK = False
+boolLembarPersetujuan = False
+
+    With reportLabel
+            Set adoReport = New ADODB.Command
+             adoReport.ActiveConnection = CN_String
+            
+            strSQL = "select pd.noregistrasi,pd.tglregistrasi,p.nocm, " & _
+                    "upper(p.namapasien) as namapasien, jk.reportdisplay as jk, " & _
+                        "p.tgllahir from pasiendaftar_t pd " & _
+                      " INNER JOIN pasien_m p on pd.nocmfk=p.id " & _
+                       " INNER JOIN jeniskelamin_m jk on jk.id=p.objectjeniskelaminfk " & _
+                       " where pd.noregistrasi ='" & strNorec & "' "
+            
+'            jml = qty - 1
+            
+            str = ""
+            If Val(qty) - 1 = 0 Then
+                adoReport.CommandText = strSQL
+             Else
+                For i = 1 To Val(qty) - 1
+                    str = strSQL & " union all " & str
+                Next
+                
+                adoReport.CommandText = str & strSQL
+           
+           End If
+           
+            adoReport.CommandType = adCmdUnknown
+            
+            
+            .database.AddADOCommand CN_String, adoReport
+
+
+            .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
+            .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
+    
+            .udtgl1.SetUnboundFieldSource ("{ado.tgllahir}")
+            .usNoreg1.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNocm1.SetUnboundFieldSource ("{ado.nocm}")
+            .usNp1.SetUnboundFieldSource ("{ado.namapasien}")
+            .usjk1.SetUnboundFieldSource ("{ado.jk}")
+   
+            .udtgl2.SetUnboundFieldSource ("{ado.tgllahir}")
+            .usNoreg2.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNocm2.SetUnboundFieldSource ("{ado.nocm}")
+            .usNp2.SetUnboundFieldSource ("{ado.namapasien}")
+            .usjk2.SetUnboundFieldSource ("{ado.jk}")
+            
+            .udtgl3.SetUnboundFieldSource ("{ado.tgllahir}")
+            .usNoreg3.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNocm3.SetUnboundFieldSource ("{ado.nocm}")
+            .usNp3.SetUnboundFieldSource ("{ado.namapasien}")
+            .usJk3.SetUnboundFieldSource ("{ado.jk}")
+            
+            
+            If view = "false" Then
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "LabelPasien")
+                .SelectPrinter "winspool", strPrinter1, "Ne00:"
+                .PrintOut False
+                Unload Me
+                Screen.MousePointer = vbDefault
+             Else
+                With CRViewer1
+                    .ReportSource = reportLabel
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+                Screen.MousePointer = vbDefault
+            End If
+     
+    End With
+Exit Sub
+errLoad:
+
+    MsgBox Err.Number & " " & Err.Description
+End Sub
 Public Sub cetakSummaryList(strNorec As String, view As String)
 On Error GoTo errLoad
 Set frmCetakPendaftaran = Nothing
@@ -988,7 +1086,7 @@ boolLembarPersetujuan = False
              adoReport.ActiveConnection = CN_String
             
             strSQL = "SELECT pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when sp.id=2 then COALESCE(ps.namasuamiistri,'-') else ps.namaayah end) as namakeluarga," & _
-                       " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
+                       " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'hh:mm') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
                        " ag.agama, pk.pekerjaan, kb.name AS kebangsaan,upper(al.alamatlengkap) as alamatlengkap,upper(al.kotakabupaten) as kotakabupaten, " & _
                        " al.kecamatan, al.namadesakelurahan, al.mobilephone1,sp.statusperkawinan, " & _
                        " (kmr.namakamar || ' - ' || kls.namakelas ) as namakamar,(tt.reportdisplay || ' - ' ||tt.nomorbed ) AS nomorbed, " & _
@@ -1011,6 +1109,133 @@ boolLembarPersetujuan = False
                        " INNER JOIN kelompokpasien_m kp on pd.objectkelompokpasienlastfk=kp.id " & _
                        " INNER JOIN kelas_m kls on apdp.objectkelasfk=kls.id " & _
                        " where pd.noregistrasi ='" & strNorec & "' "
+            
+            ReadRs strSQL
+                
+            adoReport.CommandText = strSQL
+            adoReport.CommandType = adCmdUnknown
+            
+            .database.AddADOCommand CN_String, adoReport
+
+            If RS.BOF Then
+                .txtUmur.SetText "Umur -"
+            Else
+                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
+                .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd MMM yyyy")
+                .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
+                .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd MMM yyyy"))
+                .txtJamPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "HH:MM:ss"))
+            End If
+            
+            .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+                
+            .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
+            .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
+            
+            .usNamaKeuarga.SetUnboundFieldSource ("{ado.namakeluarga}")
+            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            
+            .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
+            .usNoTlpn.SetUnboundFieldSource ("{ado.notelepon}")
+            
+            .usTL.SetUnboundFieldSource ("{ado.tempatlahir}")
+'            .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
+            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            
+            .usStatusPerkawinan.SetUnboundFieldSource ("{ado.statusperkawinan}")
+            .usAgama.SetUnboundFieldSource ("{ado.agama}")
+            .usPekerjaan.SetUnboundFieldSource ("{ado.pekerjaan}")
+            
+            .usNamaIbu.SetUnboundFieldSource ("{ado.namaibu}")
+            .usNamaAyah.SetUnboundFieldSource ("{ado.namaayah}")
+            .usNamaSuami.SetUnboundFieldSource ("{ado.namasuamiistri}")
+            .usTTLSuami.SetUnboundFieldSource ("{ado.ttlSuami}")
+            
+            .usAlamatPekerjaanAyah.SetUnboundFieldSource ("{ado.alamatPekerjaan}")
+            .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
+            
+            .usOrgDpDihubungi.SetUnboundFieldSource ("{ado.keldihubungi}")
+            .usHubungan.SetUnboundFieldSource ("{ado.Hubungan}")
+            .usAlamatKeluarga.SetUnboundFieldSource ("{ado.alamatlengkap}")
+            .usHp.SetUnboundFieldSource ("{ado.NohpKeluarga}")
+            
+'            .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            '.udJamMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            .udTglKeluar.SetUnboundFieldSource ("{ado.tglpulang}")
+'            '.udJamKeluar.SetUnboundFieldSource ("{ado.tglpulang}")
+            
+            .usJenisPembayaran.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            
+           
+            If view = "false" Then
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "CetakRMK")
+                .SelectPrinter "winspool", strPrinter1, "Ne00:"
+                .PrintOut False
+                Unload Me
+                Screen.MousePointer = vbDefault
+             Else
+                With CRViewer1
+                    .ReportSource = reportRmk
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+                Screen.MousePointer = vbDefault
+            End If
+     
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+'    MsgBox Err.Description, vbInformation
+End Sub
+
+Public Sub cetakLembarMasukByNorec_APD(strNorec As String, view As String)
+On Error GoTo errLoad
+Set frmCetakPendaftaran = Nothing
+Dim strSQL As String
+   
+    
+bolBuktiPendaftaran = False
+bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
+bolcetakSep = False
+bolTracer1 = False
+bolKartuPasien = False
+boolLabelPasien = False
+boolSumList = False
+boolLembarRMK = True
+boolLembarPersetujuan = False
+
+    With reportRmk
+            Set adoReport = New ADODB.Command
+             adoReport.ActiveConnection = CN_String
+            
+            strSQL = "SELECT pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when sp.id=2 then COALESCE(ps.namasuamiistri,'-') else ps.namaayah end) as namakeluarga," & _
+                       " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'hh:mm') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
+                       " ag.agama, pk.pekerjaan, kb.name AS kebangsaan,upper(al.alamatlengkap) as alamatlengkap,upper(al.kotakabupaten) as kotakabupaten, " & _
+                       " al.kecamatan, al.namadesakelurahan, al.mobilephone1,sp.statusperkawinan, " & _
+                       " (kmr.namakamar || ' - ' || kls.namakelas ) as namakamar,(tt.reportdisplay || ' - ' ||tt.nomorbed ) AS nomorbed, " & _
+                       " TO_CHAR(pd.tglregistrasi, 'dd Mon YYYY') as tglregistrasi, TO_CHAR(pd.tglpulang, 'dd Mon YYYY') as tglpulang, ps.namaibu, '-' as ttlSuami, " & _
+                       " COALESCE(ps.namasuamiistri,'-') as namasuamiistri, pg.namalengkap as namadokterpj, kp.kelompokpasien, " & _
+                       " '-' as alamatPekerjaan,'-' as keldihubungi  ,'-' as Hubungan , '-' as alamatKeluarga, " & _
+                       " '-' as NohpKeluarga,ps.notelepon " & _
+                       " FROM pasiendaftar_t pd  " & _
+                       " INNER JOIN antrianpasiendiperiksa_t apdp on pd.norec=apdp.noregistrasifk  " & _
+                       " INNER JOIN pasien_m ps on pd.nocmfk=ps.id " & _
+                       " INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
+                       " INNER JOIN alamat_m al on ps.id=al.nocmfk  INNER JOIN agama_m ag on ps.objectagamafk=ag.id " & _
+                       " left JOIN pekerjaan_m pk on pk.id=ps.objectpekerjaanfk " & _
+                       " LEFT JOIN kebangsaan_m kb on kb.id=ps.objectkebangsaanfk " & _
+                       " left JOIN statusperkawinan_m sp on sp.id=ps.objectstatusperkawinanfk " & _
+                       " INNER JOIN ruangan_m ru on apdp.objectruanganfk=ru.id " & _
+                       " left JOIN kamar_m kmr on apdp.objectkamarfk=kmr.id " & _
+                       " left JOIN tempattidur_m tt on apdp.nobed=tt.id " & _
+                       " LEFT JOIN pegawai_m pg on pd.objectpegawaifk=pg.id " & _
+                       " INNER JOIN kelompokpasien_m kp on pd.objectkelompokpasienlastfk=kp.id " & _
+                       " INNER JOIN kelas_m kls on apdp.objectkelasfk=kls.id " & _
+                       " where apdp.norec ='" & strNorec & "' "
             
             ReadRs strSQL
                 
@@ -1235,7 +1460,7 @@ boolLembarPersetujuan = False
                        " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
                        " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
-                       " where pd.noregistrasi ='" & strNorec & "'" & strFilter
+                       " where pd.noregistrasi ='" & strNorec & "' and pro.id <> 402611 " & strFilter
             
             ReadRs strSQL
             
@@ -1276,9 +1501,9 @@ boolLembarPersetujuan = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then

@@ -134,7 +134,12 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Param4 = Split(arrItem(3), "=")
                 lblStatus.Caption = "Cetak Label Pasien"
                 
-                Call frmCetakPendaftaran.cetakLabelPasien(Param2(1), Param3(1), Param4(1))
+                If InStr(1, UCase(GetTxt("Setting.ini", "Printer", "LabelPasien")), "ZEBRA") > 1 Then
+                    Call frmCetakPendaftaran.cetakLabelPasienZebra(Param2(1), Param3(1), Param4(1))
+                Else
+                    Call frmCetakPendaftaran.cetakLabelPasien(Param2(1), Param3(1), Param4(1))
+                End If
+                
                 'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-labelpasien=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false&qty=2
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -147,10 +152,19 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
-            
+            '
             Case "cetak-lembarmasukkeluar"
                 lblStatus.Caption = "Cetak Lembar Masuk Keluar Pasien Rawat Inap"
                 Call frmCetakPendaftaran.cetakLembarMasuk(Param2(1), Param3(1))
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-lembarmasukkeluar=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+                
+            
+            Case "cetak-lembarmasukkeluar-byNorec"
+                lblStatus.Caption = "Cetak Lembar Masuk Keluar Pasien Rawat Inap"
+                Call frmCetakPendaftaran.cetakLembarMasukByNorec_APD(Param2(1), Param3(1))
                 'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-lembarmasukkeluar=1&norec=2c9090ce5af40be8015af40eb1f80006&view=false
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -398,116 +412,116 @@ Dim Cur As String
 Dim CurVal As Long
 Dim chksum As Long
 Dim temp As String
-Dim BC(106) As String
+Dim bc(106) As String
     'code 128 is basically the ASCII chr set.
     '4 element sizes : 1=narrowest, 4=widest
-    BC(0) = "212222" '<SPC>
-    BC(1) = "222122" '!
-    BC(2) = "222221" '"
-    BC(3) = "121223" '#
-    BC(4) = "121322" '$
-    BC(5) = "131222" '%
-    BC(6) = "122213" '&
-    BC(7) = "122312" ''
-    BC(8) = "132212" '(
-    BC(9) = "221213" ')
-    BC(10) = "221312" '*
-    BC(11) = "231212" '+
-    BC(12) = "112232" ',
-    BC(13) = "122132" '-
-    BC(14) = "122231" '.
-    BC(15) = "113222" '/
-    BC(16) = "123122" '0
-    BC(17) = "123221" '1
-    BC(18) = "223211" '2
-    BC(19) = "221132" '3
-    BC(20) = "221231" '4
-    BC(21) = "213212" '5
-    BC(22) = "223112" '6
-    BC(23) = "312131" '7
-    BC(24) = "311222" '8
-    BC(25) = "321122" '9
-    BC(26) = "321221" ':
-    BC(27) = "312212" ';
-    BC(28) = "322112" '<
-    BC(29) = "322211" '=
-    BC(30) = "212123" '>
-    BC(31) = "212321" '?
-    BC(32) = "232121" '@
-    BC(33) = "111323" 'A
-    BC(34) = "131123" 'B
-    BC(35) = "131321" 'C
-    BC(36) = "112313" 'D
-    BC(37) = "132113" 'E
-    BC(38) = "132311" 'F
-    BC(39) = "211313" 'G
-    BC(40) = "231113" 'H
-    BC(41) = "231311" 'I
-    BC(42) = "112133" 'J
-    BC(43) = "112331" 'K
-    BC(44) = "132131" 'L
-    BC(45) = "113123" 'M
-    BC(46) = "113321" 'N
-    BC(47) = "133121" 'O
-    BC(48) = "313121" 'P
-    BC(49) = "211331" 'Q
-    BC(50) = "231131" 'R
-    BC(51) = "213113" 'S
-    BC(52) = "213311" 'T
-    BC(53) = "213131" 'U
-    BC(54) = "311123" 'V
-    BC(55) = "311321" 'W
-    BC(56) = "331121" 'X
-    BC(57) = "312113" 'Y
-    BC(58) = "312311" 'Z
-    BC(59) = "332111" '[
-    BC(60) = "314111" '\
-    BC(61) = "221411" ']
-    BC(62) = "431111" '^
-    BC(63) = "111224" '_
-    BC(64) = "111422" '`
-    BC(65) = "121124" 'a
-    BC(66) = "121421" 'b
-    BC(67) = "141122" 'c
-    BC(68) = "141221" 'd
-    BC(69) = "112214" 'e
-    BC(70) = "112412" 'f
-    BC(71) = "122114" 'g
-    BC(72) = "122411" 'h
-    BC(73) = "142112" 'i
-    BC(74) = "142211" 'j
-    BC(75) = "241211" 'k
-    BC(76) = "221114" 'l
-    BC(77) = "413111" 'm
-    BC(78) = "241112" 'n
-    BC(79) = "134111" 'o
-    BC(80) = "111242" 'p
-    BC(81) = "121142" 'q
-    BC(82) = "121241" 'r
-    BC(83) = "114212" 's
-    BC(84) = "124112" 't
-    BC(85) = "124211" 'u
-    BC(86) = "411212" 'v
-    BC(87) = "421112" 'w
-    BC(88) = "421211" 'x
-    BC(89) = "212141" 'y
-    BC(90) = "214121" 'z
-    BC(91) = "412121" '{
-    BC(92) = "111143" '|
-    BC(93) = "111341" '}
-    BC(94) = "131141" '~
-    BC(95) = "114113" '<DEL>        *not used in this sub
-    BC(96) = "114311" 'FNC 3        *not used in this sub
-    BC(97) = "411113" 'FNC 2        *not used in this sub
-    BC(98) = "411311" 'SHIFT        *not used in this sub
-    BC(99) = "113141" 'CODE C       *not used in this sub
-    BC(100) = "114131" 'FNC 4       *not used in this sub
-    BC(101) = "311141" 'CODE A      *not used in this sub
-    BC(102) = "411131" 'FNC 1       *not used in this sub
-    BC(103) = "211412" 'START A     *not used in this sub
-    BC(104) = "211214" 'START B
-    BC(105) = "211232" 'START C     *not used in this sub
-    BC(106) = "2331112" 'STOP
+    bc(0) = "212222" '<SPC>
+    bc(1) = "222122" '!
+    bc(2) = "222221" '"
+    bc(3) = "121223" '#
+    bc(4) = "121322" '$
+    bc(5) = "131222" '%
+    bc(6) = "122213" '&
+    bc(7) = "122312" ''
+    bc(8) = "132212" '(
+    bc(9) = "221213" ')
+    bc(10) = "221312" '*
+    bc(11) = "231212" '+
+    bc(12) = "112232" ',
+    bc(13) = "122132" '-
+    bc(14) = "122231" '.
+    bc(15) = "113222" '/
+    bc(16) = "123122" '0
+    bc(17) = "123221" '1
+    bc(18) = "223211" '2
+    bc(19) = "221132" '3
+    bc(20) = "221231" '4
+    bc(21) = "213212" '5
+    bc(22) = "223112" '6
+    bc(23) = "312131" '7
+    bc(24) = "311222" '8
+    bc(25) = "321122" '9
+    bc(26) = "321221" ':
+    bc(27) = "312212" ';
+    bc(28) = "322112" '<
+    bc(29) = "322211" '=
+    bc(30) = "212123" '>
+    bc(31) = "212321" '?
+    bc(32) = "232121" '@
+    bc(33) = "111323" 'A
+    bc(34) = "131123" 'B
+    bc(35) = "131321" 'C
+    bc(36) = "112313" 'D
+    bc(37) = "132113" 'E
+    bc(38) = "132311" 'F
+    bc(39) = "211313" 'G
+    bc(40) = "231113" 'H
+    bc(41) = "231311" 'I
+    bc(42) = "112133" 'J
+    bc(43) = "112331" 'K
+    bc(44) = "132131" 'L
+    bc(45) = "113123" 'M
+    bc(46) = "113321" 'N
+    bc(47) = "133121" 'O
+    bc(48) = "313121" 'P
+    bc(49) = "211331" 'Q
+    bc(50) = "231131" 'R
+    bc(51) = "213113" 'S
+    bc(52) = "213311" 'T
+    bc(53) = "213131" 'U
+    bc(54) = "311123" 'V
+    bc(55) = "311321" 'W
+    bc(56) = "331121" 'X
+    bc(57) = "312113" 'Y
+    bc(58) = "312311" 'Z
+    bc(59) = "332111" '[
+    bc(60) = "314111" '\
+    bc(61) = "221411" ']
+    bc(62) = "431111" '^
+    bc(63) = "111224" '_
+    bc(64) = "111422" '`
+    bc(65) = "121124" 'a
+    bc(66) = "121421" 'b
+    bc(67) = "141122" 'c
+    bc(68) = "141221" 'd
+    bc(69) = "112214" 'e
+    bc(70) = "112412" 'f
+    bc(71) = "122114" 'g
+    bc(72) = "122411" 'h
+    bc(73) = "142112" 'i
+    bc(74) = "142211" 'j
+    bc(75) = "241211" 'k
+    bc(76) = "221114" 'l
+    bc(77) = "413111" 'm
+    bc(78) = "241112" 'n
+    bc(79) = "134111" 'o
+    bc(80) = "111242" 'p
+    bc(81) = "121142" 'q
+    bc(82) = "121241" 'r
+    bc(83) = "114212" 's
+    bc(84) = "124112" 't
+    bc(85) = "124211" 'u
+    bc(86) = "411212" 'v
+    bc(87) = "421112" 'w
+    bc(88) = "421211" 'x
+    bc(89) = "212141" 'y
+    bc(90) = "214121" 'z
+    bc(91) = "412121" '{
+    bc(92) = "111143" '|
+    bc(93) = "111341" '}
+    bc(94) = "131141" '~
+    bc(95) = "114113" '<DEL>        *not used in this sub
+    bc(96) = "114311" 'FNC 3        *not used in this sub
+    bc(97) = "411113" 'FNC 2        *not used in this sub
+    bc(98) = "411311" 'SHIFT        *not used in this sub
+    bc(99) = "113141" 'CODE C       *not used in this sub
+    bc(100) = "114131" 'FNC 4       *not used in this sub
+    bc(101) = "311141" 'CODE A      *not used in this sub
+    bc(102) = "411131" 'FNC 1       *not used in this sub
+    bc(103) = "211412" 'START A     *not used in this sub
+    bc(104) = "211214" 'START B
+    bc(105) = "211232" 'START C     *not used in this sub
+    bc(106) = "2331112" 'STOP
 
     Picture1.Cls
 '    If Text1.Text = "" Then Exit Sub
@@ -522,13 +536,13 @@ Dim BC(106) As String
             Exit Sub
         End If
         CurVal = Asc(Cur) - 32
-        temp = temp + BC(CurVal)
+        temp = temp + bc(CurVal)
         chksum = chksum + CurVal * X
     Next
     
     'Add start, stop & check characters
     chksum = (chksum + 104) Mod 103
-    temp = BC(104) & temp & BC(chksum) & BC(106)
+    temp = bc(104) & temp & bc(chksum) & bc(106)
 
     'Generate Barcode
     For X = 1 To Len(temp)

@@ -210,13 +210,13 @@ bolStrukResep = True
 '                .txtklpkpasien.SetText RS("kelompokpasien")
                 '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
                 .txtNamaRuangan.SetText RS("ruanganpasien")
-                .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
+'                .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
                 .txtuser.SetText strUser
                 
                 
               '  .usSatuan.SetUnboundFieldSource ("{ado.SatuanJmlK}")
              '   .udtanggal.SetUnboundFieldSource ("{Ado.tglpelayanan}")
-                .usNoResep.SetUnboundFieldSource ("{Ado.noresep}")
+'                .usNoResep.SetUnboundFieldSource ("{Ado.noresep}")
                 .ucbiayasatuan.SetUnboundFieldSource ("{Ado.totalharga}")
        '2         .ucHrgSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
                 .ustindakan.SetUnboundFieldSource ("{Ado.namaprodukstandar}")

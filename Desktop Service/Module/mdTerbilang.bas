@@ -97,7 +97,47 @@ End Function
 
 
 Public Function hitungUmur(dateOfBird As String, fromData As String) As String
-    hitungUmur = DateDiff("yyyy", dateOfBird, fromData) & " thn " & DateDiff("M", dateOfBird, fromData) Mod 12 & " bln " & DateDiff("d", dateOfBird, fromData) Mod 365 & " hari"
+    If dateOfBird <> "" Then
+        dateOfBird = Format(dateOfBird, "yyyy-MM-dd")
+        Dim rsau As New ADODB.Recordset
+        rsau.Open "select age(timestamp '" & dateOfBird & "') as umur", CN, adOpenStatic, adLockReadOnly
+        
+'        ReadRs5 "select age(timestamp '" & dateOfBird & "') as umur"
+        '6 years 4 mons 29 days
+        Dim str As String
+        
+        str = rsau!umur
+        
+        str = Replace(str, "years", "thn")
+        str = Replace(str, "mons", "bln")
+        str = Replace(str, "days", "hari")
+        
+        hitungUmur = str
+    Else
+        hitungUmur = ""
+    End If
+
+    'hitungUmur = DateDiff("yyyy", dateOfBird, fromData) & " thn " & DateDiff("M", dateOfBird, fromData) Mod 12 & " bln " & (DateDiff("d", dateOfBird, fromData) Mod 365) Mod 30 & " hari"
+    
+'    Dim jmlhari As Double
+'    Dim tahun As Integer
+'    Dim bulan As Integer
+'    Dim hari As Integer
+'
+'
+'    jmlhari = DateDiff("d", dateOfBird, fromData)
+'
+'    tahun = jmlhari / 365
+'
+'    jmlhari = jmlhari Mod 365
+'
+'    bulan = jmlhari / 30
+'
+'    jmlhari = jmlhari Mod 30
+'
+'    hari = jmlhari
+'
+'    hitungUmur = tahun & " thn " & bulan & " bln " & hari & " hari"
     
     
 '    Dim dateNow As Date
