@@ -173,70 +173,94 @@ Set frmCetakFarmasiApotik = Nothing
 Dim strSQL As String
 
 bolStrukResep = True
-
-
-    With ReportResep
-                
-                Set adoReport = New ADODB.Command
-                 adoReport.ActiveConnection = CN_String
-                
-                strSQL = "SELECT pd.noregistrasi, ps.nocm, " & _
-                          " ps.namapasien || ' ( ' || jk.reportdisplay || ' )' as namapasienjk , kpp.kelompokpasien || ' ( ' || rek.namarekanan || ' ) ' as penjamin, " & _
-                          " ps.tgllahir, pd.tglregistrasi, ru.namaruangan AS ruanganpasien, " & _
-                          " sr.noresep, pp.rke, pr.namaproduk || ' / ' || sstd.satuanstandar as namaprodukstandar, " & _
-                          " pp.jumlah,case when pp.jasa is null then 0 else pp.jasa end as jasa , pp.hargasatuan,(pp.jumlah ) as qtyhrg,(pp.jumlah * (pp.hargasatuan-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end )) )+case when pp.jasa is null then 0 else pp.jasa end as totalharga ,jnskem.jeniskemasan, pgw.namalengkap, " & _
-                          " CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end as totaldiscound, " & _
-                          " ((pp.jumlah * pp.hargasatuan ) - (CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end))+case when pp.jasa is null then 0 else pp.jasa end as totalbiaya FROM pelayananpasien_t AS pp " & _
-                          " INNER JOIN antrianpasiendiperiksa_t AS apdp ON pp.noregistrasifk = apdp.norec " & _
-                          " INNER JOIN pasiendaftar_t AS pd ON apdp.noregistrasifk = pd.norec " & _
-                          " INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
-                          " INNER JOIN produk_m AS pr ON pp.produkfk = pr.id " & _
-                          " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
-                          " INNER JOIN strukresep_t AS sr ON pp.strukresepfk = sr.norec " & _
-                          " INNER JOIN jeniskemasan_m AS jnskem ON pp.jeniskemasanfk = jnskem.id " & _
-                          " INNER JOIN pegawai_m AS pgw ON sr.penulisresepfk = pgw.id " & _
-                          " INNER JOIN satuanstandar_m AS sstd ON pp.satuanviewfk = sstd.id " & _
-                          " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
-                          " INNER JOIN kelompokpasien_m AS kpp ON pd.objectkelompokpasienlastfk = kpp.id " & _
-                          " INNER JOIN rekanan_m as rek on rek.id=pd.objectrekananfk " & _
-                          " WHERE sr.norec='" & strNores & "'"
+    
+    
+        With ReportResep
+            Set adoReport = New ADODB.Command
+            adoReport.ActiveConnection = CN_String
             
-                ReadRs strSQL & " limit 1 "
-                
-                adoReport.CommandText = strSQL
-                adoReport.CommandType = adCmdUnknown
-               .database.AddADOCommand CN_String, adoReport
-               
-              
-                .txtnopendaftaran.SetText RS("noregistrasi")
-                .txtnocm.SetText RS("nocm")
-                .txtnmpasien.SetText RS("namapasienjk")
-'                .txtklpkpasien.SetText RS("kelompokpasien")
-                '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
-                .txtNamaRuangan.SetText RS("ruanganpasien")
+            If Left(strNores, 10) = "NonLayanan" Then
+                strNores = Replace(strNores, "NonLayanan", "")
+                strSQL = "select sp.nostruk as noregistrasi, '-' as noresep,sp.nostruk_intern as nocm,sp.namapasien_klien as namapasienjk,pg.namalengkap, " & _
+                        "ru.namaruangan as ruanganpasien,'' as penjamin,'-' as Umur,((spd.hargasatuan-spd.hargadiscount)*spd.qtyproduk)+spd.hargatambahan as totalharga, " & _
+                        "((spd.hargasatuan-spd.hargadiscount)*spd.qtyproduk)+spd.hargatambahan as totalbiaya, " & _
+                        "pr.namaproduk as namaprodukstandar, spd.qtyproduk as qtyhrg,spd.qtyproduk as jumlah, " & _
+                        "CASE when spd.hargadiscount isnull then 0 ELSE  spd.hargadiscount * spd.qtyproduk end as totaldiscound, " & _
+                        "spd.resepke as rke,jkm.jeniskemasan " & _
+                         "from strukpelayanan_t sp " & _
+                        "INNER JOIN strukpelayanandetail_t spd on spd.nostrukfk=sp.norec " & _
+                        "left JOIN pegawai_m pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
+                        "left JOIN ruangan_m ru on ru.id=sp.objectruanganfk " & _
+                        "left JOIN produk_m pr on pr.id=spd.objectprodukfk " & _
+                        "left JOIN jeniskemasan_m jkm on jkm.id=spd.objectjeniskemasanfk " & _
+                        "where sp.norec = '" & strNores & "'"
+            Else
+                strSQL = "SELECT pd.noregistrasi, ps.nocm,'=' as umur, " & _
+                       " ps.namapasien || ' ( ' || jk.reportdisplay || ' )' as namapasienjk , kpp.kelompokpasien || ' ( ' || rek.namarekanan || ' ) ' as penjamin, " & _
+                       " ps.tgllahir, pd.tglregistrasi, ru.namaruangan AS ruanganpasien, " & _
+                       " sr.noresep, pp.rke, pr.namaproduk || ' / ' || sstd.satuanstandar as namaprodukstandar, " & _
+                       " pp.jumlah,case when pp.jasa is null then 0 else pp.jasa end as jasa , pp.hargasatuan,(pp.jumlah ) as qtyhrg,(pp.jumlah * (pp.hargasatuan-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end )) )+case when pp.jasa is null then 0 else pp.jasa end as totalharga ,jnskem.jeniskemasan, pgw.namalengkap, " & _
+                       " CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end as totaldiscound, " & _
+                       " ((pp.jumlah * pp.hargasatuan ) - (CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end))+case when pp.jasa is null then 0 else pp.jasa end as totalbiaya FROM pelayananpasien_t AS pp " & _
+                       " INNER JOIN antrianpasiendiperiksa_t AS apdp ON pp.noregistrasifk = apdp.norec " & _
+                       " INNER JOIN pasiendaftar_t AS pd ON apdp.noregistrasifk = pd.norec " & _
+                       " INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
+                       " INNER JOIN produk_m AS pr ON pp.produkfk = pr.id " & _
+                       " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
+                       " INNER JOIN strukresep_t AS sr ON pp.strukresepfk = sr.norec " & _
+                       " INNER JOIN jeniskemasan_m AS jnskem ON pp.jeniskemasanfk = jnskem.id " & _
+                       " INNER JOIN pegawai_m AS pgw ON sr.penulisresepfk = pgw.id " & _
+                       " INNER JOIN satuanstandar_m AS sstd ON pp.satuanviewfk = sstd.id " & _
+                       " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
+                       " INNER JOIN kelompokpasien_m AS kpp ON pd.objectkelompokpasienlastfk = kpp.id " & _
+                       " left JOIN rekanan_m as rek on rek.id=pd.objectrekananfk " & _
+                       " WHERE sr.norec='" & strNores & "'"
+            End If
+         
+             ReadRs strSQL & " limit 1 "
+             
+             adoReport.CommandText = strSQL
+             adoReport.CommandType = adCmdUnknown
+            .database.AddADOCommand CN_String, adoReport
+            
+           
+             .txtnopendaftaran.SetText RS("noregistrasi")
+             .txtnocm.SetText RS("nocm")
+             .txtnmpasien.SetText RS("namapasienjk")
+    '                .txtklpkpasien.SetText RS("kelompokpasien")
+             '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
+             .txtNamaRuangan.SetText RS("ruanganpasien")
+            If IsNull(RS("penjamin")) = True Then
+                .txtPenjamin.SetText "-"
+            Else
                 .txtPenjamin.SetText RS("penjamin")
+            End If
+             If RS("umur") = "-" Then
+                .txtUmur.SetText "-"
+             Else
                 .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
-                .txtNamaDokter.SetText RS("namalengkap")
-                .txtuser.SetText strUser
-                
-                
-              '  .usSatuan.SetUnboundFieldSource ("{ado.SatuanJmlK}")
-             '   .udtanggal.SetUnboundFieldSource ("{Ado.tglpelayanan}")
-                .usNoResep.SetUnboundFieldSource ("{Ado.noresep}")
-                .ucbiayasatuan.SetUnboundFieldSource ("{Ado.totalharga}")
-       '2         .ucHrgSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
-                .ustindakan.SetUnboundFieldSource ("{Ado.namaprodukstandar}")
-                .usQtyHrg.SetUnboundFieldSource ("{Ado.qtyhrg}")
-                .unQtyTotal.SetUnboundFieldSource ("{Ado.jumlah}")
-                .ucGrandTotal.SetUnboundFieldSource ("{Ado.totalharga}")
-                .undis.SetUnboundFieldSource ("{Ado.totaldiscound}")
-                .unTotal.SetUnboundFieldSource ("{Ado.totalbiaya}")
-                
-                .unRacikanKe.SetUnboundFieldSource ("{ado.rke}")
-                .usJenisObat.SetUnboundFieldSource ("{ado.jeniskemasan}")
-                
-                
-                
+             End If
+             .txtNamaDokter.SetText RS("namalengkap")
+             .txtuser.SetText strUser
+             
+             
+           '  .usSatuan.SetUnboundFieldSource ("{ado.SatuanJmlK}")
+          '   .udtanggal.SetUnboundFieldSource ("{Ado.tglpelayanan}")
+             .usNoResep.SetUnboundFieldSource ("{Ado.noresep}")
+             .ucbiayasatuan.SetUnboundFieldSource ("{Ado.totalharga}")
+    '2         .ucHrgSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
+             .ustindakan.SetUnboundFieldSource ("{Ado.namaprodukstandar}")
+             .usQtyHrg.SetUnboundFieldSource ("{Ado.qtyhrg}")
+             .unQtyTotal.SetUnboundFieldSource ("{Ado.jumlah}")
+             .ucGrandTotal.SetUnboundFieldSource ("{Ado.totalharga}")
+             .undis.SetUnboundFieldSource ("{Ado.totaldiscound}")
+             .unTotal.SetUnboundFieldSource ("{Ado.totalbiaya}")
+             
+             .unRacikanKe.SetUnboundFieldSource ("{ado.rke}")
+             .usJenisObat.SetUnboundFieldSource ("{ado.jeniskemasan}")
+             
+             
+             
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "CetakResep")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
@@ -253,7 +277,7 @@ bolStrukResep = True
                 Screen.MousePointer = vbDefault
             End If
      
-    End With
+        End With
 Exit Sub
 errLoad:
 

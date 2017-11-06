@@ -150,11 +150,12 @@ End Sub
 Public Sub CetakUlangJenisKuitansi(strNoregistrasi As String, jumlahCetak As Integer, strIdPegawai As String, STD As String, view As String)
 On Error GoTo errLoad
 
-Set frmCRCetakKuitansiPasienV2 = Nothing
+Dim strKet As Boolean
 
-
-
-Set Report = New crKuitansiPasien
+    strKet = True
+    
+    Set frmCRCetakKuitansiPasienV2 = Nothing
+    Set Report = New crKuitansiPasien
     If Len(strNoregistrasi) = 10 Then
         ReadRs "select pd.noregistrasi,sbp.totaldibayar,ps.namapasien, sbp.keteranganlainnya,pd.nocmfk,ru.namaruangan,pg.namalengkap,ps.nocm from pasiendaftar_t as pd " & _
                "inner join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
@@ -166,7 +167,7 @@ Set Report = New crKuitansiPasien
                "where pd.noregistrasi='" & strNoregistrasi & "'"
     End If
     If Len(strNoregistrasi) = 14 Then
-        ReadRs "select sp.nostruk as noregistrasi,sp.totalharusdibayar as totaldibayar,sp.namapasien_klien as namapasien,pg.namalengkap, sp.keteranganlainnya,'Non Layanan' as namaruangan,'-' as nocm from  " & _
+        ReadRs "select sp.nostruk as noregistrasi,sp.totalharusdibayar as totaldibayar,sp.namapasien_klien as namapasien,pg.namalengkap, sp.keteranganlainnya,sp.keteranganlainnya as namaruangan,'-' as nocm from  " & _
                " strukpelayanan_t as sp  " & _
                "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
                "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
@@ -174,17 +175,36 @@ Set Report = New crKuitansiPasien
                "where sbp.nosbm='" & strNoregistrasi & "'"
     End If
     If Len(strNoregistrasi) > 14 Then
-        Dim noreg, nostruk As String
-        noreg = Left(strNoregistrasi, 10)
-        nostruk = Replace(strNoregistrasi, noreg, "")
-        ReadRs "select pd.noregistrasi,sbp.totaldibayar,ps.namapasien, sbp.keteranganlainnya,pd.nocmfk,ru.namaruangan,pg.namalengkap,ps.nocm from pasiendaftar_t as pd " & _
-               "inner join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
-               "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
-               "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
-               "inner join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
-               "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
-               "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
-               "where pd.noregistrasi='" & noreg & "' and sp.norec='" & nostruk & "'"
+        If Left(strNoregistrasi, 7) = "DEPOSIT" Then
+            strNoregistrasi = Replace(strNoregistrasi, "DEPOSIT", "")
+            ReadRs "select sp.nostruk as noregistrasi,sbp.totaldibayar as totaldibayar, ps.namapasien as namapasien, " & _
+                    "pg.namalengkap, sbp.keteranganlainnya,sbp.keteranganlainnya as namaruangan,ps.nocm as nocm " & _
+                    "from   strukpelayanan_t as sp " & _
+                    "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
+                    "left join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
+                    "left join pasien_m as ps on ps.id=sp.nocmfk " & _
+                    "left join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
+                    "where sbp.nosbm='" & strNoregistrasi & "'"
+            strKet = False
+'            ReadRs "select sp.nostruk as noregistrasi,sp.totalharusdibayar as totaldibayar,sp.namapasien_klien as namapasien,pg.namalengkap, sp.keteranganlainnya,sp.keteranganlainnya as namaruangan,'-' as nocm from  " & _
+'               " strukpelayanan_t as sp  " & _
+'               "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
+'               "left join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
+'               "left join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
+'               "where sbp.nosbm='" & strNoregistrasi & "'"
+        Else
+            Dim noreg, nostruk As String
+            noreg = Left(strNoregistrasi, 10)
+            nostruk = Replace(strNoregistrasi, noreg, "")
+            ReadRs "select pd.noregistrasi,sbp.totaldibayar,ps.namapasien, sbp.keteranganlainnya,pd.nocmfk,ru.namaruangan,pg.namalengkap,ps.nocm from pasiendaftar_t as pd " & _
+                   "inner join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
+                   "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
+                   "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
+                   "inner join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
+                   "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
+                   "inner join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
+                   "where pd.noregistrasi='" & noreg & "' and sp.norec='" & nostruk & "'"
+        End If
     End If
     
     Dim i As Integer
@@ -205,8 +225,14 @@ Set Report = New crKuitansiPasien
                 .txtNamaPenyetor.SetText UCase(STD)
             End If
             .txtNamaPasien.SetText UCase(RS("namapasien"))
-            .txtKeterangan.SetText UCase("Biaya Layanan Tindakan " & RS("namaruangan"))  'RS("keteranganlainnya")
-            .txtRp.SetText "Rp. " & Format(jumlahDuit, "##,##0.00")
+            If strKet = True Then
+                .txtKeterangan.SetText UCase("Biaya Layanan " & RS("namaruangan"))  'RS("keteranganlainnya")
+            Else
+                .txtKeterangan.SetText UCase(RS("namaruangan"))  'RS("keteranganlainnya")
+            End If
+'            .txtKeterangan.SetText "Biaya Perawatan Pasien"
+'            .txtRp.SetText "Rp. " & Format(jumlahDuit, "##,##0.00")
+'            .txtRp.SetText "Rp. " & Format(11789104, "##,##0.00")
             .txtTerbilang.SetText TERBILANG(jumlahDuit)
             .txtRuangan.SetText UCase(RS("namaruangan"))
             .txtNoPen2.SetText RS("noregistrasi")
@@ -214,6 +240,7 @@ Set Report = New crKuitansiPasien
             .txtPrintTglBKM.SetText "Jakarta, " & Format(Now(), "dd MMM yyyy")
             .txtPetugasKasir.SetText RS("namalengkap")
             .txtDesc.SetText UCase("NAMA/MR/No.REG  : " & RS("namapasien") & "/ " & RS("nocm") & "/ " & RS("noregistrasi"))
+'            .txtDesc.SetText UCase("NAMA/MR/No.REG  : " & RS("namapasien") & "/ " & RS("nocm") & "/ " & "1711001100")
             .txtPetugasCetak.SetText strIdPegawai
             
             If view = "false" Then

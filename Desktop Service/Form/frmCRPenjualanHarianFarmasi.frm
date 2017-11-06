@@ -86,7 +86,7 @@ Begin VB.Form frmCRPenjualanHarianFarmasi
       DisplayBackgroundEdge=   -1  'True
       SelectionFormula=   ""
       EnablePopupMenu =   -1  'True
-      EnableExportButton=   0   'False
+      EnableExportButton=   -1  'True
       EnableSearchExpertButton=   0   'False
       EnableHelpButton=   0   'False
    End
@@ -161,30 +161,31 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crPenjualanHarianFarmasi
-    strSQL = "select sr.tglresep, sr.noresep, pd.noregistrasi, ps.namapasien," & _
+    strSQL = "select sr.tglresep, sr.noresep, pd.noregistrasi, upper(ps.namapasien) as namapasien," & _
             "case when jk.jeniskelamin = 'Laki-laki' then 'L' else 'P' end as jeniskelamin, " & _
-            "kp.kelompokpasien, pg.namalengkap, ru2.namaruangan, pp.jumlah, pp.hargajual,  " & _
+            "kp.kelompokpasien, pg.namalengkap, ru2.namaruangan,ru.namaruangan as ruanganapotik, pp.jumlah, pp.hargajual,pp.rke,  " & _
             "(pp.jumlah)*(pp.hargajual) as subtotal," & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon, " & _
             "case when pp.jasa is null then 0 else pp.jasa end as jasa, 0 as ppn, (pp.jumlah*pp.hargajual)-0-0-0 as total, " & _
-            "case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, pg2.namalengkap as kasir " & _
+            "case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, case when pg2.namalengkap is null then pg3.namalengkap else pg2.namalengkap end  as kasir " & _
             "from strukresep_t as sr " & _
             "LEFT JOIN pelayananpasien_t as pp on pp.strukresepfk = sr.norec " & _
-            "LEFT JOIN strukpelayanan_t as sp on sp.norec=pp.strukterimafk " & _
+            "LEFT JOIN strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
             "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
             "inner JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
-            "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbklastfk " & _
+            "left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
             "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
+            "left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk " & _
             "inner JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
             "inner JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
             "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
             "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             str1 & _
             str2 & _
-            str3
+            str3 & " order by sr.noresep"
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -195,7 +196,7 @@ Set Report = New crPenjualanHarianFarmasi
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .udtTglResep.SetUnboundFieldSource ("{ado.tglresep}")
             .usNoResep.SetUnboundFieldSource ("{ado.noresep}")
-            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
@@ -209,6 +210,8 @@ Set Report = New crPenjualanHarianFarmasi
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
             .usKasir.SetUnboundFieldSource ("{ado.kasir}")
+            .usrke.SetUnboundFieldSource ("{ado.rke}")
+            .usRuanganFarmasi.SetUnboundFieldSource ("{ado.ruanganapotik}")
             
             
             If view = "false" Then
