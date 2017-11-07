@@ -181,8 +181,9 @@ bolStrukResep = True
             
             If Left(strNores, 10) = "NonLayanan" Then
                 strNores = Replace(strNores, "NonLayanan", "")
-                strSQL = "select sp.nostruk as noregistrasi, '-' as noresep,sp.nostruk_intern as nocm,sp.namapasien_klien as namapasienjk,pg.namalengkap, " & _
-                        "ru.namaruangan as ruanganpasien,'' as penjamin,'-' as Umur,((spd.hargasatuan-spd.hargadiscount)*spd.qtyproduk)+spd.hargatambahan as totalharga, " & _
+                strSQL = "select sp.nostruk as noresep, '-' as noregistrasi,sp.nostruk_intern as nocm,tglfaktur as tglregistrasi," & _
+                        "sp.namapasien_klien as namapasienjk,pg.namalengkap,sp.noteleponfaks,sp.namatempattujuan, " & _
+                        "ru.namaruangan,ru.namaruangan as ruanganpasien,sp.namarekanan as penjamin,'' as Umur,sp.tglfaktur as tgllahir,((spd.hargasatuan-spd.hargadiscount)*spd.qtyproduk)+spd.hargatambahan as totalharga, " & _
                         "((spd.hargasatuan-spd.hargadiscount)*spd.qtyproduk)+spd.hargatambahan as totalbiaya, " & _
                         "pr.namaproduk as namaprodukstandar, spd.qtyproduk as qtyhrg,spd.qtyproduk as jumlah, " & _
                         "CASE when spd.hargadiscount isnull then 0 ELSE  spd.hargadiscount * spd.qtyproduk end as totaldiscound, " & _
@@ -198,7 +199,7 @@ bolStrukResep = True
                 strSQL = "SELECT pd.noregistrasi, ps.nocm,'=' as umur, " & _
                        " ps.namapasien || ' ( ' || jk.reportdisplay || ' )' as namapasienjk , kpp.kelompokpasien || ' ( ' || rek.namarekanan || ' ) ' as penjamin, " & _
                        " ps.tgllahir, pd.tglregistrasi, ru.namaruangan AS ruanganpasien, " & _
-                       " sr.noresep, pp.rke, pr.namaproduk || ' / ' || sstd.satuanstandar as namaprodukstandar, " & _
+                       " sr.noresep,ru2.namaruangan, pp.rke, pr.namaproduk || ' / ' || sstd.satuanstandar as namaprodukstandar, " & _
                        " pp.jumlah,case when pp.jasa is null then 0 else pp.jasa end as jasa , pp.hargasatuan,(pp.jumlah ) as qtyhrg,(pp.jumlah * (pp.hargasatuan-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end )) )+case when pp.jasa is null then 0 else pp.jasa end as totalharga ,jnskem.jeniskemasan, pgw.namalengkap, " & _
                        " CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end as totaldiscound, " & _
                        " ((pp.jumlah * pp.hargasatuan ) - (CASE when pp.hargadiscount isnull then 0 ELSE  pp.hargadiscount * pp.jumlah end))+case when pp.jasa is null then 0 else pp.jasa end as totalbiaya FROM pelayananpasien_t AS pp " & _
@@ -208,6 +209,7 @@ bolStrukResep = True
                        " INNER JOIN produk_m AS pr ON pp.produkfk = pr.id " & _
                        " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
                        " INNER JOIN strukresep_t AS sr ON pp.strukresepfk = sr.norec " & _
+                       " INNER JOIN ruangan_m AS ru2 ON sr.ruanganfk = ru2.id " & _
                        " INNER JOIN jeniskemasan_m AS jnskem ON pp.jeniskemasanfk = jnskem.id " & _
                        " INNER JOIN pegawai_m AS pgw ON sr.penulisresepfk = pgw.id " & _
                        " INNER JOIN satuanstandar_m AS sstd ON pp.satuanviewfk = sstd.id " & _
@@ -224,12 +226,13 @@ bolStrukResep = True
             .database.AddADOCommand CN_String, adoReport
             
            
-             .txtnopendaftaran.SetText RS("noregistrasi")
-             .txtnocm.SetText RS("nocm")
-             .txtnmpasien.SetText RS("namapasienjk")
+             .txtnopendaftaran.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi")) 'RS("noregistrasi")
+             .txtnocm.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+             .txtnmpasien.SetText IIf(IsNull(RS("namapasienjk")), "-", RS("namapasienjk")) 'RS("namapasienjk")
     '                .txtklpkpasien.SetText RS("kelompokpasien")
              '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
-             .txtNamaRuangan.SetText RS("ruanganpasien")
+             .txtNamaRuangan.SetText IIf(IsNull(RS("ruanganpasien")), "-", RS("ruanganpasien")) 'RS("ruanganpasien")
+             .txtNamaRuanganFarmasi.SetText IIf(IsNull(RS("namaruangan")), "-", RS("namaruangan")) 'RS("namaruangan")
             If IsNull(RS("penjamin")) = True Then
                 .txtPenjamin.SetText "-"
             Else
@@ -240,8 +243,28 @@ bolStrukResep = True
              Else
                 .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
              End If
-             .txtNamaDokter.SetText RS("namalengkap")
+             .txtNamaDokter.SetText IIf(IsNull(RS("namalengkap")), "-", RS("namalengkap")) 'RS("namalengkap")
              .txtuser.SetText strUser
+            If Left(RS("noresep"), 2) = "OB" Then
+                .txtTelp0.Suppress = False
+                .txtTelp1.Suppress = False
+                .txtTelp2.Suppress = False
+                .txtTelp2.SetText IIf(IsNull(RS("noteleponfaks")), "-", RS("noteleponfaks")) 'RS!noteleponfaks
+                
+                .txtAl0.Suppress = False
+                .txtAl1.Suppress = False
+                .txtAl2.Suppress = False
+                .txtAl2.SetText IIf(IsNull(RS("namatempattujuan")), "-", RS("namatempattujuan")) 'RS!namatempattujuan
+            Else
+                
+                .txtTelp0.Suppress = True
+                .txtTelp1.Suppress = True
+                .txtTelp2.Suppress = True
+                
+                .txtAl0.Suppress = True
+                .txtAl1.Suppress = True
+                .txtAl2.Suppress = True
+            End If
              
              
            '  .usSatuan.SetUnboundFieldSource ("{ado.SatuanJmlK}")
