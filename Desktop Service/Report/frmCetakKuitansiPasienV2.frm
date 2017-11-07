@@ -167,7 +167,7 @@ Dim strKet As Boolean
                "where pd.noregistrasi='" & strNoregistrasi & "'"
     End If
     If Len(strNoregistrasi) = 14 Then
-        ReadRs "select sp.nostruk as noregistrasi,sp.totalharusdibayar as totaldibayar,sp.namapasien_klien as namapasien,pg.namalengkap, sp.keteranganlainnya,sp.keteranganlainnya as namaruangan,'-' as nocm from  " & _
+        ReadRs "select sp.nostruk as noregistrasi,sp.totalharusdibayar as totaldibayar,sp.namapasien_klien as namapasien,pg.namalengkap, sp.keteranganlainnya,'Tindakan Non Layanan' as namaruangan,'-' as nocm from  " & _
                " strukpelayanan_t as sp  " & _
                "inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
                "inner join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
@@ -231,7 +231,7 @@ Dim strKet As Boolean
                 .txtKeterangan.SetText UCase(RS("namaruangan"))  'RS("keteranganlainnya")
             End If
 '            .txtKeterangan.SetText "Biaya Perawatan Pasien"
-'            .txtRp.SetText "Rp. " & Format(jumlahDuit, "##,##0.00")
+            .txtRp.SetText "Rp. " & Format(jumlahDuit, "##,##0.00")
 '            .txtRp.SetText "Rp. " & Format(11789104, "##,##0.00")
             .txtTerbilang.SetText TERBILANG(jumlahDuit)
             .txtRuangan.SetText UCase(RS("namaruangan"))
