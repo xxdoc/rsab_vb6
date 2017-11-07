@@ -361,14 +361,14 @@ End Sub
 'errLoad:
 'End Sub
 '
-Public Sub CetakLaporanPendapatanPoli(tglAwal As String, tglAkhir As String, strIdRuangan As String, _
+Public Sub CetakLaporanPendapatanPoli(tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
                                         strIdKelompokPasien As String, strIdDokter As String, strIdPegawai As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRCetakLaporanPendapatanRuangan = Nothing
 Dim adocmd As New ADODB.Command
-Dim strFilter, orderby As String
+Dim strFilter, orderby, str As String
 Set Report3 = New crLaporanPendapatanPoli
 
     strFilter = ""
@@ -378,7 +378,18 @@ Set Report3 = New crLaporanPendapatanPoli
     Format(tglAwal, "yyyy-MM-dd HH:mm:ss") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd HH:mm:ss") & "' and (apd.statusenabled is null or apd.statusenabled ='t') "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
-
+    If strIdDepartemen <> "" Then
+        If strIdDepartemen = 18 Then
+            strFilter = strFilter & " and dp.id in (3,18,24,27,28) "
+        Else
+            If strIdDepartemen <> "" Then
+                strFilter = strFilter & " and dp.id =" & strIdDepartemen & " "
+            End If
+        End If
+    End If
+    
+   ' If strIdDepartemen = 18 Then strFilter = strFilter & " AND dp.id in (3,18,27,28)"
+    'If strIdDepartemen <> "" Then strFilter = strFilter & " AND dp.id = '" & strIdDepartemen & "'"
     If strIdRuangan <> "" Then strFilter = strFilter & " AND apd.objectruanganfk = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
@@ -402,6 +413,7 @@ Set Report3 = New crLaporanPendapatanPoli
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
             "LEFT JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
             "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  " & _
+            "INNER JOIN departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "inner JOIN produk_m as pr on pr.id=pp.produkfk  " & _
             "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  " & _
             "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk  " & _

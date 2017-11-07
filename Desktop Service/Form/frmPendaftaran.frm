@@ -134,7 +134,7 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Param4 = Split(arrItem(3), "=")
                 lblStatus.Caption = "Cetak Label Pasien"
                 
-                If InStr(1, UCase(GetTxt("Setting.ini", "Printer", "LabelPasien")), "ZEBRA") > 1 Then
+                If InStr(1, UCase(GetTxt("Setting.ini", "Printer", "LabelPasien")), "ZT410") > 1 Then
                     Call frmCetakPendaftaran.cetakLabelPasienZebra(Param2(1), Param3(1), Param4(1))
                 Else
                     Call frmCetakPendaftaran.cetakLabelPasien(Param2(1), Param3(1), Param4(1))
