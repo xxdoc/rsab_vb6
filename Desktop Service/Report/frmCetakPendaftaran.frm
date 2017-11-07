@@ -111,6 +111,7 @@ Dim reportSep As New crCetakSJP
 Dim reportBuktiLayanan As New Cr_cetakbuktilayanan
 Dim reportBuktiLayananRuangan As New Cr_cetakbuktilayananruangan
 Dim reportLabel As New Cr_cetakLabel
+Dim reportLabelZebra As New Cr_cetakLabelZebra
 Dim reportSumList As New Cr_cetakSummaryList
 Dim reportRmk As New Cr_cetakRMK
 Dim reportLembarGC As New Cr_cetakLembarGC
@@ -137,6 +138,7 @@ Dim bolcetakSep  As Boolean
 Dim bolTracer1  As Boolean
 Dim bolKartuPasien  As Boolean
 Dim boolLabelPasien  As Boolean
+Dim boolLabelPasienZebra  As Boolean
 Dim boolSumList  As Boolean
 Dim boolLembarRMK As Boolean
 Dim boolLembarPersetujuan As Boolean
@@ -182,6 +184,10 @@ Private Sub cmdCetak_Click()
         reportLabel.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
         PrinterNama = cboPrinter.Text
         reportLabel.PrintOut False
+    ElseIf boolLabelPasienZebra = True Then
+        reportLabelZebra.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+        PrinterNama = cboPrinter.Text
+        reportLabelZebra.PrintOut False
     ElseIf boolSumList = True Then
         reportSumList.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
         PrinterNama = cboPrinter.Text
@@ -216,6 +222,8 @@ Private Sub CmdOption_Click()
         reportKartuPasien.PrinterSetup Me.hWnd
     ElseIf boolLabelPasien = True Then
          reportLabel.PrinterSetup Me.hWnd
+    ElseIf boolLabelPasienZebra = True Then
+         reportLabelZebra.PrinterSetup Me.hWnd
     ElseIf boolSumList = True Then
          reportSumList.PrinterSetup Me.hWnd
     ElseIf boolLembarRMK = True Then
@@ -267,6 +275,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -297,7 +306,7 @@ boolLembarPersetujuan = False
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usNoTelpon.SetUnboundFieldSource ("{ado.mobilephone2}")
@@ -345,6 +354,7 @@ bolcetakSep = False
 bolTracer1 = True
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -375,7 +385,7 @@ boolLembarPersetujuan = False
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
             .udTglReg.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
@@ -421,6 +431,7 @@ bolcetakSep = True
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -506,6 +517,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -553,7 +565,7 @@ boolLembarPersetujuan = False
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
             
             .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
             .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -572,9 +584,9 @@ boolLembarPersetujuan = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -615,6 +627,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -671,7 +684,7 @@ boolLembarPersetujuan = False
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
 
             .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
             .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -693,9 +706,9 @@ boolLembarPersetujuan = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -734,6 +747,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = True
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -791,6 +805,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = True
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -830,7 +845,7 @@ boolLembarPersetujuan = False
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
     
             .udtgl1.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoreg1.SetUnboundFieldSource ("{ado.noregistrasi}")
@@ -889,7 +904,9 @@ bolBuktiLayananRuangan = False
 bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
-boolLabelPasien = True
+boolLabelPasien = False
+boolLabelPasienZebra = False
+boolLabelPasienZebra = True
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -929,7 +946,7 @@ boolLembarPersetujuan = False
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
     
             .udtgl1.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoreg1.SetUnboundFieldSource ("{ado.noregistrasi}")
@@ -937,17 +954,6 @@ boolLembarPersetujuan = False
             .usNp1.SetUnboundFieldSource ("{ado.namapasien}")
             .usjk1.SetUnboundFieldSource ("{ado.jk}")
    
-            .udtgl2.SetUnboundFieldSource ("{ado.tgllahir}")
-            .usNoreg2.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNocm2.SetUnboundFieldSource ("{ado.nocm}")
-            .usNp2.SetUnboundFieldSource ("{ado.namapasien}")
-            .usjk2.SetUnboundFieldSource ("{ado.jk}")
-            
-            .udtgl3.SetUnboundFieldSource ("{ado.tgllahir}")
-            .usNoreg3.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNocm3.SetUnboundFieldSource ("{ado.nocm}")
-            .usNp3.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJk3.SetUnboundFieldSource ("{ado.jk}")
             
             
             If view = "false" Then
@@ -986,6 +992,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = True
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -1028,7 +1035,7 @@ boolLembarPersetujuan = False
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namaayah}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
@@ -1093,6 +1100,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = True
 boolLembarPersetujuan = False
@@ -1157,7 +1165,7 @@ boolLembarPersetujuan = False
             
             .usTL.SetUnboundFieldSource ("{ado.tempatlahir}")
 '            .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
             
             .usStatusPerkawinan.SetUnboundFieldSource ("{ado.statusperkawinan}")
             .usAgama.SetUnboundFieldSource ("{ado.agama}")
@@ -1220,6 +1228,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = True
 boolLembarPersetujuan = False
@@ -1284,7 +1293,7 @@ boolLembarPersetujuan = False
             
             .usTL.SetUnboundFieldSource ("{ado.tempatlahir}")
 '            .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
-            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
             
             .usStatusPerkawinan.SetUnboundFieldSource ("{ado.statusperkawinan}")
             .usAgama.SetUnboundFieldSource ("{ado.agama}")
@@ -1350,6 +1359,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = True
@@ -1444,6 +1454,7 @@ bolcetakSep = False
 bolTracer1 = False
 bolKartuPasien = False
 boolLabelPasien = False
+boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
@@ -1497,7 +1508,7 @@ boolLembarPersetujuan = False
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usJK.SetUnboundFieldSource ("{ado.jk}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
 
             .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
             .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -1519,9 +1530,9 @@ boolLembarPersetujuan = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then

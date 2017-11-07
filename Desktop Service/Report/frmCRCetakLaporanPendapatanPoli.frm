@@ -368,7 +368,7 @@ On Error GoTo errLoad
 
 Set frmCRCetakLaporanPendapatanRuangan = Nothing
 Dim adocmd As New ADODB.Command
-Dim strFilter, orderby As String
+Dim strFilter, orderby, str As String
 Set Report3 = New crLaporanPendapatanPoli
 
     strFilter = ""
@@ -378,8 +378,18 @@ Set Report3 = New crLaporanPendapatanPoli
     Format(tglAwal, "yyyy-MM-dd HH:mm:ss") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd HH:mm:ss") & "' and (apd.statusenabled is null or apd.statusenabled ='t') "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
+    If strIdDepartemen <> "" Then
+        If strIdDepartemen = 18 Then
+            strFilter = strFilter & " and dp.id in (3,18,24,27,28) "
+        Else
+            If strIdDepartemen <> "" Then
+                strFilter = strFilter & " and dp.id =" & strIdDepartemen & " "
+            End If
+        End If
+    End If
     
-    If strIdDepartemen <> "" Then strFilter = strFilter & " AND dp.id = '" & strIdDepartemen & "' "
+   ' If strIdDepartemen = 18 Then strFilter = strFilter & " AND dp.id in (3,18,27,28)"
+    'If strIdDepartemen <> "" Then strFilter = strFilter & " AND dp.id = '" & strIdDepartemen & "'"
     If strIdRuangan <> "" Then strFilter = strFilter & " AND apd.objectruanganfk = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
