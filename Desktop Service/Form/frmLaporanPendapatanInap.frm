@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanPendapatanInap = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -157,8 +157,8 @@ Dim adocmd As New ADODB.Command
     Dim str1 As String
 
     
-    If idRuangan <> "" Then
-        str1 = " and apd.objectruanganfk=" & idRuangan & " "
+    If idDepartemen <> "" Then
+        str1 = " and dp.id=" & idDepartemen & " "
     End If
     
 Set Report = New crLaporanPendapatanInap
@@ -176,7 +176,7 @@ Set Report = New crLaporanPendapatanInap
             "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-            "and dp.id=16 and jp.id in (25,99,101,102) " & _
+            "and jp.id in (25,99,101,102) " & _
              str1 & _
              "order by pd.noregistrasi"
 
