@@ -440,7 +440,7 @@ boolLembarPersetujuan = False
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
             
-            strSQL = "select pa.nosep,pa.tanggalsep,pa.nokepesertaan,pa.norujukan,ap.namapeserta,pi.tgllahir,jk.jeniskelamin," & _
+            strSQL = "select pa.nosep,pa.tanggalsep,pa.nokepesertaan , pi.nocm,pd.noregistrasi ,pa.norujukan,ap.namapeserta,pi.tgllahir,jk.jeniskelamin," & _
                        " rp.namaruangan,rp.kodeexternal as namapoliBpjs,pa.ppkrujukan, " & _
                        " (CASE WHEN rp.objectdepartemenfk=16 then 'Rawat Inap' else 'Rawat Jalan' END) as jenisrawat," & _
                        " dg.kddiagnosa, (case when dg.namadiagnosa is null then '-' else dg.namadiagnosa end) as namadiagnosa , " & _
@@ -476,6 +476,8 @@ boolLembarPersetujuan = False
               .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
               .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
               .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
+              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+              .txtNoPendaftaran2.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi"))
              End If
 
             If view = "false" Then
@@ -1110,7 +1112,7 @@ boolLembarPersetujuan = False
              adoReport.ActiveConnection = CN_String
             
             strSQL = "SELECT pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when sp.id=2 then COALESCE(ps.namasuamiistri,'-') else ps.namaayah end) as namakeluarga," & _
-                       " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'hh:mm') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
+                       " upper(ps.namaayah) as namaayah,upper(case when ps.tempatlahir is null then '-' else ps.tempatlahir end || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'hh:mm') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
                        " ag.agama, pk.pekerjaan, kb.name AS kebangsaan,upper(al.alamatlengkap) as alamatlengkap,upper(al.kotakabupaten) as kotakabupaten, " & _
                        " al.kecamatan, al.namadesakelurahan, al.mobilephone1,sp.statusperkawinan, " & _
                        " (kmr.namakamar || ' - ' || kls.namakelas ) as namakamar,(tt.reportdisplay || ' - ' ||tt.nomorbed ) AS nomorbed, " & _

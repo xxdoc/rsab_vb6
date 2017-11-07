@@ -109,8 +109,11 @@ Public Function hitungUmur(dateOfBird As String, fromData As String) As String
         str = rsau!umur
         
         str = Replace(str, "years", "thn")
+        str = Replace(str, "year", "thn")
         str = Replace(str, "mons", "bln")
+        str = Replace(str, "mon", "bln")
         str = Replace(str, "days", "hari")
+        str = Replace(str, "day", "hari")
         
         hitungUmur = str
     Else
