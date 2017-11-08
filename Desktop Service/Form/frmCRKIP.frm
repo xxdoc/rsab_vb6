@@ -1,15 +1,14 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRLaporanPendapatanInap 
+Begin VB.Form frmCRKIP 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
-   ClientWidth     =   5790
-   Icon            =   "frmLaporanPendapatanInap.frx":0000
+   ClientWidth     =   5820
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
-   ScaleWidth      =   5790
+   ScaleWidth      =   5820
    WindowState     =   2  'Maximized
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
@@ -99,18 +98,18 @@ Begin VB.Form frmCRLaporanPendapatanInap
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRLaporanPendapatanInap"
+Attribute VB_Name = "frmCRKIP"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanPendapatanInap
-'Dim bolSuppresDetailSection10 As Boolean
-'Dim ii As Integer
-'Dim tempPrint1 As String
-'Dim p As Printer
-'Dim p2 As Printer
+Dim Report As New crCetakKIP
+Dim bolSuppresDetailSection10 As Boolean
+Dim ii As Integer
+Dim tempPrint1 As String
+Dim p As Printer
+Dim p2 As Printer
 Dim strDeviceName As String
 Dim strDriverName As String
 Dim strPort As String
@@ -132,7 +131,7 @@ Private Sub Form_Load()
     For Each p In Printers
         cboPrinter.AddItem p.DeviceName
     Next
-    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "Kwitansi")
 End Sub
 
 Private Sub Form_Resize()
@@ -144,76 +143,47 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRLaporanPendapatanInap = Nothing
+    Set frmCRKIP = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, namaPrinted As String, view As String)
+Public Sub CetakKIP(strNoregistrasi As String, jumlahCetak As Integer, strIdPegawai As String, view As String)
 On Error GoTo errLoad
-'On Error Resume Next
 
-Set frmCRLaporanPendapatanInap = Nothing
-Dim adocmd As New ADODB.Command
+Dim strKet As Boolean
 
-    Dim str1 As String
-
+    strKet = True
     
-    If idDepartemen <> "" Then
-        str1 = " and dp.id=" & idDepartemen & " "
-    End If
+    Set frmCRKIP = Nothing
+    Set Report = New crCetakKIP
     
-Set Report = New crLaporanPendapatanInap
-    strSQL = "select pd.noregistrasi, ru.namaruangan,pro.namaproduk, " & _
-            "case when jp.id in (99,25) then 'Akomodasi' " & _
-            "when jp.id=101 then 'Visit' " & _
-            "when jp.id =102 then 'Tindakan' end as jenisproduk, " & _
-            "pp.hargajual, pp.jumlah, pp.hargajual*pp.jumlah as total from pasiendaftar_t as pd " & _
-            "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "inner join produk_m as pro on pro.id = pp.produkfk " & _
-            "left join detailjenisproduk_m as djp on djp.id = pro.objectdetailjenisprodukfk " & _
-            "left join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
-            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-            "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-            "and jp.id in (25,99,101,102) " & _
-             str1 & _
-             "order by pd.noregistrasi"
-
-            
-    adocmd.CommandText = strSQL
-    adocmd.CommandType = adCmdText
-        
+    ReadRs "select pd.noregistrasi,pd.tglregistrasi,pd.tglpulang,ps.nocm,ps.namapasien,ps.objectjeniskelaminfk," & _
+            "ru.namaruangan,kp.kelompokpasien, pg.namalengkap " & _
+            "from pasiendaftar_t pd " & _
+            "INNER JOIN pasien_m ps on ps.id=pd.nocmfk " & _
+            "INNER JOIN ruangan_m ru on ru.id=pd.objectruanganlastfk " & _
+            "INNER JOIN kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
+            "INNER JOIN pegawai_m as pg on pg.id=pd.objectpegawaifk " & _
+            "where noregistrasi='" & strNoregistrasi & "'"
+    
     With Report
-        .database.AddADOCommand CN_String, adocmd
-            .txtNamaKasir.SetText namaPrinted
-            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
-            .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usKegiatan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .ucHarga.SetUnboundFieldSource ("{ado.hargajual}")
-            .ucJumlah.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucTotal.SetUnboundFieldSource ("{ado.total}")
-            .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-            
-            .txtPeriode.SetText "Periode : " & Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
-
-            If idDepartemen <> "" Then
-                If idDepartemen = 16 Then
-                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
-                ElseIf idDepartemen = 18 Then
-                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
-                End If
-            Else
-                .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
-            End If
+        If Not RS.EOF Then
+            .txtNoReg.SetText RS!noregistrasi
+            .txtNoMR.SetText RS!nocm
+            .txtNama.SetText RS!namapasien
+            .txtRuangRawat.SetText RS!namaruangan
+            .txtPegawai.SetText RS!namalengkap
+            .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd/MM/yyyy HH:mm")
+            .txtTglPulang.SetText Format(RS!tglpulang, "dd/MM/yyyy HH:mm")
+            '.txtKp.SetText RS!kelompokpasien
+            .txtPrintTglBKM.SetText "Jakarta, " & Format(Now(), "dd MMM yyyy")
+            .txtPetugasCetak.SetText strIdPegawai
             
             If view = "false" Then
                 Dim strPrinter As String
 '
-                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPedapatan")
-                .SelectPrinter "winspool", strPrinter, "Ne00:"
-                .PrintOut False
+                strPrinter = GetTxt("Setting.ini", "Printer", "Kwitansi")
+                Report.SelectPrinter "winspool", strPrinter, "Ne00:"
+                Report.PrintOut False
                 Unload Me
             Else
                 With CRViewer1
@@ -223,9 +193,9 @@ Set Report = New crLaporanPendapatanInap
                 End With
                 Me.Show
             End If
-        'End If
+        End If
     End With
 Exit Sub
 errLoad:
-    MsgBox Err.Number & " " & Err.Description
 End Sub
+

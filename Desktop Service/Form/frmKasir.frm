@@ -29,6 +29,7 @@ On Error Resume Next
     Dim Param6() As String
     Dim Param7() As String
     Dim Param8() As String
+    Dim Param9() As String
     Dim arrItem() As String
     
    If CN.State = adStateClosed Then Call openConnection
@@ -44,6 +45,7 @@ On Error Resume Next
         Param6 = Split(arrItem(5), "=")
         Param7 = Split(arrItem(6), "=")
         Param8 = Split(arrItem(7), "=")
+        Param9 = Split(arrItem(8), "=")
 
         Select Case Param1(0)
             Case "cetak-billing"
@@ -71,13 +73,20 @@ On Error Resume Next
                 Set Root = New JNode
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-kip=1&noregistrasi=1708000446&strIdPegawai=1&view=false
+                
+             Case "cetak-kip-pasien"
+                Param4 = Split(arrItem(3), "=")
+                Call frmCRKIP.CetakKIP(Param2(1), Val(Param1(1)), Param3(1), Param4(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kartu Pulang Pasien"
+                '127.0.0.1:1237/printvb/kasir?cetak-kip=1&noregistrasi=1708000446&strIdPegawai=1&view=false
             
             Case "cetak-LaporanPasienPulang"
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
                 Param6 = Split(arrItem(5), "=")
                 Param7 = Split(arrItem(6), "=")
-                Call frmCRCetakLaporanPasienPulang2.CetakLaporanPasienPulang(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
+                Call frmCRCetakLaporanPasienPulang2.CetakLaporanPasienPulang(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Pasien Pulang"
                 '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true

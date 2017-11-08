@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRCetakLaporanPasienPulang2 = Nothing
 End Sub
 
-Public Sub CetakLaporanPasienPulang(tglAwal As String, tglAkhir As String, strIdRuangan As String, _
+Public Sub CetakLaporanPasienPulang(tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
                                         strIdKelompokPasien As String, strIdPegawai As String, strIdPerusahaan As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
@@ -165,6 +165,15 @@ Set Report = New crLaporanPasienPulang2
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "'" ' and pp.strukfk is not null "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
+    If strIdDepartemen <> "" Then
+        If strIdDepartemen = 18 Then
+            strFilter = strFilter & " AND ru2.objectdepartemenfk in (18,3,24,27,28)"
+        Else
+            If strIdDepartemen <> "" Then
+                strFilter = strFilter & " AND ru2.objectdepartemenfk = '" & strIdDepartemen & "' "
+            End If
+        End If
+    End If
     If strIdRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdPerusahaan <> "" Then strFilter = strFilter & " AND rk.id = '" & strIdPerusahaan & "' "
@@ -186,6 +195,7 @@ Set Report = New crLaporanPasienPulang2
             "left JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk  " & _
             "left JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk  " & _
             "left JOIN ruangan_m as ru2 on ru2.id=sp.objectruanganfk  " & _
+            "LEFT join departemen_m as dp on dp.id = ru2.objectdepartemenfk  " & _
             "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
             "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
             "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
@@ -240,9 +250,9 @@ Set Report = New crLaporanPasienPulang2
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

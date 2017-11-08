@@ -65,6 +65,18 @@ On Error Resume Next
                 Root("Status") = "Cetak Surat Tagihan Penjamin"
                 '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
             
+            Case "cetak-LaporanTagihanSuratPasien"
+                Call frmCRLaporanTagihanSuratPasien.CetakLaporanTagihanPenjaminSurat(Param1(1), Param2(1), Param3(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Surat Tagihan Penjamin"
+                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            
+            Case "cetak-kwitansiPiutangPasien"
+                Call frmCetakKuitansiPiutangPenjaminPasien.CetakKuitansiPiutangPenjamin(Param1(1), Param2(1), Param3(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kwitansi"
+                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
