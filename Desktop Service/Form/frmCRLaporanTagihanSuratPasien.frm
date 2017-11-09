@@ -166,8 +166,10 @@ Dim adocmd As New ADODB.Command
             "(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin, " & _
             "case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
             "case when rk.alamatlengkap is null then '-' else rk.alamatlengkap end as alamat " & _
-            "FROM pasiendaftar_t as pd " & _
-            "left join  strukpelayanan_t as sp on sp.noregistrasifk = pd.norec " & _
+            "FROM strukpelayanan_t as sp " & _
+            "left join pelayananpasien_t as pp on pp.strukfk=sp.norec " & _
+            "left JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
+            "left JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "left JOIN rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
             "INNER JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "inner join pasien_m as ps on ps.id = pd.nocmfk " & _
@@ -178,15 +180,12 @@ Dim adocmd As New ADODB.Command
     Dim mr, nama, registrasi, rekanan, alamat As String
     Dim i As Integer
     
-    For i = 0 To RS2.RecordCount - 1
         tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
         mr = UCase(IIf(IsNull(RS2("nocm")), "-", RS2("nocm")))
         nama = UCase(IIf(IsNull(RS2("namapasien")), "-", RS2("namapasien")))
         registrasi = UCase(IIf(IsNull(RS2("noregistrasi")), "-", RS2("noregistrasi")))
         rekanan = UCase(IIf(IsNull(RS2("namarekanan")), "-", RS2("namarekanan")))
         alamat = UCase(IIf(IsNull(RS2("alamat")), "-", RS2("alamat")))
-        RS2.MoveNext
-    Next i
         
     With Report
         If Not RS2.BOF Then
