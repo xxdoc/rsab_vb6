@@ -229,7 +229,7 @@ bolStrukResep = True
              .txtnopendaftaran.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi")) 'RS("noregistrasi")
              .txtnocm.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
              .txtnmpasien.SetText IIf(IsNull(RS("namapasienjk")), "-", RS("namapasienjk")) 'RS("namapasienjk")
-    '                .txtklpkpasien.SetText RS("kelompokpasien")
+    '        .txtklpkpasien.SetText RS("kelompokpasien")
              '.txtPenjamin.SetText IIf(IsNull(RS("NamaPenjamin")), "Sendiri", RS("NamaPenjamin"))
              .txtNamaRuangan.SetText IIf(IsNull(RS("ruanganpasien")), "-", RS("ruanganpasien")) 'RS("ruanganpasien")
              .txtNamaRuanganFarmasi.SetText IIf(IsNull(RS("namaruangan")), "-", RS("namaruangan")) 'RS("namaruangan")
@@ -244,7 +244,7 @@ bolStrukResep = True
                 .txtUmur.SetText hitungUmur(Format(RS("tgllahir"), "dd/mm/yyyy"), Format(RS("tglregistrasi"), "dd/mm/yyyy"))
              End If
              .txtNamaDokter.SetText IIf(IsNull(RS("namalengkap")), "-", RS("namalengkap")) 'RS("namalengkap")
-             .txtuser.SetText strUser
+             .txtUser.SetText strUser
             If Left(RS("noresep"), 2) = "OB" Then
                 .txtTelp0.Suppress = False
                 .txtTelp1.Suppress = False

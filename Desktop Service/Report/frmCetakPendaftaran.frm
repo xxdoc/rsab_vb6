@@ -613,6 +613,124 @@ errLoad:
     MsgBox Err.Number & " " & Err.Description
     
 End Sub
+Public Sub cetakBuktiLayananNorec_apd(strNorec As String, strIdPegawai As String, strruangan As String, view As String)
+On Error GoTo errLoad
+Set frmCetakPendaftaran = Nothing
+Dim strSQL As String
+Dim umur As String
+    
+bolBuktiPendaftaran = False
+bolBuktiLayanan = True
+bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
+bolcetakSep = False
+bolTracer1 = False
+bolKartuPasien = False
+boolLabelPasien = False
+boolLabelPasienZebra = False
+boolSumList = False
+boolLembarRMK = False
+boolLembarPersetujuan = False
+
+    Dim strarr() As String
+    Dim norec_apc As String
+    Dim i As Integer
+    
+    
+    strarr = Split(strNorec, "|")
+    For i = 0 To UBound(strarr)
+       norec_apc = norec_apc + "'" & strarr(i) & "',"
+    Next
+    norec_apc = Left(norec_apc, Len(norec_apc) - 1)
+    With reportBuktiLayanan
+            Set adoReport = New ADODB.Command
+             adoReport.ActiveConnection = CN_String
+            
+            strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
+                       " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
+                       " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan,ks.namakelas,ar.asalrujukan, " & _
+                       " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
+                       " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
+                       " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
+                       " INNER JOIN ruangan_m AS ru ON pd.objectruanganlastfk = ru.id " & _
+                       " LEFT JOIN pegawai_m AS pp ON pd.objectpegawaifk = pp.id " & _
+                       " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
+                       " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
+                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
+                       " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+                       " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
+                       " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
+                       " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
+                       " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
+                       " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
+                       " where tp.norec  in (" & norec_apc & ") and pro.id <> 402611  ORDER BY tp.tglpelayanan "
+                       
+            
+            ReadRs strSQL
+            
+            adoReport.CommandText = strSQL
+            adoReport.CommandType = adCmdUnknown
+            
+            
+            .database.AddADOCommand CN_String, adoReport
+            If RS.BOF Then
+                .txtUmur.SetText "-"
+            Else
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+            End If
+
+
+            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usJk.SetUnboundFieldSource ("{ado.jk}")
+            
+            .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
+            .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            
+            .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
+            .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
+            '.usQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
+            .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
+            .UsPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+            
+            .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
+
+            .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
+
+            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
+            If RS2.BOF Then
+                .txtUser.SetText "-"
+            Else
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            End If
+            
+            If view = "false" Then
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "BuktiLayanan")
+                .SelectPrinter "winspool", strPrinter1, "Ne00:"
+                .PrintOut False
+                Unload Me
+                Screen.MousePointer = vbDefault
+             Else
+                With CRViewer1
+                    .ReportSource = reportBuktiLayanan
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+                Screen.MousePointer = vbDefault
+            End If
+     
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+    
+End Sub
 
 Public Sub cetakBuktiLayananRuangan(strNorec As String, strIdPegawai As String, strIdRuangan As String, view As String)
 On Error GoTo errLoad
@@ -1148,9 +1266,9 @@ boolLembarPersetujuan = False
             Else
                 .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd MMM yyyy")
-                .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
+                .txtJamMasuk.SetText Format(RS!jamregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd MMM yyyy"))
-                .txtJamPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "HH:MM:ss"))
+                .txtJamPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!jampulang, "HH:MM:ss"))
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
@@ -1240,11 +1358,11 @@ boolLembarPersetujuan = False
              adoReport.ActiveConnection = CN_String
             
             strSQL = "SELECT pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when sp.id=2 then COALESCE(ps.namasuamiistri,'-') else ps.namaayah end) as namakeluarga," & _
-                       " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'hh:mm') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
+                       " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'DD Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'HH24:MI') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
                        " ag.agama, pk.pekerjaan, kb.name AS kebangsaan,upper(al.alamatlengkap) as alamatlengkap,upper(al.kotakabupaten) as kotakabupaten, " & _
                        " al.kecamatan, al.namadesakelurahan, al.mobilephone1,sp.statusperkawinan, " & _
                        " (kmr.namakamar || ' - ' || kls.namakelas ) as namakamar,(tt.reportdisplay || ' - ' ||tt.nomorbed ) AS nomorbed, " & _
-                       " TO_CHAR(pd.tglregistrasi, 'dd Mon YYYY') as tglregistrasi, TO_CHAR(pd.tglpulang, 'dd Mon YYYY') as tglpulang, ps.namaibu, '-' as ttlSuami, " & _
+                       " TO_CHAR(pd.tglregistrasi, 'DD Mon YYYY') as tglregistrasi,TO_CHAR(pd.tglregistrasi, 'HH24:MI') as jamregistrasi, TO_CHAR(pd.tglpulang, 'DD Mon YYYY') as tglpulang,TO_CHAR(pd.tglpulang, 'HH24:MI') as jampulang, ps.namaibu, '-' as ttlSuami, " & _
                        " COALESCE(ps.namasuamiistri,'-') as namasuamiistri, pg.namalengkap as namadokterpj, kp.kelompokpasien, " & _
                        " '-' as alamatPekerjaan,'-' as keldihubungi  ,'-' as Hubungan , '-' as alamatKeluarga, " & _
                        " '-' as NohpKeluarga,ps.notelepon " & _
@@ -1276,9 +1394,9 @@ boolLembarPersetujuan = False
             Else
                 .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd MMM yyyy")
-                .txtJamMasuk.SetText Format(RS!tglregistrasi, "HH:MM:ss")
+                .txtJamMasuk.SetText Format(RS!jamregistrasi, "hh:mm:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd MMM yyyy"))
-                .txtJamPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "HH:MM:ss"))
+                .txtJamPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!jampulang, "hh:mm:ss"))
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
