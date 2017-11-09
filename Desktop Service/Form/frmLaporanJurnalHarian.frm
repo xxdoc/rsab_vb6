@@ -157,20 +157,32 @@ Dim adocmd As New ADODB.Command
     Dim str2 As String
     
     If idDepartemen <> "" Then
-        str1 = "and ru.objectdepartemenfk = " & idDepartemen & " "
+        If idDepartemen = 18 Then
+            str1 = " AND ru.objectdepartemenfk <> 16"
+        Else
+            If idDepartemen <> "" Then
+                str1 = " AND ru.objectdepartemenfk = '" & idDepartemen & "' "
+            End If
+        End If
     End If
+    'If idDepartemen <> "" Then
+       ' str1 = "and ru.objectdepartemenfk = " & idDepartemen & " "
+   ' End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
     
     
 Set Report = New crLaporanJurnalHarian
-    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk," & _
-            "case when pro.id = 395 then 'Pendt. Administrasi' " & _
-            "when kp.id = 26 then 'Pendt. Konsultasi' " & _
-            "when kp.id in (1,2,3,4,8,9,10,11,13,14) then 'Pendt. Tindakan' end as namaperkiraan, " & _
-            "(sum(case when pd.objectkelompokpasienlastfk = 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))+ " & _
-            "(sum(case when pd.objectkelompokpasienlastfk > 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))  as total, " & _
+    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk,case " & _
+            "when pro.id = 395                                          then'Pendt. Administrasi' || ' ' || ru.namaruangan " & _
+            "when kp.id = 26 and pro.id <> 395                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
+            "when kp.id in (3,4,8,9,10,11,13,14) and pro.id <> 395  then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when kp.id in (1) and pro.id <> 395  then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when kp.id in (2) and pro.id <> 395  then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when kp.id in (24) and pro.id <> 395  then 'Pendt. Tindakan Ka Instalasi Farmasi' " & _
+            "ELSE 'Pendt. Tindakan' || ' ' || ru.namaruangan end  as namaperkiraan, " & _
+            "sum(case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end) as total, " & _
             "'Pendapatan R.Jalan' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
@@ -180,11 +192,32 @@ Set Report = New crLaporanJurnalHarian
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' " & _
             str1 & _
             str2 & _
             "group by pd.noregistrasi, ru.namaruangan, tp.produkfk, kp.id, pro.id, pro.namaproduk " & _
             "order by pro.namaproduk"
+            
+'            strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk," & _
+'            "case when pro.id = 395 then 'Pendt. Administrasi' " & _
+'            "when kp.id = 26 then 'Pendt. Konsultasi' " & _
+'            "when kp.id in (1,2,3,4,8,9,10,11,13,14) then 'Pendt. Tindakan' end as namaperkiraan, " & _
+'            "(sum(case when pd.objectkelompokpasienlastfk = 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))+ " & _
+'            "(sum(case when pd.objectkelompokpasienlastfk > 1 then (tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end ))*tp.jumlah  else 0 end))  as total, " & _
+'            "'Pendapatan R.Jalan' as keterangan " & _
+'            "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
+'            "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+'            "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
+'            "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+'            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+'            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+'            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+'            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+'            str1 & _
+'            str2 & _
+'            "group by pd.noregistrasi, ru.namaruangan, tp.produkfk, kp.id, pro.id, pro.namaproduk " & _
+'            "order by pro.namaproduk"
 
    
             
