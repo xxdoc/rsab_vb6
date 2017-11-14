@@ -176,9 +176,11 @@ Dim adocmd As New ADODB.Command
             "inner join ruangan_m as ru on ru.id = sp.objectruanganfk " & _
             strFilter
             
-    Dim tPiutang As Double
+    Dim tPiutang, tmaterai, X As Double
     Dim pasien, rekanan, alamat, ruangan As String
     Dim i As Integer
+    
+    'tmaterai = 3000
     
         tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
         pasien = UCase(IIf(IsNull(RS2("pasien")), "-", RS2("pasien")))
@@ -192,6 +194,10 @@ Dim adocmd As New ADODB.Command
             .txtPenjamin.SetText rekanan
             .ucJumlah.SetUnboundFieldSource tPiutang
             '.ucJumlah.SetUnboundFieldSource (IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
+            
+            X = Round(tPiutang)
+            .txtPembulatan.SetText Format(X, "##,##0.00")
+            .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
         End If
             If view = "false" Then
                 Dim strPrinter As String

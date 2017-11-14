@@ -214,14 +214,18 @@ Dim adocmd As New ADODB.Command
             "left join rekanan_m as r on r.id = pd.objectrekananfk " & _
             "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
             orderby2
-    Dim tCash, tPiutang As Double
+    Dim tCash, tMaterai, tPiutang As Double
     Dim i As Integer
+    Dim X As Double
+    
+    tMaterai = 3000
     
     For i = 0 To RS2.RecordCount - 1
         tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
         
         RS2.MoveNext
     Next i
+    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -254,6 +258,10 @@ Dim adocmd As New ADODB.Command
             '.ucTagihan2.SetUnboundFieldSource (RS2!totalpiutangpenjamin)
             '.txtA1.SetText Format(RS2!cash, "##,##0.00")
             '.txtA2.SetText Format(RS2!totalpiutangpenjamin, "##,##0.00")
+            
+            X = Round(tPiutang + tMaterai)
+            .txtPembulatan.SetText Format(X, "##,##0.00")
+            .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
             
             If view = "false" Then
                 Dim strPrinter As String
