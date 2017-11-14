@@ -116,6 +116,7 @@ Dim reportSumList As New Cr_cetakSummaryList
 Dim reportRmk As New Cr_cetakRMK
 Dim reportLembarGC As New Cr_cetakLembarGC
 Dim reportBuktiLayananRuanganPerTindakan As New Cr_cetakbuktilayananruanganpertindakan
+Dim reportBuktiLayananJasa As New Cr_cetakbuktilayananruanganpertindakanJasa
 
 'Private fso As New Scripting.FileSystemObject
 Dim reportKartuPasien As New Cr_cetakKartuPasien
@@ -134,6 +135,7 @@ Dim bolBuktiPendaftaran As Boolean
 Dim bolBuktiLayanan  As Boolean
 Dim bolBuktiLayananRuangan  As Boolean
 Dim bolBuktiLayananRuanganPerTindakan  As Boolean
+Dim bolBuktiLayananJasa  As Boolean
 Dim bolcetakSep  As Boolean
 Dim bolTracer1  As Boolean
 Dim bolKartuPasien  As Boolean
@@ -1725,9 +1727,10 @@ boolLembarPersetujuan = False
             
             strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
                        " apdp.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
-                       " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " case when ru.objectdepartemenfk =16 then (select pg.namalengkap from pegawai_m as pg INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pg.id " & _
+                       "where p3.pelayananpasien=tp.norec and p3.objectjenispetugaspefk=4 limit 1) else pp.namalengkap end AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
                        " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
-                       " (case when tp.hargadiscount is null then 0 else tp.hargadiscount end)* tp.jumlah as diskon, " & _
+                       " (case when tp.hargadiscount is null then 0 else tp.hargadiscount end) as diskon, " & _
                        " hargasatuan*tp.jumlah as total,ks.namakelas,ar.asalrujukan,tp.tglpelayanan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
@@ -1735,15 +1738,15 @@ boolLembarPersetujuan = False
                        " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
                        " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
                        " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
-                       " LEFT JOIN pegawai_m AS pp ON apdp.objectpegawaifk = pp.id " & _
                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
+                       " LEFT JOIN pegawai_m AS pp ON apdp.objectpegawaifk = pp.id " & _
                        " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
                        " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
                        " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
                        " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
                        " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
                        " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
-                       " where tp.norec  in (" & norec_apc & ") and pro.id <> 402611 " & strFilter
+                       " where tp.norec  in (" & norec_apc & ") and pro.id <> 402611  " & strFilter
             
             ReadRs strSQL
             
@@ -1798,6 +1801,141 @@ boolLembarPersetujuan = False
              Else
                 With CRViewer1
                     .ReportSource = reportBuktiLayananRuanganPerTindakan
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+                Screen.MousePointer = vbDefault
+            End If
+     
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+End Sub
+
+Public Sub cetakBuktiLayananJasa(strNorec As String, strIdPegawai As String, strIdRuangan As String, view As String)
+On Error GoTo errLoad
+Set frmCetakPendaftaran = Nothing
+Dim strSQL As String
+Dim umur As String
+Dim strFilter As String
+Dim strFilter2 As String
+
+bolBuktiPendaftaran = False
+bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
+bolBuktiLayananJasa = True
+bolcetakSep = False
+bolTracer1 = False
+bolKartuPasien = False
+boolLabelPasien = False
+boolLabelPasienZebra = False
+boolSumList = False
+boolLembarRMK = False
+boolLembarPersetujuan = False
+
+
+    Dim strarr() As String
+    Dim norec_apc As String
+    Dim i As Integer
+    
+    
+    strarr = Split(strNorec, "|")
+    For i = 0 To UBound(strarr)
+       norec_apc = norec_apc + "'" & strarr(i) & "',"
+    Next
+    norec_apc = Left(norec_apc, Len(norec_apc) - 1)
+    
+    strSQL = ""
+    strFilter = ""
+    strFilter2 = ""
+'    If strIdRuangan <> "" Then strFilter = " AND ru2.id = '" & strIdRuangan & "' "
+'    If strIdTindakan <> "" Then strFilter2 = " AND tp.produkfk = '" & strIdTindakan & "' "
+    strFilter = strFilter & strFilter2 & " ORDER BY tp.tglpelayanan "
+    With reportBuktiLayananJasa
+    
+            Set adoReport = New ADODB.Command
+             adoReport.ActiveConnection = CN_String
+            
+            strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
+                       " apdp.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
+                       " case when ru.objectdepartemenfk =16 then (select pg.namalengkap from pegawai_m as pg INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pg.id " & _
+                       "where p3.pelayananpasien=tp.norec and p3.objectjenispetugaspefk=4 limit 1) else pp.namalengkap end AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " pro.namaproduk,tp.jumlah," & _
+                       " (select case when hargajual is null then 0 else hargajual end as hargajual from pelayananpasiendetail_t where pelayananpasien=tp.norec and komponenhargafk=35 limit 1) as hargasatuan,(select case when hargadiscount is null then 0 else hargadiscount end as hargadiscount from pelayananpasiendetail_t where pelayananpasien=tp.norec and komponenhargafk=35 limit 1) as diskon, " & _
+                       " ks.namakelas,ar.asalrujukan,tp.tglpelayanan, " & _
+                       " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin, " & _
+                       " CASE WHEN kmr.namakamar is null then '-' else kmr.namakamar END as namakamar " & _
+                       " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
+                       " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
+                       " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
+                       " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
+                       " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
+                       " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
+                       " LEFT JOIN pegawai_m AS pp ON apdp.objectpegawaifk = pp.id " & _
+                       " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+                       " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
+                       " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
+                       " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
+                       " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
+                       " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
+                       " where tp.norec  in (" & norec_apc & ") and pro.id <> 402611  " & strFilter
+            
+            ReadRs strSQL
+            
+            adoReport.CommandText = strSQL
+            adoReport.CommandType = adCmdUnknown
+            
+            
+            .database.AddADOCommand CN_String, adoReport
+            If RS.BOF Then
+                .txtumur.SetText "-"
+            Else
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+            End If
+            
+            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
+
+            .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
+            .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
+
+            .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
+            .usruangperiksa.SetUnboundFieldSource ("{ado.ruangakhir}")
+            .usQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
+            .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+
+            .usDokter.SetUnboundFieldSource ("if isnull({ado.namadokter}) then "" - "" else {ado.namadokter} ") '("{ado.namadokter}")
+            .udTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .ucTarif.SetUnboundFieldSource ("if isnull({ado.hargasatuan}) then 0 else {ado.hargasatuan} ") '("{ado.hargasatuan}")
+            .ucDiskon.SetUnboundFieldSource ("if isnull({ado.diskon}) then 0 else {ado.diskon} ") '("{ado.diskon}")
+            .usJumlah.SetUnboundFieldSource ("if isnull({ado.jumlah}) then 0 else {ado.jumlah} ") '("{ado.jumlah}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+
+            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
+            If RS2.BOF Then
+                .txtUser.SetText "-"
+            Else
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            End If
+            
+            If view = "false" Then
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "BuktiLayananRuanganPerTindakan")
+                .SelectPrinter "winspool", strPrinter1, "Ne00:"
+                .PrintOut False
+                Unload Me
+                Screen.MousePointer = vbDefault
+             Else
+                With CRViewer1
+                    .ReportSource = reportBuktiLayananJasa
                     .ViewReport
                     .Zoom 1
                 End With

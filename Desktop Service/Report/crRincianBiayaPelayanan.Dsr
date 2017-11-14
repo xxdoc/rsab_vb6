@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crRincianBiayaPelayanan 
-   ClientHeight    =   7575
+   ClientHeight    =   9900
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   16035
+   ClientWidth     =   15120
    OleObjectBlob   =   "crRincianBiayaPelayanan.dsx":0000
 End
 Attribute VB_Name = "crRincianBiayaPelayanan"
@@ -29,9 +29,9 @@ Private Sub Section11_Format(ByVal pFormattingInfo As Object)
     d.SetText Format(X, "##,##0.00")
     
     If usTipe.Value = "Umum/Pribadi" Then
-        txtTerbilang.SetText "# " & TERBILANG(txtPembulatan.Text) & " #"
+        txtTerbilang.SetText "# " & TerbilangDesimal(txtPembulatan.Text) & " #"
     Else
-        txtTerbilang.SetText "# " & TERBILANG(ucDitanggungPerusahaan.Value) & " #"
+        txtTerbilang.SetText "# " & TerbilangDesimal(ucDitanggungPerusahaan.Value) & " #"
     End If
 
 '    ucJumlahBill.Value = Replace(txtPembulatan.Text, ".", ",")
