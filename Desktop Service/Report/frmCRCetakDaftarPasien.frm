@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hwnd
+    Report.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -200,10 +200,10 @@ Set Report = New crLaporanPasienDaftar
         'If Not RS.EOF Then
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.ruangandaftar}")
-            .UsPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
+            .usPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usUmur.SetUnboundFieldSource ("{ado.umur}")

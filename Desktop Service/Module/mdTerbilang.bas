@@ -242,6 +242,7 @@ Public Function TerbilangDesimal(InputCurrency As String, Optional MataUang As S
    'UserID
    If Right(InputCurrency, 1) = "," Then InputCurrency = Left(InputCurrency, Len(InputCurrency) - 1)
    If Right(InputCurrency, 1) = "." Then InputCurrency = Left(InputCurrency, Len(InputCurrency) - 1)
+   InputCurrency = Replace(InputCurrency, ".", ",")
    strValid = "1234567890,"
    For i% = 1 To Len(InputCurrency)
      huruf = Chr(Asc(Mid(InputCurrency, i%, 1)))
@@ -292,6 +293,8 @@ Public Function TerbilangDesimal(InputCurrency As String, Optional MataUang As S
  Else
     TerbilangDesimal = (KonversiBilangan(strInput))
   End If
+  
+    TerbilangDesimal = UCase(TerbilangDesimal & " rupiah")
  Exit Function
 Pesan:
   TerbilangDesimal = "(maksimal 15 digit)"

@@ -22,5 +22,5 @@ Private Sub Section2_Format(ByVal pFormattingInfo As Object)
     Dim X As Double
     X = Round(ucTagihan2.Value + ucMaterai.Value)
     txtPembulatan.SetText Format(X, "##,##0.00")
-    txtTerbilang.SetText "# " & TERBILANG(X) & " #"
+    txtTerbilang.SetText "# " & TerbilangDesimal(X) & " #"
 End Sub

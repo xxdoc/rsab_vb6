@@ -167,7 +167,7 @@ Dim strFilter As String
    
 Set Report = New crRincianBiayaPelayanan
     strSQL = "SELECT pp.norec as norec_pp, sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan  as unit,ru.objectdepartemenfk,case when sr.noresep is not null then '' else kl.namakelas end as namakelas,   " & _
-            "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, case when sr.noresep is not null then ru_sr.namaruangan || '     Resep No: ' || sr.noresep  else ru2.namaruangan  end as ruangantindakan, case when pp.rke is not null then 'R/' || pp.rke || ' ' || pr.namaproduk else pr.namaproduk end as namaproduk,pg_sr.namalengkap as penulisresep,case when sr.noresep is not null then 'Resep' else jp.jenisproduk end as jenisproduk, case when sr.noresep is not null then '' else pg2.namalengkap end as dokter,pp.jumlah,pp.hargajual,   " & _
+            "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, case when sr.noresep is not null then ru_sr.namaruangan || '     Resep No: ' || sr.noresep  else ru2.namaruangan  end as ruangantindakan, case when pp.rke is not null then 'R/' || pp.rke || ' ' || pr.namaproduk else pr.namaproduk end as namaproduk,pg_sr.namalengkap as penulisresep,case when sr.noresep is not null then 'Resep' else jp.jenisproduk end as jenisproduk, case when sr.noresep is not null then '' else (select pgw.namalengkap from pegawai_m as pgw INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pgw.id where p3.pelayananpasien=pp.norec and p3.objectjenispetugaspefk=4 limit 1) end as dokter,pp.jumlah,pp.hargajual,   " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
             "sp.totalharusdibayar,case when sp.totalprekanan is null then 0 else sp.totalprekanan end as totalprekanan,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as totalbiayatambahan, pg3.namalengkap as user " & _
             "from pelayananpasien_t as pp left JOIN strukpelayanan_t as sp on pp.strukfk=sp.norec LEFT JOIN strukresep_t as sr on sr.norec=pp.strukresepfk  " & _
@@ -244,7 +244,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -256,7 +256,7 @@ Set Report = New crRincianBiayaPelayanan
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .udtanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
