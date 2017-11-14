@@ -240,8 +240,9 @@ Public Function TerbilangDesimal(InputCurrency As String, Optional MataUang As S
    Dim i As Integer
    'Periksa setiap karakter yg diketikkan ke kotak
    'UserID
-   If Right(InputCurrency, 1) = "," Then InputCurrency = Left(InputCurrency, Len(InputCurrency) - 1)
-   If Right(InputCurrency, 1) = "." Then InputCurrency = Left(InputCurrency, Len(InputCurrency) - 1)
+'   If Right(InputCurrency, 1) = "," Then InputCurrency = Left(InputCurrency, Len(InputCurrency) - 1)
+'   If Right(InputCurrency, 1) = "." Then InputCurrency = Left(InputCurrency, Len(InputCurrency) - 1)
+   InputCurrency = Replace(InputCurrency, ",", "")
    InputCurrency = Replace(InputCurrency, ".", ",")
    strValid = "1234567890,"
    For i% = 1 To Len(InputCurrency)
@@ -282,9 +283,9 @@ Public Function TerbilangDesimal(InputCurrency As String, Optional MataUang As S
     End If
      
     If CLng(Trim(strPecahan)) = 0 Then
-    TerbilangDesimal = (KonversiBilangan(strBilangan) & MataUang & " " & KonversiBilangan(strPecahan))
+    TerbilangDesimal = (KonversiBilangan(strBilangan) & " " & KonversiBilangan(strPecahan))
  Else
-  TerbilangDesimal = (KonversiBilangan(strBilangan) & MataUang & " koma " & KonversiBilangan(strPecahan) & "")
+  TerbilangDesimal = (KonversiBilangan(strBilangan) & " koma " & KonversiBilangan(strPecahan) & "")
     End If
   Else
     TerbilangDesimal = (KonversiBilangan(strBilangan) & "koma " & KonversiPecahan(strPecahan))
