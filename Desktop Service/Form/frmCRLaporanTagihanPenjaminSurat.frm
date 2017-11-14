@@ -210,7 +210,7 @@ Dim adocmd As New ADODB.Command
     
     If tPiutang >= 1000000 Then
         tmaterai = 6000
-    ElseIf 25000 >= tPiutang <= 999999 Then
+    ElseIf tPiutang >= 250000 And tPiutang <= 999999 Then
         tmaterai = 3000
     ElseIf 0 >= tPiutang <= 249999 Then
         tmaterai = 0

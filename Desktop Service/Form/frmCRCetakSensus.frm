@@ -159,43 +159,63 @@ Set Report = New crLaporanSensusPasien
 
     strFilter = ""
 
-    strFilter = " where apd.tglregistrasi BETWEEN '" & _
+    strFilter = " where pd.tglregistrasi BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd HH:mm") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd HH:mm") & "' AND apd.tglkeluar is null"
+    Format(tglAkhir, "yyyy-MM-dd HH:mm") & "' AND pd.tglpulang is null"
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
-    If strIdRuangan <> "" Then strFilter = strFilter & " AND ru2.id = '" & strIdRuangan & "' "
-    If strIdDepartement <> "" Then strFilter = strFilter & " AND ru2.objectdepartemenfk = '" & strIdDepartement & "' "
-    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND klp.id = '" & strIdKelompokPasien & "' "
+    If strIdRuangan <> "" Then strFilter = strFilter & " AND apd.objectruanganfk = '" & strIdRuangan & "' "
+    If strIdDepartement <> "" Then strFilter = strFilter & " AND ru.objectdepartemenfk = '" & strIdDepartement & "' "
+    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
 '    If strIdDokter <> "" Then strFilter = strFilter & " AND pg2.id = '" & strIdDokter & "' "
     
-    strFilter = strFilter & " order by apd.tglregistrasi "
-
-    strSQL = "SELECT DISTINCT pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk,ru.namaruangan as ruanganakhir,kl.namakelas,   " & _
-"                 pg.namalengkap as dokterpj,apd.tglregistrasi,apd.tglkeluar as tglpulang,rk.namarekanan,ru2.namaruangan as ruangandaftar,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap,   " & _
-"                 pg2.namalengkap as dokter, kmr.namakamar,cast(apd.nobed as varchar(10)) as nobed,ru2.id as idruangandaftar,ru2.objectdepartemenfk as iddepartementdaftar, klp.id as IdKelompokPasien, klp.kelompokpasien, " & _
-"                 pg2.id as idDokter,ar.asalrujukan,case when apd.statuskunjungan='BARU' then 'Y' ELSE 'N' END as statuskunjungan,alm.alamatlengkap,kdp.kondisipasien,dpt.namadepartemen," & _
+    strFilter = strFilter & " order by pd.noregistrasi "
+    
+    strSQL = "SELECT DISTINCT pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk," & _
+"                 ru.namaruangan as ruanganakhir, pg.namalengkap as dokter, klp.kelompokpasien, " & _
+"                 dpt.namadepartemen," & _
 "                 case when dgs.namadiagnosa is null then '-' else dgs.namadiagnosa end as diagnosa " & _
 "                 from pasiendaftar_t as pd  " & _
 "                 INNER join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec   " & _
 "                 INNER join pasien_m as ps on ps.id=pd.nocmfk   " & _
 "                 INNER join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk   " & _
-"                 INNER join ruangan_m  as ru on ru.id=pd.objectruanganlastfk   " & _
-"                 INNER join ruangan_m  as ru2 on ru2.id=apd.objectruanganfk   " & _
-"                 left join kelas_m  as kl on kl.id=apd.objectkelasfk   " & _
-"                 left join pegawai_m  as pg on pg.id=pd.objectpegawaifk   " & _
-"                 left join pegawai_m  as pg2 on pg2.id=apd.objectpegawaifk   " & _
+"                 INNER join ruangan_m  as ru on ru.id=apd.objectruanganfk   " & _
+"                 left join pegawai_m  as pg on pg.id=apd.objectpegawaifk   " & _
 "                 left join rekanan_m  as rk on rk.id=pd.objectrekananfk   " & _
-"                 left join kamar_m  as kmr on kmr.id=apd.objectkamarfk " & _
 "                 INNER join kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
-"                 left join asalrujukan_m as ar on ar.id=apd.objectasalrujukanfk " & _
-"                 left join alamat_m as alm on ps.id=alm.nocmfk " & _
-"                 left join kondisipasien_m as kdp on kdp.id=pd.objectkondisipasienfk " & _
 "                 LEFT JOIN detaildiagnosapasien_t as ddp on ddp.noregistrasifk = apd.norec " & _
 "                 LEFT JOIN diagnosa_m as dgs on dgs.id=ddp.objectdiagnosafk " & _
 "                 LEFT JOIN jenisdiagnosa_m as jd on jd.id=ddp.objectjenisdiagnosafk " & _
-"                 inner join departemen_m as dpt on dpt.id=ru2.objectdepartemenfk" & strFilter
-      
+"                 inner join departemen_m as dpt on dpt.id=ru.objectdepartemenfk" & strFilter
+
+'    strSQL = "SELECT DISTINCT pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk,ru.namaruangan as ruanganakhir,kl.namakelas, pg.namalengkap as dokterpj,apd.tglregistrasi,apd.tglkeluar as tglpulang,rk.namarekanan, " & _
+'"                 case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap,   " & _
+'"                 pg2.namalengkap as dokter, kmr.namakamar,cast(apd.nobed as varchar(10)) as nobed,ru.id as idruangandaftar,ru.objectdepartemenfk as iddepartementdaftar, klp.id as IdKelompokPasien, klp.kelompokpasien, " & _
+'"                 pg2.id as idDokter,ar.asalrujukan,case when apd.statuskunjungan='BARU' then 'Y' ELSE 'N' END as statuskunjungan,alm.alamatlengkap,kdp.kondisipasien,dpt.namadepartemen," & _
+'"                 case when dgs.namadiagnosa is null then '-' else dgs.namadiagnosa end as diagnosa " & _
+'"                 from pasiendaftar_t as pd  " & _
+'"                 INNER join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec   " & _
+'"                 INNER join pasien_m as ps on ps.id=pd.nocmfk   " & _
+'"                 INNER join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk   " & _
+'"                 INNER join ruangan_m  as ru on ru.id=apd.objectruanganfk   " & _
+'"                 left join kelas_m  as kl on kl.id=apd.objectkelasfk   " & _
+'"                 left join pegawai_m  as pg on pg.id=pd.objectpegawaifk   " & _
+'"                 left join pegawai_m  as pg2 on pg2.id=apd.objectpegawaifk   " & _
+'"                 left join rekanan_m  as rk on rk.id=pd.objectrekananfk   " & _
+'"                 left join kamar_m  as kmr on kmr.id=apd.objectkamarfk " & _
+'"                 INNER join kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
+'"                 left join asalrujukan_m as ar on ar.id=apd.objectasalrujukanfk " & _
+'"                 left join alamat_m as alm on ps.id=alm.nocmfk " & _
+'"                 left join kondisipasien_m as kdp on kdp.id=pd.objectkondisipasienfk " & _
+'"                 LEFT JOIN detaildiagnosapasien_t as ddp on ddp.noregistrasifk = apd.norec " & _
+'"                 LEFT JOIN diagnosa_m as dgs on dgs.id=ddp.objectdiagnosafk " & _
+'"                 LEFT JOIN jenisdiagnosa_m as jd on jd.id=ddp.objectjenisdiagnosafk " & _
+'"                 inner join departemen_m as dpt on dpt.id=ru.objectdepartemenfk" & strFilter
+
+'"                 INNER join ruangan_m  as ru on ru.id=pd.objectruanganlastfk   " & _
+'case when ru.objectdepartemenfk in (16,35) then ru2.namaruangan else ru3.namaruangan end as ruangandaftar,
+'"                 INNER join ruangan_m  as ru3 on ru3.id=apd.objectruanganasalfk   " & _
+
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -206,7 +226,7 @@ Set Report = New crLaporanSensusPasien
             '.usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usRuanganPelayanan.SetUnboundFieldSource ("{ado.ruangandaftar}")
+            .usRuanganPelayanan.SetUnboundFieldSource ("{ado.ruanganakhir}")
             '.usPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
