@@ -105,7 +105,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanSensus
+Dim Report As New crLaporanSensusPasien
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -155,14 +155,13 @@ On Error GoTo errLoad
 Set frmCRCetakSensus = Nothing
 Dim adocmd As New ADODB.Command
 Dim strFilter As String
-Set Report = New crLaporanSensus
+Set Report = New crLaporanSensusPasien
 
     strFilter = ""
 
     strFilter = " where apd.tglregistrasi BETWEEN '" & _
-    Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' AND apd.tglkeluar is not null"
-    'and jd.id=5
+    Format(tglAwal, "yyyy-MM-dd HH:mm") & "' AND '" & _
+    Format(tglAkhir, "yyyy-MM-dd HH:mm") & "' AND apd.tglkeluar is null"
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
     If strIdRuangan <> "" Then strFilter = strFilter & " AND ru2.id = '" & strIdRuangan & "' "
@@ -203,26 +202,26 @@ Set Report = New crLaporanSensus
     With Report
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
-            .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
-            .usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
+            '.udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            '.usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.ruangandaftar}")
-            .usPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
+            '.usPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usUmur.SetUnboundFieldSource ("{ado.umur}")
-            .usBaru.SetUnboundFieldSource ("{ado.statuskunjungan}")
-            .usInap.SetUnboundFieldSource ("{ado.inap}")
+            '.usBaru.SetUnboundFieldSource ("{ado.statuskunjungan}")
+            '.usInap.SetUnboundFieldSource ("{ado.inap}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas})  then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
-            .usBed.SetUnboundFieldSource ("if isnull({ado.nobed})  then "" - "" else {ado.nobed} ") '("{ado.nobed}")
+            '.usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas})  then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
+            '.usBed.SetUnboundFieldSource ("if isnull({ado.nobed})  then "" - "" else {ado.nobed} ") '("{ado.nobed}")
             .usDokter.SetUnboundFieldSource ("if isnull({ado.dokter})  then "" - "" else {ado.dokter} ") '("{ado.dokter}")
 '            .usDokterPengirim.SetUnboundFieldSource ("{ado.dokterpengirim}")
-            .usAsalPasien.SetUnboundFieldSource ("{ado.asalrujukan}")
-            .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
+            '.usAsalPasien.SetUnboundFieldSource ("{ado.asalrujukan}")
+            '.udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
 '            .usCaraMasuk.SetUnboundFieldSource ("{ado.caramasuk}")
-            .usKeadaan.SetUnboundFieldSource ("if isnull({ado.kondisipasien})  then "" - "" else {ado.kondisipasien} ") '("{ado.kondisipasien}")
+            '.usKeadaan.SetUnboundFieldSource ("if isnull({ado.kondisipasien})  then "" - "" else {ado.kondisipasien} ") '("{ado.kondisipasien}")
             .usDiagnosa.SetUnboundFieldSource ("{ado.diagnosa}")
             .usDepartement.SetUnboundFieldSource ("{ado.namadepartemen}")
             
