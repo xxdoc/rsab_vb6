@@ -214,17 +214,23 @@ Dim adocmd As New ADODB.Command
             "left join rekanan_m as r on r.id = pd.objectrekananfk " & _
             "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
             orderby2
-    Dim tCash, tMaterai, tPiutang As Double
+    Dim tCash, tmaterai, tPiutang As Double
     Dim i As Integer
     Dim X As Double
-    
-    tMaterai = 3000
     
     For i = 0 To RS2.RecordCount - 1
         tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
         
         RS2.MoveNext
     Next i
+    
+    If tPiutang >= 1000000 Then
+        tmaterai = 6000
+    ElseIf 250000 >= tPiutang <= 999999 Then
+        tmaterai = 3000
+    ElseIf 0 >= tPiutang <= 249999 Then
+        tmaterai = 0
+    End If
     
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -250,7 +256,7 @@ Dim adocmd As New ADODB.Command
             .ucTagihan.SetUnboundFieldSource ("{ado.bb}")
             '.usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
-            .ucMaterai.SetUnboundFieldSource 3000
+            .ucMaterai.SetUnboundFieldSource tmaterai
             
             '.ucCash2.SetUnboundFieldSource (tCash)
             .ucTagihan2.SetUnboundFieldSource (tPiutang)
@@ -259,7 +265,7 @@ Dim adocmd As New ADODB.Command
             '.txtA1.SetText Format(RS2!cash, "##,##0.00")
             '.txtA2.SetText Format(RS2!totalpiutangpenjamin, "##,##0.00")
             
-            X = Round(tPiutang + tMaterai)
+            X = Round(tPiutang + tmaterai)
             .txtPembulatan.SetText Format(X, "##,##0.00")
             .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
             

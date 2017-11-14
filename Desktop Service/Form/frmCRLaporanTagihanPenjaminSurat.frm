@@ -198,29 +198,34 @@ Dim adocmd As New ADODB.Command
             "left join rekanan_m as r on r.id = pd.objectrekananfk  " & _
             "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
             orderby
-    Dim tCash, tPiutang, tMaterai, X As Double
+    Dim tCash, tPiutang, tmaterai, X As Double
     Dim tRekanan, tPosting As String
     Dim i As Integer
-    
-    tMaterai = 3000
 
-    
     For i = 0 To RS2.RecordCount - 1
         tPiutang = tPiutang + CDbl(IIf(IsNull(RS2!totalppenjamin), 0, RS2!totalppenjamin))
         tRekanan = UCase(IIf(IsNull(RS2("namarekanan")), "-", RS2("namarekanan")))
         RS2.MoveNext
     Next i
+    
+    If tPiutang >= 1000000 Then
+        tmaterai = 6000
+    ElseIf 25000 >= tPiutang <= 999999 Then
+        tmaterai = 3000
+    ElseIf 0 >= tPiutang <= 249999 Then
+        tmaterai = 0
+    End If
         
     With Report
         If Not RS2.BOF Then
             '.txtPrinted.SetText namaPrinted
            ' .usNamaPenjamin.SetUnboundFieldSource (tRekanan)
             .ucJumlah.SetUnboundFieldSource (tPiutang)
-            .ucMaterai.SetUnboundFieldSource (tMaterai)
+            .ucMaterai.SetUnboundFieldSource (tmaterai)
             .txtPenjamin.SetText (tRekanan)
             
             
-             X = Round(tPiutang + tMaterai)
+             X = Round(tPiutang + tmaterai)
             .txtPembulatan.SetText Format(X, "##,##0.00")
             .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
         End If
