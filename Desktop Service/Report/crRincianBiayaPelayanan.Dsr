@@ -19,14 +19,14 @@ Private Sub Section11_Format(ByVal pFormattingInfo As Object)
     X = Round(ucJumlahBill.Value)
     txtPembulatan.SetText Format(X, "##,##0.00")
     
-    X = Round(CDbl(ucDitanggungPerusahaan.Value))
-    a.SetText Format(X, "##,##0.00")
-    X = Round(CDbl(ucDitanggungRS.Value))
-    b.SetText Format(X, "##,##0.00")
-    X = Round(CDbl(ucDitanggungSendiri.Value))
-    c.SetText Format(X, "##,##0.00")
-    X = Round(CDbl(ucSurplusMinusRS.Value))
-    d.SetText Format(X, "##,##0.00")
+    X = CDbl(ucDitanggungPerusahaan.Value) 'Round(CDbl(ucDitanggungPerusahaan.Value))
+    a.SetText Format(X, "##,##0.#0")
+    X = CDbl(ucDitanggungRS.Value) 'Round(CDbl(ucDitanggungRS.Value))
+    b.SetText Format(X, "##,##0.#0")
+    X = CDbl(ucDitanggungSendiri.Value) 'Round(CDbl(ucDitanggungSendiri.Value))
+    c.SetText Format(X, "##,##0.#0")
+    X = CDbl(ucSurplusMinusRS.Value) 'Round(CDbl(ucSurplusMinusRS.Value))
+    d.SetText Format(X, "##,##0.#0")
     
     If usTipe.Value = "Umum/Pribadi" Then
         txtTerbilang.SetText "# " & TerbilangDesimal(txtPembulatan.Text) & " #"
