@@ -474,11 +474,11 @@ boolLembarPersetujuan = False
               .txtAsalRujukan.SetText IIf(IsNull(RS("nmprovider")), "-", RS("nmprovider"))
               .txtPeserta.SetText IIf(IsNull(RS("jenispeserta")), "-", RS("jenispeserta"))
               .txtJenisrawat.SetText IIf(IsNull(RS("jenisrawat")), "-", RS("jenisrawat")) 'RS("jenisrawat")
-              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
-              .txtDiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
+              .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
               .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
               .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
-              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
               .txtNoPendaftaran2.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi"))
              End If
 
@@ -885,7 +885,7 @@ boolLembarPersetujuan = False
 
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
 
-        .txtTgl.SetText strTglLahir
+        .txttgl.SetText strTglLahir
         .txtnocm.SetText strNocm
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
@@ -1254,7 +1254,7 @@ boolLembarPersetujuan = False
                        " LEFT JOIN pegawai_m pg on pd.objectpegawaifk=pg.id " & _
                        " INNER JOIN kelompokpasien_m kp on pd.objectkelompokpasienlastfk=kp.id " & _
                        " INNER JOIN kelas_m kls on apdp.objectkelasfk=kls.id " & _
-                       " where pd.noregistrasi ='" & strNorec & "' "
+                       " where apd.norec ='" & strNorec & "' "
             
             ReadRs strSQL
                 
@@ -1359,7 +1359,7 @@ boolLembarPersetujuan = False
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
             
-            strSQL = "SELECT pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when sp.id=2 then COALESCE(ps.namasuamiistri,'-') else ps.namaayah end) as namakeluarga," & _
+            strSQL = "SELECT pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when ps.namakeluarga is null then '-' else ps.namakeluarga end) as namakeluarga," & _
                        " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'DD Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'HH24:MI') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
                        " ag.agama, pk.pekerjaan, kb.name AS kebangsaan,upper(al.alamatlengkap) as alamatlengkap,upper(al.kotakabupaten) as kotakabupaten, " & _
                        " al.kecamatan, al.namadesakelurahan, al.mobilephone1,sp.statusperkawinan, " & _
