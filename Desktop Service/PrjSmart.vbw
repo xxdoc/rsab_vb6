@@ -46,18 +46,26 @@ crLaporanPasienPulang = 78, 78, 902, 530, C, -159, 42, 851, 733, CZ
 frmCRCetakLaporanPasienPulang = 72, 188, 926, 681, C, 0, 0, 854, 350, CZ
 crLaporanPendapatanRuangan = 0, 0, 0, 0, C, 100, 100, 1091, 625, CZ
 frmCRCetakLaporanPendapatanRuangan = 0, 0, 833, 344, C, 125, 125, 958, 469, CZ
+<<<<<<< HEAD
+crRincianBiayaPelayanan = 104, 60, 980, 345, Z, -53, 175, 963, 866, CZ
+frmCRCetakRincianBiaya = 131, -3, 1007, 282, , 25, 25, 901, 310, CZ
+Cr_cetakbuktilayananruangan = 50, 50, 876, 419, C, -44, 10, 967, 701, CZ
+crLaporanSensusPasien = 0, 0, 0, 0, C, 104, 104, 1101, 787, CZ
+frmCRCetakSensus = 26, 26, 826, 478, C, 0, 0, 800, 452, CZ
+=======
 crRincianBiayaPelayanan = 104, 60, 980, 345, C, -53, 175, 1024, 711, CZ
 frmCRCetakRincianBiaya = 131, -3, 1007, 282, C, 25, 25, 901, 310, CZ
 Cr_cetakbuktilayananruangan = 50, 50, 876, 419, C, -44, 10, 967, 701, CZ
 crLaporanSensusPasien = 26, 26, 807, 470, , 26, 26, 1023, 709, C
 frmCRCetakSensus = 26, 26, 926, 377, Z, 208, 208, 989, 652, C
+>>>>>>> 1fea6d0ec5900d505f5c9a6cc414789e630de679
 crLaporanPendapatanRuanganDetail = 0, 0, 0, 0, C, 0, 0, 991, 525, CZ
 frmCRCetakBilling = 104, 104, 1069, 476, , 26, 26, 872, 478, C
 crBilling = 182, 182, 1028, 634, C, 26, 26, 1035, 467, CZ
 frmCRLaporanPendapatanRemun = 26, 26, 872, 478, C, 156, 156, 1002, 608, CZ
 crLaporanPendapatanRemun = 0, 0, 0, 0, C, 26, 26, 1088, 717, CZ
 frmDiagramOdonto = 0, 0, 0, 0, C, 0, 0, 846, 452, C
-frmKasir = 127, 37, 1014, 489, C, 78, 78, 965, 530, C
+frmKasir = 127, 37, 1014, 489, , 78, 78, 965, 530, C
 frmCetakOdontoGram = 0, 0, 0, 0, C, 26, 26, 872, 478, CZ
 crOdontoGram = 0, 0, 0, 0, C, 182, 182, 1148, 874, CZ
 crRekapLaporanPendapatanPoli = 100, 100, 1009, 444, C, -80, 72, 922, 755, CZ
@@ -93,6 +101,15 @@ frmCetakLabelFarmasi = 26, 26, 815, 478, C, 0, 0, 789, 452, CZ
 Cr_cetakLabelFarmasi = 208, 208, 997, 660, C, 182, 182, 1187, 873, CZ
 frmCetakPendaftaran = 208, 208, 997, 660, C, 78, 78, 867, 530, CZ
 frmCRLaporanPenerimaanKasir = 26, 26, 815, 478, C, 0, 0, 789, 452, CZ
+<<<<<<< HEAD
+frmCRLaporanTagihanPenjamin = 72, 37, 861, 489, C, 104, 104, 893, 556, CZ
+crLaporanTagihanPenjamin = 209, 185, 998, 637, C, -10, 30, 992, 713, CZ
+frmCRLaporanTagihanPenjaminSurat = 156, 156, 980, 608, , 130, 130, 954, 582, CZ
+crLaporanTagihanPenjaminSurat = 182, 182, 1006, 634, C, -43, 16, 988, 699, CZ
+crKuitansiPiutangPenjamin = 130, 130, 954, 582, C, -76, 97, 955, 780, CZ
+frmCetakKuitansiPiutangPenjamin = 104, 104, 928, 556, C, 78, 78, 902, 530, CZ
+frmPiutang = 130, 130, 1065, 481, , 0, 0, 816, 444, C
+=======
 frmCRLaporanTagihanPenjamin = 72, 37, 861, 489, , 104, 104, 893, 556, C
 crLaporanTagihanPenjamin = 209, 185, 998, 637, , -10, 30, 992, 713, C
 frmCRLaporanTagihanPenjaminSurat = 156, 156, 980, 608, , 130, 130, 954, 582, C
@@ -100,6 +117,7 @@ crLaporanTagihanPenjaminSurat = 182, 182, 1006, 634, , -43, 16, 988, 699, C
 crKuitansiPiutangPenjamin = 130, 130, 954, 582, , -76, 97, 955, 780, C
 frmCetakKuitansiPiutangPenjamin = 104, 104, 928, 556, , 78, 78, 902, 530, C
 frmPiutang = 130, 130, 1065, 481, C, 0, 0, 816, 444, C
+>>>>>>> 1fea6d0ec5900d505f5c9a6cc414789e630de679
 frmRekapPendapatanKeuangan = 52, 52, 867, 496, C, 26, 26, 841, 470, CZ
 crRekapPendapatanKeuangan = 52, 52, 867, 496, C, 0, 0, 1031, 683, CZ
 frmLaporanJurnal = 208, 208, 1023, 652, C, 182, 182, 997, 626, CZ
@@ -126,15 +144,28 @@ crLaporanPendapatanInap = 52, 52, 838, 496, C, 1, 30, 1012, 721, CZ
 frmLaporanJurnalDetail = 182, 182, 968, 626, C, 156, 156, 942, 600, CZ
 crLaporanJurnalDetail = 0, 0, 0, 0, C, 130, 130, 1132, 813, CZ
 crLaporanJurnalPenjamin = 0, 0, 0, 0, C, 156, 156, 1158, 839, CZ
+<<<<<<< HEAD
+frmLaporanJurnalPenjamin = 0, 0, 786, 444, C, 208, 208, 994, 652, CZ
+crLaporanTagihanSuratPasien = 26, 26, 812, 470, C, 208, 208, 1205, 891, CZ
+frmCRLaporanTagihanSuratPasien = 52, 52, 838, 496, C, 26, 26, 812, 470, CZ
+crKuitansiPiutangPenjaminPasien = 182, 182, 963, 626, C, 26, 26, 1028, 709, CZ
+frmCetakKuitansiPiutangPenjaminPasien = 208, 208, 994, 652, C, 182, 182, 968, 626, CZ
+=======
 frmLaporanJurnalPenjamin = 0, 0, 786, 444, , 208, 208, 994, 652, CZ
 crLaporanTagihanSuratPasien = 26, 26, 812, 470, , 208, 208, 1205, 891, C
 frmCRLaporanTagihanSuratPasien = 52, 52, 838, 496, , 26, 26, 812, 470, C
 crKuitansiPiutangPenjaminPasien = 182, 182, 963, 626, , 26, 26, 1028, 709, C
 frmCetakKuitansiPiutangPenjaminPasien = 208, 208, 994, 652, , 182, 182, 968, 626, C
+>>>>>>> 1fea6d0ec5900d505f5c9a6cc414789e630de679
 crCetakKIP = 0, 0, 0, 0, C, 78, 78, 1080, 761, CZ
 frmCRKIP = 0, 0, 786, 444, C, 208, 208, 994, 652, CZ
 crLaporanPendapatanPoli = 0, 0, 0, 0, C, 104, 104, 1106, 787, CZ
 frmCRCetakLaporanPendapatanPoli = 0, 0, 0, 0, C, 182, 182, 968, 626, CZ
 frmCRCetakDaftarPasien = 43, 12, 907, 356, C, 75, 75, 939, 419, CZ
 crLaporanPasienDaftar = 50, 50, 914, 394, C, -14, 308, 977, 833, CZ
+<<<<<<< HEAD
+crLaporanSensus = 0, 0, 0, 0, C, 78, 78, 1083, 769, CZ
+Cr_cetakbuktilayananruanganpertindakanJasa = 130, 130, 930, 582, C, 104, 104, 1104, 795, CZ
+=======
 crLaporanSensus = 0, 0, 0, 0, C, 52, 52, 1057, 743, CZ
+>>>>>>> 1fea6d0ec5900d505f5c9a6cc414789e630de679
