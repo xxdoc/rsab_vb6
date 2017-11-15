@@ -150,6 +150,7 @@ Form=Report\frmCRCetakLaporanPendapatanPoli.frm
 Form=Report\frmCRCetakDaftarPasien.frm
 Designer=Report\crLaporanPasienDaftar.Dsr
 Designer=Report\crLaporanSensus.Dsr
+Designer=Report\Cr_cetakbuktilayananruanganpertindakanJasa.Dsr
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
