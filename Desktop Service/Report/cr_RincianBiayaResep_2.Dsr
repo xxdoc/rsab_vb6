@@ -12,3 +12,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+Private Sub Section9_Format(ByVal pFormattingInfo As Object)
+    Text25.SetText App.Comments
+    
+End Sub

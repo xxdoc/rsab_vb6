@@ -189,7 +189,7 @@ Set Report = New crRincianBiayaPelayanan
             "left JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk left join pegawai_m as pg3 on pg3.id=sbm.objectpegawaipenerimafk " & _
             "where pd.noregistrasi='" & strNoregistrasi & "' and pr.id not in (402611,10011572,10011571)   or " & _
             "sp.nostruk='" & strNoStruk & "' and pr.id not in (402611,10011572,10011571)  or " & _
-            "sbm.nosbm='" & strNoKwitansi & "' and pr.id not in (402611,10011572,10011571)  order by pp.rke"
+            "sbm.nosbm='" & strNoKwitansi & "' and pr.id not in (402611,10011572,10011571)  order by pp.tglpelayanan, pp.rke"
     
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
@@ -244,7 +244,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -256,7 +256,7 @@ Set Report = New crRincianBiayaPelayanan
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-            .udtanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
@@ -288,6 +288,8 @@ Set Report = New crRincianBiayaPelayanan
 '            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
+            
+            .txtVersi.SetText App.Comments
             
             
             

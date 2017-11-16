@@ -56,7 +56,7 @@ Begin VB.Form GossRESTMain
          Visible         =   0   'False
       End
       Begin VB.Menu fgdgdfg 
-         Caption         =   "Version 20171115.1"
+         Caption         =   "Version 20171116.1"
       End
       Begin VB.Menu asdasdasdsa 
          Caption         =   "-"
@@ -117,6 +117,9 @@ End Sub
 Private Sub Form_Initialize()
 On Error Resume Next
 Dim msg As String
+    
+    fgdgdfg.Caption = App.Comments
+    
 
 '    TerminateProcess ("Desktop ServiceC.exe")
 '    TerminateProcess ("Desktop ServiceD.exe")
