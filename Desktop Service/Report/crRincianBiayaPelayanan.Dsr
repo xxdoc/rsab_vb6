@@ -28,8 +28,10 @@ Private Sub Section11_Format(ByVal pFormattingInfo As Object)
     X = CDbl(ucSurplusMinusRS.Value) 'Round(CDbl(ucSurplusMinusRS.Value))
     d.SetText Format(X, "##,##0.#0")
     
-    If usTipe.Value = "Umum/Pribadi" Then
-        txtTerbilang.SetText "# " & TerbilangDesimal(txtPembulatan.Text) & " #"
+    'If usTipe.Value = "Umum/Pribadi" Then
+    If CDbl(ucDitanggungPerusahaan.Value) = 0 Then
+'        txtTerbilang.SetText "# " & TerbilangDesimal(txtPembulatan.Text) & " #"
+        txtTerbilang.SetText "# " & TerbilangDesimal(ucJumlahBill.Value) & " #"
     Else
         txtTerbilang.SetText "# " & TerbilangDesimal(ucDitanggungPerusahaan.Value) & " #"
     End If
