@@ -233,7 +233,7 @@ Dim strKet As Boolean
 '            .txtKeterangan.SetText "Biaya Perawatan Pasien"
             .txtRp.SetText "Rp. " & Format(jumlahDuit, "##,##0.00")
 '            .txtRp.SetText "Rp. " & Format(11789104, "##,##0.00")
-            .txtTerbilang.SetText TERBILANG(jumlahDuit)
+            .txtTerbilang.SetText TerbilangDesimal(CStr(jumlahDuit))
             .txtRuangan.SetText UCase(RS("namaruangan"))
             .txtNoPen2.SetText RS("noregistrasi")
             .txtNoCM2.SetText RS("nocm")
