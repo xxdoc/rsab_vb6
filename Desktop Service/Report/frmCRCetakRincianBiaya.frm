@@ -196,13 +196,19 @@ Set Report = New crRincianBiayaPelayanan
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
             "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk=402611 "
-    
-    ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
+            
+     ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
-            "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611 and ppp.objectjenispetugaspefk=4 "
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611 "
+    
+'    ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
+'            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
+'            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
+'            "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+'            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
+'            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611 and ppp.objectjenispetugaspefk=4 "
     
     Dim TotalDiskonMedis  As Double
     Dim TotalDiskonUmum  As Double
@@ -244,7 +250,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -256,7 +262,7 @@ Set Report = New crRincianBiayaPelayanan
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .udtanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
