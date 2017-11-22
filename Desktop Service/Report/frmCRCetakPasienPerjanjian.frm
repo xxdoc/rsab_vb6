@@ -162,7 +162,7 @@ Dim strKet As Boolean
             "from pasienperjanjian_t as pp " & _
             "inner join pasien_m as ps on ps.id = pp.objectpasienfk " & _
             "inner join pegawai_m as pg on pg.id = pp.objectdokterfk " & _
-            "inner join ruangan_m as ru on ru.id = pg.objectruangankerjafk " & _
+            "inner join ruangan_m as ru on ru.id = pP.objectruanganfk " & _
             "where pp.norec='" & strNoRec & "'"
     
     With Report
