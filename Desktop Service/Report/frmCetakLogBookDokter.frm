@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRCetakRincianBiaya 
+Begin VB.Form frmCetakLogBookDokter 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmCRCetakRincianBiaya.frx":0000
+   Icon            =   "frmCetakLogBookDokter.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmCRCetakRincianBiaya
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRCetakRincianBiaya"
+Attribute VB_Name = "frmCetakLogBookDokter"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crRincianBiayaPelayanan
+Dim Report As New crLaporanLogBookDokter
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
