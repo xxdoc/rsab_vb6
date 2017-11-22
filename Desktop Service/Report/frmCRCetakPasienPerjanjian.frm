@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRCetakPasienPerjanjian = Nothing
 End Sub
 
-Public Sub CetakPerjanjian(strNoRec As String, strIdPegawai As String, view As String)
+Public Sub CetakPerjanjian(strNorec As String, strIdPegawai As String, view As String)
 On Error GoTo errLoad
 
 Dim strKet As Boolean
@@ -163,7 +163,7 @@ Dim strKet As Boolean
             "inner join pasien_m as ps on ps.id = pp.objectpasienfk " & _
             "inner join pegawai_m as pg on pg.id = pp.objectdokterfk " & _
             "inner join ruangan_m as ru on ru.id = pP.objectruanganfk " & _
-            "where pp.norec='" & strNoRec & "'"
+            "where pp.norec='" & strNorec & "'"
     
     With Report
         If Not RS.EOF Then
@@ -200,4 +200,60 @@ Dim strKet As Boolean
 Exit Sub
 errLoad:
 End Sub
+
+Public Sub CetakPerjanjianbynoreg(strNoReg As String, strIdPegawai As String, view As String)
+On Error GoTo errLoad
+
+Dim strKet As Boolean
+
+    strKet = True
+    
+    Set frmCRCetakPasienPerjanjian = Nothing
+    Set Report = New crCetakPasienPerjanjian
+    
+    ReadRs "select pp.noperjanjian, ps.nocm, (upper(ps.namapasien))as namapasien,(upper(case when ps.namakeluarga is null then ' - ' else ps.namakeluarga end)) as namakeluarga, " & _
+            "pp.tglinput, pp.tglperjanjian, pg.namalengkap, ru.namaruangan, pp.keterangan " & _
+            "from pasienperjanjian_t as pp " & _
+            "inner join pasien_m as ps on ps.id = pp.objectpasienfk " & _
+            "inner join pasiendaftar_t as pd on pd.nocmfk= ps.id " & _
+            "inner join pegawai_m as pg on pg.id = pp.objectdokterfk " & _
+            "inner join ruangan_m as ru on ru.id = pP.objectruanganfk " & _
+            "where pd.noregistrasi='" & strNoReg & "'"
+    
+    With Report
+        If Not RS.EOF Then
+            .txtNoPerjanjian.SetText RS!noperjanjian
+            .txtNoMR.SetText RS!nocm
+            .txtNama.SetText RS!namapasien
+            .txtNamaKeluarga.SetText RS!namakeluarga
+            .txtTglInput.SetText Format(RS!tglinput, "dd-MM-yyyy HH:mm")
+            .txtTglPerjanjian.SetText Format(RS!tglperjanjian, "dd-MM-yyyy")
+            .txtJamKunjungan.SetText Format(RS!tglperjanjian, "HH:mm")
+            .txtNamaRuangan.SetText RS!namaruangan
+            .txtNamaDokter.SetText RS!namalengkap
+            .txtKeterangan.SetText RS!keterangan
+            .txtPrintTglBKM.SetText "Jakarta, " & Format(Now(), "dd MMM yyyy")
+            .txtPetugasCetak.SetText strIdPegawai
+            
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "Perjanjian")
+                Report.SelectPrinter "winspool", strPrinter, "Ne00:"
+                Report.PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        End If
+    End With
+Exit Sub
+errLoad:
+End Sub
+
 

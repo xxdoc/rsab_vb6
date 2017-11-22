@@ -275,6 +275,19 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "s@epic"
             
+            Case "cetak-suratPerjanjianbynoreg"
+                Param2 = Split(arrItem(1), "=")
+                Param3 = Split(arrItem(2), "=")
+                Param4 = Split(arrItem(3), "=")
+                lblStatus.Caption = "Cetak Surat Perjanjian"
+                Call frmCRCetakPasienPerjanjian.CetakPerjanjianbynoreg(Param2(1), Param3(1), Param4(1))
+                
+'                Call frmCetakPendaftaran.cetakBuktiLayananNorec_apd               (Param2(1), Param3(1), Param4(1), Param5(1))
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-buktilayanan-norec_apd=1&norec=norec|norec|norec&strIdPegawai=320263&strIdRuangan=-&view=true
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "s@epic"
+            
             Case "RIS"
                 Dim lngReturnCode As Long
                 Dim strShellCommand As String
@@ -372,15 +385,15 @@ errLoad:
 End Sub
 
 
-Private Sub cetak_KartuPasien(strNoCM As String)
+Private Sub cetak_KartuPasien(strNocm As String)
     On Error GoTo errLoad
     Dim prn As Printer
     Dim strPrinter As String
     
     strSQL = "SELECT ps.namapasien || ' ( ' ||  jk.reportdisplay || ' ) ' as namapasien ,ps.nocm, ps.tgllahir," & _
-            "ps.namaayah,ps.namasuamiistri ,ps.objectjeniskelaminfk,ps.objectstatusperkawinanfk " & _
+            "ps.namaayah, case when ps.namakeluarga is null then '-' else ps.namakeluarga end as namakeluarga,ps.namasuamiistri ,ps.objectjeniskelaminfk,ps.objectstatusperkawinanfk " & _
             " from pasien_m ps INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
-            " where ps.id=" & strNoCM & " "
+            " where ps.id=" & strNocm & " "
       
      ReadRs strSQL
       
@@ -403,15 +416,15 @@ Private Sub cetak_KartuPasien(strNoCM As String)
     
     If IsNull(RS!objectjeniskelaminfk) <> 1 Then
         If RS!objectstatusperkawinanfk = 2 Then 'kawin
-            ayah = IIf(IsNull(RS!namasuamiistri) = True, "", RS!namasuamiistri)
+            ayah = IIf(IsNull(RS!namakeluarga) = True, "", RS!namakeluarga)
         Else
-            ayah = IIf(IsNull(RS!namaayah) = True, "", RS!namaayah)
+            ayah = IIf(IsNull(RS!namakeluarga) = True, "", RS!namakeluarga)
         End If
     Else
         If RS!objectstatusperkawinanfk = 2 Then 'kawin
             ayah = ""
         Else
-            ayah = IIf(IsNull(RS!namaayah) = True, "", RS!namaayah)
+            ayah = IIf(IsNull(RS!namakeluarga) = True, "", RS!namakeluarga)
         End If
     End If
     If ayah <> "" Then
