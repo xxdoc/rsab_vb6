@@ -40,3 +40,7 @@ Private Sub Section11_Format(ByVal pFormattingInfo As Object)
 '    txtTerbilang.SetText "# " & TerbilangDesimal(Replace(txtPembulatan.Text, ".", ",")) & " #"
     
 End Sub
+
+Private Sub Section6_Format(ByVal pFormattingInfo As Object)
+
+End Sub
