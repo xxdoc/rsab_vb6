@@ -275,12 +275,12 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "s@epic"
             
-            Case "cetak-suratPerjanjianbynoreg"
+            Case "cetak-suratPerjanjian-bypasienID"
                 Param2 = Split(arrItem(1), "=")
                 Param3 = Split(arrItem(2), "=")
                 Param4 = Split(arrItem(3), "=")
                 lblStatus.Caption = "Cetak Surat Perjanjian"
-                Call frmCRCetakPasienPerjanjian.CetakPerjanjianbynoreg(Param2(1), Param3(1), Param4(1))
+                Call frmCRCetakPasienPerjanjian.CetakPerjanjianbypasienID(Param2(1), Param3(1), Param4(1))
                 
 '                Call frmCetakPendaftaran.cetakBuktiLayananNorec_apd               (Param2(1), Param3(1), Param4(1), Param5(1))
                 'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-buktilayanan-norec_apd=1&norec=norec|norec|norec&strIdPegawai=320263&strIdRuangan=-&view=true

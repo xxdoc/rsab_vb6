@@ -566,9 +566,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
 
 
@@ -684,9 +684,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
 
 
@@ -804,9 +804,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -1154,9 +1154,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             .txtlTglLahir.SetText Format(RS!tgllahir, "yyyy/MM/dd")
              
@@ -1272,9 +1272,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "Umur -"
+                .txtumur.SetText "Umur -"
             Else
-                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
+                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd MMM yyyy")
                 .txtJamMasuk.SetText Format(RS!jamregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd MMM yyyy"))
@@ -1368,7 +1368,7 @@ boolLembarPersetujuan = False
              adoReport.ActiveConnection = CN_String
              
              strSQL = "SELECT distinct pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when ps.namakeluarga is null then '-' else ps.namakeluarga end) as namakeluarga," & _
-                       " upper(ps.namaayah) as namaayah,upper(case when ps.tempatlahir is null then '-' else ps.tempatlahir end || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) || ' Jam: ' || TO_CHAR(ps.jamlahir, 'HH24:MI') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
+                       " upper(ps.namaayah) as namaayah,upper(case when ps.tempatlahir is null then '-' else ps.tempatlahir || ', ' end) as tempatlahir,  TO_CHAR(ps.tgllahir, 'dd Month YYYY')as tgllahir, ' Jam: ' || TO_CHAR(ps.jamlahir, 'HH24:MI') as jamlahir,jk.jeniskelamin, ps.noidentitas, " & _
                        " ag.agama, pk.pekerjaan, kb.name AS kebangsaan,upper(al.alamatlengkap) as alamatlengkap,upper(al.kotakabupaten) as kotakabupaten, " & _
                        " al.kecamatan, al.namadesakelurahan, al.mobilephone1,sp.statusperkawinan, " & _
                        " (kmr.namakamar || ' - ' || kls.namakelas ) as namakamar,(tt.reportdisplay || ' - ' ||tt.nomorbed ) AS nomorbed, " & _
@@ -1392,6 +1392,32 @@ boolLembarPersetujuan = False
                        " INNER JOIN kelas_m kls on apdp.objectkelasfk=kls.id " & _
                        " left JOIN detaildiagnosapasien_t as ddp on ddp.noregistrasifk=apdp.norec left join diagnosa_m as dg on dg.id=ddp.objectdiagnosafk left JOIN jenisdiagnosa_m as jd on jd.id=ddp.objectjenisdiagnosafk " & _
                        " where apdp.norec ='" & strNorec & "' and jd.id=5 "
+             
+'             strSQL = "SELECT distinct pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when ps.namakeluarga is null then '-' else ps.namakeluarga end) as namakeluarga," & _
+'                       " upper(ps.namaayah) as namaayah,upper(case when ps.tempatlahir is null then '-' else ps.tempatlahir end || ', ' || TO_CHAR(ps.tgllahir, 'dd Month YYYY')) || ' Jam: ' || TO_CHAR(ps.jamlahir, 'HH24:MI') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
+'                       " ag.agama, pk.pekerjaan, kb.name AS kebangsaan,upper(al.alamatlengkap) as alamatlengkap,upper(al.kotakabupaten) as kotakabupaten, " & _
+'                       " al.kecamatan, al.namadesakelurahan, al.mobilephone1,sp.statusperkawinan, " & _
+'                       " (kmr.namakamar || ' - ' || kls.namakelas ) as namakamar,(tt.reportdisplay || ' - ' ||tt.nomorbed ) AS nomorbed, " & _
+'                       " TO_CHAR(pd.tglregistrasi, 'dd Mon YYYY') as tglregistrasi,TO_CHAR(pd.tglregistrasi, 'HH24:MI') as jamregistrasi, TO_CHAR(pd.tglpulang, 'DD Mon YYYY') as tglpulang,TO_CHAR(pd.tglpulang, 'HH24:MI') as jampulang, TO_CHAR(pd.tglpulang, 'dd Mon YYYY') as tglpulang, ps.namaibu, '-' as ttlSuami, " & _
+'                       " COALESCE(ps.namasuamiistri,'-') as namasuamiistri, pg.namalengkap as namadokterpj, kp.kelompokpasien, " & _
+'                       " '-' as alamatPekerjaan,'-' as keldihubungi  ,'-' as Hubungan , '-' as alamatKeluarga, " & _
+'                       " '-' as NohpKeluarga,ps.notelepon, case when ddp.keterangan is null then ' - ' else ddp.keterangan end as namadiagnosa" & _
+'                       " FROM pasiendaftar_t pd  " & _
+'                       " INNER JOIN antrianpasiendiperiksa_t apdp on pd.norec=apdp.noregistrasifk  " & _
+'                       " INNER JOIN pasien_m ps on pd.nocmfk=ps.id " & _
+'                       " INNER JOIN jeniskelamin_m jk on jk.id=ps.objectjeniskelaminfk " & _
+'                       " INNER JOIN alamat_m al on ps.id=al.nocmfk  INNER JOIN agama_m ag on ps.objectagamafk=ag.id " & _
+'                       " left JOIN pekerjaan_m pk on pk.id=ps.objectpekerjaanfk " & _
+'                       " LEFT JOIN kebangsaan_m kb on kb.id=ps.objectkebangsaanfk " & _
+'                       " left JOIN statusperkawinan_m sp on sp.id=ps.objectstatusperkawinanfk " & _
+'                       " INNER JOIN ruangan_m ru on apdp.objectruanganfk=ru.id " & _
+'                       " left JOIN kamar_m kmr on apdp.objectkamarfk=kmr.id " & _
+'                       " left JOIN tempattidur_m tt on apdp.nobed=tt.id " & _
+'                       " LEFT JOIN pegawai_m pg on pd.objectpegawaifk=pg.id " & _
+'                       " INNER JOIN kelompokpasien_m kp on pd.objectkelompokpasienlastfk=kp.id " & _
+'                       " INNER JOIN kelas_m kls on apdp.objectkelasfk=kls.id " & _
+'                       " left JOIN detaildiagnosapasien_t as ddp on ddp.noregistrasifk=apdp.norec left join diagnosa_m as dg on dg.id=ddp.objectdiagnosafk left JOIN jenisdiagnosa_m as jd on jd.id=ddp.objectjenisdiagnosafk " & _
+'                       " where apdp.norec ='" & strNorec & "' and jd.id=5 "
             
 '            strSQL = "SELECT pd.noregistrasi, ps.nocm, upper(ps.namapasien) as namapasien, upper(case when ps.namakeluarga is null then '-' else ps.namakeluarga end) as namakeluarga," & _
 '                       " upper(ps.namaayah) as namaayah,upper(ps.tempatlahir || ', ' || TO_CHAR(ps.tgllahir, 'DD Month YYYY')) || ' Jam: ' || TO_CHAR(ps.tgllahir, 'HH24:MI') as tempatlahir,ps.tgllahir,jk.jeniskelamin, ps.noidentitas, " & _
@@ -1426,9 +1452,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "Umur -"
+                .txtumur.SetText "Umur -"
             Else
-                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
+                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd MMM yyyy")
                 .txtJamMasuk.SetText Format(RS!jamregistrasi, "hh:mm:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd MMM yyyy"))
@@ -1448,7 +1474,8 @@ boolLembarPersetujuan = False
             .usNoTlpn.SetUnboundFieldSource ("{ado.notelepon}")
             
             .usTL.SetUnboundFieldSource ("{ado.tempatlahir}")
-'            .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
+            .usTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
+            .usJamLahir.SetUnboundFieldSource ("{ado.jamlahir}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             
             .usStatusPerkawinan.SetUnboundFieldSource ("{ado.statusperkawinan}")
@@ -1655,9 +1682,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -1790,9 +1817,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -1925,9 +1952,9 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")

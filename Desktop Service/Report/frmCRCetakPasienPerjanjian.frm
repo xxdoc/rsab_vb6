@@ -201,7 +201,7 @@ Exit Sub
 errLoad:
 End Sub
 
-Public Sub CetakPerjanjianbynoreg(strNoReg As String, strIdPegawai As String, view As String)
+Public Sub CetakPerjanjianbypasienID(strpasienID As String, strIdPegawai As String, view As String)
 On Error GoTo errLoad
 
 Dim strKet As Boolean
@@ -218,7 +218,7 @@ Dim strKet As Boolean
             "inner join pasiendaftar_t as pd on pd.nocmfk= ps.id " & _
             "inner join pegawai_m as pg on pg.id = pp.objectdokterfk " & _
             "inner join ruangan_m as ru on ru.id = pP.objectruanganfk " & _
-            "where pd.noregistrasi='" & strNoReg & "'"
+            "where ps.id='" & strpasienID & "'"
     
     With Report
         If Not RS.EOF Then
