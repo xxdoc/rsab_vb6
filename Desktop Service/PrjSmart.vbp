@@ -157,6 +157,7 @@ Form=Form\frmLaporanJurnalBalikDetail.frm
 Designer=Report\crLaporanJurnalPenjamin2.Dsr
 Form=Form\frmLaporanJurnalPenjamin.frm
 Designer=Report\crLaporanJurnalDetail.Dsr
+Designer=Report\crLaporanJurnalPenjamin.Dsr
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
