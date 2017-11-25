@@ -197,18 +197,18 @@ Set Report = New crRincianBiayaPelayanan
             "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk=402611 "
     
-    ReadRs3 "select ppp.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
-            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
-            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
-            "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
-            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611 and ppp.objectjenispetugaspefk=4 "
-      
-'      ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
+'    ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
 '            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
 '            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
+'            "left JOIN pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
 '            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
-'            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611  "
+'            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611 and ppp.objectjenispetugaspefk=4 "
+      
+      ReadRs3 "select ppd.hargadiscount,ppd.hargajual,ppd.komponenhargafk from pasiendaftar_t pd " & _
+            "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
+            "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
+            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec " & _
+            "where pd.noregistrasi='" & strNoregistrasi & "' and pp.produkfk<>402611  "
     
     Dim TotalDiskonMedis  As Double
     Dim TotalDiskonUmum  As Double
