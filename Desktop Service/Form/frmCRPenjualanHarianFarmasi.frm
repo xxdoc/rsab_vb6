@@ -234,3 +234,89 @@ Set Report = New crPenjualanHarianFarmasi
 Exit Sub
 errLoad:
 End Sub
+Public Sub CetakPenjualanHarianFarmasiBebas(namaPrinted As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompokPasien As String, idPegawai As String, view As String)
+'On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmCRPenjualanHarianFarmasi = Nothing
+Dim adocmd As New ADODB.Command
+    Dim str1 As String
+    Dim str2 As String
+    Dim str3 As String
+    
+    If idPegawai <> "" Then
+        str1 = "and sp.objectpegawaipenanggungjawabfk=" & idPegawai & " "
+    End If
+    If idRuangan <> "" Then
+        str2 = " and ru.id=" & idRuangan & " "
+    End If
+'    If idKelompokPasien <> "" Then
+'        str3 = " and kp.id=" & idKelompokPasien & " "
+'    End If
+    
+Set Report = New crPenjualanHarianFarmasi
+    strSQL = "select sp.tglstruk, sp.nostruk,  upper(ps.namapasien) as namapasien, '-' as noregistrasi, " & _
+            "case when jk.jeniskelamin = 'Laki-laki' then 'L' else 'P' end as jeniskelamin, 'Umum/Sendiri' as kelompokpasien, pg.namalengkap, " & _
+            "'-' as namaruangan,ru.namaruangan as ruanganapotik, spd.qtyproduk as jumlah, spd.hargasatuan,spd.resepke,  (spd.qtyproduk)*(spd.hargasatuan) as subtotal, " & _
+            "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa, " & _
+            "0 as ppn, (spd.qtyproduk*spd.hargasatuan)-0-0-0 as total, case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, " & _
+             "case when pg2.namalengkap is null then pg3.namalengkap else pg2.namalengkap end  as kasir " & _
+             "from strukpelayanan_t as sp " & _
+            "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
+            "inner JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
+            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
+            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
+            str1 & _
+            str2 & _
+            str3 & " order by sp.nostruk"
+   
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Report
+        .database.AddADOCommand CN_String, adocmd
+            .Text4.SetText "LAPORAN PENJUALAN OBAT BEBAS"
+            .txtPrinted.SetText namaPrinted
+            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
+            .udtTglResep.SetUnboundFieldSource ("{ado.tglstruk}")
+            .usNoResep.SetUnboundFieldSource ("{ado.nostruk}")
+            .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+            .usJumlahResep.SetUnboundFieldSource ("{ado.jumlah}")
+            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
+            .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
+            .ucPPN.SetUnboundFieldSource ("{ado.ppn}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
+            .usKasir.SetUnboundFieldSource ("{ado.kasir}")
+            .usrke.SetUnboundFieldSource ("{ado.resepke}")
+            .usRuanganFarmasi.SetUnboundFieldSource ("{ado.ruanganapotik}")
+            
+            
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenjualanHarianFarmasi")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+End Sub

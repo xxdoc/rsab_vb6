@@ -168,38 +168,31 @@ Dim adocmd As New ADODB.Command
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' AND sp.statusenabled is null and sp.totalprekanan <> 0"
     
+    strFilter = strFilter & " AND ru.objectdepartemenfk  in(18,28,24) "
+    strFilter2 = strFilter2 & " AND ru.objectdepartemenfk in(18,28,24)"
+    
     If idDepartemen <> "" Then
-        strFilter = strFilter & " AND ru.objectdepartemenfk  = '" & idDepartemen & "'"
-        strFilter2 = strFilter2 & " AND ru.objectdepartemenfk =   '" & idDepartemen & "'"
+'        strFilter = strFilter & " AND ru.objectdepartemenfk  = '" & idDepartemen & "'"
+'        strFilter2 = strFilter2 & " AND ru.objectdepartemenfk =   '" & idDepartemen & "'"
     End If
-'    If idDepartemen <> "" Then
-'        If idDepartemen = 18 Then
-'            strFilter = strFilter & " AND ru.objectdepartemenfk <> 16"
-'            strFilter2 = strFilter2 & " AND ru.objectdepartemenfk <> 16"
-'        Else
-'            If idDepartemen <> "" Then
-'                strFilter = strFilter & " AND ru.objectdepartemenfk = '" & idDepartemen & "' "
-'                strFilter2 = strFilter2 & " AND ru.objectdepartemenfk = '" & idDepartemen & "' "
-'            End If
-'        End If
-'    End If
-    'If idDepartemen <> "" Then strFilter = strFilter & " And ru.objectdepartemenfk = " & idDepartemen & ""
+    
+    
+
     If idRuangan <> "" Then strFilter = strFilter & " and pd.objectruanganlastfk=" & idRuangan & ""
     
     strFilter = strFilter & " GROUP BY pd.tglregistrasi, pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
     strFilter2 = strFilter2 & " GROUP BY pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
-    'strFilter3 = strFilter3 & " GROUP BY pd.tglregistrasi, pp.hargadiscount, pp.jumlah, ru.namaruangan "
     
 Set Report = New crLaporanJurnalBalikDetail
 
     strSQL = "select tgl,tglregistrasi,noregistrasi,nocm,namapasien,idruangan,namaruangan,iddepartemen," & _
             "sum(umum) as umum,sum(perusahaan) as perusahaan,sum(bpjs) as bpjs, sum(diskon) as diskon,sum(total) as total from ( " & _
             "select to_char(pd.tglregistrasi, 'YYYY-MM-DD') AS tgl,pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
-            "sum(CASE WHEN kp.id = 1 then sp.totalprekanan else 0 end) as umum, " & _
+            "sum(CASE WHEN kp.id in (1,6) then sp.totalprekanan else 0 end) as umum, " & _
             "sum(CASE WHEN kp.id in (3,5) then sp.totalprekanan else 0 end) as perusahaan, " & _
             "sum(CASE WHEN kp.id in (2,4) then sp.totalprekanan else 0 end) as bpjs, 0 as diskon, " & _
             "sum(sp.totalprekanan) As total " & _
-            "from Pasiendaftar_t as pd inner JOIN antrianpasiendiperiksa_t as apd on pd.norec=apd.noregistrasifk " & _
+            "from Pasiendaftar_t as pd  " & _
             "LEFT JOIN strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
             "left join strukpelayananpenjamin_t as spp on spp.nostrukfk = sp.norec " & _
             "LEFT JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
@@ -216,7 +209,7 @@ Set Report = New crLaporanJurnalBalikDetail
             "sum(case when pp.hargadiscount * pp.jumlah is null then 0 else pp.hargadiscount * pp.jumlah end) As diskon, 0 as total " & _
             "from pasiendaftar_t as pd inner join antrianpasiendiperiksa_t as adp on adp.noregistrasifk = pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk = adp.norec left join pasien_m as ps on ps.id=pd.nocmfk left join ruangan_m as ru on ru.id=pd.objectruanganlastfk left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-            strFilter2 & ")x group by x.tgl,x.tglregistrasi,x.noregistrasi,x.nocm,x.namapasien,x.idruangan,x.namaruangan,x.idDepartemen "
+            strFilter2 & ")x  group by x.tgl,x.tglregistrasi,x.noregistrasi,x.nocm,x.namapasien,x.idruangan,x.namaruangan,x.idDepartemen "
             
 
     adocmd.CommandText = strSQL
@@ -230,15 +223,15 @@ Set Report = New crLaporanJurnalBalikDetail
 '            .txtTglDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
 '            '.ucDebet.SetUnboundFieldSource ("{ado.tunai}")
 '            '.ucKredit.SetUnboundFieldSource ("{ado.nontunai}")
-            '.ustgl.SetUnboundFieldSource ("{ado.tgl}")
+            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usRegMR.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             
             .ucPasien.SetUnboundFieldSource ("{ado.umum}")
             .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
-            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
+            .ucBPJS.SetUnboundFieldSource ("{ado.bpjs}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
             

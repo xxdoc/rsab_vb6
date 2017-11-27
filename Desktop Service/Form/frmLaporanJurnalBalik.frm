@@ -159,13 +159,14 @@ Dim adocmd As New ADODB.Command
 
     strFilter = ""
     
-    strFilter = " where tgl BETWEEN '" & _
-    Format(tglAwal, "yyyy-MM-dd") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd") & "'"
+    strFilter = " where x.tglregistrasi BETWEEN '" & _
+    Format(tglAwal, "yyyy-MM-dd 00:00") & "' AND '" & _
+    Format(tglAkhir, "yyyy-MM-dd 23:59") & "'"
     
-       If idDepartemen <> "" Then
-           strFilter = strFilter & " AND departemen = '" & idDepartemen & "' "
-       End If
+    strFilter = strFilter & " AND depart in (18,28,24) "
+'       If idDepartemen <> "" Then
+'           strFilter = strFilter & " AND depart = '" & idDepartemen & "' "
+'       End If
     
     'strFilter = strFilter & " GROUP BY pd.tglregistrasi"
     
@@ -174,10 +175,10 @@ Set Report = New crLaporanJurnalBalik2
 '    strSQL = "select tgl, umum, perusahaan,bpjs,diskon,total,departemen,ruangandiskon,keterangan from v_jurnal_balik " & _
 '            strFilter
             
-    strSQL = " SELECT v_jurnal_balik_1.tgl, v_jurnal_balik_1.umum, v_jurnal_balik_1.perusahaan, " & _
+    'strSQL = " SELECT v_jurnal_balik_1.tgl, v_jurnal_balik_1.umum, v_jurnal_balik_1.perusahaan, " & _
              " v_jurnal_balik_1.bpjs, v_jurnal_balik_1.diskon, v_jurnal_balik_1.total, v_jurnal_balik_1.departemen, " & _
              " v_jurnal_balik_1.ruangandiskon, v_jurnal_balik_1.keterangan" & _
-             " From v_jurnal_balik_1 " & _
+             " From v_jurnal_balik_1 " & strFilter & "" & _
              " Union All " & _
              " SELECT v_jurnal_balik_2.tgl, v_jurnal_balik_2.umum, v_jurnal_balik_2.perusahaan, " & _
              " v_jurnal_balik_2.bpjs, v_jurnal_balik_2.diskon,v_jurnal_balik_2.total, " & _
@@ -185,7 +186,25 @@ Set Report = New crLaporanJurnalBalik2
              " v_jurnal_balik_2.keterangan" & _
              " FROM v_jurnal_balik_2  " & _
                strFilter
-
+    strSQL = "SELECT x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
+            "SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl,  " & _
+            " sp.totalprekanan AS total,CASE WHEN kp.id in (2, 4) THEN 'Piutang BPJS' " & _
+            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian' Else '-' end AS keterangan  " & _
+            "FROM pasiendaftar_t pd LEFT JOIN strukpelayanan_t sp ON sp.noregistrasifk = pd.norec  " & _
+            "LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk  " & _
+            "LEFT JOIN rekanan_m r ON r.id = pd.objectrekananfk LEFT JOIN jenisrekanan_m jr ON jr.id = r.objectjenisrekananfk  " & _
+            "LEFT JOIN kelompokpasien_m kp ON kp.id = pd.objectkelompokpasienlastfk Where sp.totalprekanan Is Not Null  and sp.statusenabled is null " & _
+            " Union All " & _
+            " SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl, " & _
+            " CASE WHEN ((pp.hargadiscount * pp.jumlah) IS NULL) THEN (0) ELSE (pp.hargadiscount * pp.jumlah) END AS  total, " & _
+            " ('Biaya Subsidi Fasilitas Kesehatan '::text || (ru.namaruangan)::text) AS keterangan " & _
+            " FROM pasiendaftar_t pd JOIN antrianpasiendiperiksa_t adp ON adp.noregistrasifk = pd.norec " & _
+            " LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk " & _
+            " LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk where pp.hargadiscount is not null and pp.hargadiscount > 0 " & _
+            ") x " & _
+            " " & strFilter & _
+            "GROUP BY x.tgl,  x.keterangan,x.tglregistrasi ORDER BY x.tgl,x.keterangan"
+    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -194,41 +213,30 @@ Set Report = New crLaporanJurnalBalik2
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
-            .ucUmum.SetUnboundFieldSource ("{ado.umum}")
-            .ustgl.SetUnboundFieldSource ("{ado.tgl}")
-            .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
-            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
-            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
-            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+'            .ucUmum.SetUnboundFieldSource ("{ado.umum}")
+            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
+'            .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
+'            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.total}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.keterangan}")
-''            .usRuanganDiskon.SetUnboundFieldSource ("{ado.ruangandiskon}")
-'            .txtTglDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
-''            .ucDebet.SetUnboundFieldSource ("{ado.tunai}")
-''            .ucKredit.SetUnboundFieldSource ("{ado.nontunai}")
-'
-            '.udPeriode.SetUnboundFieldSource RS2!tgl
-            '.usTanggal.SetUnboundFieldSource Format(tglAwal, "dd/MM/yyyy")
-            '.SetUnboundFieldSource Format(RS2!tgl, "MM-yyyy")
-            '.usTglDeskripsi.SetUnboundFieldSource Format(tglAwal, "dd/MM/yyyy")
-
-'            .ucDetailDiskon.SetUnboundFieldSource ("{ado.detaildiskon}"
 
            
             
-            If idDepartemen = 16 Then
-                .txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " + ("{ado.tgl}")
-                .txtKeterangan1.SetText "Pendapatan R.Inap"
-                .txtKeterangan2.SetText "Pendapatan R.Inap"
-                .txtKeterangan3.SetText "Pendapatan R.Inap"
-                .txtKeterangan4.SetText "Pendapatan R.Inap"
-                .txtKeterangan5.SetText "Pendapatan R.Inap"
+            If idDepartemen = "16" Then
+'                .txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " + ("{ado.tgl}")
+'                .txtKeterangan1.SetText "Pendapatan R.Inap"
+'                .txtKeterangan2.SetText "Pendapatan R.Inap"
+'                .txtKeterangan3.SetText "Pendapatan R.Inap"
+'                .txtKeterangan4.SetText "Pendapatan R.Inap"
+'                .txtKeterangan5.SetText "Pendapatan R.Inap"
             Else
-                .txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " + ("{ado.tgl}")
-                .txtKeterangan1.SetText "Pendapatan R.Jalan"
-                .txtKeterangan2.SetText "Pendapatan R.Jalan"
-                .txtKeterangan3.SetText "Pendapatan R.Jalan"
-                .txtKeterangan4.SetText "Pendapatan R.Jalan"
-                .txtKeterangan5.SetText "Pendapatan R.Jalan"
+'                .txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " + ("{ado.tgl}")
+'                .txtKeterangan1.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan2.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan3.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan4.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan5.SetText "Pendapatan R.Jalan"
             End If
             If view = "false" Then
                 Dim strPrinter As String
