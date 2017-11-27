@@ -144,48 +144,66 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRLaporanPendapatanInap = Nothing
+    Set frmCrRincianPendapatanHarianPerKelas = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, strNoReg, idDepartemen As String, idRuangan As String, idKelas As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRLaporanPendapatanInap = Nothing
+Set frmCrRincianPendapatanHarianPerKelas = Nothing
 Dim adocmd As New ADODB.Command
 
-    Dim str1 As String
+    Dim strarr() As String
+    Dim strReg, noreg As String
+    Dim i As Integer
+    
+    If strNoReg <> "" Then
+        strarr = Split(strNoReg, "|")
+        For i = 0 To UBound(strarr)
+           noreg = noreg + "'" & strarr(i) & "',"
+        Next
+        noreg = Left(noreg, Len(noreg) - 1)
+        strReg = "and pd.noregistrasi  in (" & noreg & ") "
+    End If
+    Dim str1, str2, str3 As String
 
     
     If idDepartemen <> "" Then
         str1 = " and dp.id=" & idDepartemen & " "
     End If
+    If idRuangan <> "" Then
+        str2 = " and ru.id=" & idRuangan & " "
+    End If
+    If idKelas <> "" Then
+        str3 = " and kls.id=" & idKelas & " "
+    End If
     
-Set Report = New crLaporanPendapatanInap
+Set Report = New crRncianPendapatanHarianPerkelas
     strSQL = " SELECT pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas AS namaruangan, " & _
              " pro.namaproduk, pp.hargadiscount, kls.namakelas, case when jp.id in (99,25) then sum( pp.jumlah * pp.hargajual) else 0 end as Akomodasi, " & _
              " case when jp.id in (99,25) then sum(pp.jumlah) else 0 end as VolAkomodasi, case when jp.id=101 then sum( pp.jumlah * pp.hargajual)else 0 end as Visit, " & _
              " case when jp.id=101 then sum(pp.jumlah)else 0 end as VolVisit, " & _
              " case when jp.id=27666 then sum( pp.jumlah * pp.hargajual)else 0 end as SewaAlat, " & _
-             " case when jp.id=27666 then sum( pp.jumlah)else 0 end as volSewaAlat, " & _
-             " case when jp.id =102 then sum( pp.jumlah * pp.hargajual) else 0 end AS jenisproduk, " & _
-             " case when jp.id =102 then sum( pp.jumlah) else 0 end AS voljenisproduk " & _
-             " From pasiendaftar_t AS pd " & _
-             " LEFT JOIN antrianpasiendiperiksa_t AS apd ON apd.noregistrasifk = pd.norec " & _
+             " case when jp.id=27666 then sum( pp.jumlah)else 0 end as VolSewaAlat, " & _
+             " case when jp.id =102 then sum( pp.jumlah * pp.hargajual) else 0 end AS Tindakan, " & _
+             " case when jp.id =102 then sum( pp.jumlah) else 0 end AS VolTindakan, " & _
+             " case when jp.id =100 then sum( pp.jumlah * pp.hargajual) else 0 end AS Konsultasi, " & _
+             " case when jp.id =100 then sum( pp.jumlah) else 0 end AS VolKonsultasi " & _
+             " From pasiendaftar_t AS pd LEFT JOIN antrianpasiendiperiksa_t AS apd ON apd.noregistrasifk = pd.norec " & _
              " LEFT JOIN pelayananpasien_t AS pp ON pp.noregistrasifk = apd.norec " & _
              " INNER JOIN produk_m AS pro ON pro.id = pp.produkfk " & _
              " LEFT JOIN kelas_m AS kls ON kls.id = apd.objectkelasfk " & _
-             " LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk " & _
-             " LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk " & _
+             " LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk  LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk " & _
              " LEFT JOIN kelompokproduk_m AS kp ON kp.id = jp.objectkelompokprodukfk " & _
              " LEFT JOIN ruangan_m AS ru ON ru.id = apd.objectruanganfk " & _
-             " LEFT JOIN departemen_m AS dp ON dp.id = ru.objectdepartemenfk " & _
-             " INNER JOIN pasien_m ON pd.nocmfk = pasien_m.id " & _
-             " Where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND " & _
-             " jp.id IN (25, 99, 101, 102, 27666) " & _
-             " GROUP BY jp.id,pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi,pp.hargadiscount, " & _
-             " ru.namaruangan || ' ' || kls.namakelas,kls.namakelas, pro.namaproduk " & _
+             " LEFT JOIN departemen_m AS dp ON dp.id = ru.objectdepartemenfk INNER JOIN pasien_m ON pd.nocmfk = pasien_m.id " & _
+             " Where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND jp.id IN (25, 99, 101, 102, 27666) " & _
+            strReg & _
             str1 & _
+            str2 & _
+            str3 & _
+             " GROUP BY jp.id,pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi,pp.hargadiscount, ru.namaruangan || ' ' || kls.namakelas,kls.namakelas, pro.namaproduk " & _
             " ORDER BY pd.noregistrasi ASC "
 
             
@@ -196,22 +214,22 @@ Set Report = New crLaporanPendapatanInap
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaPrinted
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoMR.SetUnboundFieldSource ("{ado.Nocm}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
+            '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .unVolAkomodasi.SetUnboundFieldSource ("{ado.volakomodasi}")
-            .ucAkomodasi.SetUnboundFieldSource ("{ado.akomodasi}")
-            .unVolVisite.SetUnboundFieldSource ("{ado.volvisite}")
-            .ucVisite.SetUnboundFieldSource ("{ado.visite}")
-            .unVolKonsultasi.SetUnboundFieldSource ("{ado.volkonsultasi}")
-            .ucKonsultasi.SetUnboundFieldSource ("{ado.konsultasi}")
-            .unVolTindakan.SetUnboundFieldSource ("{ado.voltindakan}")
-            .ucTindakan.SetUnboundFieldSource ("{ado.tindakan}")
-            .unVolSewaAlat.SetUnboundFieldSource ("{ado.volsewaalat}")
-            .ucSewaAlat.SetUnboundFieldSource ("{ado.sewaalat}")
-            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
+            .unVolAkomodasi.SetUnboundFieldSource ("{ado.VolAkomodasi}")
+            .ucAkomodasi.SetUnboundFieldSource ("{ado.Akomodasi}")
+            .unVolVisite.SetUnboundFieldSource ("{ado.VolVisit}")
+            .ucVisite.SetUnboundFieldSource ("{ado.Visit}")
+            .unVolKonsultasi.SetUnboundFieldSource ("{ado.VolKonsultasi}")
+            .ucKonsultasi.SetUnboundFieldSource ("{ado.Konsultasi}")
+            .unVolTindakan.SetUnboundFieldSource ("{ado.VolTindakan}")
+            .ucTindakan.SetUnboundFieldSource ("{ado.Tindakan}")
+            .unVolSewaAlat.SetUnboundFieldSource ("{ado.VolSewaAlat}")
+            .ucSewaAlat.SetUnboundFieldSource ("{ado.SewaAlat}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.hargadiscount}")
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
 
             If idDepartemen <> "" Then
