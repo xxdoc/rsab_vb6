@@ -147,17 +147,20 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCrRekapPendapatanInap = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCrRekapPendapatanInap = Nothing
 Dim adocmd As New ADODB.Command
 
-    Dim str1 As String
+    Dim str1, str2 As String
 
     If idDepartemen <> "" Then
         str1 = " and dp.id=" & idDepartemen & " "
+    End If
+    If idRuangan <> "" Then
+        str2 = " and ru.id=" & idRuangan & " "
     End If
     
 Set Report = New crRekapPendapatanInap
