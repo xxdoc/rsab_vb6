@@ -180,8 +180,7 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crRncianPendapatanHarianPerkelas
-    strSQL = " SELECT pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas AS namaruangan, " & _
-             " pro.namaproduk, pp.hargadiscount, kls.namakelas, case when jp.id in (99,25) then sum( pp.jumlah * pp.hargajual) else 0 end as Akomodasi, " & _
+    strSQL = " Select x.nocm, x.namapasien, x.noregistrasi, x.namaruangan, x.hargadiscount, x.namakelas, SUM(x.Akomodasi)as Akomodasi, SUM(x.VolAkomodasi) as VolAkomodasi, SUM(x.Visit) as Visit,SUM(x.VolVisit) as VolVisit, SUM(x.SewaAlat) as SewaAlat, SUM(x.VolSewaAlat) as VolSewaAlat,SUM(x.Tindakan) as Tindakan, SUM(x.VolTindakan) as VolTindakan, SUM(x.Konsultasi) as Konsultasi,SUM(x.VolKonsultasi) as VolKonsultasi from (SELECT pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas AS namaruangan, pp.hargadiscount, kls.namakelas, case when jp.id in (99,25) then sum( pp.jumlah * pp.hargajual) else 0 end as Akomodasi, " & _
              " case when jp.id in (99,25) then sum(pp.jumlah) else 0 end as VolAkomodasi, case when jp.id=101 then sum( pp.jumlah * pp.hargajual)else 0 end as Visit, " & _
              " case when jp.id=101 then sum(pp.jumlah)else 0 end as VolVisit, " & _
              " case when jp.id=27666 then sum( pp.jumlah * pp.hargajual)else 0 end as SewaAlat, " & _
@@ -203,8 +202,8 @@ Set Report = New crRncianPendapatanHarianPerkelas
             str1 & _
             str2 & _
             str3 & _
-             " GROUP BY jp.id,pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi,pp.hargadiscount, ru.namaruangan || ' ' || kls.namakelas,kls.namakelas, pro.namaproduk " & _
-            " ORDER BY pd.noregistrasi ASC "
+             " GROUP BY jp.id,pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi,pp.hargadiscount, ru.namaruangan || ' ' || kls.namakelas,kls.namakelas, pro.namaproduk )x" & _
+            " GROUP BY x.nocm, x.namapasien, x.noregistrasi, x.namaruangan, x.hargadiscount, x.namakelas ORDER BY  x.noregistrasi ASC "
 
             
     adocmd.CommandText = strSQL
