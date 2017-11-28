@@ -157,18 +157,15 @@ Form=Form\frmLaporanJurnalBalikDetail.frm
 Designer=Report\crLaporanJurnalPenjamin2.Dsr
 Form=Form\frmLaporanJurnalPenjamin.frm
 Designer=Report\crLaporanJurnalDetail.Dsr
-<<<<<<< HEAD
 Form=Form\frmCrRincianPendapatanHarianPerKelas.frm
 Designer=Report\crRincianPendapatanHarianPerkelas.Dsr
-=======
 Designer=Report\crLaporanJurnalPenjamin.Dsr
->>>>>>> 5277fb269634c7cabccf4e1dac3c80ad7243cca6
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
 ExeName32="DesktopService.exe"
-Path32="Report"
+Path32="C:\"
 Command32=""
 Name="DesktopService"
 HelpContextID="0"
@@ -178,7 +175,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-VersionComments="CR171125.2"
+VersionComments="CR171128.1"
 VersionCompanyName="PT. Jasamedika Saranatama"
 CompilationType=0
 OptimizationType=0

@@ -180,28 +180,22 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crRncianPendapatanHarianPerkelas
-    strSQL = " Select x.nocm, x.namapasien, x.noregistrasi, x.namaruangan, x.hargadiscount, x.namakelas, SUM(x.Akomodasi)as Akomodasi, SUM(x.VolAkomodasi) as VolAkomodasi, SUM(x.Visit) as Visit,SUM(x.VolVisit) as VolVisit, SUM(x.SewaAlat) as SewaAlat, SUM(x.VolSewaAlat) as VolSewaAlat,SUM(x.Tindakan) as Tindakan, SUM(x.VolTindakan) as VolTindakan, SUM(x.Konsultasi) as Konsultasi,SUM(x.VolKonsultasi) as VolKonsultasi from (SELECT pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas AS namaruangan, pp.hargadiscount, kls.namakelas, case when jp.id in (99,25) then sum( pp.jumlah * pp.hargajual) else 0 end as Akomodasi, " & _
-             " case when jp.id in (99,25) then sum(pp.jumlah) else 0 end as VolAkomodasi, case when jp.id=101 then sum( pp.jumlah * pp.hargajual)else 0 end as Visit, " & _
-             " case when jp.id=101 then sum(pp.jumlah)else 0 end as VolVisit, " & _
-             " case when jp.id=27666 then sum( pp.jumlah * pp.hargajual)else 0 end as SewaAlat, " & _
-             " case when jp.id=27666 then sum( pp.jumlah)else 0 end as VolSewaAlat, " & _
-             " case when jp.id =102 then sum( pp.jumlah * pp.hargajual) else 0 end AS Tindakan, " & _
-             " case when jp.id =102 then sum( pp.jumlah) else 0 end AS VolTindakan, " & _
-             " case when jp.id =100 then sum( pp.jumlah * pp.hargajual) else 0 end AS Konsultasi, " & _
-             " case when jp.id =100 then sum( pp.jumlah) else 0 end AS VolKonsultasi " & _
-             " From pasiendaftar_t AS pd LEFT JOIN antrianpasiendiperiksa_t AS apd ON apd.noregistrasifk = pd.norec " & _
-             " LEFT JOIN pelayananpasien_t AS pp ON pp.noregistrasifk = apd.norec " & _
-             " INNER JOIN produk_m AS pro ON pro.id = pp.produkfk " & _
-             " LEFT JOIN kelas_m AS kls ON kls.id = apd.objectkelasfk " & _
-             " LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk  LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk " & _
-             " LEFT JOIN kelompokproduk_m AS kp ON kp.id = jp.objectkelompokprodukfk " & _
-             " LEFT JOIN ruangan_m AS ru ON ru.id = apd.objectruanganfk " & _
-             " LEFT JOIN departemen_m AS dp ON dp.id = ru.objectdepartemenfk INNER JOIN pasien_m ON pd.nocmfk = pasien_m.id " & _
-             " Where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND jp.id IN (25, 99, 101, 102, 27666) " & _
+    strSQL = " SELECT pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi, " & _
+             "ru.namaruangan || ' ' || kls.namakelas AS namaruangan, case when pp.hargadiscount is not null then pp.hargadiscount else 0 end as hargadiscount, kls.namakelas, " & _
+             "case when jp.id in (99,25) and pp.hargajual is not null then   pp.hargajual else 0 end as Akomodasi, case when jp.id in (99,25) and pp.hargajual is not null then pp.jumlah else 0 end as VolAkomodasi, " & _
+             "case when jp.id=101 and pp.hargajual is not null then   pp.hargajual else 0 end as Visit, case when jp.id=101 and pp.hargajual is not null then pp.jumlah else 0 end as VolVisit, " & _
+             "case when jp.id=27666 and pp.hargajual is not null then   pp.hargajual else 0 end as SewaAlat, case when jp.id=27666 and pp.hargajual is not null then  pp.jumlah else 0 end as VolSewaAlat, " & _
+             "case when jp.id =102 and pp.hargajual is not null then   pp.hargajual else 0 end AS Tindakan, case when jp.id =102 and pp.hargajual is not null then  pp.jumlah  else 0 end AS VolTindakan, " & _
+             "case when jp.id =100 and pp.hargajual is not null then   pp.hargajual else 0 end AS Konsultasi, case when jp.id =100 and pp.hargajual is not null then  pp.jumlah   else 0 end AS VolKonsultasi " & _
+             "From pasiendaftar_t AS pd  " & _
+             "LEFT JOIN antrianpasiendiperiksa_t AS apd ON apd.noregistrasifk = pd.norec LEFT JOIN pelayananpasien_t AS pp ON pp.noregistrasifk = apd.norec  INNER JOIN produk_m AS pro ON pro.id = pp.produkfk " & _
+             "LEFT JOIN kelas_m AS kls ON kls.id = apd.objectkelasfk  LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk  LEFT JOIN kelompokproduk_m AS kp ON kp.id = jp.objectkelompokprodukfk " & _
+             "LEFT JOIN ruangan_m AS ru ON ru.id = apd.objectruanganfk  LEFT JOIN departemen_m AS dp ON dp.id = ru.objectdepartemenfk INNER JOIN pasien_m ON pd.nocmfk = pasien_m.id Where pp.tglpelayanan between '" & tglAwal & "' and " & _
+            "'" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND jp.id IN (25, 99, 101, 102, 27666)  " & _
             strReg & _
             str1 & _
             str2 & _
-            str3 & _
+            str3 '& _
              " GROUP BY jp.id,pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi,pp.hargadiscount, ru.namaruangan || ' ' || kls.namakelas,kls.namakelas, pro.namaproduk )x" & _
             " GROUP BY x.nocm, x.namapasien, x.noregistrasi, x.namaruangan, x.hargadiscount, x.namakelas ORDER BY  x.noregistrasi ASC "
 
