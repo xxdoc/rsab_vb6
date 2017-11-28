@@ -165,8 +165,9 @@ Set Report = New crLaporanPendapatanInap
     strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas as namaruangan,pro.namaproduk, " & _
             "case when jp.id in (99,25) then 'Akomodasi' " & _
             "when jp.id=101 then 'Visit' " & _
-            "when jp.id =102 then 'Tindakan' end as jenisproduk, " & _
-            "pp.hargajual, pp.jumlah, pp.hargajual*pp.jumlah as total from pasiendaftar_t as pd " & _
+            "when jp.id =102 then 'Tindakan' when jp.id=27666 then 'Sewa Alat' end as jenisproduk, " & _
+            "case when pp.hargajual is not null then pp.hargajual else 0 end as hargajual, " & _
+            "case when pp.jumlah is not null and pp.hargajual is not null then pp.jumlah else 0 end as jumlah from pasiendaftar_t as pd " & _
             "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "inner join produk_m as pro on pro.id = pp.produkfk " & _
@@ -177,7 +178,7 @@ Set Report = New crLaporanPendapatanInap
             "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-            "and jp.id in (25,99,101,102) " & _
+            "and jp.id in (25,99,101,102,27666) " & _
              str1 & _
              "order by pd.noregistrasi"
 
@@ -192,9 +193,9 @@ Set Report = New crLaporanPendapatanInap
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usKegiatan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .ucHarga.SetUnboundFieldSource ("{ado.hargajual}")
-            .ucJumlah.SetUnboundFieldSource ("{ado.jumlah}")
-'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+            '.ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
 '            .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
             
@@ -202,12 +203,12 @@ Set Report = New crLaporanPendapatanInap
 
             If idDepartemen <> "" Then
                 If idDepartemen = 16 Then
-                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
+                    .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
                 ElseIf idDepartemen = 18 Then
-                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
+                    .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
                 End If
             Else
-                .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
+                .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
             End If
             
             If view = "false" Then
