@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRLaporanPendapatanInap 
+Begin VB.Form frmCrRekapPendapatanInap 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5790
-   Icon            =   "frmLaporanPendapatanInap.frx":0000
+   Icon            =   "frmCrRekapPendapatanInapHarian.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5790
@@ -99,13 +99,13 @@ Begin VB.Form frmCRLaporanPendapatanInap
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRLaporanPendapatanInap"
+Attribute VB_Name = "frmCrRekapPendapatanInap"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanPendapatanInap
+Dim Report As New crRekapPendapatanInap
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,48 +144,39 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRLaporanPendapatanInap = Nothing
+    Set frmCrRekapPendapatanInap = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idKelas As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, strNoReg, idDepartemen As String, idRuangan As String, idKelas As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRLaporanPendapatanInap = Nothing
+Set frmCrRekapPendapatanInap = Nothing
 Dim adocmd As New ADODB.Command
 
-    Dim str1, str2, str3 As String
+    Dim str1 As String
 
     If idDepartemen <> "" Then
         str1 = " and dp.id=" & idDepartemen & " "
     End If
-    If idRuangan <> "" Then
-        str2 = " and ru.id=" & idRuangan & " "
-    End If
-    If idKelas <> "" Then
-        str3 = " and kls.id=" & idKelas & " "
-    End If
     
-Set Report = New crLaporanPendapatanInap
-    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas as namaruangan,pro.namaproduk, " & _
-            "case when jp.id in (99,25) then 'Akomodasi' " & _
-            "when jp.id=101 then 'Visit' " & _
-            "when jp.id =102 then 'Tindakan' when jp.id=27666 then 'Sewa Alat' end as jenisproduk, " & _
-            "case when pp.hargajual is not null then pp.hargajual else 0 end as hargajual, " & _
-            "case when pp.jumlah is not null and pp.hargajual is not null then pp.jumlah else 0 end as jumlah from pasiendaftar_t as pd " & _
-            "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "inner join produk_m as pro on pro.id = pp.produkfk " & _
-            "left join kelas_m as kls on kls.id = apd.objectkelasfk " & _
-            "left join detailjenisproduk_m as djp on djp.id = pro.objectdetailjenisprodukfk " & _
-            "left join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
-            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-            "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-            "and jp.id in (25,99,101,102,27666) " & _
-             str1 & _
-             "order by pd.noregistrasi"
+Set Report = New crRekapPendapatanInap
+    strSQL = " SELECT pd.noregistrasi, " & _
+             "ru.namaruangan, case when pp.hargadiscount is not null then pp.hargadiscount else 0 end as hargadiscount, " & _
+             "case when jp.id in (99,25) and pp.hargajual is not null then   pp.hargajual else 0 end as Akomodasi, case when jp.id in (99,25) and pp.hargajual is not null then pp.jumlah else 0 end as VolAkomodasi, " & _
+             "case when jp.id=101 and pp.hargajual is not null then   pp.hargajual else 0 end as Visit, case when jp.id=101 and pp.hargajual is not null then pp.jumlah else 0 end as VolVisit, " & _
+             "case when jp.id=27666 and pp.hargajual is not null then   pp.hargajual else 0 end as SewaAlat, case when jp.id=27666 and pp.hargajual is not null then  pp.jumlah else 0 end as VolSewaAlat, " & _
+             "case when jp.id =102 and pp.hargajual is not null then   pp.hargajual else 0 end AS Tindakan, case when jp.id =102 and pp.hargajual is not null then  pp.jumlah  else 0 end AS VolTindakan, " & _
+             "case when jp.id =100 and pp.hargajual is not null then   pp.hargajual else 0 end AS Konsultasi, case when jp.id =100 and pp.hargajual is not null then  pp.jumlah   else 0 end AS VolKonsultasi " & _
+             "From pasiendaftar_t AS pd  " & _
+             "LEFT JOIN antrianpasiendiperiksa_t AS apd ON apd.noregistrasifk = pd.norec LEFT JOIN pelayananpasien_t AS pp ON pp.noregistrasifk = apd.norec  INNER JOIN produk_m AS pro ON pro.id = pp.produkfk " & _
+             "LEFT JOIN kelas_m AS kls ON kls.id = apd.objectkelasfk  LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk  LEFT JOIN kelompokproduk_m AS kp ON kp.id = jp.objectkelompokprodukfk " & _
+             "LEFT JOIN ruangan_m AS ru ON ru.id = apd.objectruanganfk  LEFT JOIN departemen_m AS dp ON dp.id = ru.objectdepartemenfk INNER JOIN pasien_m ON pd.nocmfk = pasien_m.id Where pp.tglpelayanan between '" & tglAwal & "' and " & _
+            "'" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND jp.id IN (25, 99, 101, 102, 27666)  " & _
+            strReg & _
+            str1 '& _
+             " GROUP BY jp.id,pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi,pp.hargadiscount, ru.namaruangan || ' ' || kls.namakelas,kls.namakelas, pro.namaproduk )x" & _
+            " GROUP BY x.nocm, x.namapasien, x.noregistrasi, x.namaruangan, x.hargadiscount, x.namakelas ORDER BY  x.noregistrasi ASC "
 
             
     adocmd.CommandText = strSQL
@@ -194,26 +185,29 @@ Set Report = New crLaporanPendapatanInap
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaPrinted
-            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usKegiatan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .ucTarif.SetUnboundFieldSource ("{ado.hargajual}")
-            .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
-            '.ucTotal.SetUnboundFieldSource ("{ado.total}")
-            .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-'            .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .unVolAkomodasi.SetUnboundFieldSource ("{ado.VolAkomodasi}")
+            .ucAkomodasi.SetUnboundFieldSource ("{ado.Akomodasi}")
+            .unVolVisite.SetUnboundFieldSource ("{ado.VolVisit}")
+            .ucVisite.SetUnboundFieldSource ("{ado.Visit}")
+            .unVolKonsultasi.SetUnboundFieldSource ("{ado.VolKonsultasi}")
+            .ucKonsultasi.SetUnboundFieldSource ("{ado.Konsultasi}")
+            .unVolTindakan.SetUnboundFieldSource ("{ado.VolTindakan}")
+            .ucTindakan.SetUnboundFieldSource ("{ado.Tindakan}")
+            .unVolSewaAlat.SetUnboundFieldSource ("{ado.VolSewaAlat}")
+            .ucSewaAlat.SetUnboundFieldSource ("{ado.SewaAlat}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.hargadiscount}")
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
 
             If idDepartemen <> "" Then
                 If idDepartemen = 16 Then
-                    .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
-                ElseIf idDepartemen = 18 Then
-                    .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
+                    .txtJudul.SetText "REKAPITULASI PENDAPATAN RAWAT INAP"
+                ElseIf idDepartemen <> 16 Then
+                    .txtJudul.SetText "REKAPITULASI PENDAPATAN RAWAT JALAN"
                 End If
             Else
-                .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
+                .txtJudul.SetText "REKAPITULASI PENDAPATAN"
             End If
             
             If view = "false" Then
@@ -237,3 +231,4 @@ Exit Sub
 errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
+
