@@ -96,6 +96,7 @@ Private Sub Form_Load()
     Combo1.AddItem "BuktiPendaftaran"
     Combo1.AddItem "BuktiLayanan"
     Combo1.AddItem "BuktiLayananRuangan"
+    Combo1.AddItem "Logistik_A4"
     Combo1.AddItem "CetakAntrian"
     Combo1.AddItem "CetakFarmasi"
     Combo1.AddItem "CetakRMK"
