@@ -224,14 +224,14 @@ Set Report = New crLaporanJurnalBalik2
            
             
             If idDepartemen = "16" Then
-'                .txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " + ("{ado.tgl}")
+                .txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " & ("{ado.tgl}")
 '                .txtKeterangan1.SetText "Pendapatan R.Inap"
 '                .txtKeterangan2.SetText "Pendapatan R.Inap"
 '                .txtKeterangan3.SetText "Pendapatan R.Inap"
 '                .txtKeterangan4.SetText "Pendapatan R.Inap"
 '                .txtKeterangan5.SetText "Pendapatan R.Inap"
             Else
-'                .txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " + ("{ado.tgl}")
+                .txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " & ("{ado.tgl}")
 '                .txtKeterangan1.SetText "Pendapatan R.Jalan"
 '                .txtKeterangan2.SetText "Pendapatan R.Jalan"
 '                .txtKeterangan3.SetText "Pendapatan R.Jalan"
@@ -259,3 +259,122 @@ Exit Sub
 errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
+Public Sub CetakLaporanJurnalBalikInap(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
+On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmLaporanJurnalBalik = Nothing
+Dim adocmd As New ADODB.Command
+
+    Dim str1 As String
+    Dim str2 As String
+    Dim strFilter, strFilter2, strFilter3 As String
+
+    strFilter = ""
+    
+    strFilter = " where x.tglregistrasi BETWEEN '" & _
+    Format(tglAwal, "yyyy-MM-dd 00:00") & "' AND '" & _
+    Format(tglAkhir, "yyyy-MM-dd 23:59") & "'"
+    
+    strFilter = strFilter & " AND depart in (16) "
+'       If idDepartemen <> "" Then
+'           strFilter = strFilter & " AND depart = '" & idDepartemen & "' "
+'       End If
+    
+    'strFilter = strFilter & " GROUP BY pd.tglregistrasi"
+    
+Set Report = New crLaporanJurnalBalik2
+
+            
+    'strSQL = " SELECT v_jurnal_balik_1.tgl, v_jurnal_balik_1.umum, v_jurnal_balik_1.perusahaan, " & _
+             " v_jurnal_balik_1.bpjs, v_jurnal_balik_1.diskon, v_jurnal_balik_1.total, v_jurnal_balik_1.departemen, " & _
+             " v_jurnal_balik_1.ruangandiskon, v_jurnal_balik_1.keterangan" & _
+             " From v_jurnal_balik_1 " & strFilter & "" & _
+             " Union All " & _
+             " SELECT v_jurnal_balik_2.tgl, v_jurnal_balik_2.umum, v_jurnal_balik_2.perusahaan, " & _
+             " v_jurnal_balik_2.bpjs, v_jurnal_balik_2.diskon,v_jurnal_balik_2.total, " & _
+             " v_jurnal_balik_2.departemen,v_jurnal_balik_2.ruangandiskon, " & _
+             " v_jurnal_balik_2.keterangan" & _
+             " FROM v_jurnal_balik_2  " & _
+               strFilter
+    strSQL = "SELECT x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
+            "SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl,  " & _
+            " sp.totalprekanan AS total,CASE WHEN kp.id in (2, 4) THEN 'Piutang BPJS' " & _
+            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian' Else '-' end AS keterangan  " & _
+            "FROM pasiendaftar_t pd LEFT JOIN strukpelayanan_t sp ON sp.noregistrasifk = pd.norec  " & _
+            "LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk  " & _
+            "LEFT JOIN rekanan_m r ON r.id = pd.objectrekananfk LEFT JOIN jenisrekanan_m jr ON jr.id = r.objectjenisrekananfk  " & _
+            "LEFT JOIN kelompokpasien_m kp ON kp.id = pd.objectkelompokpasienlastfk Where sp.totalprekanan Is Not Null  and sp.statusenabled is null " & _
+            " Union All " & _
+            " SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl, " & _
+            " CASE WHEN ((pp.hargadiscount * pp.jumlah) IS NULL) THEN (0) ELSE (pp.hargadiscount * pp.jumlah) END AS  total, " & _
+            " ('Biaya Subsidi Fasilitas Kesehatan '::text || (ru.namaruangan)::text) AS keterangan " & _
+            " FROM pasiendaftar_t pd JOIN antrianpasiendiperiksa_t adp ON adp.noregistrasifk = pd.norec " & _
+            " LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk " & _
+            " LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk where pp.hargadiscount is not null and pp.hargadiscount > 0 " & _
+            "union ALL " & _
+            "select dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl, " & _
+            "CASE WHEN ((pp.hargajual) IS NULL) THEN (0) " & _
+            "ELSE (pp.hargajual) END AS  total,('Uang Muka Pasien ') AS keterangan " & _
+            "FROM pasiendaftar_t pd " & _
+            "JOIN antrianpasiendiperiksa_t adp ON adp.noregistrasifk = pd.norec  LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk  LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk " & _
+            "where pp.hargajual is not null and pp.hargajual > 0  and pp.produkfk=402611 " & _
+            ") x " & _
+            " " & strFilter & _
+            "GROUP BY x.tgl,  x.keterangan,x.tglregistrasi ORDER BY x.tgl,x.keterangan"
+    
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Report
+        .database.AddADOCommand CN_String, adocmd
+            .txtPrinted.SetText namaPrinted
+            .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
+            .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
+'            .ucUmum.SetUnboundFieldSource ("{ado.umum}")
+            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
+'            .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
+'            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.total}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            .usNamaPerkiraan.SetUnboundFieldSource ("{ado.keterangan}")
+
+           
+            
+            If idDepartemen = "16" Then
+                .txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " & Format(tglAwal, "dd MMMM yyyy")
+'                .txtKeterangan1.SetText "Pendapatan R.Inap"
+'                .txtKeterangan2.SetText "Pendapatan R.Inap"
+'                .txtKeterangan3.SetText "Pendapatan R.Inap"
+'                .txtKeterangan4.SetText "Pendapatan R.Inap"
+'                .txtKeterangan5.SetText "Pendapatan R.Inap"
+            Else
+                .txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " & Format(tglAwal, "dd MMMM yyyy")
+'                .txtKeterangan1.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan2.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan3.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan4.SetText "Pendapatan R.Jalan"
+'                .txtKeterangan5.SetText "Pendapatan R.Jalan"
+            End If
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanJurnal")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+End Sub
+

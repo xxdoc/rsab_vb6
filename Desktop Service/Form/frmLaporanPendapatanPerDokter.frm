@@ -161,7 +161,7 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crLaporanPendapatanPerDokter
-    strSQL = "select distinct apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
+    strSQL = "select apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,ps.nocm , " & _
              "upper(ps.namapasien) as namapasien,pd.statuspasien, " & _
              "case when pr.id =395 then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
              "case when pr.id =10013116  then pp.hargajual* pp.jumlah else 0 end as embos, " & _

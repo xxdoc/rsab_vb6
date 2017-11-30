@@ -209,7 +209,7 @@ Set Report = New crLaporanJurnalDetail
             "sum(case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end) as total, " & _
             "'Pendapatan R.Jalan' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
+            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec left join strukpelayanan_t as sp on sp.noregistrasifk = pd.norec " & _
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
@@ -217,7 +217,7 @@ Set Report = New crLaporanJurnalDetail
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
             str1 & _
             str2 & _
             "group by pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, " & _
@@ -268,3 +268,97 @@ Exit Sub
 errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
+Public Sub CetakLaporanJurnalInap(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
+On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmLaporanJurnalDetail = Nothing
+Dim adocmd As New ADODB.Command
+
+    Dim str1 As String
+    Dim str2 As String
+    
+    If idDepartemen <> "" Then
+        str1 = " AND ru.objectdepartemenfk in (16) "
+    End If
+'    If idDepartemen <> "" Then
+'        str1 = "and ru.objectdepartemenfk=" & idDepartemen & " "
+'    End If
+    If idRuangan <> "" Then
+        str2 = " and apd.objectruanganfk=" & idRuangan & " "
+    End If
+    
+    
+Set Report = New crLaporanJurnalDetail
+            
+    strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah, case " & _
+            "when jp.id in (99,25)                    then'Pendt. Akomodasi' || ' ' || ru.namaruangan " & _
+            "when jp.id =100                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
+            "when jp.id =101                          then 'Pendt. Visite' || ' ' || ru.namaruangan " & _
+            "when jp.id =102                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =36                           then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =103                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =107                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =97                           then 'Pendt. Tindakan Ka Instalasi Farmasi' " & _
+            "when jp.id=27666                         then 'Pendt. Alat Canggih' || ' ' || ru.namaruangan " & _
+            "ELSE 'Pendt. Tindakan' || ' ' || ru.namaruangan end  as namaperkiraan, " & _
+            "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
+            "'Pendapatan R.Inap' as keterangan " & _
+            "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec left join strukpelayanan_t as sp on sp.noregistrasifk = pd.norec " & _
+            "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+            "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
+            "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
+            str1 & _
+            str2 & _
+            "group by pd.tglregistrasi, pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, ru.namaruangan, tp.produkfk, pro.namaproduk, pro.id, jp.id  " & _
+            "order by ps.namapasien"
+
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Report
+        .database.AddADOCommand CN_String, adocmd
+            .txtPrinted.SetText namaPrinted
+            .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
+            '.usTglRegis.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usNmPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
+            '.usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRegMR.SetUnboundFieldSource ("{ado.regcm}")
+            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usLayanan.SetUnboundFieldSource ("{ado.layanan}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+            .unKode.SetUnboundFieldSource ("{ado.kode}")
+            '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
+            '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
+            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            
+            
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanJurnal")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+End Sub
+
+

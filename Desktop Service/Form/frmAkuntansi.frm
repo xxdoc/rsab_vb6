@@ -42,30 +42,50 @@ On Error Resume Next
 
         Select Case Param1(0)
             Case "cetak-jurnal"
-                Call frmLaporanJurnalHarian.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Jurnal"
-                
+                If Param4(1) <> 16 Then
+                    Call frmLaporanJurnalHarian.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                ElseIf Param4(1) = 16 Then
+                    Call frmLaporanJurnalHarian.CetakLaporanJurnalInap(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                End If
             Case "cetak-jurnal-detail"
-                Call frmLaporanJurnalDetail.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Jurnal"
-                
+                If Param4(1) <> 16 Then
+                    Call frmLaporanJurnalDetail.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                ElseIf Param4(1) = 16 Then
+                    Call frmLaporanJurnalDetail.CetakLaporanJurnalInap(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                End If
             Case "cetak-jurnal-penjamin"
                 Call frmLaporanJurnalPenjamin.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Jurnal"
             
             Case "cetak-jurnal-balik"
-                Call frmLaporanJurnalBalik.CetakLaporanJurnalBalik(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Jurnal"
-                
+                If Param4(1) <> 16 Then
+                    Call frmLaporanJurnalBalik.CetakLaporanJurnalBalik(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                ElseIf Param4(1) = 16 Then
+                    Call frmLaporanJurnalBalik.CetakLaporanJurnalBalikInap(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal Inap"
+                End If
             Case "cetak-jurnal-balik-detail"
-                Call frmLaporanJurnalBalikDetail.CetakLaporanJurnalBalikDetail(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Jurnal"
-
+                If Param4(1) <> 16 Then
+                    Call frmLaporanJurnalBalikDetail.CetakLaporanJurnalBalikDetail(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                ElseIf Param4(1) = 16 Then
+                    Call frmLaporanJurnalBalikDetail.CetakLaporanJurnalBalikDetailInap(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                End If
             
             Case Else
                 Set Root = New JNode

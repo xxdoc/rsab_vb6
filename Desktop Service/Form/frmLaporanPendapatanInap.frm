@@ -185,6 +185,8 @@ Set Report = New crLaporanPendapatanInap
             "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             "and jp.id in (25,99,101,102,27666) " & _
              str1 & _
+             str2 & _
+             str3 & _
              "order by pd.noregistrasi"
 
             

@@ -196,7 +196,7 @@ Set Report = New crLaporanJurnal
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
-            .txtDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
+            
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
@@ -204,7 +204,10 @@ Set Report = New crLaporanJurnal
             .unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
             .unKredit.SetUnboundFieldSource ("{ado.P_JM}")
             
+            .txtDeskripsi.SetText "Rekapitulasi Pendapatan R. Jalan Tgl " & Format(tglAwal, "dd/MM/yyyy")
             
+'.txtTgl.SetText Format(tglAwal, "dd/MM/yyyy 00:00:00") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy 23:59:59")
+
             If view = "false" Then
                 Dim strPrinter As String
 '

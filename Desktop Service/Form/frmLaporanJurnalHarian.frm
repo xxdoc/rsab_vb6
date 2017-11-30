@@ -229,7 +229,96 @@ Set Report = New crLaporanJurnalHarian
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
-            .txtDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
+            .txtDeskripsi.SetText "Pendapatan R. Jalan Tgl " & Format(tglAwal, "dd MMMM yyyy")
+            .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
+            .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
+            '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
+            '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
+            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+            
+            
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanJurnal")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+End Sub
+Public Sub CetakLaporanJurnalInap(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
+On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmLaporanJurnalHarian = Nothing
+Dim adocmd As New ADODB.Command
+
+    Dim str1 As String
+    Dim str2 As String
+    
+    If idDepartemen <> "" Then
+        str1 = " AND ru.objectdepartemenfk = '" & idDepartemen & "' "
+    End If
+    'If idDepartemen <> "" Then
+       ' str1 = "and ru.objectdepartemenfk = " & idDepartemen & " "
+   ' End If
+    If idRuangan <> "" Then
+        str2 = " and apd.objectruanganfk=" & idRuangan & " "
+    End If
+    
+    
+Set Report = New crLaporanJurnalHarian
+    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk,case " & _
+            "when jp.id in (99,25)                    then'Pendt. Akomodasi' || ' ' || ru.namaruangan " & _
+            "when jp.id =100                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
+            "when jp.id =101                          then 'Pendt. Visite' || ' ' || ru.namaruangan " & _
+            "when jp.id =102                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =36                           then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =103                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =107                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =97                           then 'Pendt. Tindakan Ka Instalasi Farmasi' " & _
+            "when jp.id=27666                         then 'Pendt. Alat Canggih' || ' ' || ru.namaruangan " & _
+            "ELSE 'Pendt. Tindakan' || ' ' || ru.namaruangan end  as namaperkiraan, " & _
+            "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
+            "'Pendapatan R.Jalan' as keterangan " & _
+            "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
+            "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+            "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
+            "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' " & _
+            str1 & _
+            str2 '& _
+            "group by pd.noregistrasi, ru.namaruangan, tp.produkfk, kp.id, pro.id, pro.namaproduk " & _
+            "order by pro.id"
+
+   
+            
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Report
+        .database.AddADOCommand CN_String, adocmd
+            .txtPrinted.SetText namaPrinted
+            .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
+            .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
+            .txtDeskripsi.SetText "Rekapitulasi Pendapatan R. Inap Tgl " & Format(tglAwal, "dd MMMM yyyy")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
