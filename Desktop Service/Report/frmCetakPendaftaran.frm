@@ -221,6 +221,8 @@ Private Sub CmdOption_Click()
         reportBuktiLayananRuangan.PrinterSetup Me.hWnd
     ElseIf bolBuktiLayananRuanganPerTindakan = True Then
         reportBuktiLayananRuanganPerTindakan.PrinterSetup Me.hWnd
+    ElseIf bolBuktiLayananJasa = True Then
+        reportBuktiLayananJasa.PrinterSetup Me.hWnd
     ElseIf bolcetakSep = True Then
         reportSep.PrinterSetup Me.hWnd
     ElseIf bolTracer1 = True Then
