@@ -27,12 +27,12 @@ Designer=Report\crRekapPendapatan.Dsr
 Form=Form\frmRekapPendapatan.frm
 Module=mdTerbilang; Module\mdTerbilang.bas
 Form=Report\frmCRCetakPasienPerjanjian.frm
-Form=Form\frmLogistik.frm
+Form=Form\frmFarmasiApotik.frm
 Designer=Report\Cr_cetakBuktiPendaftaran.Dsr
 Designer=Report\Cr_cetakRMK.Dsr
 Designer=Report\Cr_cetakLabelTracer.Dsr
 Designer=Report\crCetakSJP.Dsr
-Form=Report\frmCetakBuktiPenerimaanBarang.frm
+Form=Report\frmCetakFarmasiApotik.frm
 Designer=Report\Cr_cetakbuktilayanan.Dsr
 Designer=Report\Cr_cetakLembarGC.Dsr
 Designer=Report\crJenisKIP.Dsr
@@ -44,7 +44,7 @@ Module=Barcode_128; Module\Special128.bas
 Designer=Report\Cr_cetakKartuPasien.Dsr
 Form=Form\frmPendaftaran.frm
 Form=Form\frmCRLabelFarmasi.frm
-Designer=Report\cr_RincianPenerimaanBarang.Dsr
+Designer=Report\cr_RincianBiayaResep_2.Dsr
 Designer=Report\Cr_cetakSummaryList.Dsr
 Designer=Report\Cr_cetakLabel.Dsr
 Module=modSampleCodeGraphics; zebra\modSampleCodeGraphics.bas
@@ -164,14 +164,13 @@ Form=Form\frmCrRincianPendapatanHarianPerKelas.frm
 Designer=Report\crRincianPendapatanHarianPerkelas.Dsr
 Designer=Report\crLaporanJurnalBalik2.Dsr
 Designer=Report\crLaporanJurnaBalikDetail.Dsr
-<<<<<<< HEAD
 Form=Report\frmCRCetakLaporanPasienPulang2.frm
 Designer=Report\crLaporanPasienPulang2.Dsr
-=======
-Form=Form\frmFarmasiApotik.frm
-Form=Report\frmCetakFarmasiApotik.frm
-Designer=Report\cr_RincianBiayaResep_2.Dsr
->>>>>>> 490a4def00cdf8892d7f01361559aed26b56b7f9
+Form=Form\frmLogistik.frm
+Form=frmCetakBuktiPenerimaanBarang2.frm
+Designer=cr_BuktiPenerimaanBarang.Dsr
+Designer=Report\cr_RincianPenerimaanBarang.Dsr
+Form=Report\frmCetakBuktiPenerimaanBarang.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -187,11 +186,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-<<<<<<< HEAD
 VersionComments="CR171128.1"
-=======
-VersionComments="CR171130.2"
->>>>>>> 490a4def00cdf8892d7f01361559aed26b56b7f9
 VersionCompanyName="PT. Jasamedika Saranatama"
 CompilationType=0
 OptimizationType=0
