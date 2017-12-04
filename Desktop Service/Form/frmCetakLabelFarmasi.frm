@@ -152,15 +152,24 @@ Set frmCetakLabelFarmasi = Nothing
 Dim adocmd As New ADODB.Command
     
 Set Report = New Cr_cetakLabelFarmasi
-    strSQL = "select ps.namapasien, ps.tgllahir, sr.noresep, sr.tglresep, pr.namaproduk, pp.aturanpakai " & _
+    strSQL = "select ps.namapasien, ps.tgllahir, sr.noresep, sr.tglresep, pr.namaproduk, pp.aturanpakai,pp.rke " & _
             "from pelayananpasien_t as pp inner join strukresep_t as sr on sr.norec= pp.strukresepfk " & _
             "inner join produk_m as pr on pr.id = pp.produkfk " & _
             "inner join antrianpasiendiperiksa_t as apd on apd.norec = pp.noregistrasifk " & _
             "inner join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner join pasien_m as ps on ps.id = pd.nocmfk " & _
-            "where " & _
+            "where pp.jeniskemasanfk =2 and " & _
             str1 & _
-            "order by sr.noresep"
+            ""
+    strSQL = strSQL & " union all select distinct ps.namapasien, ps.tgllahir, sr.noresep, sr.tglresep,'Racikan' as namaproduk, pp.aturanpakai,pp.rke " & _
+            "from strukresep_t as sr  " & _
+            "inner join pelayananpasien_t as pp on sr.norec= pp.strukresepfk " & _
+            "inner join antrianpasiendiperiksa_t as apd on apd.norec = sr.pasienfk " & _
+            "inner join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
+            "inner join pasien_m as ps on ps.id = pd.nocmfk " & _
+            "where pp.jeniskemasanfk =1 and " & _
+            str1 & _
+            ""
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
