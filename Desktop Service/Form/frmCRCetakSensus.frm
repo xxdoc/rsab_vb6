@@ -174,7 +174,7 @@ Set Report = New crLaporanSensusPasien
     strSQL = "SELECT DISTINCT pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk," & _
 "                 ru.namaruangan as ruanganakhir, pg.namalengkap as dokter, klp.kelompokpasien, " & _
 "                 dpt.namadepartemen," & _
-"                 case when dgs.namadiagnosa is null then '-' else dgs.namadiagnosa end as diagnosa " & _
+"                 case when ddp.keterangan is null then '-' else ddp.keterangan end as diagnosa " & _
 "                 from pasiendaftar_t as pd  " & _
 "                 INNER join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec   " & _
 "                 INNER join pasien_m as ps on ps.id=pd.nocmfk   " & _
@@ -245,7 +245,7 @@ Set Report = New crLaporanSensusPasien
             .usDiagnosa.SetUnboundFieldSource ("{ado.diagnosa}")
             .usDepartement.SetUnboundFieldSource ("{ado.namadepartemen}")
             
-            .txtTgl.SetText Format(tglAwal, "dd/MM/yyyy 00:00:00") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy 23:59:59")
+            '.txtTgl.SetText Format(tglAwal, "dd/MM/yyyy 00:00:00") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy 23:59:59")
              
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
