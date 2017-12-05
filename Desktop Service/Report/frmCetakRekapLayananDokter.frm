@@ -222,7 +222,7 @@ Set Report = New crCetakRekapLayananDokter
             .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
             .usPaid.SetUnboundFieldSource ("{ado.sbm}")
             
-        .txtTgl.SetText "TANGGAL" & Format(tglAwal, "dd/MM/yyyy") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy")
+        .txtTgl.SetText "TANGGAL " & Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & id & "' "
         If RS2.BOF Then

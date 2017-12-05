@@ -167,7 +167,7 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crLaporanPendapatanInap
-    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas as namaruangan,pro.namaproduk, " & _
+    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || km.namakamar as namaruangan,pro.namaproduk, " & _
             "case when jp.id in (99,25) then 'Akomodasi' " & _
             "when jp.id=101 then 'Visit' " & _
             "when jp.id =102 then 'Tindakan' when jp.id=27666 then 'Sewa Alat' end as jenisproduk, " & _
@@ -176,7 +176,7 @@ Set Report = New crLaporanPendapatanInap
             "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "inner join produk_m as pro on pro.id = pp.produkfk " & _
-            "left join kelas_m as kls on kls.id = apd.objectkelasfk " & _
+            "left join kamar_m as km on km.id = apd.objectkamarfk " & _
             "left join detailjenisproduk_m as djp on djp.id = pro.objectdetailjenisprodukfk " & _
             "left join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
@@ -210,12 +210,12 @@ Set Report = New crLaporanPendapatanInap
 
             If idDepartemen <> "" Then
                 If idDepartemen = 16 Then
-                    .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
+                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
                 ElseIf idDepartemen = 18 Then
-                    .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
+                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
                 End If
             Else
-                .txtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
+                .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
             End If
             
             If view = "false" Then
