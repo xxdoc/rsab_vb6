@@ -173,7 +173,7 @@ Set Report = New crPenerimaanKasir1
             "from strukbuktipenerimaan_t as sbm " & _
             "left JOIN strukbuktipenerimaancarabayar_t as sbmc on sbmc.nosbmfk=sbm.norec " & _
             "LEFT JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk " & _
-            "INNER JOIN strukpelayanan_t as sp on sp.nosbmlastfk=sbm.norec " & _
+            "INNER JOIN strukpelayanan_t as sp on sp.norec=sbm.nostrukfk  " & _
             "LEFT JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk " & _
             "LEFT JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk " & _
             "LEFT JOIN pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _

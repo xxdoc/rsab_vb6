@@ -217,7 +217,7 @@ Set Report = New crLaporanPendapatan
              "left JOIN produk_m as pr on pr.id=pp.produkfk left JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
              "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
              "left JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
-             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+             "left JOIN strukpelayanan_t as sp  on sp.norec=pp.strukfk " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   and  sp.statusenabled is null " & _
              " and ru.objectdepartemenfk=18 " & _
              str2 & _
