@@ -181,7 +181,7 @@ Dim adocmd As New ADODB.Command
     
 Set Report = New crRncianPendapatanHarianPerkelas
     strSQL = " SELECT pasien_m.nocm, pasien_m.namapasien, pd.noregistrasi, " & _
-             "ru.namaruangan || ' ' || kls.namakelas AS namaruangan, case when pp.hargadiscount is not null then pp.hargadiscount else 0 end as hargadiscount, kls.namakelas, " & _
+             "ru.namaruangan, case when pp.hargadiscount is not null then pp.hargadiscount else 0 end as hargadiscount, km.namakamar, " & _
              "case when jp.id in (99,25) and pp.hargajual is not null then   pp.hargajual else 0 end as Akomodasi, case when jp.id in (99,25) and pp.hargajual is not null then pp.jumlah else 0 end as VolAkomodasi, " & _
              "case when jp.id=101 and pp.hargajual is not null then   pp.hargajual else 0 end as Visit, case when jp.id=101 and pp.hargajual is not null then pp.jumlah else 0 end as VolVisit, " & _
              "case when jp.id=27666 and pp.hargajual is not null then   pp.hargajual else 0 end as SewaAlat, case when jp.id=27666 and pp.hargajual is not null then  pp.jumlah else 0 end as VolSewaAlat, " & _
@@ -189,7 +189,7 @@ Set Report = New crRncianPendapatanHarianPerkelas
              "case when jp.id =100 and pp.hargajual is not null then   pp.hargajual else 0 end AS Konsultasi, case when jp.id =100 and pp.hargajual is not null then  pp.jumlah   else 0 end AS VolKonsultasi " & _
              "From pasiendaftar_t AS pd  " & _
              "LEFT JOIN antrianpasiendiperiksa_t AS apd ON apd.noregistrasifk = pd.norec LEFT JOIN pelayananpasien_t AS pp ON pp.noregistrasifk = apd.norec  INNER JOIN produk_m AS pro ON pro.id = pp.produkfk " & _
-             "LEFT JOIN kelas_m AS kls ON kls.id = apd.objectkelasfk  LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk  LEFT JOIN kelompokproduk_m AS kp ON kp.id = jp.objectkelompokprodukfk " & _
+             "left join kamar_m as km on km.id = apd.objectkamarfk  LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk  LEFT JOIN kelompokproduk_m AS kp ON kp.id = jp.objectkelompokprodukfk " & _
              "LEFT JOIN ruangan_m AS ru ON ru.id = apd.objectruanganfk  LEFT JOIN departemen_m AS dp ON dp.id = ru.objectdepartemenfk INNER JOIN pasien_m ON pd.nocmfk = pasien_m.id Where pp.tglpelayanan between '" & tglAwal & "' and " & _
             "'" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND jp.id IN (25, 99, 101, 102, 27666)  " & _
             strReg & _
@@ -210,7 +210,7 @@ Set Report = New crRncianPendapatanHarianPerkelas
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
+            .usKelas.SetUnboundFieldSource ("{ado.namakamar}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .unVolAkomodasi.SetUnboundFieldSource ("{ado.VolAkomodasi}")
             .ucAkomodasi.SetUnboundFieldSource ("{ado.Akomodasi}")

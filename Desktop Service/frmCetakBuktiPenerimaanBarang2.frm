@@ -167,7 +167,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub cetak(strNores As String, view As String, strUser As String)
+Public Sub Cetak(strNores As String, view As String, strUser As String)
 On Error GoTo errLoad
 Set frmCetakBuktiPenerimaanBarang2 = Nothing
 Dim strSQL As String
@@ -179,7 +179,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select sp.nostruk as noresep, sp.tglstruk,  " & _
+            strSQL = "select sp.nostruk as noresep, sp.tglstruk, sp.tglspk, " & _
                     "case when rk.namarekanan is null then '-' else rk.kdrekanan || ' - ' || rk.namarekanan end as rekanan, " & _
                     "pr.kdproduk, pr.namaproduk, " & _
                     "ss.satuanstandar, spd.hargasatuan, spd.qtyproduk, " & _
@@ -202,15 +202,16 @@ bolStrukResep = True
 
              .txtuser.SetText strUser
            
-             .udtanggal.SetUnboundFieldSource ("{Ado.tglpelayanan}")
-             .txtnoresep.SetText ("{Ado.noresep}")
-             .txtrekanan.SetText ("{Ado.rekanan}")
-             .txtRuangan.SetText ("{Ado.gudang}")
+             .udtanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
+             .udTglSPK.SetUnboundFieldSource ("{Ado.tglspk}")
+             .usResep.SetUnboundFieldSource ("{Ado.noresep}")
+             .usRekanan.SetUnboundFieldSource ("{Ado.rekanan}")
+             .usNamaRuangan.SetUnboundFieldSource ("{Ado.gudang}")
              '.usSumberDana.SetUnboundFieldSource ("{Ado.sumber}")
-             .usKdBarang.SetUnboundFieldSource ("{ado.kodebarang}")
+             .usKdBarang.SetUnboundFieldSource ("{ado.kdproduk}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{ado.satuanstandar}")
-             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
+             .ucHarga.SetUnboundFieldSource ("{Ado.hargasatuan}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              
              
