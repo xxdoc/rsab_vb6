@@ -167,7 +167,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub Cetak(strNores As String, view As String, strUser As String)
+Public Sub cetak(strNores As String, view As String, strUser As String)
 On Error GoTo errLoad
 Set frmCetakBuktiPenerimaanBarang2 = Nothing
 Dim strSQL As String
@@ -179,16 +179,21 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select sp.nostruk as noresep, sp.tglstruk, sp.tglspk, " & _
+            strSQL = "select sp.nostruk, sp.nofaktur, sp.tglstruk, sp.tglspk, " & _
+                    "case when ap.asalproduk is null then '-' else ap.asalproduk end as asalproduk," & _
+                    "case when sp.totaldiscount is null then '0,00%' else (sp.totaldiscount * 100) / sp.totalhargasatuan || ',00%' end as persendiskon," & _
+                    "case when sp.totalppn is null then '0,00%' else (sp.totalppn * 100) / sp.totalhargasatuan || ',00%' end as persenppn," & _
                     "case when rk.namarekanan is null then '-' else rk.kdrekanan || ' - ' || rk.namarekanan end as rekanan, " & _
                     "pr.kdproduk, pr.namaproduk, " & _
-                    "ss.satuanstandar, spd.hargasatuan, spd.qtyproduk, " & _
+                    "ss.satuanstandar, sp.totalharusdibayar, " & _
+                    "(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as harga, spd.qtyproduk, " & _
                     "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang " & _
                     "from strukpelayanan_t sp " & _
                     "left join strukpelayanandetail_t spd on spd.nostrukfk=sp.norec " & _
                     "left JOIN pegawai_m pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
                     "left JOIN ruangan_m ru on ru.id=sp.objectruanganfk " & _
                     "left JOIN produk_m pr on pr.id=spd.objectprodukfk " & _
+                    "left join asalproduk_m as ap on ap.id=spd.objectasalprodukfk " & _
                     "left join rekanan_m rk on rk.id=sp.objectrekananfk " & _
                     "left JOIN jeniskemasan_m jkm on jkm.id=spd.objectjeniskemasanfk " & _
                     "left join satuanstandar_m ss on ss.id=spd.objectsatuanstandarfk " & _
@@ -204,15 +209,18 @@ bolStrukResep = True
            
              .udtanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
              .udTglSPK.SetUnboundFieldSource ("{Ado.tglspk}")
-             .usResep.SetUnboundFieldSource ("{Ado.noresep}")
+             .usResep.SetUnboundFieldSource ("{Ado.nofaktur}")
+             .usPersenDiskon.SetUnboundFieldSource ("{Ado.persendiskon}")
+             .usPersenPpn.SetUnboundFieldSource ("{Ado.persenppn}")
              .usRekanan.SetUnboundFieldSource ("{Ado.rekanan}")
              .usNamaRuangan.SetUnboundFieldSource ("{Ado.gudang}")
-             '.usSumberDana.SetUnboundFieldSource ("{Ado.sumber}")
+             .usSumberDana.SetUnboundFieldSource ("{Ado.asalproduk}")
              .usKdBarang.SetUnboundFieldSource ("{ado.kdproduk}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{ado.satuanstandar}")
-             .ucHarga.SetUnboundFieldSource ("{Ado.hargasatuan}")
+             .ucHarga.SetUnboundFieldSource ("{Ado.harga}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
+             .ucTotalBayar.SetUnboundFieldSource ("{Ado.totalharusdibayar}")
              
              
             If view = "false" Then

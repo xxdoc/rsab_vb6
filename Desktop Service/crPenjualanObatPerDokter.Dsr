@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crPenjualanObatPerDokter 
-   ClientHeight    =   9900
+   ClientHeight    =   9765
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   15495
+   ClientWidth     =   14655
    OleObjectBlob   =   "crPenjualanObatPerDokter.dsx":0000
 End
 Attribute VB_Name = "crPenjualanObatPerDokter"

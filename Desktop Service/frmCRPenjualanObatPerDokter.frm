@@ -215,7 +215,7 @@ Dim strSQL As String
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
             .ucHarga.SetUnboundFieldSource ("{ado.hargajual}")
             .ucTotal.SetUnboundFieldSource ("{ado.subtotal}")
-            .usKdFarma.SetUnboundFieldSource ("{ado.kodefarmatologi}")
+            .usKdFarma.SetUnboundFieldSource ("{ado.noresep}")
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")

@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakRekapLayananDokter 
+Begin VB.Form frmCetakDetailLayananDokter 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmCetakRekapLayananDokter.frx":0000
+   Icon            =   "frmCetakDetailLayananDokter.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmCetakRekapLayananDokter
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakRekapLayananDokter"
+Attribute VB_Name = "frmCetakDetailLayananDokter"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crCetakRekapLayananDokter
+Dim Report As New crCetakDetailLayananDokter
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,18 +144,18 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCetakRekapLayananDokter = Nothing
+    Set frmCetakDetailLayananDokter = Nothing
 End Sub
 
-Public Sub CetakRekapLayanan(ID As String, tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
+Public Sub CetakDetailLayanan(ID As String, tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
                                         strIdKelompokPasien As String, strIdDokter As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCetakRekapLayananDokter = Nothing
+Set frmCetakDetailLayananDokter = Nothing
 Dim adocmd As New ADODB.Command
 Dim strFilter, orderby As String
-Set Report = New crCetakRekapLayananDokter
+Set Report = New crCetakDetailLayananDokter
 
     strFilter = ""
     orderby = ""
@@ -178,8 +178,7 @@ Set Report = New crCetakRekapLayananDokter
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
   
-    orderby = strFilter & "order by pg.namalengkap"
-        
+    orderby = strFilter & " order by pg.namalengkap"
     strSQL = "select DISTINCT pp.tglpelayanan, apd.objectruanganfk, ru.namaruangan, " & _
             "pg.namalengkap,pd.noregistrasi,ps.nocm, upper(ps.namapasien) as namapasien, " & _
             "case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap, " & _
@@ -202,6 +201,29 @@ Set Report = New crCetakRekapLayananDokter
             "left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & orderby
+        
+'    strSQL = "select DISTINCT pp.tglpelayanan, apd.objectruanganfk, ru.namaruangan,pg.namalengkap,pd.noregistrasi,ps.nocm ,  " & _
+'            "upper(ps.namapasien) as namapasien, " & _
+'            "case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap, " & _
+'            "kps.kelompokpasien, case when rk.namarekanan is not null then rk.namarekanan else '-' end as namarekanan, pr.namaproduk, pp.jumlah, " & _
+'            "case when pp.hargajual * pp.jumlah is not null then pp.hargajual * pp.jumlah else 0 end as harga, " & _
+'            "case when sbm.norec is null then 'N' else 'Y' end as sbm " & _
+'            "from pasiendaftar_t as pd inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien = pp.norec " & _
+'            "left JOIN pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+'            "inner join jenispegawai_m as jpg on jpg.id=pg.objectjenispegawaifk " & _
+'            "inner JOIN produk_m as pr on pr.id=pp.produkfk " & _
+'            "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+'            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+'            "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+'            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+'            "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+'            "left join rekanan_m as rk on rk.id=pd.objectrekananfk " & _
+'            "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+'            "left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
+'            "left JOIN ruangan_m as ru on ru.id=sp.objectruanganfk " & _
+'            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & orderby
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -211,13 +233,18 @@ Set Report = New crCetakRekapLayananDokter
         'If Not RS.EOF Then
             
             .udTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
-            '.usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usKamar.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            '.usKelas.SetUnboundFieldSource ("{ado.namakelas}")
+            .usInap.SetUnboundFieldSource ("{ado.inap}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
-            '.ucHargaLayanan.SetUnboundFieldSource ("{ado.harga}")
-            .ucHarga.SetUnboundFieldSource ("{ado.harga}")
+            .ucHargaLayanan.SetUnboundFieldSource ("{ado.harga}")
             .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+            .usPaid.SetUnboundFieldSource ("{ado.sbm}")
             
         .txtTgl.SetText "TANGGAL " & Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
              
