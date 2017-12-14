@@ -174,63 +174,39 @@ Dim adocmd As New ADODB.Command
     
     
 Set Report = New crLaporanJurnalDetail
-'    strSQL = "select pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, " & _
-'            "pro.namaproduk as layanan, tp.hargajual, tp.jumlah, " & _
-'            "case when pro.id = 395 then 'Pendt. Administrasi' " & _
-'            "when kp.id = 26 then 'Pendt. Konsultasi' " & _
-'            "when kp.id in (1,2,3,4,8,9,10,11,13,14) then 'Pendt. Tindakan' end as namaperkiraan, " & _
-'            "(sum(case when pd.objectkelompokpasienlastfk = 1 then tp.hargajual*tp.jumlah  else 0 end))+ " & _
-'            "(sum(case when pd.objectkelompokpasienlastfk > 1 then tp.hargajual*tp.jumlah  else 0 end))  as total, " & _
-'            "'Pendapatan R.Jalan' as keterangan " & _
-'            "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-'            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
-'            "inner JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
-'            "inner JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
-'            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
-'            "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-'            "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-'            "inner join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-'            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-'            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-'            str1 & _
-'            str2 & _
-'            "group by pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, " & _
-            "ru.namaruangan, tp.produkfk, pro.namaproduk, pro.id, kp.id  " & _
-            "order by ps.namapasien"
             
-    strSQL = "select pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah, case " & _
-            "when pro.id = 395                                          then'Pendt. Administrasi' || ' ' || ru.namaruangan " & _
-            "when kp.id = 26 and pro.id <> 395                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
-            "when kp.id in (3,4,8,9,10,11,13,14) and pro.id <> 395  then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
-            "when kp.id in (1) and pro.id <> 395  then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
-            "when kp.id in (2) and pro.id <> 395  then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
-            "when kp.id in (24) and pro.id <> 395  then 'Pendt. Tindakan Ka Instalasi Farmasi' " & _
+    strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah, case " & _
+            "when jp.id in (99,25)                    then'Pendt. Akomodasi' || ' ' || ru.namaruangan " & _
+            "when jp.id =100                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
+            "when jp.id =101                          then 'Pendt. Visite' || ' ' || ru.namaruangan " & _
+            "when jp.id =102                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =36                           then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =103                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =107                          then 'Pendt. Tindakan' || ' ' || ru.namaruangan " & _
+            "when jp.id =97                           then 'Pendt. Tindakan Ka Instalasi Farmasi' " & _
+            "when jp.id=27666                         then 'Pendt. Alat Canggih' || ' ' || ru.namaruangan " & _
             "ELSE 'Pendt. Tindakan' || ' ' || ru.namaruangan end  as namaperkiraan, " & _
-            "sum(case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end) as total, " & _
-            "'Pendapatan R.Jalan' as keterangan " & _
+            "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
+            "'Pendapatan R. Jalan' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec left join strukpelayanan_t as sp on sp.noregistrasifk = pd.norec " & _
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
-            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
+            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296) " & _
             str1 & _
             str2 & _
-            "group by pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, " & _
-            "ru.namaruangan, tp.produkfk, pro.namaproduk, pro.id, kp.id  " & _
             "order by ps.namapasien"
 
-   
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
+            .TxtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT JALAN"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
             .usNmPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
@@ -309,19 +285,22 @@ Set Report = New crLaporanJurnalDetail
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
-            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
+            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666)" & _
             str1 & _
             str2 & _
-            "group by pd.tglregistrasi, pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, ru.namaruangan, tp.produkfk, pro.namaproduk, pro.id, jp.id  " & _
             "order by ps.namapasien"
+            '            "group by pd.tglregistrasi, pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, ru.namaruangan, tp.produkfk, pro.namaproduk, pro.id, jp.id  " & _
+
 
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
+            .TxtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT INAP"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
             '.usTglRegis.SetUnboundFieldSource ("{ado.tglregistrasi}")

@@ -192,7 +192,7 @@ Set Report = New crLaporanJurnalBalikDetail
     strSQL = "select tgl,tglregistrasi,noregistrasi,nocm,namapasien,idruangan,namaruangan,iddepartemen," & _
             "sum(umum) as umum,sum(perusahaan) as perusahaan,sum(bpjs) as bpjs, sum(diskon) as diskon,sum(total) as total from ( " & _
             "select to_char(pd.tglregistrasi, 'YYYY-MM-DD') AS tgl,pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
-            "sum(CASE WHEN kp.id in (1,6) then sp.totalprekanan else 0 end) as umum, " & _
+            "sum(CASE WHEN kp.id in (6) then sp.totalprekanan else 0 end) as umum, " & _
             "sum(CASE WHEN kp.id in (3,5) then sp.totalprekanan else 0 end) as perusahaan, " & _
             "sum(CASE WHEN kp.id in (2,4) then sp.totalprekanan else 0 end) as bpjs, 0 as diskon, " & _
             "sum(sp.totalprekanan) As total " & _
@@ -227,7 +227,7 @@ Set Report = New crLaporanJurnalBalikDetail
 '            .txtTglDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
 '            '.ucDebet.SetUnboundFieldSource ("{ado.tunai}")
 '            '.ucKredit.SetUnboundFieldSource ("{ado.nontunai}")
-            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
+            .ustgl.SetUnboundFieldSource ("{ado.tgl}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usRegMR.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
@@ -235,7 +235,7 @@ Set Report = New crLaporanJurnalBalikDetail
             
             .ucPasien.SetUnboundFieldSource ("{ado.umum}")
             .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
-            .ucBPJS.SetUnboundFieldSource ("{ado.bpjs}")
+            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
             
@@ -343,7 +343,7 @@ Set Reports = New crLaporanJurnalBalikDetailInap
 '            .txtTglDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
 '            '.ucDebet.SetUnboundFieldSource ("{ado.tunai}")
 '            '.ucKredit.SetUnboundFieldSource ("{ado.nontunai}")
-            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
+            .ustgl.SetUnboundFieldSource ("{ado.tgl}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usRegMR.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
@@ -351,7 +351,7 @@ Set Reports = New crLaporanJurnalBalikDetailInap
             
             .ucPasien.SetUnboundFieldSource ("{ado.umum}")
             .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
-            .ucBPJS.SetUnboundFieldSource ("{ado.bpjs}")
+            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucUangMuka.SetUnboundFieldSource ("{ado.uangmuka}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")

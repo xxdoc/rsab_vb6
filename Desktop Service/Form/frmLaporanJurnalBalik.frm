@@ -186,10 +186,12 @@ Set Report = New crLaporanJurnalBalik2
              " v_jurnal_balik_2.keterangan" & _
              " FROM v_jurnal_balik_2  " & _
                strFilter
+               'WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian'
+               
     strSQL = "SELECT x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
             "SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl,  " & _
             " sp.totalprekanan AS total,CASE WHEN kp.id in (2, 4) THEN 'Piutang BPJS' " & _
-            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian' Else '-' end AS keterangan  " & _
+            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' Else '-' end AS keterangan  " & _
             "FROM pasiendaftar_t pd LEFT JOIN strukpelayanan_t sp ON sp.noregistrasifk = pd.norec  " & _
             "LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk  " & _
             "LEFT JOIN rekanan_m r ON r.id = pd.objectrekananfk LEFT JOIN jenisrekanan_m jr ON jr.id = r.objectjenisrekananfk  " & _
@@ -214,7 +216,7 @@ Set Report = New crLaporanJurnalBalik2
             .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
 '            .ucUmum.SetUnboundFieldSource ("{ado.umum}")
-            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
+            .ustgl.SetUnboundFieldSource ("{ado.tgl}")
 '            .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
 '            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
             .ucDiskon.SetUnboundFieldSource ("{ado.total}")
@@ -224,14 +226,14 @@ Set Report = New crLaporanJurnalBalik2
            
             
             If idDepartemen = "16" Then
-                .txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " & ("{ado.tgl}")
+                .txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " & Format(tglAwal, "dd MMMM yyyy")
 '                .txtKeterangan1.SetText "Pendapatan R.Inap"
 '                .txtKeterangan2.SetText "Pendapatan R.Inap"
 '                .txtKeterangan3.SetText "Pendapatan R.Inap"
 '                .txtKeterangan4.SetText "Pendapatan R.Inap"
 '                .txtKeterangan5.SetText "Pendapatan R.Inap"
             Else
-                .txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " & ("{ado.tgl}")
+                .txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " & Format(tglAwal, "dd MMMM yyyy")
 '                .txtKeterangan1.SetText "Pendapatan R.Jalan"
 '                .txtKeterangan2.SetText "Pendapatan R.Jalan"
 '                .txtKeterangan3.SetText "Pendapatan R.Jalan"
@@ -297,10 +299,12 @@ Set Report = New crLaporanJurnalBalik2
              " v_jurnal_balik_2.keterangan" & _
              " FROM v_jurnal_balik_2  " & _
                strFilter
+               ' WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian'
+               
     strSQL = "SELECT x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
             "SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl,  " & _
             " sp.totalprekanan AS total,CASE WHEN kp.id in (2, 4) THEN 'Piutang BPJS' " & _
-            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian' Else '-' end AS keterangan  " & _
+            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' Else '-' end AS keterangan  " & _
             "FROM pasiendaftar_t pd LEFT JOIN strukpelayanan_t sp ON sp.noregistrasifk = pd.norec  " & _
             "LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk  " & _
             "LEFT JOIN rekanan_m r ON r.id = pd.objectrekananfk LEFT JOIN jenisrekanan_m jr ON jr.id = r.objectjenisrekananfk  " & _
@@ -332,7 +336,7 @@ Set Report = New crLaporanJurnalBalik2
             .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
 '            .ucUmum.SetUnboundFieldSource ("{ado.umum}")
-            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
+            .ustgl.SetUnboundFieldSource ("{ado.tgl}")
 '            .ucPerusahaan.SetUnboundFieldSource ("{ado.perusahaan}")
 '            .ucBpjs.SetUnboundFieldSource ("{ado.bpjs}")
             .ucDiskon.SetUnboundFieldSource ("{ado.total}")

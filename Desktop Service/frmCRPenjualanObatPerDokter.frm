@@ -166,7 +166,7 @@ Dim strSQL As String
     With reportPenjualanPerDokter
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
-             strSQL = "select pg.namalengkap, ru2.namaruangan,sr.tglresep, sr.noresep, pr.kdproduk, pr.namaproduk, " & _
+             strSQL = "select pg.namalengkap, ru2.namaruangan,sr.tglresep, sr.noresep, pr.id as idproduk, pr.namaproduk, " & _
                      "pp.jumlah, pp.hargajual, pp.jumlah*pp.hargajual as subtotal, " & _
                      "'-' as kodefarmatologi, ps.namapasien, ps.tgllahir," & _
                      "kp.kelompokpasien , ps.namaibu, al.alamatlengkap " & _
@@ -210,7 +210,7 @@ Dim strSQL As String
             .usNamaUnit.SetUnboundFieldSource ("{ado.namaruangan}")
             .udtTanggal.SetUnboundFieldSource ("{ado.tglresep}")
             .usNoResep.SetUnboundFieldSource ("{ado.noresep}")
-            .usKdProduk.SetUnboundFieldSource ("{ado.kdproduk}")
+            .unKdProduk.SetUnboundFieldSource ("{ado.idproduk}")
             .usNamaProduk.SetUnboundFieldSource ("{ado.namaproduk}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
             .ucHarga.SetUnboundFieldSource ("{ado.hargajual}")

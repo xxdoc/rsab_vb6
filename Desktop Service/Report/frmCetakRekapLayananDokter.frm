@@ -174,7 +174,7 @@ Set Report = New crCetakRekapLayananDokter
             End If
         End If
     End If
-    If strIdRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & strIdRuangan & "' "
+    If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
   
@@ -223,9 +223,9 @@ Set Report = New crCetakRekapLayananDokter
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtUser.SetText "-"
+            .txtuser.SetText "-"
         Else
-            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

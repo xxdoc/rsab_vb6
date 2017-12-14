@@ -15,9 +15,9 @@ Attribute VB_Exposed = False
 
 Private Sub Section1_Format(ByVal pFormattingInfo As Object)
     If usDept.Value = "16" Then
-        txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " + ustgl.Value
+        txtDeskripsi.SetText "Pendapatan R. Inap Non Tunai Tgl " + usTgl.Value
     Else
-        txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " + ustgl.Value
+        txtDeskripsi.SetText "Pendapatan R. Jalan Non Tunai Tgl " + usTgl.Value
     End If
 End Sub
 
