@@ -174,7 +174,7 @@ Dim adocmd As New ADODB.Command
     
     
 Set Report = New crLaporanJurnalHarian
-    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk, " & _
+    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk, map.kdperkiraan, map.namaperkiraan as nmperkiraan,ru.id,map.objectruanganfk, " & _
             "case " & _
             "when jp.id in (99,25)                    then'Pendt. Akomodasi' || ' ' || ru.namaruangan " & _
             "when jp.id =100                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
@@ -187,14 +187,14 @@ Set Report = New crLaporanJurnalHarian
             "when jp.id=27666                         then 'Pendt. Alat Canggih' || ' ' || ru.namaruangan " & _
             "ELSE 'Pendt. Tindakan' || ' ' || ru.namaruangan end  as namaperkiraan, " & _
             "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
-            "'Pendapatan R.Jalan' as keterangan " & _
+            "'Pendapatan R.Jalan' as keterangan, '11410000140201' as kdperkiraanpasien " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec left join strukpelayanan_t as sp on sp.noregistrasifk = pd.norec " & _
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN mapjurnalrj_m as map on map.objectruanganfk=ru.id and map.jpid=jp.id  inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296)" & _
             str1 & _
             str2 & _
@@ -212,8 +212,12 @@ Set Report = New crLaporanJurnalHarian
             .txtDeskripsi.SetText "Pendapatan R. Jalan Tgl " & Format(tglAwal, "dd MMMM yyyy")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
+            .usKeteranganPasien.SetUnboundFieldSource ("{ado.keterangan}")
+            .usKdPerkiraanPasien.SetUnboundFieldSource ("{ado.kdperkiraanpasien}")
+            
             '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
             '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
@@ -262,7 +266,7 @@ Dim adocmd As New ADODB.Command
     
     
 Set Report = New crLaporanJurnalHarian
-    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk,case " & _
+    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk,map.kdperkiraan, map.namaperkiraan as nmperkiraan,ru.id,map.objectruanganfk,case " & _
             "when jp.id in (99,25)                    then'Pendt. Akomodasi' || ' ' || ru.namaruangan " & _
             "when jp.id =100                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
             "when jp.id =101                          then 'Pendt. Visite' || ' ' || ru.namaruangan " & _
@@ -274,7 +278,7 @@ Set Report = New crLaporanJurnalHarian
             "when jp.id=27666                         then 'Pendt. Alat Canggih' || ' ' || ru.namaruangan " & _
             "ELSE 'Pendt. Tindakan' || ' ' || ru.namaruangan end  as namaperkiraan, " & _
             "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
-            "'Pendapatan R.Inap' as keterangan " & _
+            "'Pendapatan R.Inap' as keterangan, '11410000140201' as kdperkiraanpasien  " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec left join strukpelayanan_t as sp on sp.noregistrasifk = pd.norec " & _
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
@@ -282,7 +286,7 @@ Set Report = New crLaporanJurnalHarian
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join ruangan_m as ru2 on ru2.id = apd.objectruanganasalfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
+            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN mapjurnalri_m as map on map.objectruanganfk=ru.id and map.jpid=jp.id " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666)" & _
             str1 & _
             str2 '& _
@@ -301,8 +305,11 @@ Set Report = New crLaporanJurnalHarian
             .txtDeskripsi.SetText "Rekapitulasi Pendapatan R. Inap Tgl " & Format(tglAwal, "dd MMMM yyyy")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
+            .usKeteranganPasien.SetUnboundFieldSource ("{ado.keterangan}")
+            .usKdPerkiraanPasien.SetUnboundFieldSource ("{ado.kdperkiraanpasien}")
             '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
             '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")

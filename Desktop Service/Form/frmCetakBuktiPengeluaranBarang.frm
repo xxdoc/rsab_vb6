@@ -182,7 +182,7 @@ bolStrukResep = True
             strSQL = "select sk.tglkirim, so.tglorder, sk.nokirim, so.noorder, jp.name, ru.namaruangan, " & _
                     "ru.kdruangan || ' - ' || ru.namaruangan as ruangankirim, " & _
                     "ru2.namaruangan, ru2.kdruangan || ' - ' || ru2.namaruangan as ruangantujuan, pg.namalengkap, " & _
-                    "pr.kdproduk, pr.namaproduk, ss.satuanstandar, kp.qtyproduk, kp.qtyorder, kp.hargasatuan, sk.keteranganlainnyakirim, " & _
+                    "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, kp.qtyproduk, kp.qtyorder, kp.hargasatuan, (kp.hargasatuan * kp.qtyproduk) as total, sk.keteranganlainnyakirim, " & _
                     "'Ka. ' || dp.namadepartemen as pnjPengirim, pg.namalengkap as pegawaipengirim, 'NIP. ' || pg.nippns as nippengirim, " & _
                     "'Ka. ' || dp2.namadepartemen as pnjPenerima, pg2.namalengkap as pegawaipenerima, 'NIP. ' || pg2.nippns as nippenerima " & _
                     "from strukkirim_t as sk " & _
@@ -197,7 +197,7 @@ bolStrukResep = True
                     "left JOIN departemen_m as dp2 on dp2.id = ru2.objectdepartemenfk " & _
                     "left join pegawai_m as pg on pg.id = sk.objectpegawaipengirimfk " & _
                     "left join pegawai_m as pg2 on pg2.id = sk.objectpegawaipenerimafk  " & _
-                    "where nokirim = '" & strNoKirim & "'"
+                    "where sk.norec = '" & strNoKirim & "'"
 
              ReadRs strSQL
              
@@ -215,12 +215,13 @@ bolStrukResep = True
              .usRuangKirim.SetUnboundFieldSource ("{Ado.ruangankirim}")
              .usKeterangan.SetUnboundFieldSource ("{Ado.keteranganlainnyakirim}")
              .usRuangTujuan.SetUnboundFieldSource ("{Ado.ruangantujuan}")
-             .usKdBarang.SetUnboundFieldSource ("{ado.kdproduk}")
+             .usKdBarang.SetUnboundFieldSource ("{ado.idproduk}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{ado.satuanstandar}")
              .ucHarga.SetUnboundFieldSource ("{Ado.hargasatuan}")
              .unDiminta.SetUnboundFieldSource ("{Ado.qtyorder}")
              .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
+             .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
              
              .usPnjPengirim.SetUnboundFieldSource ("{Ado.pnjPengirim}")
              .usNamaPenyerah.SetUnboundFieldSource ("{Ado.pegawaipengirim}")

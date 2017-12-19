@@ -267,7 +267,7 @@ Dim adocmd As New ADODB.Command
     
 Set Report = New crLaporanJurnalDetail
             
-    strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah, case " & _
+    strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah,map.kdperkiraan, map.namaperkiraan as nmperkiraan,ru.id,map.objectruanganfk, case " & _
             "when jp.id in (99,25)                    then'Pendt. Akomodasi' || ' ' || ru.namaruangan " & _
             "when jp.id =100                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
             "when jp.id =101                          then 'Pendt. Visite' || ' ' || ru.namaruangan " & _
@@ -287,7 +287,7 @@ Set Report = New crLaporanJurnalDetail
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "inner JOIN mapjurnalri_m as map on map.objectruanganfk=ru.id and map.jpid=jp.id inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666)" & _
             str1 & _
             str2 & _
@@ -310,6 +310,7 @@ Set Report = New crLaporanJurnalDetail
             .usRegMR.SetUnboundFieldSource ("{ado.regcm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usLayanan.SetUnboundFieldSource ("{ado.layanan}")
+            .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
             .ucTarif.SetUnboundFieldSource ("{ado.hargajual}")
             .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
             .unKode.SetUnboundFieldSource ("{ado.kode}")

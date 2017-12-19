@@ -86,7 +86,7 @@ Begin VB.Form frmCRLaporanTagihanPenjamin
       DisplayBackgroundEdge=   -1  'True
       SelectionFormula=   ""
       EnablePopupMenu =   -1  'True
-      EnableExportButton=   0   'False
+      EnableExportButton=   -1  'True
       EnableSearchExpertButton=   0   'False
       EnableHelpButton=   0   'False
    End
@@ -246,27 +246,28 @@ Dim adocmd As New ADODB.Command
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")
-            .ucEmbos.SetUnboundFieldSource ("{ado.embos}")
-            .ucKonsul.SetUnboundFieldSource ("{ado.konsul}")
-            .ucTindakan.SetUnboundFieldSource ("{ado.tindakan}")
-            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
-            .ucResep.SetUnboundFieldSource ("{ado.totalresep}")
-            .ucCash.SetUnboundFieldSource ("{ado.aa}")
-            .ucTagihan.SetUnboundFieldSource ("{ado.bb}")
+            .unKarcis.SetUnboundFieldSource ("{ado.karcis}")
+            .unEmbos.SetUnboundFieldSource ("{ado.embos}")
+            .unKonsul.SetUnboundFieldSource ("{ado.konsul}")
+            .unTindakan.SetUnboundFieldSource ("{ado.tindakan}")
+            '.unDiskon.SetUnboundFieldSource ("{ado.diskon}")
+            .unResep.SetUnboundFieldSource ("{ado.totalresep}")
+            .unCash.SetUnboundFieldSource ("{ado.aa}")
+            .unTagihan.SetUnboundFieldSource ("{ado.bb}")
             '.usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
-            .ucMaterai.SetUnboundFieldSource tmaterai
+            .unMaterai.SetUnboundFieldSource tmaterai
             
             '.ucCash2.SetUnboundFieldSource (tCash)
-            .ucTagihan2.SetUnboundFieldSource (tPiutang)
+            .unTagihan2.SetUnboundFieldSource (tPiutang)
             '.ucCash2.SetUnboundFieldSource (RS2!cash)
             '.ucTagihan2.SetUnboundFieldSource (RS2!totalpiutangpenjamin)
             '.txtA1.SetText Format(RS2!cash, "##,##0.00")
             '.txtA2.SetText Format(RS2!totalpiutangpenjamin, "##,##0.00")
             
             X = Round(tPiutang + tmaterai)
-            .txtPembulatan.SetText Format(X, "##,##0.00")
+            .unPembulatan.SetUnboundFieldSource X
+            '.txtPembulatan.SetText Format(X, "##.##0")
             .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
             
             If view = "false" Then
