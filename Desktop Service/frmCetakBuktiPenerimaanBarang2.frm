@@ -184,7 +184,7 @@ bolStrukResep = True
                     "case when sp.totaldiscount is null then '0,00%' else (sp.totaldiscount * 100) / sp.totalhargasatuan || ',00%' end as persendiskon," & _
                     "case when sp.totalppn is null then '0,00%' else (sp.totalppn * 100) / sp.totalhargasatuan || ',00%' end as persenppn," & _
                     "case when rk.namarekanan is null then '-' else rk.kdrekanan || ' - ' || rk.namarekanan end as rekanan, " & _
-                    "pr.kdproduk, pr.namaproduk, " & _
+                    "pr.id as idproduk, pr.namaproduk, " & _
                     "ss.satuanstandar, sp.totalharusdibayar, " & _
                     "(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as harga, spd.qtyproduk, " & _
                     "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang " & _
@@ -210,12 +210,13 @@ bolStrukResep = True
              .udtanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
              .udTglSPK.SetUnboundFieldSource ("{Ado.tglspk}")
              .usResep.SetUnboundFieldSource ("{Ado.nofaktur}")
+             .usPemesanan.SetUnboundFieldSource ("{Ado.nostruk}")
              .usPersenDiskon.SetUnboundFieldSource ("{Ado.persendiskon}")
              .usPersenPpn.SetUnboundFieldSource ("{Ado.persenppn}")
              .usRekanan.SetUnboundFieldSource ("{Ado.rekanan}")
              .usNamaRuangan.SetUnboundFieldSource ("{Ado.gudang}")
              .usSumberDana.SetUnboundFieldSource ("{Ado.asalproduk}")
-             .usKdBarang.SetUnboundFieldSource ("{ado.kdproduk}")
+             .usKdBarang.SetUnboundFieldSource ("{ado.idproduk}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{ado.satuanstandar}")
              .ucHarga.SetUnboundFieldSource ("{Ado.harga}")
