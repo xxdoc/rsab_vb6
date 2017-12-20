@@ -161,7 +161,7 @@ Dim adocmd As New ADODB.Command
     
     strFilter = " where x.tglregistrasi BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd 23:59") & "'"
+    Format(tglAkhir, "yyyy-MM-dd 23:59") & "'  "
     
     strFilter = strFilter & " AND depart in (18,28,24) "
 '       If idDepartemen <> "" Then
@@ -188,10 +188,11 @@ Set Report = New crLaporanJurnalBalik2
                strFilter
                'WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian'
                
-    strSQL = "SELECT x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
+    strSQL = "SELECT x.kdPerkiraan,x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
             "SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl,  " & _
             " sp.totalprekanan AS total,CASE WHEN kp.id in (2, 4) THEN 'Piutang BPJS' " & _
-            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' Else '-' end AS keterangan  " & _
+            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' Else 'Piutang Pasien Perjanjian' end AS keterangan,CASE WHEN kp.id in (2, 4) THEN '11450000140201' " & _
+            "WHEN kp.id in (3, 5) THEN '11440000140201' Else '11470000140201' end AS kdPerkiraan  " & _
             "FROM pasiendaftar_t pd LEFT JOIN strukpelayanan_t sp ON sp.noregistrasifk = pd.norec  " & _
             "LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk  " & _
             "LEFT JOIN rekanan_m r ON r.id = pd.objectrekananfk LEFT JOIN jenisrekanan_m jr ON jr.id = r.objectjenisrekananfk  " & _
@@ -199,13 +200,13 @@ Set Report = New crLaporanJurnalBalik2
             " Union All " & _
             " SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl, " & _
             " CASE WHEN ((pp.hargadiscount * pp.jumlah) IS NULL) THEN (0) ELSE (pp.hargadiscount * pp.jumlah) END AS  total, " & _
-            " ('Biaya Subsidi Fasilitas Kesehatan '::text || (ru.namaruangan)::text) AS keterangan " & _
+            " mm.namaperkiraan as keterangan,mm.kdperkiraan as  kdPerkiraan " & _
             " FROM pasiendaftar_t pd JOIN antrianpasiendiperiksa_t adp ON adp.noregistrasifk = pd.norec " & _
-            " LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk " & _
-            " LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk where pp.hargadiscount is not null and pp.hargadiscount > 0 " & _
+            " LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk LEFT JOIN mapjurnalmanual mm ON mm.objectruanganfk = ru.id " & _
+            " LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk where pp.hargadiscount is not null and pp.hargadiscount > 0 and mm.jenis='JurnalBalik' " & _
             ") x " & _
             " " & strFilter & _
-            "GROUP BY x.tgl,  x.keterangan,x.tglregistrasi ORDER BY x.tgl,x.keterangan"
+            "GROUP BY x.tgl,  x.kdPerkiraan,x.keterangan,x.tglregistrasi ORDER BY x.tgl,x.keterangan"
     
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -222,6 +223,7 @@ Set Report = New crLaporanJurnalBalik2
             .ucDiskon.SetUnboundFieldSource ("{ado.total}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.keterangan}")
+            .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdPerkiraan}")
 
            
             
@@ -276,7 +278,7 @@ Dim adocmd As New ADODB.Command
     
     strFilter = " where x.tglregistrasi BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd 23:59") & "'"
+    Format(tglAkhir, "yyyy-MM-dd 23:59") & "'  "
     
     strFilter = strFilter & " AND depart in (16) "
 '       If idDepartemen <> "" Then
@@ -301,10 +303,10 @@ Set Report = New crLaporanJurnalBalik2
                strFilter
                ' WHEN (kp.id in (1,6)) THEN 'Piutang Pasien Perjanjian'
                
-    strSQL = "SELECT x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
+    strSQL = "SELECT x.kdPerkiraan,x.keterangan,x.tgl,sum(x.total) AS total,x.tglregistrasi FROM ( " & _
             "SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl,  " & _
             " sp.totalprekanan AS total,CASE WHEN kp.id in (2, 4) THEN 'Piutang BPJS' " & _
-            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' Else '-' end AS keterangan  " & _
+            "WHEN kp.id in (3, 5) THEN 'Piutang Perusahaan' Else 'Piutang Pasien Perjanjian' end AS keterangan,CASE WHEN kp.id in (2, 4) THEN '11450000140201' WHEN kp.id in (3, 5) THEN '11440000140201' Else '11470000140201' end AS kdPerkiraan " & _
             "FROM pasiendaftar_t pd LEFT JOIN strukpelayanan_t sp ON sp.noregistrasifk = pd.norec  " & _
             "LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk  " & _
             "LEFT JOIN rekanan_m r ON r.id = pd.objectrekananfk LEFT JOIN jenisrekanan_m jr ON jr.id = r.objectjenisrekananfk  " & _
@@ -312,20 +314,20 @@ Set Report = New crLaporanJurnalBalik2
             " Union All " & _
             " SELECT dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl, " & _
             " CASE WHEN ((pp.hargadiscount * pp.jumlah) IS NULL) THEN (0) ELSE (pp.hargadiscount * pp.jumlah) END AS  total, " & _
-            " ('Biaya Subsidi Fasilitas Kesehatan '::text || (ru.namaruangan)::text) AS keterangan " & _
+            " mm.namaperkiraan as keterangan,kdperkiraan as  kdPerkiraan " & _
             " FROM pasiendaftar_t pd JOIN antrianpasiendiperiksa_t adp ON adp.noregistrasifk = pd.norec " & _
             " LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk " & _
-            " LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk where pp.hargadiscount is not null and pp.hargadiscount > 0 " & _
+            " LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk LEFT JOIN mapjurnalmanual mm ON mm.objectruanganfk = ru.id where pp.hargadiscount is not null and pp.hargadiscount > 0 and mm.jenis='JurnalBalik' " & _
             "union ALL " & _
             "select dp.id AS depart,pd.tglregistrasi,to_char(pd.tglregistrasi, 'YYYY-MM-DD'::text) AS tgl, " & _
             "CASE WHEN ((pp.hargajual) IS NULL) THEN (0) " & _
-            "ELSE (pp.hargajual) END AS  total,('Uang Muka Pasien ') AS keterangan " & _
+            "ELSE (pp.hargajual) END AS  total,('Uang Muka Pasien ') AS keterangan,'21140030140301' as kdPerkiraan " & _
             "FROM pasiendaftar_t pd " & _
-            "JOIN antrianpasiendiperiksa_t adp ON adp.noregistrasifk = pd.norec  LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk  LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk " & _
-            "where pp.hargajual is not null and pp.hargajual > 0  and pp.produkfk=402611 " & _
+            "JOIN antrianpasiendiperiksa_t adp ON adp.noregistrasifk = pd.norec  LEFT JOIN pelayananpasien_t pp ON pp.noregistrasifk = adp.norec LEFT JOIN ruangan_m ru ON ru.id = pd.objectruanganlastfk  LEFT JOIN departemen_m dp ON dp.id = ru.objectdepartemenfk  " & _
+            "where pp.hargajual is not null and pp.hargajual > 0  and pp.produkfk=402611  " & _
             ") x " & _
             " " & strFilter & _
-            "GROUP BY x.tgl,  x.keterangan,x.tglregistrasi ORDER BY x.tgl,x.keterangan"
+            "GROUP BY x.tgl,x.kdPerkiraan,  x.keterangan,x.tglregistrasi ORDER BY x.tgl,x.keterangan"
     
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -342,6 +344,7 @@ Set Report = New crLaporanJurnalBalik2
             .ucDiskon.SetUnboundFieldSource ("{ado.total}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.keterangan}")
+            .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdPerkiraan}")
 
            
             

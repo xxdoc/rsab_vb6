@@ -166,7 +166,7 @@ Dim strFilter As String
 '    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
    
 Set Report = New crRincianBiayaPelayanan
-    strSQL = "SELECT pp.norec as norec_pp, sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan  as unit,ru.objectdepartemenfk,case when sr.noresep is not null then '' else kl.namakelas end as namakelas,   " & _
+    'strSQL = "SELECT pp.norec as norec_pp, sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan  as unit,ru.objectdepartemenfk,case when sr.noresep is not null then '' else kl.namakelas end as namakelas,   " & _
             "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, case when sr.noresep is not null then ru_sr.namaruangan || '     Resep No: ' || sr.noresep  else ru2.namaruangan  end as ruangantindakan, case when pp.rke is not null then 'R/' || pp.rke || ' ' || pr.namaproduk else pr.namaproduk end as namaproduk,pg_sr.namalengkap as penulisresep,case when sr.noresep is not null then 'Resep' else jp.jenisproduk end as jenisproduk, case when sr.noresep is not null then '' else (select pgw.namalengkap from pegawai_m as pgw INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pgw.id where p3.pelayananpasien=pp.norec and p3.objectjenispetugaspefk=4 limit 1) end as dokter,pp.jumlah,pp.hargajual,   " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
             "sp.totalharusdibayar,case when sp.totalprekanan is null then 0 else sp.totalprekanan end as totalprekanan,(case when sppj.totalppenjamin is null then 0 else sppj.totalppenjamin end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as totalbiayatambahan, pg3.namalengkap as user " & _
@@ -190,6 +190,8 @@ Set Report = New crRincianBiayaPelayanan
             "where pd.noregistrasi='" & strNoregistrasi & "' and pr.id not in (402611,10011572,10011571)   or " & _
             "sp.nostruk='" & strNoStruk & "' and pr.id not in (402611,10011572,10011571)  or " & _
             "sbm.nosbm='" & strNoKwitansi & "' and pr.id not in (402611,10011572,10011571)  order by pp.tglpelayanan, pp.rke"
+            
+    strSQL = "select * from temp_billing_t where noregistrasi='" & strNoregistrasi & "' and namaproduk is not null order by tglpelayanan, namaproduk"
     
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
@@ -254,7 +256,7 @@ Set Report = New crRincianBiayaPelayanan
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
-            .usKelasH.SetUnboundFieldSource ("{ado.namakelas}")
+            .usKelasH.SetUnboundFieldSource ("{ado.namakelaspd}")
             .usDokterPJawab.SetUnboundFieldSource ("{ado.dokterpj}")
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .udTglPlng.SetUnboundFieldSource IIf(IsNull("{ado.tglpulang}") = True, "-", ("{ado.tglpulang}"))
@@ -305,7 +307,7 @@ Set Report = New crRincianBiayaPelayanan
 '            Else
 '                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
 '            End If
-            .txtUser.SetText UCase(strIdPegawai)
+            .txtuser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String
