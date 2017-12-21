@@ -209,12 +209,19 @@ Dim strKet As Boolean
     
     Dim i As Integer
     Dim jumlahDuit As Double
+    Dim kembaliDeposit As Boolean
+    
     For i = 0 To RS.RecordCount - 1
         jumlahDuit = jumlahDuit + CDbl(RS!totaldibayar)
         RS.MoveNext
         
     Next
     RS.MoveFirst
+    
+    kembaliDeposit = False
+    If jumlahDuit < 0 Then
+        kembaliDeposit = True
+    End If
     
     With Report
         If Not RS.EOF Then
@@ -228,7 +235,12 @@ Dim strKet As Boolean
             If strKet = True Then
                 .txtKeterangan.SetText UCase("Biaya Layanan " & RS("namaruangan"))  'RS("keteranganlainnya")
             Else
-                .txtKeterangan.SetText UCase(RS("namaruangan"))  'RS("keteranganlainnya")
+                If kembaliDeposit = False Then
+                    .txtKeterangan.SetText UCase(RS("namaruangan"))  'RS("keteranganlainnya")
+                Else
+                    .txtKeterangan.SetText Replace(UCase(RS("namaruangan")), "PEMBAYARAN", "PENGEMBALIAN")
+                    jumlahDuit = jumlahDuit * (-1)
+                End If
             End If
 '            .txtKeterangan.SetText "Biaya Perawatan Pasien"
             .txtRp.SetText "Rp. " & Format(jumlahDuit, "##,##0.00")

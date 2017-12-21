@@ -75,14 +75,14 @@ Form=Report\frmCRCetakLaporanPendapatanRuanganDetail.frm
 Form=Report\frmCRCetakRekapLaporanPendapatanPoli.frm
 Designer=Report\crLaporanSensusBPJS.Dsr
 Form=Report\frmCRCetakSensusBPJS.frm
-Form=Form\frmLaporanPenerimaanFFS.frm
+Form=Form\frmRekapffsRI.frm
 Designer=Report\crLaporanPenerimaanRemun.Dsr
 Form=frmRekapPenerimaan.frm
 Designer=Report\crRekapPenerimaan.Dsr
 Form=frmLaporanPenerimaan.frm
 Form=Form\frmLaporanPenerimaanRemun.frm
 Designer=crLaporanPenerimaan.Dsr
-Designer=Report\crLaporanPenerimaanFFS.Dsr
+Designer=Report\crRekapffsRI.Dsr
 Form=Form\frmLaporanPendapatan.frm
 Form=Form\frmLaporanPendapatanFFS.frm
 Designer=Report\crLaporanPendapatan.Dsr
@@ -181,10 +181,21 @@ Form=Form\frmCetakBuktiPengeluaranBarang.frm
 Designer=Report\cr_RekapPenerimaanBarang2.Dsr
 Form=frmCetakBuktiPenerimaanBarang2.frm
 Designer=Report\cr_RekapPengeluaranBarang2.Dsr
+<<<<<<< HEAD
 Designer=Report\crRekapJasaMedis.Dsr
 Designer=Report\crRekapPendapatan.Dsr
 Form=Form\frmRekapPendapatan.frm
 Designer=Report\crRekapHarianPemeriksaan.Dsr
+=======
+Form=Form\frmLaporanPenerimaanFFS.frm
+Designer=Report\crLaporanPenerimaanFFS.Dsr
+Form=Form\frmLaporanffsRI.frm
+Designer=Report\crLaporanffsRI.Dsr
+Form=Form\frmLaporanffsIGD.frm
+Designer=Report\crLaporanffsIGD.Dsr
+Form=Form\frmRekapffsIGD.frm
+Designer=Report\crRekapffsIGD.Dsr
+>>>>>>> f51c411938313165cb54b59a23a6eb044db66b1f
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -200,7 +211,11 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
+<<<<<<< HEAD
 VersionComments="CR171128.1"
+=======
+VersionComments="NV171220.2"
+>>>>>>> f51c411938313165cb54b59a23a6eb044db66b1f
 VersionCompanyName="PT. Jasamedika Saranatama"
 CompilationType=0
 OptimizationType=0
