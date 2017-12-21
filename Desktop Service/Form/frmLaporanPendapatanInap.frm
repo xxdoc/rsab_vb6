@@ -147,27 +147,36 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanPendapatanInap = Nothing
 End Sub
 
-Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idKelas As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idKelompok As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRLaporanPendapatanInap = Nothing
 Dim adocmd As New ADODB.Command
 
-    Dim str1, str2, str3 As String
+    Dim str1, str2, str3, str4 As String
 
     If idDepartemen <> "" Then
-        str1 = " and dp.id=" & idDepartemen & " "
+        If idDepartemen = 16 Then
+            str1 = " and dp.id in (16,17,26)"
+        Else
+            If idDepartemen <> "" Then
+                str1 = " and dp.id not in (16,17,26)"
+            End If
+        End If
     End If
     If idRuangan <> "" Then
         str2 = " and ru.id=" & idRuangan & " "
     End If
-    If idKelas <> "" Then
-        str3 = " and kls.id=" & idKelas & " "
+'    If idKelas <> "" Then
+'        str3 = " and kls.id=" & idKelas & " "
+'    End If
+    If idKelompok <> "" Then
+        str4 = " and kps.id=" & idKelompok & " "
     End If
     
 Set Report = New crLaporanPendapatanInap
-    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || km.namakamar as namaruangan,pro.namaproduk, " & _
+    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || km.namakamar as namaruangan, kps.kelompokpasien,pro.namaproduk, " & _
             "case when jp.id in (99,25) then 'Akomodasi' " & _
             "when jp.id=101 then 'Visit' " & _
             "when jp.id =102 then 'Tindakan' when jp.id=27666 then 'Sewa Alat' end as jenisproduk, " & _
@@ -182,11 +191,12 @@ Set Report = New crLaporanPendapatanInap
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+            "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             "and jp.id in (25,99,101,102,27666) " & _
              str1 & _
              str2 & _
-             str3 & _
+             str4 & _
              "order by pd.noregistrasi"
 
             
@@ -204,7 +214,7 @@ Set Report = New crLaporanPendapatanInap
             .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
             '.ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-'            .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
+            .usKelompok.SetUnboundFieldSource ("{ado.kelompokpasien}")
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
 
