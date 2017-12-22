@@ -158,10 +158,10 @@ Dim adocmd As New ADODB.Command
     
     If idDepartemen <> "" Then
         If idDepartemen = 18 Then
-            str1 = " AND ru.objectdepartemenfk <> 16"
+            str1 = " AND ru2.objectdepartemenfk <> 16"
         Else
             If idDepartemen <> "" Then
-                str1 = " AND ru.objectdepartemenfk = '" & idDepartemen & "' "
+                str1 = " AND ru2.objectdepartemenfk = '" & idDepartemen & "' "
             End If
         End If
     End If
@@ -184,13 +184,13 @@ Set Report = New crLaporanJurnalHarian
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
-            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id " & _
+            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
             str2 & _
-            "order by pro.namaproduk"
+            " order by pro.namaproduk"
    
             
     adocmd.CommandText = strSQL
@@ -203,7 +203,7 @@ Set Report = New crLaporanJurnalHarian
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
             .txtDeskripsi.SetText "Pendapatan R. Jalan Tgl " & Format(tglAwal, "dd MMMM yyyy")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
@@ -244,7 +244,7 @@ Dim adocmd As New ADODB.Command
     Dim str2 As String
     
     If idDepartemen <> "" Then
-        str1 = " AND ru.objectdepartemenfk = '" & idDepartemen & "' "
+        str1 = " AND ru3.objectdepartemenfk = '" & idDepartemen & "' "
     End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
@@ -288,8 +288,8 @@ Set Report = New crLaporanJurnalHarian
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id " & _
+            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru3 on ru3.id=pd.objectruanganlastfk " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
             "left join ruangan_m as ru2 on ru2.id = apd.objectruanganasalfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
@@ -306,7 +306,7 @@ Set Report = New crLaporanJurnalHarian
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
             .txtDeskripsi.SetText "Rekapitulasi Pendapatan R. Inap Tgl " & Format(tglAwal, "dd MMMM yyyy")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
