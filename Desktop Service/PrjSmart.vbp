@@ -23,6 +23,8 @@ Form=Form\frmSettingKoneksi.frm
 Form=Form\frmRajal.frm
 Form=Form\frmTataRekening.frm
 Module=SavetoFile; Module\SaveTxt.bas
+Designer=Report\crRekapPendapatan.Dsr
+Form=Form\frmRekapPendapatan.frm
 Module=mdTerbilang; Module\mdTerbilang.bas
 Form=Report\frmCRCetakPasienPerjanjian.frm
 Form=Form\frmFarmasiApotik.frm
@@ -75,14 +77,21 @@ Form=Report\frmCRCetakLaporanPendapatanRuanganDetail.frm
 Form=Report\frmCRCetakRekapLaporanPendapatanPoli.frm
 Designer=Report\crLaporanSensusBPJS.Dsr
 Form=Report\frmCRCetakSensusBPJS.frm
+<<<<<<< HEAD
 Form=Form\frmLaporanPenerimaanFFS.frm
+=======
+Form=Form\frmRekapffsIBS.frm
+>>>>>>> 1ce9345df27cfca22f84089916f0019997887ea8
 Designer=Report\crLaporanPenerimaanRemun.Dsr
 Form=frmRekapPenerimaan.frm
 Designer=Report\crRekapPenerimaan.Dsr
 Form=frmLaporanPenerimaan.frm
 Form=Form\frmLaporanPenerimaanRemun.frm
 Designer=crLaporanPenerimaan.Dsr
+<<<<<<< HEAD
 Designer=Report\crLaporanPenerimaanFFS.Dsr
+=======
+>>>>>>> 1ce9345df27cfca22f84089916f0019997887ea8
 Form=Form\frmLaporanPendapatan.frm
 Form=Form\frmLaporanPendapatanFFS.frm
 Designer=Report\crLaporanPendapatan.Dsr
@@ -166,14 +175,14 @@ Form=Report\frmCRCetakLaporanPasienPulang2.frm
 Designer=Report\crLaporanPasienPulang2.Dsr
 Form=Form\frmLogistik.frm
 Form=Form\frmCetakRekapPengeluaranBarang.frm
-Designer=Report\cr_PenerimaanPengeluaranBarang.Dsr
 Designer=Report\cr_RincianPenerimaanBarang.Dsr
 Form=Report\frmCetakBuktiPenerimaanBarang.frm
 Form=Report\frmCrRekapHarianPemeriksaanLab.frm
 Designer=Report\crRekapHarianPemeriksaanLab.Dsr
 Designer=Report\crCetakRekapLayananDokter.Dsr
 Form=Report\frmCetakRekapLayananDokter.frm
-Form=frmCrRekapJasaMedis.frm
+Form=frmCrRekapHarianPemeriksaan.frm
+Designer=Report\crRekapHarianPemeriksaan.Dsr
 Form=Form\frmCetakRekapPenerimaanBarang.frm
 Designer=Report\cr_BuktiPengeluaranBarang.Dsr
 Designer=cr_BuktiPenerimaanBarang.Dsr
@@ -181,6 +190,7 @@ Form=Form\frmCetakBuktiPengeluaranBarang.frm
 Designer=Report\cr_RekapPenerimaanBarang2.Dsr
 Form=frmCetakBuktiPenerimaanBarang2.frm
 Designer=Report\cr_RekapPengeluaranBarang2.Dsr
+<<<<<<< HEAD
 Designer=Report\crRekapJasaMedis.Dsr
 Designer=Report\crRekapPendapatan.Dsr
 Form=Form\frmRekapPendapatan.frm
@@ -188,13 +198,27 @@ Designer=Report\crRekapHarianPemeriksaan.Dsr
 Designer=Report\crLaporanJasaMedisRI.Dsr
 Form=Form\frmLaporanJasaMedisRI.frm
 Form=Form\frmLaporanffsRI.frm
+=======
+Form=Form\frmLaporanPenerimaanFFS.frm
+Designer=Report\crLaporanPenerimaanFFS.Dsr
+Form=Form\frmLaporanffsIBS.frm
+Form=Form\frmLaporanffsIGD.frm
+Designer=Report\crLaporanffsIGD.Dsr
+Form=Form\frmRekapffsIGD.frm
+Designer=Report\crRekapffsIGD.Dsr
+Form=Form\frmLaporanffsRI.frm
+Designer=Report\crLaporanffsIBS.Dsr
+Form=Form\frmRekapffsRI.frm
+Designer=Report\crRekapffsIBS.Dsr
+Designer=Report\crRekapffsRI.Dsr
+>>>>>>> 1ce9345df27cfca22f84089916f0019997887ea8
 Designer=Report\crLaporanffsRI.Dsr
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
-ExeName32="DesktopServiceCoba2.exe"
-Path32="C:\DS"
+ExeName32="DesktopService.exe"
+Path32="C:\"
 Command32=""
 Name="DesktopService"
 HelpContextID="0"
@@ -204,7 +228,11 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
+<<<<<<< HEAD
 VersionComments="CR171128.1"
+=======
+VersionComments="NV171222.1"
+>>>>>>> 1ce9345df27cfca22f84089916f0019997887ea8
 VersionCompanyName="PT. Jasamedika Saranatama"
 CompilationType=0
 OptimizationType=0

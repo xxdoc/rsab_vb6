@@ -158,10 +158,10 @@ Dim adocmd As New ADODB.Command
     
     If idDepartemen <> "" Then
         If idDepartemen = 18 Then
-            str1 = " AND ru.objectdepartemenfk <> 16"
+            str1 = " AND ru2.objectdepartemenfk <> 16"
         Else
             If idDepartemen <> "" Then
-                str1 = " AND ru.objectdepartemenfk = '" & idDepartemen & "' "
+                str1 = " AND ru2.objectdepartemenfk = '" & idDepartemen & "' "
             End If
         End If
     End If
@@ -185,8 +185,8 @@ Set Report = New crLaporanJurnalDetail
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
-            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id " & _
+            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
+            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
             str2 & _
@@ -198,7 +198,7 @@ Set Report = New crLaporanJurnalDetail
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .txtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT JALAN"
+            .TxtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT JALAN"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
             
@@ -249,7 +249,7 @@ Dim adocmd As New ADODB.Command
     Dim str2 As String
     
     If idDepartemen <> "" Then
-        str1 = " AND ru.objectdepartemenfk in (16) "
+        str1 = " AND ru2.objectdepartemenfk in (16) "
     End If
 '    If idDepartemen <> "" Then
 '        str1 = "and ru.objectdepartemenfk=" & idDepartemen & " "
@@ -299,8 +299,8 @@ Set Report = New crLaporanJurnalDetail
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id " & _
+            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
             "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
@@ -311,7 +311,7 @@ Set Report = New crLaporanJurnalDetail
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .txtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT INAP"
+            .TxtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT INAP"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
             '.usTglRegis.SetUnboundFieldSource ("{ado.tglregistrasi}")

@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRRekapffsRI = Nothing
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, view As String)
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -198,11 +198,15 @@ Dim adocmd As New ADODB.Command
     If idDokter <> "" Then
         dokter = " and pg.id = '" & idDokter & "'"
     End If
+    Dim idRuangan As String
+    If kdRuangan <> "" Then
+        idRuangan = " and ru.id = '" & kdRuangan & "'"
+    End If
 
     
 Set Report = New crRekapffsRI
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-            "select to_char(pd.tglregistrasi,'Day') as hari,pd.tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
+            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
             "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
             "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as total,0 as remun,ppd.jumlah " & _
             "from pasiendaftar_t as pd " & _
@@ -214,8 +218,8 @@ Set Report = New crRekapffsRI
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & "" & _
-            "order by pd.tglregistrasi) as x where  " & SQLdate
+            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & idRuangan & "" & _
+            "order by pp.tglpelayanan) as x where  " & SQLdate
 
 '
     adocmd.CommandText = strSQL
@@ -239,21 +243,21 @@ Set Report = New crRekapffsRI
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
             
-            If view = "false" Then
-                Dim strPrinter As String
-'
-                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
-                .SelectPrinter "winspool", strPrinter, "Ne00:"
-                .PrintOut False
-                Unload Me
-            Else
+'            If view = "false" Then
+'                Dim strPrinter As String
+''
+'                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+'                .SelectPrinter "winspool", strPrinter, "Ne00:"
+'                .PrintOut False
+'                Unload Me
+'            Else
                 With CRViewer1
                     .ReportSource = Report
                     .ViewReport
                     .Zoom 1
                 End With
                 Me.Show
-            End If
+'            End If
         'End If
     End With
 Exit Sub
