@@ -188,7 +188,7 @@ On Error Resume Next
                 '127.0.0.1:1237/printvb/kasir?cetak-laporan-pendapatan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&view=false
             
             Case "cetak-rekap-pendapatan"
-                Call frmRekapPendapatan.CetakRekapPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
+                Call frmRekapPendapatan.CetakRekapPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Rekap Penerimaan Kasir"
                 Root("by") = "as@epic"
