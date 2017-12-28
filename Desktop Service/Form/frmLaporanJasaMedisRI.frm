@@ -190,10 +190,10 @@ Set Report = New crLaporanJasaMedisRI
             .txtNamaKasir.SetText PrinteDBY
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
-            .usHari.SetUnboundFieldSource ("{ado.harihari}")
-            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            .usHari.SetUnboundFieldSource ("{ado.harihari}")
+'            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
-            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")

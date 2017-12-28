@@ -218,7 +218,7 @@ Set Report = New crLaporanffsRI
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & idRuangan & "" & _
+            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
             'hanya visite
@@ -233,7 +233,7 @@ Set Report = New crLaporanffsRI
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
             .usHari.SetUnboundFieldSource ("{ado.harihari}")
-            .ustgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
