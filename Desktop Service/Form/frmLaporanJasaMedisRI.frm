@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRLaporanffsRI 
+Begin VB.Form frmLaporanJasaMedisRI 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmLaporanffsRI.frx":0000
+   Icon            =   "frmLaporanJasaMedisRI.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmCRLaporanffsRI
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRLaporanffsRI"
+Attribute VB_Name = "frmLaporanJasaMedisRI"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanffsRI
+Dim Report As New crLaporanJasaMedisRI
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,71 +144,29 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRLaporanffsRI = Nothing
+    Set frmLaporanJasaMedisRI = Nothing
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String)
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRLaporanffsRI = Nothing
+Set frmLaporanJasaMedisRI = Nothing
 Dim adocmd As New ADODB.Command
-
-    Dim str1 As String
-    Dim str2 As String
-    
-    Dim diff As Integer
-    
-    diff = DateDiff("d", tglAwal, tglAkhir)
-    Dim strTgl As String
-    Dim strTglJamSQL As String
-    Dim strTglJamSQLLibur As String
-    Dim i As Integer
-    Dim SQLdate As String
-    Dim SQLdateLibur As String
-    
-    For i = 0 To diff
-        strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-'        Else
-'            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-'                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
-        End If
-        SQLdate = SQLdate & strTglJamSQL
-    Next
-    
-    If tglLibur <> "" Then
-        Dim strarr() As String
-        strarr = Split(tglLibur, ",")
-        For i = 0 To UBound(strarr)
-           strTglJamSQL = " or tglregistrasi between '" & Format(tglAwal, "yyyy-MM-" & strarr(i)) & " 00:00' and '" & Format(tglAwal, "yyyy-MM-" & strarr(i)) & " 23:59'"
-           strTglJamSQLLibur = " or tglregistrasi between '" & Format(tglAwal, "yyyy-MM-" & strarr(i)) & " 00:00' and '" & Format(tglAwal, "yyyy-MM-" & strarr(i)) & " 23:59'"
-            SQLdate = SQLdate & strTglJamSQL
-            SQLdateLibur = SQLdateLibur & strTglJamSQLLibur
-        Next
-        SQLdateLibur = " case when " & Right(SQLdateLibur, Len(SQLdateLibur) - 3) & " then 'OT/Libur' else "
-        Dim STREND As String
-        STREND = " end "
-    End If
-    
-        SQLdate = Right(SQLdate, Len(SQLdate) - 3)
     
     Dim dokter As String
     If idDokter <> "" Then
         dokter = " and pg.id = '" & idDokter & "'"
     End If
-    Dim idRuangan As String
-    If kdRuangan <> "" Then
-        idRuangan = " and ru.id = '" & kdRuangan & "'"
-    End If
 
     
-Set Report = New crLaporanffsRI
-    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
+Set Report = New crLaporanJasaMedisRI
+    strSQL = "select pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
             "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as total,0 as remun " & _
+            "case when ppd.komponenhargafk = 35 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasamedis," & _
+            "case when ppd.komponenhargafk = 25 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasaparamedis, " & _
+            "case when ppd.komponenhargafk = 38 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasasarana, " & _
+            "case when ppd.komponenhargafk = 30 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasaumum, 0 as diskonmedis " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -218,8 +176,8 @@ Set Report = New crLaporanffsRI
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & idRuangan & "" & _
-            "order by pp.tglpelayanan) as x where  " & SQLdate
+            "Where ppp.objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & "" & _
+            "order by pp.tglpelayanan"
             
             'hanya visite
 
@@ -233,7 +191,7 @@ Set Report = New crLaporanffsRI
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
             .usHari.SetUnboundFieldSource ("{ado.harihari}")
-            .ustgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
@@ -241,24 +199,28 @@ Set Report = New crLaporanffsRI
             .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .ucJasaMedis.SetUnboundFieldSource ("{ado.total}")
+            .ucJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
+            .ucJasaParam.SetUnboundFieldSource ("{ado.jasaparamedis}")
+            .ucJasaSarana.SetUnboundFieldSource ("{ado.jasasarana}")
+            .ucJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
+            .ucDiskonMedis.SetUnboundFieldSource ("{ado.diskonmedis}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             
-'            If view = "false" Then
-'                Dim strPrinter As String
-''
-'                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
-'                .SelectPrinter "winspool", strPrinter, "Ne00:"
-'                .PrintOut False
-'                Unload Me
-'            Else
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
                 With CRViewer1
                     .ReportSource = Report
                     .ViewReport
                     .Zoom 1
                 End With
                 Me.Show
-'            End If
+            End If
         'End If
     End With
 Exit Sub

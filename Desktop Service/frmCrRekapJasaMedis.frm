@@ -277,7 +277,7 @@ Set Report = New crRekapJasaMedis
             .usRuangan.SetUnboundFieldSource ("{ado.ruangan}")
             .unQty.SetUnboundFieldSource ("{ado.qty}")
             .unTarif.SetUnboundFieldSource ("{ado.tarif}")
-            .unDiskon.SetUnboundFieldSource ("{ado.diskon}")
+            '.unDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .unSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
             .unJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
             .unJasaParamedis.SetUnboundFieldSource ("{ado.jasaparamedis}")
