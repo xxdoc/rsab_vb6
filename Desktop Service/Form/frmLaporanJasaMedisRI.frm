@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmLaporanJasaMedisRI = Nothing
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, view As String)
+Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -176,7 +176,7 @@ Set Report = New crLaporanJasaMedisRI
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppp.objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & "" & _
+            "Where pp.tglPelayanan between '" & tglAwal & "' and '" & tglAkhir & "' ppp.objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & "" & _
             "order by pp.tglpelayanan"
             
             'hanya visite
@@ -190,10 +190,9 @@ Set Report = New crLaporanJasaMedisRI
             .txtNamaKasir.SetText PrinteDBY
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
-            .usHari.SetUnboundFieldSource ("{ado.harihari}")
-            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            '.usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
-            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
+           ' .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
