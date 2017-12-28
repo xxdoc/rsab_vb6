@@ -77,23 +77,16 @@ Form=Report\frmCRCetakLaporanPendapatanRuanganDetail.frm
 Form=Report\frmCRCetakRekapLaporanPendapatanPoli.frm
 Designer=Report\crLaporanSensusBPJS.Dsr
 Form=Report\frmCRCetakSensusBPJS.frm
-<<<<<<< HEAD
-Form=Form\frmRekapffsIBS.frm
-=======
 Form=Form\frmLaporanPenerimaanFFS.frm
 Form=Form\frmRekapffsIBS.frm
 Designer=Report\crLaporanPenerimaanRemun.Dsr
->>>>>>> 780d60afa8c9c5f1d127277d19628abf81331565
 Form=frmRekapPenerimaan.frm
 Designer=Report\crRekapPenerimaan.Dsr
 Form=frmLaporanPenerimaan.frm
 Form=Form\frmLaporanPenerimaanRemun.frm
 Designer=crLaporanPenerimaan.Dsr
-<<<<<<< HEAD
-=======
 Designer=Report\crLaporanPenerimaanFFS.Dsr
 Form=Form\frmLaporanPendapatan.frm
->>>>>>> 780d60afa8c9c5f1d127277d19628abf81331565
 Form=Form\frmLaporanPendapatanFFS.frm
 Designer=Report\crLaporanPendapatan.Dsr
 Designer=Report\crLaporanPendapatanFFS.Dsr
@@ -191,18 +184,10 @@ Form=Form\frmCetakBuktiPengeluaranBarang.frm
 Designer=Report\cr_RekapPenerimaanBarang2.Dsr
 Form=frmCetakBuktiPenerimaanBarang2.frm
 Designer=Report\cr_RekapPengeluaranBarang2.Dsr
-<<<<<<< HEAD
-Designer=Report\crLaporanJasaMedisRI.Dsr
-Form=Form\frmLaporanJasaMedisRI.frm
-Form=Form\frmLaporanffsRI.frm
-Form=Form\frmLaporanPenerimaanFFS.frm
-Designer=Report\crLaporanPenerimaanFFS.Dsr
-=======
 Designer=Report\crRekapJasaMedis.Dsr
 Designer=Report\crLaporanJasaMedisRI.Dsr
 Form=Form\frmLaporanJasaMedisRI.frm
 Form=Form\frmLaporanffsRI.frm
->>>>>>> 780d60afa8c9c5f1d127277d19628abf81331565
 Form=Form\frmLaporanffsIBS.frm
 Form=Form\frmLaporanffsIGD.frm
 Designer=Report\crLaporanffsIGD.Dsr
@@ -212,10 +197,7 @@ Designer=Report\crLaporanffsIBS.Dsr
 Form=Form\frmRekapffsRI.frm
 Designer=Report\crRekapffsIBS.Dsr
 Designer=Report\crRekapffsRI.Dsr
-<<<<<<< HEAD
-=======
 Designer=Report\crLaporanffsRI.Dsr
->>>>>>> 780d60afa8c9c5f1d127277d19628abf81331565
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -231,12 +213,8 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-VersionComments="NV171222.1"
-<<<<<<< HEAD
-VersionCompanyName="ab"
-=======
+VersionComments="NV171228.1"
 VersionCompanyName="PT. Jasamedika Saranatama"
->>>>>>> 780d60afa8c9c5f1d127277d19628abf81331565
 CompilationType=0
 OptimizationType=0
 FavorPentiumPro(tm)=0
