@@ -167,14 +167,14 @@ Set Report = New crLaporanPasienPulang2
     
     If strIdDepartemen <> "" Then
         If strIdDepartemen = 18 Then
-            strFilter = strFilter & " AND ru2.objectdepartemenfk in (18,3,24,27,28)"
+            strFilter = strFilter & " AND ru.objectdepartemenfk in (18,3,24,27,28)"
         Else
             If strIdDepartemen <> "" Then
-                strFilter = strFilter & " AND ru2.objectdepartemenfk = '" & strIdDepartemen & "' "
+                strFilter = strFilter & " AND ru.objectdepartemenfk = '" & strIdDepartemen & "' "
             End If
         End If
     End If
-    If strIdRuangan <> "" Then strFilter = strFilter & " AND sp.objectruanganfk = '" & strIdRuangan & "' "
+    If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdPerusahaan <> "" Then strFilter = strFilter & " AND rk.id = '" & strIdPerusahaan & "' "
   
@@ -250,9 +250,9 @@ Set Report = New crLaporanPasienPulang2
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
         If RS2.BOF Then
-            .txtUser.SetText "-"
+            .txtuser.SetText "-"
         Else
-            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then
