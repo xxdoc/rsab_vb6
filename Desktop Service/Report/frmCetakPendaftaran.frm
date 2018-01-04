@@ -117,6 +117,7 @@ Dim reportRmk As New Cr_cetakRMK
 Dim reportLembarGC As New Cr_cetakLembarGC
 Dim reportBuktiLayananRuanganPerTindakan As New Cr_cetakbuktilayananruanganpertindakan
 Dim reportBuktiLayananJasa As New Cr_cetakbuktilayananruanganpertindakanJasa
+Dim reportBuktiLayananRuanganBedah As New Cr_cetakbuktilayananruanganbedah
 
 'Private fso As New Scripting.FileSystemObject
 Dim reportKartuPasien As New Cr_cetakKartuPasien
@@ -145,6 +146,7 @@ Dim boolSumList  As Boolean
 Dim boolLembarRMK As Boolean
 Dim boolLembarPersetujuan As Boolean
 Dim boolBuktiLayananJasa As Boolean
+Dim bolBuktiLayananRuanganBedah  As Boolean
 
 
 Dim strPrinter As String
@@ -207,7 +209,10 @@ Private Sub cmdCetak_Click()
         reportLembarGC.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
         PrinterNama = cboPrinter.Text
         reportLembarGC.PrintOut False
-    
+    ElseIf bolBuktiLayananRuanganBedah = True Then
+        reportBuktiLayananRuanganBedah.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+        PrinterNama = cboPrinter.Text
+        reportBuktiLayananRuanganBedah.PrintOut False
     End If
 End Sub
 
@@ -241,7 +246,8 @@ Private Sub CmdOption_Click()
          reportBuktiLayananJasa.PrinterSetup Me.hWnd
     ElseIf boolLembarPersetujuan = True Then
          reportLembarGC.PrinterSetup Me.hWnd
-         
+    ElseIf bolBuktiLayananRuanganBedah = True Then
+        reportBuktiLayananRuanganBedah.PrinterSetup Me.hWnd
     End If
     
     CRViewer1.Refresh
@@ -290,6 +296,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With Report
             Set adoReport = New ADODB.Command
@@ -315,7 +322,7 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
@@ -369,6 +376,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With ReportTracer
             Set adoReport = New ADODB.Command
@@ -394,7 +402,7 @@ boolLembarPersetujuan = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
 '            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
@@ -446,6 +454,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With reportSep
             Set adoReport = New ADODB.Command
@@ -534,6 +543,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With reportBuktiLayanan
             Set adoReport = New ADODB.Command
@@ -568,15 +578,15 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
 
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             
@@ -642,6 +652,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     Dim strarr() As String
     Dim norec_apc As String
@@ -686,15 +697,15 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
 
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             
@@ -762,6 +773,8 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
+
     strSQL = ""
     strFilter = ""
     If Left(strIdRuangan, 14) = "ORDERRADIOLOGI" Then
@@ -806,14 +819,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -882,6 +895,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With reportKartuPasien
 '            Set adoReport = New ADODB.Command
@@ -940,6 +954,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With reportLabel
             Set adoReport = New ADODB.Command
@@ -974,7 +989,7 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
     
@@ -1075,7 +1090,7 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
     
@@ -1127,6 +1142,7 @@ boolLabelPasienZebra = False
 boolSumList = True
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With reportSumList
             Set adoReport = New ADODB.Command
@@ -1156,9 +1172,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             .txtlTglLahir.SetText Format(RS!tgllahir, "yyyy/MM/dd")
              
@@ -1167,7 +1183,7 @@ boolLembarPersetujuan = False
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namakeluarga}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
            
@@ -1235,6 +1251,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = True
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
     With reportRmk
             Set adoReport = New ADODB.Command
@@ -1274,9 +1291,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "Umur -"
+                .txtumur.SetText "Umur -"
             Else
-                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
+                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd MMM yyyy")
                 .txtJamMasuk.SetText Format(RS!jamregistrasi, "HH:MM:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd MMM yyyy"))
@@ -1284,7 +1301,7 @@ boolLembarPersetujuan = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1454,9 +1471,9 @@ boolLembarPersetujuan = False
             .database.AddADOCommand CN_String, adoReport
 
             If RS.BOF Then
-                .txtUmur.SetText "Umur -"
+                .txtumur.SetText "Umur -"
             Else
-                .txtUmur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
+                .txtumur.SetText "Umur " & hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(RS!tglregistrasi, "yyyy/MM/dd"))
                 .txtTglMasuk.SetText Format(RS!tglregistrasi, "dd MMM yyyy")
                 .txtJamMasuk.SetText Format(RS!jamregistrasi, "hh:mm:ss")
                 .txtTglPlng.SetText IIf(RS!tglpulang = "Null", "-", Format(RS!tglpulang, "dd MMM yyyy"))
@@ -1464,7 +1481,7 @@ boolLembarPersetujuan = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1548,6 +1565,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = True
+bolBuktiLayananRuanganBedah = False
 
     With reportLembarGC
             Set adoReport = New ADODB.Command
@@ -1643,6 +1661,8 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
+
     strSQL = ""
     strFilter = ""
     strFilter2 = ""
@@ -1684,14 +1704,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -1764,6 +1784,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
 
     Dim strarr() As String
@@ -1819,14 +1840,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -1898,6 +1919,7 @@ boolLabelPasienZebra = False
 boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
 
 
     Dim strarr() As String
@@ -1954,14 +1976,14 @@ boolLembarPersetujuan = False
             
             .database.AddADOCommand CN_String, adoReport
             If RS.BOF Then
-                .txtUmur.SetText "-"
+                .txtumur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -2011,4 +2033,163 @@ Exit Sub
 errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
+Public Sub cetakBuktiLayananRuanganBedah(strNorec As String, strIdPegawai As String, strIdRuangan As String, view As String)
+On Error GoTo errLoad
+Set frmCetakPendaftaran = Nothing
+Dim strSQL As String
+Dim umur As String
+Dim strFilter As String
+Dim strFilter2 As String
 
+bolBuktiPendaftaran = False
+bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
+bolcetakSep = False
+bolTracer1 = False
+bolKartuPasien = False
+boolLabelPasien = False
+boolLabelPasienZebra = False
+boolSumList = False
+boolLembarRMK = False
+boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = True
+
+
+    Dim strarr() As String
+    Dim norec_apc As String
+    Dim i As Integer
+    
+    
+    strarr = Split(strNorec, "|")
+    For i = 0 To UBound(strarr)
+       norec_apc = norec_apc + "'" & strarr(i) & "',"
+    Next
+    norec_apc = Left(norec_apc, Len(norec_apc) - 1)
+    
+    strSQL = ""
+    strFilter = ""
+    strFilter2 = ""
+'    If strIdRuangan <> "" Then strFilter = " AND ru2.id = '" & strIdRuangan & "' "
+'    If strIdTindakan <> "" Then strFilter2 = " AND tp.produkfk = '" & strIdTindakan & "' "
+    strFilter = strFilter & strFilter2 & " ORDER BY tp.tglpelayanan "
+    With reportBuktiLayananRuanganBedah
+    
+            Set adoReport = New ADODB.Command
+             adoReport.ActiveConnection = CN_String
+            
+            strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
+                       " apdp.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
+                       " case when ru.objectdepartemenfk =16 then (select pg.namalengkap from pegawai_m as pg INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pg.id " & _
+                       "where p3.pelayananpasien=tp.norec and p3.objectjenispetugaspefk=4 limit 1) else pp.namalengkap end AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
+                       " (case when tp.hargadiscount is null then 0 else tp.hargadiscount end) as diskon, " & _
+                       " hargasatuan*tp.jumlah as total,ks.namakelas,ar.asalrujukan,tp.tglpelayanan, " & _
+                       " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
+                       " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
+                       " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
+                       " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
+                       " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
+                       " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
+                       " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
+                       " LEFT JOIN pegawai_m AS pp ON apdp.objectpegawaifk = pp.id " & _
+                       " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
+                       " LEFT JOIN kelas_m AS ks ON apdp.objectkelasfk = ks.id " & _
+                       " LEFT JOIN asalrujukan_m AS ar ON apdp.objectasalrujukanfk = ar.id " & _
+                       " left JOIN rekanan_m AS rek ON rek.id= pd.objectrekananfk " & _
+                       " left JOIN kamar_m as kmr on apdp.objectkamarfk=kmr.id " & _
+                       " INNER join ruangan_m  as ru2 on ru2.id=apdp.objectruanganfk " & _
+                       " where tp.norec  in (" & norec_apc & ") and pro.id <> 402611  " & strFilter
+            
+            ReadRs strSQL
+            
+            adoReport.CommandText = strSQL
+            adoReport.CommandType = adCmdUnknown
+            
+            
+            .database.AddADOCommand CN_String, adoReport
+            If RS.BOF Then
+                .txtumur.SetText "-"
+            Else
+                .txtumur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+            End If
+            
+            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usJK.SetUnboundFieldSource ("{ado.jk}")
+
+            .usUnitLayanan.SetUnboundFieldSource ("{ado.ruanganperiksa}")
+            .usTipe.SetUnboundFieldSource ("{ado.kelompokpasien}")
+
+            .usRujukan.SetUnboundFieldSource ("{ado.asalrujukan}")
+            .usruangperiksa.SetUnboundFieldSource ("{ado.ruangakhir}")
+            .usQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .usKamar.SetUnboundFieldSource ("if isnull({ado.namakamar}) then "" - "" else {ado.namakamar} ")
+            .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas}) then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.namapenjamin}")
+
+            .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
+            .udTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .usPelayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargasatuan}")
+            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
+            .usJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+'            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+
+            ReadRs3 "select " & _
+                    "sum(case when ppd.komponenhargafk=38 then ppd.hargajual*ppd.jumlah end) as jasasarana, " & _
+                    "sum(case when ppd.komponenhargafk=35 then ppd.hargajual*ppd.jumlah end) as jasamedis, " & _
+                    "sum(case when ppd.komponenhargafk=25 then ppd.hargajual*ppd.jumlah end) as jasaparamedis, " & _
+                    "sum(case when ppd.komponenhargafk=30 then ppd.hargajual*ppd.jumlah end) as jasaumum, " & _
+                    "sum(case when ppd.komponenhargafk=21 then ppd.hargajual*ppd.jumlah end) as anestesidr, " & _
+                    "sum(case when ppd.komponenhargafk=22 then ppd.hargajual*ppd.jumlah end) as jasaspesialis, " & _
+                    "sum(case when ppd.komponenhargafk=26 then ppd.hargajual*ppd.jumlah end) as jasaperawatanastesi, " & _
+                    "sum(case when ppd.komponenhargafk=27 then ppd.hargajual*ppd.jumlah end) as jasaperawatinstr " & _
+                    "from pasiendaftar_t as pd " & _
+                    "inner join antrianpasiendiperiksa_t as apdp on apdp.noregistrasifk = pd.norec " & _
+                    "left join pelayananpasien_t as tp on tp.noregistrasifk = apdp.norec " & _
+                    "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=tp.norec " & _
+                    "left join produk_m as pro on tp.produkfk = pro.id " & _
+                    " where tp.norec  in (" & norec_apc & ") and pro.id <> 402611 "
+            
+            If RS3.BOF = False Then
+                .ucJasaSarana.SetUnboundFieldSource UCase(IIf(IsNull(RS3("jasasarana")), "0.00", RS3("jasasarana")))
+                .ucJasaMedis.SetUnboundFieldSource UCase(IIf(IsNull(RS3("jasamedis")), "0.00", RS3("jasamedis")))
+                .ucJasaParamedis.SetUnboundFieldSource UCase(IIf(IsNull(RS3("jasaparamedis")), "0.00", RS3("jasaparamedis")))
+                .ucJasaUmum.SetUnboundFieldSource UCase(IIf(IsNull(RS3("jasaumum")), "0.00", RS3("jasaumum")))
+                .ucAnestesiDr.SetUnboundFieldSource UCase(IIf(IsNull(RS3("anestesidr")), "0.00", RS3("anestesidr")))
+                .ucJasaSpesialis.SetUnboundFieldSource UCase(IIf(IsNull(RS3("jasaspesialis")), "0.00", RS3("jasaspesialis")))
+                .ucJasaPerawatAnastesi.SetUnboundFieldSource UCase(IIf(IsNull(RS3("jasaperawatanastesi")), "0.00", RS3("jasaperawatanastesi")))
+                .ucJasaPerawatInstr.SetUnboundFieldSource UCase(IIf(IsNull(RS3("jasaperawatinstr")), "0.00", RS3("jasaperawatinstr")))
+            End If
+
+            ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
+            If RS2.BOF Then
+                .txtUser.SetText "-"
+            Else
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            End If
+            
+            If view = "false" Then
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "BuktiLayananRuanganPerTindakan")
+                .SelectPrinter "winspool", strPrinter1, "Ne00:"
+                .PrintOut False
+                Unload Me
+                Screen.MousePointer = vbDefault
+             Else
+                With CRViewer1
+                    .ReportSource = reportBuktiLayananRuanganBedah
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+                Screen.MousePointer = vbDefault
+            End If
+     
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+End Sub
