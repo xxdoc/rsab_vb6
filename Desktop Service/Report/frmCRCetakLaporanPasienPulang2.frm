@@ -178,13 +178,13 @@ Set Report = New crLaporanPasienPulang2
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdPerusahaan <> "" Then strFilter = strFilter & " AND rk.id = '" & strIdPerusahaan & "' "
   
-    orderby = strFilter & "group by pd.tglregistrasi,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru2.namaruangan, " & _
+    orderby = strFilter & "group by pd.tglregistrasi,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru.namaruangan, " & _
             "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya,ru.objectdepartemenfk " & _
             "order by ps.namapasien"
             'sp.tglstruk"
 
         
-    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru2.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
+    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
             "sum(case when pp.produkfk not  in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahbiaya, sum((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah) as diskon,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
             "sum(case when pp.produkfk      in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahdeposit, " & _
             "sp.totalharusdibayar,(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap " & _
@@ -220,7 +220,7 @@ Set Report = New crLaporanPasienPulang2
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
             .udTglBayar.SetUnboundFieldSource ("{ado.tglstruk}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nodaftar}")
+            .usnocm.SetUnboundFieldSource ("{ado.nodaftar}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -250,9 +250,9 @@ Set Report = New crLaporanPasienPulang2
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

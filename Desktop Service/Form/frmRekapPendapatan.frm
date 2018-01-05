@@ -147,24 +147,33 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmRekapPendapatan = Nothing
 End Sub
 
-Public Sub CetakRekapPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, idKelompok As String, namaKasir As String, view As String)
+Public Sub CetakRekapPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idDokter As String, idKelompok As String, namaKasir As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmRekapPendapatan = Nothing
 Dim adocmd As New ADODB.Command
-    Dim str1 As String
-    Dim str2 As String
-    Dim str3 As String
+    Dim str1, str2, str3, str4, str5 As String
     
     If idDokter <> "" Then
         str1 = "and apd.objectpegawaifk=" & idDokter & " "
+    End If
+    If idDepartemen <> "" Then
+        If idDepartemen = 16 Then
+            str4 = " and dp.id = 16"
+            str5 = " pg.id = 641"
+        Else
+            If idDepartemen <> "" Then
+                str4 = " and dp.id <> 16 "
+                str5 = " pg.id = 192"
+            End If
+        End If
     End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
     If idKelompok <> "" Then
-        If idKelompok = 0 Then
+        If idKelompok = 153 Then
             str3 = " and kps.id in (1,3,5) "
         Else
             If idKelompok <> "" Then
@@ -207,13 +216,13 @@ Set Report = New crRekapPendapatan
             "0 as Pr_Pph,0 as Pr_Diterima " & _
             "from pasiendaftar_t as pd " & _
             "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "left JOIN produk_m as pr on pr.id=pp.produkfk left JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left JOIN pasien_m as ps on ps.id=pd.nocmfk left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   and sp.statusenabled is null " & _
-             " " & str1 & " " & str2 & " " & str3 & " " & _
+             " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
              "group by apd.norec,pp.norec,pd.noregistrasi, apd.objectruanganfk,ru.namaruangan, apd.objectpegawaifk,pg.namalengkap,sp.norec , " & _
              "pd.objectkelompokpasienlastfk  " & _
             "order by pg.namalengkap"
@@ -240,6 +249,48 @@ Set Report = New crRekapPendapatan
             .prJasa.SetUnboundFieldSource ("{ado.Pr_Jasa}")
             '.prPph.SetUnboundFieldSource ("{ado.Pr_Pph}")
             '.prDiterima.SetUnboundFieldSource ("{ado.Pr_Diterima}")
+            
+        ReadRs2 "SELECT pg.namalengkap, jb.namajabatan, pg.nippns FROM pegawai_m as pg " & _
+                "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                "where pg.id=776"
+        
+        If RS2.BOF Then
+            .txtJabatan1.SetText "-"
+            .txtPegawai1.SetText "-"
+            .txtnip1.SetText "-"
+        Else
+            .txtJabatan1.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
+            .txtPegawai1.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtnip1.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
+        End If
+        
+        ReadRs2 "SELECT pg.namalengkap, jb.namajabatan, pg.nippns FROM pegawai_m as pg " & _
+                "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                "where pg.id=143"
+        
+        If RS2.BOF Then
+            .txtJabatan2.SetText "-"
+            .txtPegawai2.SetText "-"
+            .txtnip2.SetText "-"
+        Else
+            .txtJabatan2.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
+            .txtPegawai2.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtnip2.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
+        End If
+        
+        ReadRs2 "SELECT pg.namalengkap, jb.namajabatan, pg.nippns FROM pegawai_m as pg " & _
+                "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                "where " & str5 & ""
+        
+        If RS2.BOF Then
+            .txtJabatan3.SetText "-"
+            .txtPegawai3.SetText "-"
+            .txtnip3.SetText "-"
+        Else
+            .txtJabatan3.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
+            .txtPegawai3.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtnip3.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
+        End If
             
             If view = "false" Then
                 Dim strPrinter As String

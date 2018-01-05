@@ -166,7 +166,7 @@ Dim adocmd As New ADODB.Command
     End If
     
     If idKelompok <> "" Then
-        If idKelompok = 0 Then
+        If idKelompok = 153 Then
             str3 = " and kps.id in (1,3,5) "
         Else
             If idKelompok <> "" Then
@@ -365,7 +365,7 @@ Set Report = New crLaporanPendapatan
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")
             .ucEmbos.SetUnboundFieldSource ("{ado.embos}")

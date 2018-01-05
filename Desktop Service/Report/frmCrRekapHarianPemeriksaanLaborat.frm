@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmLaporanJasaMedisRI 
+Begin VB.Form frmCrRekapHarianPemeriksaanLaborat 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmLaporanJasaMedisRI.frx":0000
+   Icon            =   "frmCrRekapHarianPemeriksaanLaborat.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmLaporanJasaMedisRI
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmLaporanJasaMedisRI"
+Attribute VB_Name = "frmCrRekapHarianPemeriksaanLaborat"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanJasaMedisRI
+Dim Report As New crRekapHarianPemeriksaanLaborat
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,73 +144,91 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmLaporanJasaMedisRI = Nothing
+    Set frmCrRekapHarianPemeriksaanLaborat = Nothing
 End Sub
 
-Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, view As String)
+Public Sub cetak(tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaKasir As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmLaporanJasaMedisRI = Nothing
+Set frmCrRekapHarianPemeriksaanLaborat = Nothing
 Dim adocmd As New ADODB.Command
-    
-    Dim dokter As String
-    If idDokter <> "" Then
-        dokter = " and pg.id = '" & idDokter & "'"
+
+    Dim str1 As String
+
+    If idRuangan <> "" Then
+        str1 = " and ru.id=" & idRuangan & " "
     End If
-
+     
     
-Set Report = New crLaporanJasaMedisRI
-    strSQL = "select pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
-            "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "case when ppd.komponenhargafk = 35 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasamedis," & _
-            "case when ppd.komponenhargafk = 25 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasaparamedis, " & _
-            "case when ppd.komponenhargafk = 38 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasasarana, " & _
-            "case when ppd.komponenhargafk = 30 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as jasaumum, 0 as diskonmedis " & _
-            "from pasiendaftar_t as pd " & _
-            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
-            "left join produk_m as pr on pr.id=ppd.produkfk " & _
-            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
-            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where pp.tglPelayanan between '" & tglAwal & "' and '" & tglAkhir & "' ppp.objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk=16  " & dokter & "" & _
-            "order by pp.tglpelayanan"
-            
-            'hanya visite
+Set Report = New crRekapHarianPemeriksaanLaborat
+'    ReadRs2 "SELECT distinct pp.tglpelayanan,dp.namadepartemen,ru.namaruangan,pr.id, pr.namaproduk, " & _
+'            "pp.hargajual,pp.jumlah,pp.hargajual*pp.jumlah as subtotal, " & _
+'            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon " & _
+'            "from produk_m pr " & _
+'            "left join pelayananpasien_t pp on pp.produkfk=pr.id " & _
+'            "left join pelayananpasiendetail_t ppd on pp.norec=ppd.pelayananpasien " & _
+'            "left join strukpelayanan_t sp on sp.norec=pp.strukfk " & _
+'            "left join departemen_m dp on dp.id=pr.objectdepartemenfk " & _
+'            "left join ruangan_m ru on ru.objectdepartemenfk=dp.id " & _
+'            "where pr.objectdepartemenfk=3 and ppd.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
+'            "and sp.statusenabled is null " & _
+'            str1 & _
+'            "order by pp.tglpelayanan "
 
+    strSQL = "SELECT pp.tglpelayanan,dp.namadepartemen,ru.namaruangan, pr.id, pr.namaproduk, " & _
+            "pp.hargajual,pp.jumlah,pp.hargajual*pp.jumlah as subtotal, " & _
+            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon, " & _
+            "0 as unitcost, " & _
+            "sum(case when ppd.komponenhargafk=38 then ppd.hargajual*ppd.jumlah end) as jasasarana, " & _
+            "sum(case when ppd.komponenhargafk=35 then ppd.hargajual*ppd.jumlah end) as jasamedis, " & _
+            "sum(case when ppd.komponenhargafk=25 then ppd.hargajual*ppd.jumlah end) as jasaparamedis, " & _
+            "sum(case when ppd.komponenhargafk=30 then ppd.hargajual*ppd.jumlah end) as jasaumum " & _
+            "from produk_m pr " & _
+            "left join pelayananpasien_t pp on pp.produkfk=pr.id " & _
+            "left join pelayananpasiendetail_t ppd on pp.norec=ppd.pelayananpasien " & _
+            "left join strukpelayanan_t sp on sp.norec=pp.strukfk " & _
+            "left join departemen_m dp on dp.id=pr.objectdepartemenfk " & _
+            "left join ruangan_m ru on ru.objectdepartemenfk=dp.id " & _
+            "where pr.objectdepartemenfk=3 and ppd.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
+            "and sp.statusenabled is null " & _
+            str1 & _
+            "group by pp.tglpelayanan,dp.namadepartemen,ru.namaruangan, pr.id, pr.namaproduk,pp.hargajual,pp.jumlah,pp.hargadiscount " & _
+            "order by pp.tglpelayanan "
+'    Dim uc, tjs, tJm, tjp, tju As Double
+'    Dim i As Integer
 '
+'    For i = 0 To RS2.RecordCount - 1
+'        tjs = tjs + CDbl(IIf(IsNull(RS2!jasasarana), 0, RS2!jasasarana))
+'        tJm = tJm + CDbl(IIf(IsNull(RS2!jasamedis), 0, RS2!jasamedis))
+'        tjp = tjp + CDbl(IIf(IsNull(RS2!jasaparamedis), 0, RS2!jasaparamedis))
+'        tju = tju + CDbl(IIf(IsNull(RS2!jasaumum), 0, RS2!jasaumum))
+'        uc = uc + CDbl(IIf(IsNull(RS2!unitcost), 0, RS2!unitcost))
+'
+'        RS2.MoveNext
+'    Next
+
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .txtNamaKasir.SetText PrinteDBY
-            
-            .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
-<<<<<<< HEAD
-            '.usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
-'            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
-           ' .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
-=======
-'            .usHari.SetUnboundFieldSource ("{ado.harihari}")
-'            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
-'            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
-'            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
->>>>>>> bfe2962ba3328955d1b941a8280ea7502b087a0f
+            .txtNamaKasir.SetText namaKasir
+            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & " ' "
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
-            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .ucJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
-            .ucJasaParam.SetUnboundFieldSource ("{ado.jasaparamedis}")
-            .ucJasaSarana.SetUnboundFieldSource ("{ado.jasasarana}")
-            .ucJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
-            .ucDiskonMedis.SetUnboundFieldSource ("{ado.diskonmedis}")
-            .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+            .usDepartemen.SetUnboundFieldSource ("{ado.namadepartemen}")
+            .unQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .unTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unDiskon.SetUnboundFieldSource ("{ado.diskon}")
+            .unSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .unUnitCost.SetUnboundFieldSource ("{ado.unitcost}")
+            .unJasaSarana.SetUnboundFieldSource ("{ado.jasasarana}")
+            .unJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
+            .unJasaParamedis.SetUnboundFieldSource ("{ado.jasaparamedis}")
+            .unJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
+
+'            .txtC7.SetText Format(tC7, "##,##0.00")
+            
             
             If view = "false" Then
                 Dim strPrinter As String
