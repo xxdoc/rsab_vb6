@@ -171,6 +171,9 @@ Dim adocmd As New ADODB.Command
         strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
         If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
             strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+        ElseIf Weekday(strTgl, vbSunday) = 6 Then
+            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                           "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
         Else
             strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
                            "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
