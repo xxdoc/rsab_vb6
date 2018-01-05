@@ -167,16 +167,52 @@ Dim adocmd As New ADODB.Command
     Dim SQLdate As String
     Dim SQLdateLibur As String
     
-    For i = 0 To diff
-        strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+    Dim dokter As String
+    Dim typeDokter As String
+    
+    If idDokter <> "" Then
+        dokter = " and pg.id = '" & idDokter & "'"
+        ReadRs2 "select * from pegawai_m where id = " & idDokter
+        typeDokter = RS2!objecttypepegawaifk
+        
+        If typeDokter = 1 Then
+            For i = 0 To diff
+                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                ElseIf Weekday(strTgl, vbSunday) = 6 Then
+                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                   "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+                Else
+                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                   "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+                End If
+                SQLdate = SQLdate & strTglJamSQL
+            Next
         Else
-            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+            For i = 0 To diff
+                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                SQLdate = SQLdate & strTglJamSQL
+            Next
         End If
-        SQLdate = SQLdate & strTglJamSQL
-    Next
+    Else
+        For i = 0 To diff
+            strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+            If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+            ElseIf Weekday(strTgl, vbSunday) = 6 Then
+                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                               "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+            Else
+                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                               "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+            End If
+            SQLdate = SQLdate & strTglJamSQL
+        Next
+    End If
+    
+    
     
     If tglLibur <> "" Then
         Dim strarr() As String
@@ -194,10 +230,10 @@ Dim adocmd As New ADODB.Command
     
         SQLdate = Right(SQLdate, Len(SQLdate) - 3)
     
-    Dim dokter As String
-    If idDokter <> "" Then
-        dokter = " and pg.id = '" & idDokter & "'"
-    End If
+'    Dim dokter As String
+'    If idDokter <> "" Then
+'        dokter = " and pg.id = '" & idDokter & "'"
+'    End If
     
     Dim idRuangan As String
     If kdRuangan <> "" Then
@@ -205,7 +241,11 @@ Dim adocmd As New ADODB.Command
     End If
     Dim idKelompokPasien As String
     If kpid <> "" Then
-        idKelompokPasien = " and kp.id = '" & kpid & "'"
+        If kpid = "153" Then
+            idKelompokPasien = " and kp.id in (1,5,3)"
+        Else
+            idKelompokPasien = " and kp.id = '" & kpid & "'"
+        End If
     End If
 
     
@@ -214,7 +254,7 @@ Set Report = New crLaporanffsIBS
             "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
             "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
             "case when ppd.komponenhargafk = 35 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as total,0 as remun, " & _
-            "case when ppd.komponenhargafk <> 35 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as totalTarif " & _
+            " ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -228,7 +268,6 @@ Set Report = New crLaporanffsIBS
             "Where  objectjenispetugaspefk = 4  and ru.objectdepartemenfk=25  " & dokter & idRuangan & idKelompokPasien & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
-            'hanya visite
     
     If kpid <> "" Then
         ReadRs "Select * from kelompokpasien_m where id= '" & kpid & "'"
@@ -247,9 +286,14 @@ Set Report = New crLaporanffsIBS
             If kpid = "" Then
                 .txtjudul.SetText "Type Pasien : ALL"
             Else
-                .txtjudul.SetText "Type Pasien : " & RS!kelompokpasien
+                If kpid = "153" Then
+                    .txtjudul.SetText "Type Pasien : Non BPJS"
+                Else
+                    .txtjudul.SetText "Type Pasien : " & RS!kelompokpasien
+                End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMMM yyyy")
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
@@ -259,7 +303,8 @@ Set Report = New crLaporanffsIBS
             .usRemunerasi2.SetUnboundFieldSource ("{ado.totalTarif}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
+            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
+            .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             
 '            If view = "false" Then
 '                Dim strPrinter As String
