@@ -177,9 +177,9 @@ Dim adocmd As New ADODB.Command
     
 Set Report = New crLaporanPendapatanInap
     strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || km.namakamar as namaruangan, kps.kelompokpasien,pro.namaproduk, " & _
-            "case when jp.id in (99,25) then 'Akomodasi' " & _
-            "when jp.id=101 then 'Visit' " & _
-            "when jp.id =102 then 'Tindakan' when jp.id=27666 then 'Sewa Alat' end as jenisproduk, " & _
+            "case when (kp.id in (25) and jp.id in (99,25)) then 'Akomodasi' " & _
+            "when (kp.id in (26) and jp.id in (101)) then 'Visit' " & _
+            "when kp.id in (1, 2, 3, 4, 8, 9, 10, 11, 13, 14) then 'Tindakan' when kp.id in (34) then 'Sewa Alat' end as jenisproduk, " & _
             "case when pp.hargajual is not null then pp.hargajual else 0 end as hargajual, " & _
             "case when pp.jumlah is not null and pp.hargajual is not null then pp.jumlah else 0 end as jumlah from pasiendaftar_t as pd " & _
             "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
@@ -193,7 +193,7 @@ Set Report = New crLaporanPendapatanInap
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-            "and jp.id in (25,99,101,102,27666) " & _
+            "and jp.id in (25,99,101,102,107,27666) " & _
              str1 & _
              str2 & _
              str4 & _
@@ -220,12 +220,12 @@ Set Report = New crLaporanPendapatanInap
 
             If idDepartemen <> "" Then
                 If idDepartemen = 16 Then
-                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
+                    .txtjudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT INAP"
                 ElseIf idDepartemen = 18 Then
-                    .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
+                    .txtjudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN RAWAT JALAN"
                 End If
             Else
-                .TxtJudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
+                .txtjudul.SetText "LAPORAN VOLUME KEGIATAN DAN PENDAPATAN"
             End If
             
             If view = "false" Then
