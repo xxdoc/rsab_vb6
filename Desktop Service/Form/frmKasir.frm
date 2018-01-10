@@ -165,7 +165,7 @@ On Error Resume Next
                 
             Case "cetak-laporan-pendapatan"
                 If CN.State = adStateClosed Then Call openConnection
-                Call frmCRLaporanPendapatan.CetakLaporanPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
+                Call frmCRLaporanPendapatan.CetakLaporanPendapatan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Penerimaan Kasir"
                 Root("by") = "as@epic"

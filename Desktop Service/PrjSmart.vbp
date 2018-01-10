@@ -136,7 +136,7 @@ Form=Form\frmLaporanJurnalDetail.frm
 Designer=Report\crLaporanJurnaBalikDetailInap.Dsr
 Designer=Report\crLaporanJurnalBalikInap.Dsr
 Form=Form\frmLaporanJurnalBalik.frm
-Designer=Report\crLaporanTagihanSuratPasien.Dsr
+Designer=Report\crLaporanSuratPermintaanPengirimanBarang.Dsr
 Form=Form\frmCRLaporanTagihanSuratPasien.frm
 Designer=Report\crKuitansiPiutangPenjaminPasien.Dsr
 Form=Form\frmCetakKuitansiPiutangPenjaminPasien.frm
@@ -202,8 +202,12 @@ Form=Form\frmLaporanPendapatan.frm
 Form=Report\frmCrRekapHarianPemeriksaanLab.frm
 Designer=Report\crRekapHarianPemeriksaanLab.Dsr
 Designer=Report\Cr_cetakbuktilayananruanganpertindakan.Dsr
+<<<<<<< HEAD
 Form=Form\frmLaporanffsIBS.frm
 Designer=Report\crLaporanffsIBS.Dsr
+=======
+Designer=Report\crLaporanTagihanSuratPasien.Dsr
+>>>>>>> e02caceb806091bf464348df4a3dbae2b366a651
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
