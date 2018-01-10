@@ -269,6 +269,7 @@ Set Report = New crRekapffsIGD
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText PrinteDBY
+            .txtVer.SetText App.Comments
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
 '            .usHari.SetUnboundFieldSource ("{ado.harihari}")

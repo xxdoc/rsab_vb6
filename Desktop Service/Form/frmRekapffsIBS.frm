@@ -271,6 +271,7 @@ Set Report = New crRekapffsIBS
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText PrinteDBY
+            .txtVer.SetText App.Comments
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
             If kpid = "" Then

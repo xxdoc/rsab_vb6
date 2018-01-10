@@ -252,7 +252,7 @@ Dim adocmd As New ADODB.Command
 Set Report = New crLaporanffsIBS
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
-            "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
+            "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
             "case when ppd.komponenhargafk = 35 then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as total,0 as remun, " & _
             " ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
@@ -281,7 +281,8 @@ Set Report = New crLaporanffsIBS
             .txtNamaKasir.SetText PrinteDBY
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
-            .usHari.SetUnboundFieldSource ("{ado.harihari}")
+'            .usHarii.SetUnboundFieldSource ("{ado.harihari}")
+            .usNgaranPoe.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             If kpid = "" Then
                 .txtjudul.SetText "Type Pasien : ALL"
@@ -293,6 +294,8 @@ Set Report = New crLaporanffsIBS
                 End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .txtVer.SetText App.Comments
+
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMMM yyyy")
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
@@ -305,6 +308,7 @@ Set Report = New crLaporanffsIBS
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
+            .usNorec.SetUnboundFieldSource ("{ado.norec_ppd}")
             
 '            If view = "false" Then
 '                Dim strPrinter As String

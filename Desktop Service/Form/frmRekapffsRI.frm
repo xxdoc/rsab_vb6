@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRRekapffsRI = Nothing
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String)
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY2 As String, idDokter As String, tglLibur As String, kdRuangan As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -169,7 +169,17 @@ Dim adocmd As New ADODB.Command
     
     Dim dokter As String
     Dim typeDokter As String
+    Dim dokterJD As String
     
+    Dim nmKaInstalasi As String
+    Dim PrinteDBY As String
+    Dim arrStr() As String
+    
+    arrStr = Split(PrinteDBY2, "~")
+    PrinteDBY = arrStr(0)
+    nmKaInstalasi = arrStr(1)
+    
+    dokterJD = " and pr.objectdetailjenisprodukfk=481 "
     If idDokter <> "" Then
         dokter = " and pg.id = '" & idDokter & "'"
         ReadRs2 "select * from pegawai_m where id = " & idDokter
@@ -189,6 +199,7 @@ Dim adocmd As New ADODB.Command
                 strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
                 SQLdate = SQLdate & strTglJamSQL
             Next
+            dokterJD = ""
         End If
     Else
         For i = 0 To diff
@@ -233,7 +244,7 @@ Set Report = New crRekapffsRI
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
             "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as total,0 as remun,ppd.jumlah " & _
+            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as total,0 as remun,ppd.jumlah,kp.id as KPID, kp.kelompokpasien,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -243,7 +254,8 @@ Set Report = New crRekapffsRI
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.objectdetailjenisprodukfk=481 and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & "" & _
+            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 " & dokterJD & " and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
 
 '
@@ -253,6 +265,7 @@ Set Report = New crRekapffsRI
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText PrinteDBY
+            .txtVer.SetText App.Comments
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
 '            .usHari.SetUnboundFieldSource ("{ado.harihari}")
@@ -264,9 +277,23 @@ Set Report = New crRekapffsRI
 '            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
 '            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
 '            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .ucJasaMedis.SetUnboundFieldSource ("{ado.total}")
+            .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .ucKPID.SetUnboundFieldSource ("{ado.KPID}")
+            .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
+            .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")
+            
+            If nmKaInstalasi = 1 Then
+                .txtKainsnm.SetText "Ka. Instalasi Perinatal Risiko Tinggi"
+                .txtKaIns.SetText "DR. dr. Setyadewi Lusyati, SpA (K), Ph.D"
+                .txtKaNIP.SetText "Nip. 196606131991032012"
+            Else
+                .txtKainsnm.SetText "Ka. Instalasi Rawat Inap"
+                .txtKaIns.SetText "dr. Retno Widyaningsih, SpA (K)"
+                .txtKaNIP.SetText "Nip. 196207281989022001"
+            End If
             
 '            If view = "false" Then
 '                Dim strPrinter As String

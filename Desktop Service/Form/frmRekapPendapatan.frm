@@ -255,13 +255,13 @@ Set Report = New crRekapPendapatan
                 "where pg.id=776"
         
         If RS2.BOF Then
-            .txtJabatan1.SetText "-"
-            .txtPegawai1.SetText "-"
-            .txtnip1.SetText "-"
+'            .txtJabatan1.SetText "-"
+'            .txtPegawai1.SetText "-"
+'            .txtnip1.SetText "-"
         Else
-            .txtJabatan1.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
-            .txtPegawai1.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
-            .txtnip1.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
+'            .txtJabatan1.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
+'            .txtPegawai1.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+'            .txtnip1.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
         End If
         
         ReadRs2 "SELECT pg.namalengkap, jb.namajabatan, pg.nippns FROM pegawai_m as pg " & _
@@ -269,13 +269,13 @@ Set Report = New crRekapPendapatan
                 "where pg.id=143"
         
         If RS2.BOF Then
-            .txtJabatan2.SetText "-"
-            .txtPegawai2.SetText "-"
-            .txtnip2.SetText "-"
-        Else
-            .txtJabatan2.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
-            .txtPegawai2.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
-            .txtnip2.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
+'            .txtJabatan2.SetText "-"
+'            .txtPegawai2.SetText "-"
+'            .txtnip2.SetText "-"
+'        Else
+'            .txtJabatan2.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
+'            .txtPegawai2.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+'            .txtnip2.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
         End If
         
         ReadRs2 "SELECT pg.namalengkap, jb.namajabatan, pg.nippns FROM pegawai_m as pg " & _
@@ -283,13 +283,13 @@ Set Report = New crRekapPendapatan
                 "where " & str5 & ""
         
         If RS2.BOF Then
-            .txtJabatan3.SetText "-"
-            .txtPegawai3.SetText "-"
-            .txtnip3.SetText "-"
-        Else
-            .txtJabatan3.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
-            .txtPegawai3.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
-            .txtnip3.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
+'            .txtJabatan3.SetText "-"
+'            .txtPegawai3.SetText "-"
+'            .txtnip3.SetText "-"
+'        Else
+'            .txtJabatan3.SetText UCase(IIf(IsNull(RS2("namajabatan")), "-", RS2("namajabatan")))
+'            .txtPegawai3.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+'            .txtnip3.SetText UCase(IIf(IsNull(RS2("nippns")), "-", "NIP. " & RS2("nippns")))
         End If
             
             If view = "false" Then
