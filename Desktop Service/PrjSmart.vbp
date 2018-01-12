@@ -185,12 +185,12 @@ Form=Form\frmLaporanJasaMedisRI.frm
 Form=Form\frmLaporanffsRI.frm
 Form=Form\frmLaporanPenerimaanFFS.frm
 Designer=Report\crLaporanPenerimaanFFS.Dsr
-Form=Form\frmLaporanffsIBS.frm
+Form=Form\frmLaporanPendapatanAdminMaterai.frm
 Form=Form\frmLaporanffsIGD.frm
 Designer=Report\crLaporanffsIGD.Dsr
 Form=Form\frmRekapffsIGD.frm
 Designer=Report\crRekapffsIGD.Dsr
-Designer=Report\crLaporanffsIBS.Dsr
+Designer=Report\crLaporanPendapatanAdminMaterai.Dsr
 Form=Form\frmRekapffsRI.frm
 Designer=Report\crRekapffsIBS.Dsr
 Designer=Report\crRekapffsRI.Dsr
@@ -202,7 +202,12 @@ Form=Form\frmLaporanPendapatan.frm
 Form=Report\frmCrRekapHarianPemeriksaanLab.frm
 Designer=Report\crRekapHarianPemeriksaanLab.Dsr
 Designer=Report\Cr_cetakbuktilayananruanganpertindakan.Dsr
+<<<<<<< HEAD
+Form=Form\frmLaporanffsIBS.frm
+Designer=Report\crLaporanffsIBS.Dsr
+=======
 Designer=Report\crLaporanTagihanSuratPasien.Dsr
+>>>>>>> e02caceb806091bf464348df4a3dbae2b366a651
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -218,7 +223,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-VersionComments="NV171222.1"
+VersionComments="AL180110.3"
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0
