@@ -190,27 +190,24 @@ Set Report = New crLaporanJasaMedisRI
             .txtNamaKasir.SetText PrinteDBY
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
-<<<<<<< HEAD
             '.usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
            ' .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
-=======
 '            .usHari.SetUnboundFieldSource ("{ado.harihari}")
 '            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
->>>>>>> bfe2962ba3328955d1b941a8280ea7502b087a0f
-            .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
-            .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
-            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .ucJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
-            .ucJasaParam.SetUnboundFieldSource ("{ado.jasaparamedis}")
-            .ucJasaSarana.SetUnboundFieldSource ("{ado.jasasarana}")
-            .ucJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
-            .ucDiskonMedis.SetUnboundFieldSource ("{ado.diskonmedis}")
-            .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+'            .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+'            .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
+'            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+'            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
+'            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+'            .ucJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
+'            .ucJasaParam.SetUnboundFieldSource ("{ado.jasaparamedis}")
+'            .ucJasaSarana.SetUnboundFieldSource ("{ado.jasasarana}")
+'            .ucJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
+'            .ucDiskonMedis.SetUnboundFieldSource ("{ado.diskonmedis}")
+'            .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             
             If view = "false" Then
                 Dim strPrinter As String
