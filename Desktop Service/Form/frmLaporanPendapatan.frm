@@ -157,11 +157,11 @@ Dim adocmd As New ADODB.Command
     Dim str1, str2, str3, str4 As String
     
     If idDokter <> "" Then
-        str1 = "and apd.objectpegawaifk=" & idDokter & " "
+        str1 = " and apd.objectpegawaifk=" & idDokter & " "
     End If
     If idDepartemen <> "" Then
         If idDepartemen = 16 Then
-            str2 = " and ru.objectdepartemenfk in (16,17,26)"
+            str2 = " and ru.objectdepartemenfk in (16,17,26) "
         Else
             If idDepartemen <> "" Then
                 str2 = " and ru.objectdepartemenfk =" & idDepartemen & " "
@@ -174,7 +174,7 @@ Dim adocmd As New ADODB.Command
     
     If idKelompok <> "" Then
         If idKelompok = 153 Then
-            str4 = " and kps.id in (1,3,5)"
+            str4 = " and kps.id in (1,3,5) "
         Else
             If idKelompok <> "" Then
                 str4 = " and kps.id =" & idKelompok & " "
@@ -184,7 +184,7 @@ Dim adocmd As New ADODB.Command
     
     
 Set Report = New crLaporanPendapatan
-    strSQL = "select distinct apd.objectruanganfk, ru.namaruangan, pg.namalengkap, ps.nocm,upper(ps.namapasien) as namapasien, kp.id as kpid, pr.id as prid, " & _
+    strSQL = "select * from (select sp.statusenabled, apd.objectruanganfk, ru.namaruangan, pg.namalengkap, ps.nocm,upper(ps.namapasien) as namapasien, kp.id as kpid, pr.id as prid, " & _
             "case when kp.id =25 and pr.id in (395) then pp.hargajual* pp.jumlah else 0 end as karcis, " & _
             "case when kp.id=25 and pr.id in (10013116)  then pp.hargajual* pp.jumlah else 0 end as embos, " & _
             "case when kp.id = 26 and pr.id not in(395,10013116) then pp.hargajual* pp.jumlah else 0 end as konsul, " & _
@@ -195,35 +195,35 @@ Set Report = New crLaporanPendapatan
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+            "left join pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left join jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left join kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and ppp.objectjenispetugaspefk=4 and  sp.statusenabled is null " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97  " & _
              str1 & _
              str2 & _
              str3 & _
              str4 & _
-             "order by pd.noregistrasi"
+             "order by pp.tglpelayanan ) as x where x.statusenabled is null"
 
-    ReadRs3 "select distinct pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*pp.jumlah) as total " & _
+    ReadRs3 "select * from (select sp.statusenabled, pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*pp.jumlah) as total " & _
             "from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk left join ruangan_m as ru on ru.id=apd.objectruanganfk left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=35 and djp.objectjenisprodukfk <> 97   and  sp.statusenabled is null" & _
-             "" & str1 & " " & str2 & str3 & str4
-    ReadRs4 "select distinct pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*pp.jumlah) as total " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=35 and djp.objectjenisprodukfk <> 97   " & _
+             "" & str1 & " " & str2 & str3 & str4 & " ) as x where x.statusenabled is null"
+
+    ReadRs4 "select * from (select sp.statusenabled, pd.tglregistrasi,((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end))*pp.jumlah) as total " & _
             "from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  left join ruangan_m as ru on ru.id=apd.objectruanganfk left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=25 and djp.objectjenisprodukfk <> 97   and  sp.statusenabled is null" & _
-             "" & str1 & " " & str2 & str3 & str4
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=25 and djp.objectjenisprodukfk <> 97   " & _
+             "" & str1 & " " & str2 & str3 & str4 & " ) as x where x.statusenabled is null"
              
 Dim tCash, tKk, tPj, tJm, tJR, tPm, tPR As Double
     Dim i As Integer
@@ -292,7 +292,7 @@ Dim tCash, tKk, tPj, tJm, tJR, tPm, tPR As Double
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")
             .ucEmbos.SetUnboundFieldSource ("{ado.embos}")

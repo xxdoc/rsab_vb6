@@ -161,11 +161,11 @@ Dim adocmd As New ADODB.Command
     If idDepartemen <> "" Then
         If idDepartemen = 16 Then
             str4 = " and ru.objectdepartemenfk in (16,17,26)"
-            str5 = " pg.id = 641"
+'            str5 = " pg.id = 641"
         Else
             If idDepartemen <> "" Then
                 str4 = " and ru.objectdepartemenfk =" & idDepartemen & " "
-                str5 = " pg.id = 192"
+'                str5 = " pg.id = 192"
             End If
         End If
     End If
@@ -183,7 +183,7 @@ Dim adocmd As New ADODB.Command
     End If
 Set Report = New crRekapPendapatan
     
-    strSQL = "select DISTINCT apd.objectruanganfk, ru.namaruangan, ppp.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
+    strSQL = "select * from (select  sp.statusenabled, apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
             "(case when pd.objectkelompokpasienlastfk=1 then pd.noregistrasi else null end) as nonpj, " & _
             "(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as jm, " & _
             "pp.hargajual as hargapp, pp.jumlah as jumlahpp, pp.hargadiscount as diskonpp,kp.id as kpid, ppd.komponenhargafk as khid, " & _
@@ -192,8 +192,7 @@ Set Report = New crRekapPendapatan
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+            "left join pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "left join produk_m as pr on pr.id=pp.produkfk " & _
@@ -203,9 +202,9 @@ Set Report = New crRekapPendapatan
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left join strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and ppp.objectjenispetugaspefk=4  and sp.statusenabled is null " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   " & _
             " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
-            "order by pg.namalengkap"
+            "order by pg.namalengkap ) as x where x.statusenabled is null"
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -217,7 +216,7 @@ Set Report = New crRekapPendapatan
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .namaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .jCH.SetUnboundFieldSource ("{ado.nonpj}")
             .jJM.SetUnboundFieldSource ("{ado.jm}")
             .usKP.SetUnboundFieldSource ("{ado.kpid}")
