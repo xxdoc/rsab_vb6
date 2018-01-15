@@ -147,36 +147,27 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCrRekapHarianPemeriksaanLaborat = Nothing
 End Sub
 
-Public Sub cetak(tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaKasir As String, view As String)
+Public Sub cetak(tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idKelompok As String, namaKasir As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCrRekapHarianPemeriksaanLaborat = Nothing
 Dim adocmd As New ADODB.Command
 
-    Dim str1 As String
+    Dim str1, str2 As String
 
     If idRuangan <> "" Then
         str1 = " and ru.id=" & idRuangan & " "
     End If
+    
+    If idKelompok <> "" Then
+        str2 = " and kps.id=" & idKelompok & " "
+    End If
      
     
 Set Report = New crRekapHarianPemeriksaanLaborat
-'    ReadRs2 "SELECT distinct pp.tglpelayanan,dp.namadepartemen,ru.namaruangan,pr.id, pr.namaproduk, " & _
-'            "pp.hargajual,pp.jumlah,pp.hargajual*pp.jumlah as subtotal, " & _
-'            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon " & _
-'            "from produk_m pr " & _
-'            "left join pelayananpasien_t pp on pp.produkfk=pr.id " & _
-'            "left join pelayananpasiendetail_t ppd on pp.norec=ppd.pelayananpasien " & _
-'            "left join strukpelayanan_t sp on sp.norec=pp.strukfk " & _
-'            "left join departemen_m dp on dp.id=pr.objectdepartemenfk " & _
-'            "left join ruangan_m ru on ru.objectdepartemenfk=dp.id " & _
-'            "where pr.objectdepartemenfk=3 and ppd.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
-'            "and sp.statusenabled is null " & _
-'            str1 & _
-'            "order by pp.tglpelayanan "
 
-    strSQL = "SELECT pp.tglpelayanan,dp.namadepartemen,ru.namaruangan, pr.id, pr.namaproduk, " & _
+    strSQL = "SELECT pp.tglpelayanan,dp.namadepartemen,ru.namaruangan, kps.kelompokpasien, pr.id, pr.namaproduk, " & _
             "pp.hargajual,pp.jumlah,pp.hargajual*pp.jumlah as subtotal, " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon, " & _
             "0 as unitcost, " & _
@@ -184,16 +175,22 @@ Set Report = New crRekapHarianPemeriksaanLaborat
             "sum(case when ppd.komponenhargafk=35 then ppd.hargajual*ppd.jumlah end) as jasamedis, " & _
             "sum(case when ppd.komponenhargafk=25 then ppd.hargajual*ppd.jumlah end) as jasaparamedis, " & _
             "sum(case when ppd.komponenhargafk=30 then ppd.hargajual*ppd.jumlah end) as jasaumum " & _
-            "from produk_m pr " & _
-            "left join pelayananpasien_t pp on pp.produkfk=pr.id " & _
-            "left join pelayananpasiendetail_t ppd on pp.norec=ppd.pelayananpasien " & _
-            "left join strukpelayanan_t sp on sp.norec=pp.strukfk " & _
-            "left join departemen_m dp on dp.id=pr.objectdepartemenfk " & _
-            "left join ruangan_m ru on ru.objectdepartemenfk=dp.id " & _
-            "where pr.objectdepartemenfk=3 and ppd.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
-            "and sp.statusenabled is null " & _
+            "from pasiendaftar_t as pd " & _
+            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+            "left join pelayananpasiendetail_t ppd on pp.norec=ppd.pelayananpasien  " & _
+            "left join pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
+            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
+            "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+            "left join jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left join kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+            "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+            "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+            "where pr.objectdepartemenfk=3 and ppd.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and djp.objectjenisprodukfk <> 97 " & _
             str1 & _
-            "group by pp.tglpelayanan,dp.namadepartemen,ru.namaruangan, pr.id, pr.namaproduk,pp.hargajual,pp.jumlah,pp.hargadiscount " & _
+            str2 & _
+            "group by pp.tglpelayanan,dp.namadepartemen,ru.namaruangan,kps.kelompokpasien, pr.id, pr.namaproduk,pp.hargajual,pp.jumlah,pp.hargadiscount " & _
             "order by pp.tglpelayanan "
 '    Dim uc, tjs, tJm, tjp, tju As Double
 '    Dim i As Integer
@@ -216,6 +213,7 @@ Set Report = New crRekapHarianPemeriksaanLaborat
             .txtNamaKasir.SetText namaKasir
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & " ' "
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usDepartemen.SetUnboundFieldSource ("{ado.namadepartemen}")
             .unQty.SetUnboundFieldSource ("{ado.jumlah}")
             .unTarif.SetUnboundFieldSource ("{ado.hargajual}")
