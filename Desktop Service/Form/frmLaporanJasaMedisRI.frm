@@ -190,10 +190,29 @@ Set Report = New crLaporanJasaMedisRI
             .txtNamaKasir.SetText PrinteDBY
             
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
+<<<<<<< HEAD
+            '.usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
+           ' .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
+=======
+>>>>>>> 3035b243e0a07eb5ce662b313673c9b92e8cfc63
 '            .usHari.SetUnboundFieldSource ("{ado.harihari}")
 '            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
+<<<<<<< HEAD
+'            .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+'            .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
+'            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+'            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
+'            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+'            .ucJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
+'            .ucJasaParam.SetUnboundFieldSource ("{ado.jasaparamedis}")
+'            .ucJasaSarana.SetUnboundFieldSource ("{ado.jasasarana}")
+'            .ucJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
+'            .ucDiskonMedis.SetUnboundFieldSource ("{ado.diskonmedis}")
+'            .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+=======
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
@@ -205,6 +224,7 @@ Set Report = New crLaporanJasaMedisRI
             .ucJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
             .ucDiskonMedis.SetUnboundFieldSource ("{ado.diskonmedis}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+>>>>>>> 3035b243e0a07eb5ce662b313673c9b92e8cfc63
             
             If view = "false" Then
                 Dim strPrinter As String
