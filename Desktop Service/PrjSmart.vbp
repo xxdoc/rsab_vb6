@@ -197,18 +197,13 @@ Designer=Report\crRekapffsRI.Dsr
 Designer=Report\crLaporanPenerimaanRemun.Dsr
 Designer=Report\crLaporanffsRI.Dsr
 Designer=Report\cr_RekapPengeluaranBarang2.Dsr
-Form=Form\frmCetakBuktiPengeluaranBarang.frm
+Form=Form\frmCetakSPPB.frm
 Form=Form\frmLaporanPendapatan.frm
 Form=Report\frmCrRekapHarianPemeriksaanLab.frm
 Designer=Report\crRekapHarianPemeriksaanLab.Dsr
 Designer=Report\Cr_cetakbuktilayananruanganpertindakan.Dsr
-<<<<<<< HEAD
-Form=Form\frmLaporanffsIBS.frm
 Designer=Report\crLaporanffsIBS.Dsr
-=======
 Designer=Report\crLaporanTagihanSuratPasien.Dsr
->>>>>>> e02caceb806091bf464348df4a3dbae2b366a651
-IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
