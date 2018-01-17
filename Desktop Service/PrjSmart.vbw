@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 GossRESTDB = 60, 168, 947, 620, C
+=======
+GossRESTDB = 36, -2, 923, 450, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 JNode = 45, 24, 932, 476, C
 GossEvent = 26, 26, 761, 478, C
 GossClient = 83, 99, 970, 551, C, 156, 156, 1043, 608, C
@@ -11,27 +15,59 @@ frmSettingKoneksi = 156, 156, 1043, 608, C, 52, 52, 939, 504, C
 frmRajal = 0, 0, 0, 0, C, 0, 0, 846, 452, C
 frmTataRekening = 52, 52, 939, 504, C, 104, 104, 991, 556, C
 SavetoFile = 93, 61, 980, 513, C
+<<<<<<< HEAD
 crRekapPendapatan = 156, 156, 958, 608, C, 26, 26, 1044, 717, C
 frmRekapPendapatan = 169, 145, 938, 588, C, 182, 182, 951, 625, C
+=======
+crRekapPendapatan = 0, 0, 0, 0, C, 26, 26, 979, 717, C
+frmRekapPendapatan = 169, 145, 938, 588, C, 182, 182, 951, 625, C
+mdTerbilang = 78, 78, 1058, 469, C
+<<<<<<< HEAD
+frmCRCetakPasienPerjanjian = 0, 0, 781, 444, C, 208, 208, 989, 652, C
+=======
+frmCRCetakPasienPerjanjian = 0, 0, 781, 444, C, 208, 208, 989, 652, CZ
+frmFarmasiApotik = 208, 208, 1057, 660, C, 208, 208, 1057, 660, C
+Cr_cetakBuktiPendaftaran = 0, 0, 0, 0, C, 130, 130, 1139, 571, CZ
+Cr_cetakRMK = 104, 104, 956, 556, C, 156, 156, 1280, 847, CZ
+Cr_cetakLabelTracer = 0, 0, 852, 452, C, 182, 182, 1144, 873, CZ
+crCetakSJP = 0, 0, 0, 0, C, 208, 208, 1219, 899, CZ
+frmCetakFarmasiApotik = 0, 0, 0, 0, C, 0, 0, 849, 452, CZ
+Cr_cetakbuktilayanan = 78, 78, 924, 530, C, 0, 0, 997, 691, CZ
+Cr_cetakLembarGC = 0, 0, 0, 0, C, 26, 26, 1035, 467, CZ
+crJenisKIP = 0, 0, 0, 0, C, 78, 78, 1131, 769, CZ
+=======
+SavetoFile = 93, 61, 980, 513, 
+crRekapPendapatan = 0, 0, 0, 0, C, 26, 26, 1053, 717, C
+frmRekapPendapatan = 169, 145, 938, 588, , 182, 182, 951, 625, CZ
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 mdTerbilang = 78, 78, 1058, 469, C
 frmCRCetakPasienPerjanjian = 0, 0, 781, 444, C, 208, 208, 989, 652, CZ
+>>>>>>> 54cb40af93d5a8b16ca1d197ea19a40b387c764e
 frmFarmasiApotik = 208, 208, 1057, 660, C, 208, 208, 1057, 660, C
 Cr_cetakBuktiPendaftaran = 0, 0, 0, 0, C, 130, 130, 1139, 571, C
 Cr_cetakRMK = 104, 104, 956, 556, C, 156, 156, 1280, 847, C
 Cr_cetakLabelTracer = 0, 0, 852, 452, C, 182, 182, 1144, 873, C
 crCetakSJP = 0, 0, 0, 0, C, 208, 208, 1219, 899, C
-frmCetakFarmasiApotik = 0, 0, 0, 0, C, 0, 0, 849, 452, CZ
+frmCetakFarmasiApotik = 0, 0, 0, 0, C, 0, 0, 849, 452, C
 Cr_cetakbuktilayanan = 78, 78, 924, 530, C, 0, 0, 997, 691, C
 Cr_cetakLembarGC = 0, 0, 0, 0, C, 26, 26, 1035, 467, C
 crJenisKIP = 0, 0, 0, 0, C, 78, 78, 1131, 769, C
+<<<<<<< HEAD
 frmCRCetakKuitansiPasien = 0, 0, 980, 391, C, 0, 0, 887, 452, CZ
+=======
+frmCRCetakKuitansiPasien = 0, 0, 980, 391, C, 0, 0, 887, 452, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 mdlTotray = 26, 26, 913, 478, C
 bar39 = 208, 208, 1095, 660, C
 GIF = 0, 0, 0, 0, C
 Barcode_128 = 196, 67, 1012, 511, C
 Cr_cetakKartuPasien = 0, 0, 0, 0, C, 78, 78, 1087, 519, C
 frmPendaftaran = 40, 165, 927, 617, C, 52, 52, 939, 504, C
+<<<<<<< HEAD
 frmCRLabelFarmasi = 7, 61, 934, 434, C, 104, 104, 991, 556, CZ
+=======
+frmCRLabelFarmasi = 7, 61, 934, 434, C, 104, 104, 991, 556, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 cr_RincianBiayaResep_2 = 0, 0, 849, 452, C, 208, 208, 1224, 899, C
 Cr_cetakSummaryList = 156, 156, 1002, 608, C, 26, 26, 1023, 717, C
 Cr_cetakLabel = 0, 0, 0, 0, C, 10, 64, 972, 755, C
@@ -40,6 +76,7 @@ modSampleCodeMag = 78, 78, 813, 530, C
 modZBRGraphics = 0, 0, 0, 0, C
 modZBRPrinter = 0, 0, 0, 0, C
 crBukuRegisterPelayananPasien = 125, 125, 989, 469, C, 150, 150, 1217, 675, C
+<<<<<<< HEAD
 frmCRCetakBukuRegisterPelayanan = 73, 0, 937, 344, C, 0, 0, 864, 344, CZ
 frmLaporanPelayanan = 53, 12, 929, 297, C, 76, 232, 952, 517, C
 crLaporanPasienPulang = 78, 78, 902, 530, C, -159, 42, 851, 733, C
@@ -48,16 +85,51 @@ crLaporanPendapatanRuangan = 0, 0, 0, 0, C, 100, 100, 1091, 625, C
 frmCRCetakLaporanPendapatanRuangan = 0, 0, 833, 344, C, 125, 125, 958, 469, CZ
 crRincianBiayaPelayanan = 104, 60, 980, 345, , -53, 175, 1110, 866, C
 frmCRCetakRincianBiaya = 131, -3, 1007, 282, , 25, 25, 901, 310, C
+=======
+frmCRCetakBukuRegisterPelayanan = 73, 0, 937, 344, C, 0, 0, 864, 344, C
+frmLaporanPelayanan = 53, 12, 929, 297, C, 76, 232, 952, 517, C
+crLaporanPasienPulang = 78, 78, 902, 530, C, -159, 42, 851, 733, C
+frmCRCetakLaporanPasienPulang = 72, 188, 926, 681, C, 0, 0, 854, 350, C
+crLaporanPendapatanRuangan = 0, 0, 0, 0, C, 100, 100, 1091, 625, C
+frmCRCetakLaporanPendapatanRuangan = 0, 0, 833, 344, C, 125, 125, 958, 469, C
+crRincianBiayaPelayanan = 104, 60, 980, 345, C, -53, 175, 1110, 866, C
+frmCRCetakRincianBiaya = 131, -3, 1007, 282, C, 25, 25, 901, 310, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 Cr_cetakbuktilayananruangan = 50, 50, 876, 419, C, -44, 10, 967, 701, C
 crLaporanSensusPasien = 26, 26, 807, 470, C, 26, 26, 1023, 709, C
-frmCRCetakSensus = 26, 26, 926, 377, C, 208, 208, 989, 652, CZ
+frmCRCetakSensus = 26, 26, 926, 377, C, 208, 208, 989, 652, C
 crLaporanPendapatanRuanganDetail = 0, 0, 0, 0, C, 0, 0, 991, 525, C
-frmCRCetakBilling = 104, 104, 1069, 476, C, 26, 26, 872, 478, CZ
+frmCRCetakBilling = 104, 104, 1069, 476, C, 26, 26, 872, 478, C
 crBilling = 182, 182, 1028, 634, C, 26, 26, 1011, 708, C
-frmCRLaporanPendapatanRemun = 26, 26, 872, 478, C, 156, 156, 1002, 608, CZ
+frmCRLaporanPendapatanRemun = 26, 26, 872, 478, C, 156, 156, 1002, 608, C
 crLaporanPendapatanRemun = 0, 0, 0, 0, C, 26, 26, 1088, 717, C
 frmDiagramOdonto = 0, 0, 0, 0, C, 0, 0, 846, 452, C
+<<<<<<< HEAD
 frmKasir = 127, 37, 1014, 489, C, 78, 78, 965, 530, C
+=======
+<<<<<<< HEAD
+frmKasir = 127, 37, 1014, 489, C, 78, 78, 965, 530, C
+frmCetakOdontoGram = 0, 0, 0, 0, C, 26, 26, 872, 478, C
+crOdontoGram = 0, 0, 0, 0, C, 182, 182, 1148, 874, C
+crRekapLaporanPendapatanPoli = 100, 100, 1009, 444, C, -80, 72, 922, 755, C
+frmCRCetakLaporanPendapatanRuanganDetail = -36, 126, 873, 470, C, 25, 25, 934, 369, C
+frmCRCetakRekapLaporanPendapatanPoli = 83, 71, 992, 415, C, 75, 75, 984, 419, C
+crLaporanSensusBPJS = 125, 125, 1024, 469, C, 0, 0, 991, 525, C
+frmCRCetakSensusBPJS = 59, 0, 892, 344, C, 25, 25, 858, 369, C
+frmCRRekapffsIBS = 156, 156, 1002, 608, C, 130, 130, 976, 582, C
+frmRekapPenerimaan = 75, 75, 974, 419, C, 208, 208, 1054, 660, C
+crRekapPenerimaan = 87, 228, 920, 572, C, 0, 0, 1062, 559, C
+frmCRLaporanPenerimaan = 208, 208, 1052, 660, C, 182, 182, 1026, 634, C
+frmCRLaporanPenerimaanRemun = 104, 104, 950, 556, C, 78, 78, 924, 530, C
+crLaporanPenerimaan = 0, 0, 846, 452, C, 0, 0, 1031, 683, C
+frmCRLaporanPendapatanFFS = 208, 208, 1054, 660, C, 156, 156, 1002, 608, C
+crLaporanPendapatan = 208, 208, 1054, 660, C, -10, 106, 1017, 797, C
+crLaporanPendapatanFFS = 156, 156, 989, 608, C, 26, 26, 1088, 717, C
+crPenerimaanKasir1 = 0, 0, 789, 452, C, 130, 130, 1161, 813, C
+frmCRPenjualanHarianFarmasi = 105, 184, 894, 636, C, 182, 182, 974, 634, C
+=======
+frmKasir = 127, 37, 1014, 489, , 78, 78, 965, 530, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 frmCetakOdontoGram = 0, 0, 0, 0, C, 26, 26, 872, 478, CZ
 crOdontoGram = 0, 0, 0, 0, C, 182, 182, 1148, 874, C
 crRekapLaporanPendapatanPoli = 100, 100, 1009, 444, C, -80, 72, 922, 755, C
@@ -76,47 +148,74 @@ crLaporanPendapatan = 208, 208, 1054, 660, C, -10, 106, 1017, 797, C
 crLaporanPendapatanFFS = 156, 156, 989, 608, C, 26, 26, 1088, 717, C
 crPenerimaanKasir1 = 0, 0, 789, 452, C, 130, 130, 1161, 813, C
 frmCRPenjualanHarianFarmasi = 105, 184, 894, 636, C, 182, 182, 974, 634, CZ
+>>>>>>> 54cb40af93d5a8b16ca1d197ea19a40b387c764e
 FormFarmasi = 182, 182, 971, 634, C, 156, 156, 945, 608, C
 frmCRPenjualanObatPerDokter = 78, 78, 867, 530, C, 0, 0, 789, 452, C
 crPenjualanObatPerDokter = 156, 156, 945, 608, C, -22, 42, 963, 724, C
 Cr_cetakbuktilayananruanganbedah = 44, 161, 868, 613, C, 104, 104, 1087, 786, C
 crLaporanPendapatanPerDokter = 0, 0, 789, 452, C, -43, 39, 962, 730, C
+<<<<<<< HEAD
 frmLaporanPendapatanPerDokter = 26, 26, 815, 478, C, 0, 0, 789, 452, C
+=======
+<<<<<<< HEAD
+frmLaporanPendapatanPerDokter = 26, 26, 815, 478, C, 0, 0, 789, 452, C
+frmLaporanPenerimaanKasirPerusahaan = 104, 104, 893, 556, C, 78, 78, 867, 530, C
+=======
+frmLaporanPendapatanPerDokter = 26, 26, 815, 478, , 0, 0, 789, 452, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 frmLaporanPenerimaanKasirPerusahaan = 104, 104, 893, 556, C, 78, 78, 867, 530, CZ
+>>>>>>> 54cb40af93d5a8b16ca1d197ea19a40b387c764e
 crPenerimaanKasirPerusahaan = 208, 208, 997, 660, C, 52, 52, 1080, 743, C
 crPenjualanHarianFarmasi = 0, 0, 0, 0, C, 78, 78, 1119, 769, C
 Cr_cetakLabelFarmasi2 = 182, 182, 971, 634, C, -95, 64, 910, 755, C
-frmCetakLabelFarmasi = 26, 26, 815, 478, C, 0, 0, 789, 452, CZ
+frmCetakLabelFarmasi = 26, 26, 815, 478, C, 0, 0, 789, 452, C
 Cr_cetakLabelFarmasi = 208, 208, 997, 660, C, 182, 182, 1247, 873, C
 frmCetakPendaftaran = 208, 208, 997, 660, C, 78, 78, 867, 530, C
+<<<<<<< HEAD
 frmCRLaporanPenerimaanKasir = 26, 26, 815, 478, C, 0, 0, 789, 452, CZ
 frmCRLaporanTagihanPenjamin = 72, 37, 861, 489, C, 104, 104, 893, 556, CZ
+=======
+frmCRLaporanPenerimaanKasir = 26, 26, 815, 478, C, 0, 0, 789, 452, C
+frmCRLaporanTagihanPenjamin = 72, 37, 861, 489, C, 104, 104, 893, 556, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crLaporanTagihanPenjamin = 209, 185, 998, 637, C, -10, 30, 975, 712, C
-frmCRLaporanTagihanPenjaminSurat = 156, 156, 980, 608, C, 130, 130, 954, 582, CZ
+frmCRLaporanTagihanPenjaminSurat = 156, 156, 980, 608, C, 130, 130, 954, 582, C
 crLaporanTagihanPenjaminSurat = 182, 182, 1006, 634, C, -43, 16, 988, 699, C
 crKuitansiPiutangPenjamin = 130, 130, 954, 582, C, -76, 97, 955, 780, C
-frmCetakKuitansiPiutangPenjamin = 104, 104, 928, 556, C, 78, 78, 902, 530, CZ
+frmCetakKuitansiPiutangPenjamin = 104, 104, 928, 556, C, 78, 78, 902, 530, C
 frmPiutang = 130, 130, 1065, 481, C, 0, 0, 816, 444, C
-frmRekapPendapatanKeuangan = 52, 52, 867, 496, C, 26, 26, 841, 470, CZ
+frmRekapPendapatanKeuangan = 52, 52, 867, 496, C, 26, 26, 841, 470, C
 crRekapPendapatanKeuangan = 52, 52, 867, 496, C, 0, 0, 1031, 683, C
+<<<<<<< HEAD
 frmLaporanJurnal = 208, 208, 1023, 652, C, 182, 182, 997, 626, CZ
+=======
+frmLaporanJurnal = 208, 208, 1023, 652, C, 182, 182, 997, 626, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crLaporanJurnal = 26, 26, 841, 470, C, 0, 0, 985, 682, C
 frmAkuntansi = 182, 182, 997, 626, C, 156, 156, 971, 600, C
-frmLaporanJurnalHarian = 0, 0, 774, 444, C, 208, 208, 982, 652, CZ
+frmLaporanJurnalHarian = 0, 0, 774, 444, C, 208, 208, 982, 652, C
 crLaporanJurnalHarian = 52, 52, 826, 496, C, 26, 26, 1103, 717, C
-frmCetakFarmasiApotikPenjualan = 182, 182, 968, 626, C, 208, 208, 994, 652, CZ
+frmCetakFarmasiApotikPenjualan = 182, 182, 968, 626, C, 208, 208, 994, 652, C
 cr_RincianPenjualanFarmasi = 0, 0, 0, 0, C, 130, 130, 1188, 813, C
 Cr_cetakLabelFarmasiAdmin = 0, 0, 0, 0, C, 156, 156, 1085, 839, C
 Cr_cetakLabelFarmasiKemo = 0, 0, 0, 0, C, 156, 156, 1085, 839, C
 Cr_cetakLabelFarmasiTPN = 0, 0, 0, 0, C, 182, 182, 1111, 865, C
+<<<<<<< HEAD
 frmCetakLabelFarmasiAdmin = 0, 0, 0, 0, C, 78, 78, 864, 522, CZ
 frmCetakLabelFarmasiKemo = 0, 0, 0, 0, C, 104, 104, 890, 548, CZ
 frmCetakLabelFarmasiTPN = 0, 0, 0, 0, C, 130, 130, 916, 574, CZ
 frmCRCetakKuitansiPasienV2 = 208, 208, 1095, 660, C, 182, 182, 1069, 634, CZ
+=======
+frmCetakLabelFarmasiAdmin = 0, 0, 0, 0, C, 78, 78, 864, 522, C
+frmCetakLabelFarmasiKemo = 0, 0, 0, 0, C, 104, 104, 890, 548, C
+frmCetakLabelFarmasiTPN = 0, 0, 0, 0, C, 130, 130, 916, 574, C
+frmCRCetakKuitansiPasienV2 = 208, 208, 1095, 660, C, 182, 182, 1069, 634, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crKuitansiPasien = 0, 0, 887, 452, C, 104, 104, 1101, 787, C
 crJenisKuitansiPasien = 182, 182, 963, 626, C, 52, 52, 1074, 493, C
 Cr_cetakLabelZebra = 0, 0, 0, 0, C, 0, 0, 1002, 683, C
 crCetakDetailLayananDokter = 156, 156, 937, 599, C, 0, 0, 985, 682, C
+<<<<<<< HEAD
 frmCetakDetailLayananDokter = 52, 52, 833, 495, C, 208, 208, 989, 651, CZ
 frmCRLaporanPendapatanInap = 25, 30, 811, 474, C, 182, 182, 968, 626, CZ
 crLaporanPendapatanInap = 52, 52, 838, 496, C, 1, 30, 986, 712, C
@@ -126,29 +225,50 @@ crLaporanJurnalBalikInap = 52, 52, 907, 504, C, 0, 0, 1071, 691, C
 frmLaporanJurnalBalik = 26, 26, 881, 478, C, 52, 52, 907, 504, C
 crLaporanSuratPermintaanPengirimanBarang = 26, 26, 812, 470, Z, -34, 128, 984, 819, C
 frmCRLaporanTagihanSuratPasien = 52, 52, 838, 496, , 26, 26, 812, 470, C
+=======
+frmCetakDetailLayananDokter = 52, 52, 833, 495, C, 208, 208, 989, 651, C
+frmCRLaporanPendapatanInap = 25, 30, 811, 474, C, 182, 182, 968, 626, C
+crLaporanPendapatanInap = 52, 52, 838, 496, C, 1, 30, 986, 712, C
+frmLaporanJurnalDetail = 182, 182, 968, 626, C, 156, 156, 942, 600, C
+crLaporanJurnalBalikDetailInap = 130, 130, 985, 582, C, 208, 208, 1205, 891, C
+crLaporanJurnalBalikInap = 52, 52, 907, 504, C, 0, 0, 1071, 691, C
+frmLaporanJurnalBalik = 26, 26, 881, 478, C, 52, 52, 907, 504, C
+crLaporanSuratPermintaanPengirimanBarang = 26, 26, 812, 470, C, -34, 128, 949, 810, C
+frmCRLaporanTagihanSuratPasien = 52, 52, 838, 496, C, 26, 26, 812, 470, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crKuitansiPiutangPenjaminPasien = 182, 182, 963, 626, C, 26, 26, 1023, 709, C
-frmCetakKuitansiPiutangPenjaminPasien = 208, 208, 994, 652, C, 182, 182, 968, 626, CZ
+frmCetakKuitansiPiutangPenjaminPasien = 208, 208, 994, 652, C, 182, 182, 968, 626, C
 crCetakPasienPerjanjian = 156, 156, 937, 600, C, 20, 89, 1017, 772, C
-frmCRKIP = 0, 0, 786, 444, C, 208, 208, 994, 652, CZ
+frmCRKIP = 0, 0, 786, 444, C, 208, 208, 994, 652, C
 crLaporanPendapatanPoli = 0, 0, 0, 0, C, 104, 104, 1106, 787, C
+<<<<<<< HEAD
 frmCRCetakLaporanPendapatanPoli = 78, 78, 847, 521, C, 182, 182, 968, 626, CZ
 frmCRCetakDaftarPasien = 43, 12, 907, 356, C, 75, 75, 939, 419, CZ
+=======
+frmCRCetakLaporanPendapatanPoli = 78, 78, 847, 521, C, 182, 182, 968, 626, C
+frmCRCetakDaftarPasien = 43, 12, 907, 356, C, 75, 75, 939, 419, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crLaporanPasienDaftar = 50, 50, 914, 394, C, -14, 308, 977, 833, C
 crLaporanSensus = 0, 0, 0, 0, C, 52, 52, 1057, 743, C
 Cr_cetakbuktilayananruanganpertindakanJasa = 130, 130, 930, 582, C, 104, 104, 1104, 795, C
 crCetakKIP = 0, 0, 0, 0, C, 78, 78, 1080, 761, C
 crLaporanJurnaBalikDetail = 0, 0, 0, 0, C, 0, 0, 997, 683, C
-frmLaporanJurnalBalikDetail = 182, 182, 1037, 634, C, 0, 0, 917, 452, CZ
+frmLaporanJurnalBalikDetail = 182, 182, 1037, 634, C, 0, 0, 917, 452, C
 crLaporanJurnalPenjamin2 = 0, 0, 0, 0, C, 26, 26, 1023, 709, C
-frmLaporanJurnalPenjamin = 0, 0, 786, 444, C, 208, 208, 994, 652, CZ
+frmLaporanJurnalPenjamin = 0, 0, 786, 444, C, 208, 208, 994, 652, C
 crLaporanJurnalDetail = 208, 208, 977, 651, C, 130, 130, 1195, 821, C
+<<<<<<< HEAD
 frmCrRekapPendapatanInap = 156, 156, 937, 600, C, 182, 182, 1038, 634, CZ
+=======
+frmCrRekapPendapatanInap = 156, 156, 937, 600, C, 182, 182, 1038, 634, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crRekapPendapatanInap = 0, 0, 0, 0, C, 208, 208, 1205, 891, C
 crLaporanJurnalPenjamin = 0, 0, 0, 0, C, 156, 156, 1153, 839, C
-frmCrRincianPendapatanHarianPerKelas = 26, 26, 807, 470, C, 0, 0, 781, 444, CZ
-crRncianPendapatanHarianPerkelas = 78, 78, 1004, 356, C, 182, 182, 1179, 864, C
+frmCrRincianPendapatanHarianPerKelas = 26, 26, 807, 470, C, 0, 0, 781, 444, C
+crRncianPendapatanHarianPerkelas = 78, 78, 1004, 356, C, 182, 182, 1167, 864, C
 crLaporanJurnalBalik2 = 78, 78, 927, 530, C, 130, 130, 1179, 821, C
 crLaporanJurnalBalikDetail = 0, 0, 0, 0, C, 156, 156, 1141, 838, C
+<<<<<<< HEAD
 frmCRCetakLaporanPasienPulang2 = 130, 130, 916, 574, C, 26, 26, 812, 470, CZ
 crLaporanPasienPulang2 = 78, 78, 864, 522, C, 26, 26, 1091, 717, C
 frmLogistik = -13, 104, 874, 556, , 0, 0, 887, 452, C
@@ -177,12 +297,43 @@ frmCRLaporanPendapatanAdminMaterai = 78, 78, 745, 530, C, 104, 104, 674, 556, C
 frmCRLaporanffsIGD = 182, 182, 752, 634, C, 52, 52, 851, 504, CZ
 crLaporanffsIGD = 0, 0, 0, 0, C, 104, 104, 1207, 795, C
 frmCRRekapffsIGD = 130, 130, 984, 479, C, 104, 104, 903, 556, CZ
+=======
+frmCRCetakLaporanPasienPulang2 = 130, 130, 916, 574, C, 26, 26, 812, 470, C
+crLaporanPasienPulang2 = 78, 78, 864, 522, C, 26, 26, 1091, 717, C
+frmLogistik = -13, 104, 874, 556, C, 0, 0, 887, 452, C
+frmCetakRekapPengeluaranBarang = 104, 104, 885, 548, C, 78, 78, 859, 522, C
+cr_RincianPenerimaanBarang = 7, 182, 894, 634, C, -183, 256, 882, 947, C
+frmCetakBuktiPenerimaanBarang = 134, 48, 1021, 500, C, 78, 78, 965, 530, C
+frmCrRekapHarianPemeriksaanLaborat = 156, 156, 937, 600, C, 156, 156, 937, 600, C
+crRekapHarianPemeriksaanLaborat = 182, 182, 963, 626, C, 52, 52, 1035, 734, C
+crCetakRekapLayananDokter = 26, 26, 807, 469, C, 104, 104, 1089, 786, C
+frmCetakRekapLayananDokter = 0, 0, 781, 443, C, 208, 208, 989, 651, C
+frmCrRekapHarianPemeriksaan = 78, 78, 847, 521, C, 52, 52, 821, 495, C
+crRekapHarianPemeriksaan = 0, 0, 0, 0, C, 12, 75, 997, 757, C
+frmCetakRekapPenerimaanBarang = 104, 104, 873, 547, C, 78, 78, 847, 521, C
+cr_BuktiPengeluaranBarang = 0, 0, 0, 0, C, 52, 52, 1037, 734, C
+cr_BuktiPenerimaanBarang = 0, 0, 0, 0, C, 78, 78, 1063, 760, C
+frmCetakStokOpname = 104, 104, 873, 547, C, 52, 52, 821, 495, C
+cr_RekapPenerimaanBarang2 = 156, 156, 937, 599, C, 26, 26, 1011, 708, C
+frmCetakBuktiPenerimaanBarang2 = 0, 0, 0, 0, C, 104, 104, 965, 556, C
+cr_LaporanStokOpname = 26, 26, 795, 469, C, 208, 208, 1193, 890, C
+crLaporanJasaMedisRI = 78, 78, 1066, 521, C, 0, 0, 1015, 691, C
+frmLaporanJasaMedisRI = 156, 156, 889, 599, C, 104, 104, 837, 547, C
+frmCRLaporanffsRI = 78, 78, 840, 530, C, 52, 52, 814, 504, C
+frmCRLaporanPenerimaanFFS = 130, 130, 963, 582, C, 182, 182, 1015, 634, C
+crLaporanPenerimaanFFS = 156, 156, 989, 608, C, 130, 130, 1192, 821, C
+frmCRLaporanPendapatanAdminMaterai = 78, 78, 745, 530, C, 104, 104, 674, 556, C
+frmCRLaporanffsIGD = 182, 182, 752, 634, C, 52, 52, 851, 504, C
+crLaporanffsIGD = 0, 0, 0, 0, C, 104, 104, 1229, 795, C
+frmCRRekapffsIGD = 130, 130, 984, 479, C, 104, 104, 903, 556, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crRekapffsIGD = 78, 78, 877, 530, C, 0, 0, 1103, 691, C
 crLaporanPendapatanAdminMaterai = 26, 26, 823, 478, C, 182, 182, 1270, 873, C
 frmCRRekapffsRI = 78, 78, 840, 530, C, 130, 130, 892, 582, C
 crRekapffsIBS = 26, 26, 788, 478, C, 0, 0, 1148, 691, C
 crRekapffsRI = 78, 78, 821, 530, C, 182, 182, 1330, 873, C
 crLaporanPenerimaanRemun = 0, 0, 0, 0, C, 182, 182, 1244, 873, C
+<<<<<<< HEAD
 crLaporanffsRI = 0, 0, 0, 0, C, 26, 26, 1174, 717, C
 cr_RekapPengeluaranBarang2 = 0, 0, 0, 0, C, 130, 130, 1115, 812, C
 frmCetakSPPB = 0, 0, 914, 277, , 78, 78, 845, 521, C
@@ -191,4 +342,22 @@ frmCRRekapHarianPemeriksaanLab = 0, 0, 767, 443, C, 208, 208, 975, 651, C
 crRekapHarianPemeriksaanLab = 104, 104, 906, 556, C, -26, 26, 992, 717, CZ
 Cr_cetakbuktilayananruanganpertindakan = 0, 0, 0, 0, C, 182, 182, 1198, 873, C
 crLaporanffsIBS = 26, 26, 823, 478, C, 182, 182, 1234, 873, C
+=======
+crLaporanffsRI = 0, 0, 0, 0, C, 26, 26, 1151, 717, C
+cr_RekapPengeluaranBarang2 = 0, 0, 0, 0, C, 130, 130, 1115, 812, C
+<<<<<<< HEAD
+frmCetakBuktiPengeluaranBarang = 0, 0, 914, 277, C, 78, 78, 845, 521, C
+frmCRLaporanPendapatan = 182, 182, 951, 625, C, 156, 156, 925, 599, C
+frmCRRekapHarianPemeriksaanLab = 0, 0, 767, 443, C, 208, 208, 975, 651, C
+crRekapHarianPemeriksaanLab = 0, 0, 0, 0, C, 182, 182, 1179, 864, C
+=======
+frmCetakBuktiPengeluaranBarang = 0, 0, 914, 277, , 78, 78, 845, 521, CZ
+frmCRLaporanPendapatan = 182, 182, 951, 625, Z, 156, 156, 925, 599, C
+frmCRRekapHarianPemeriksaanLab = 0, 0, 767, 443, , 208, 208, 975, 651, C
+crRekapHarianPemeriksaanLab = 104, 104, 906, 556, , 182, 182, 1165, 864, C
+>>>>>>> 54cb40af93d5a8b16ca1d197ea19a40b387c764e
+Cr_cetakbuktilayananruanganpertindakan = 0, 0, 0, 0, C, 182, 182, 1198, 873, C
+frmCRLaporanffsIBS = 0, 0, 0, 0, C, 78, 78, 882, 530, C
+crLaporanffsIBS = 26, 26, 823, 478, C, 182, 182, 1307, 873, C
+>>>>>>> e468a2392cc7d7d7eccac4a83cc400ec3476e7f0
 crLaporanTagihanSuratPasien = 0, 0, 0, 0, C, 52, 52, 1049, 735, C

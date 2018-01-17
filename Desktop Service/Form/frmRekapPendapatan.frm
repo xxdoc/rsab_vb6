@@ -161,11 +161,11 @@ Dim adocmd As New ADODB.Command
     If idDepartemen <> "" Then
         If idDepartemen = 16 Then
             str4 = " and ru.objectdepartemenfk in (16,17,26)"
-            str5 = " pg.id = 641"
+'            str5 = " pg.id = 641"
         Else
             If idDepartemen <> "" Then
                 str4 = " and ru.objectdepartemenfk =" & idDepartemen & " "
-                str5 = " pg.id = 192"
+'                str5 = " pg.id = 192"
             End If
         End If
     End If
@@ -183,8 +183,13 @@ Dim adocmd As New ADODB.Command
     End If
 Set Report = New crRekapPendapatan
     
+<<<<<<< HEAD
+    strSQL = "select * from (select  sp.statusenabled, apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
+            "(case when pd.objectkelompokpasienlastfk=1 then pd.noregistrasi else null end) as nonpj, " & _
+=======
     strSQL = "select distinct * from (select sp.statusenabled, apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
             "(case when pd.objectkelompokpasienlastfk = 1 then pd.noregistrasi else null end) as nonpj, " & _
+>>>>>>> 54cb40af93d5a8b16ca1d197ea19a40b387c764e
             "(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as jm, " & _
             "pp.hargajual as hargapp, pp.jumlah as jumlahpp, pp.hargadiscount as diskonpp,kp.id as kpid, ppd.komponenhargafk as khid, " & _
             "ppd.hargajual as hargappd, ppd.jumlah as jumlahppd, ppd.hargadiscount as diskonppd " & _
@@ -202,9 +207,15 @@ Set Report = New crRekapPendapatan
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left join strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+<<<<<<< HEAD
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97   " & _
+            " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
+            "order by pg.namalengkap ) as x where x.statusenabled is null"
+=======
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
             "order by pg.namalengkap) as x where x.statusenabled is null "
+>>>>>>> 54cb40af93d5a8b16ca1d197ea19a40b387c764e
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -216,7 +227,7 @@ Set Report = New crRekapPendapatan
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .namaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .jCH.SetUnboundFieldSource ("{ado.nonpj}")
             .jJM.SetUnboundFieldSource ("{ado.jm}")
             .usKP.SetUnboundFieldSource ("{ado.kpid}")
