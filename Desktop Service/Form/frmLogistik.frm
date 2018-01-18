@@ -104,6 +104,13 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
+                
+            Case "cetak-SPPB"
+                Call frmCetakSPPB.cetak(Param2(1), Param3(1))
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
