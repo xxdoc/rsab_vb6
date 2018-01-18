@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmLaporanJurnalHarian 
+Begin VB.Form frmLaporanJurnaAdmin 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
@@ -98,7 +98,7 @@ Begin VB.Form frmLaporanJurnalHarian
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmLaporanJurnalHarian"
+Attribute VB_Name = "frmLaporanJurnaAdmin"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -175,7 +175,7 @@ Dim adocmd As New ADODB.Command
     
 Set Report = New crLaporanJurnalHarian
     strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk, " & _
-            "case when jp.id=97 then '41110040121001' else map.kdperkiraan end as kdperkiraan, " & _
+            "case when jp.id=97 then '41120040121001' else map.kdperkiraan end as kdperkiraan, " & _
             "case when jp.id=97 then 'Pendt. Tindakan Ka Instalasi Farmasi' else map.namaperkiraan end as namaperkiraan, " & _
             "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
             "'Pendapatan R.Jalan' as keterangan " & _
@@ -185,9 +185,9 @@ Set Report = New crLaporanJurnalHarian
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=pro.id  " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and  pro.id in (10011572,10011571) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
             str2 & _
             " order by pro.namaproduk"
@@ -288,10 +288,10 @@ Set Report = New crLaporanJurnalHarian
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru3 on ru3.id=pd.objectruanganlastfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
+            "left JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk left JOIN ruangan_m as ru3 on ru3.id=pd.objectruanganlastfk " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=pro.id  " & _
             "left join ruangan_m as ru2 on ru2.id = apd.objectruanganasalfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'   and jp.id in (25,99,100,101,102,36,103,107,97,27666) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
+            "where tp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "'   and  pro.id in (10011572,10011571) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
             str2 '& _
 
