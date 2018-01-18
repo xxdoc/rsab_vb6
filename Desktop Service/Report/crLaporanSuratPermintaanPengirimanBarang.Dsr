@@ -3,7 +3,7 @@ Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crLaporanSuratPermintaanPengirimanB
    ClientHeight    =   9900
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   15150
+   ClientWidth     =   16200
    OleObjectBlob   =   "crLaporanSuratPermintaanPengirimanBarang.dsx":0000
 End
 Attribute VB_Name = "crLaporanSuratPermintaanPengirimanBarang"
@@ -15,3 +15,4 @@ Attribute VB_Exposed = False
 Private Sub Section11_Format(ByVal pFormattingInfo As Object)
     txtTerbilang.SetText "# " & TerbilangDesimal(ucGrand.Value) & " #"
 End Sub
+
