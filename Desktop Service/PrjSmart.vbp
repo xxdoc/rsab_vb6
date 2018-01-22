@@ -114,7 +114,7 @@ Designer=Report\crRekapPendapatanKeuangan.Dsr
 Form=Form\frmLaporanJurnal.frm
 Designer=Report\crLaporanJurnal.Dsr
 Form=Form\frmAkuntansi.frm
-Form=Form\frmLaporanJurnalHarian.frm
+Form=Form\frmLaporanJurnalAdmin.frm
 Designer=Report\crLaporanJurnalHarian.Dsr
 Form=Form\frmCetakFarmasiApotikPenjualan.frm
 Designer=Report\cr_RincianPenjualanFarmasi.Dsr
@@ -132,7 +132,7 @@ Designer=Report\crCetakDetailLayananDokter.Dsr
 Form=Report\frmCetakDetailLayananDokter.frm
 Form=Form\frmLaporanPendapatanInap.frm
 Designer=Report\crLaporanPendapatanInap.Dsr
-Form=Form\frmLaporanJurnalDetail.frm
+Form=Form\frmLaporanJurnalAdminDetail.frm
 Designer=Report\crLaporanJurnaBalikDetailInap.Dsr
 Designer=Report\crLaporanJurnalBalikInap.Dsr
 Form=Form\frmLaporanJurnalBalik.frm
@@ -204,6 +204,13 @@ Designer=Report\crRekapHarianPemeriksaanLab.Dsr
 Designer=Report\Cr_cetakbuktilayananruanganpertindakan.Dsr
 Designer=Report\crLaporanffsIBS.Dsr
 Designer=Report\crLaporanTagihanSuratPasien.Dsr
+<<<<<<< HEAD
+=======
+Form=Form\frmLaporanffsIBS.frm
+Form=Form\frmLaporanJurnalHarian.frm
+Form=Form\frmLaporanJurnalDetail.frm
+IconForm="GossRESTMain"
+>>>>>>> 2a4b92459fa5b17d4fc2ed835181ec2f69622384
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
@@ -218,7 +225,11 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
+<<<<<<< HEAD
 VersionComments="AL180110.3"
+=======
+VersionComments="AL180118.2"
+>>>>>>> 2a4b92459fa5b17d4fc2ed835181ec2f69622384
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0

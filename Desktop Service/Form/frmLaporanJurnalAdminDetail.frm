@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmLaporanJurnalHarian 
+Begin VB.Form frmLaporanJurnalAdminDetail 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
@@ -61,7 +61,7 @@ Begin VB.Form frmLaporanJurnalHarian
       Width           =   3015
    End
    Begin CRVIEWERLibCtl.CRViewer CRViewer1 
-      Height          =   6975
+      Height          =   6855
       Left            =   0
       TabIndex        =   4
       Top             =   0
@@ -98,13 +98,13 @@ Begin VB.Form frmLaporanJurnalHarian
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmLaporanJurnalHarian"
+Attribute VB_Name = "frmLaporanJurnalAdminDetail"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanJurnalHarian
+Dim Report As New crLaporanJurnalDetail
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -143,14 +143,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmLaporanJurnalHarian = Nothing
+    Set frmLaporanJurnalDetail = Nothing
 End Sub
 
 Public Sub CetakLaporanJurnal(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmLaporanJurnalHarian = Nothing
+Set frmLaporanJurnalDetail = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
@@ -165,48 +165,53 @@ Dim adocmd As New ADODB.Command
             End If
         End If
     End If
-    'If idDepartemen <> "" Then
-       ' str1 = "and ru.objectdepartemenfk = " & idDepartemen & " "
-   ' End If
+'    If idDepartemen <> "" Then
+'        str1 = "and ru.objectdepartemenfk=" & idDepartemen & " "
+'    End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
     
     
-Set Report = New crLaporanJurnalHarian
-    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk, " & _
-            "case when jp.id=97 then '41110040121001' else map.kdperkiraan end as kdperkiraan, " & _
+Set Report = New crLaporanJurnalDetail
+            
+    strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah, " & _
+            "case when jp.id=97 then '41120040121001' else map.kdperkiraan end as kdperkiraan, " & _
             "case when jp.id=97 then 'Pendt. Tindakan Ka Instalasi Farmasi' else map.namaperkiraan end as namaperkiraan, " & _
             "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
-            "'Pendapatan R.Jalan' as keterangan " & _
+            "'Pendapatan R. Jalan' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
+            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec  " & _
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
             str2 & _
-            " order by pro.namaproduk"
-   
+            " order by ps.namapasien"
+
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
+            .txtjudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT JALAN"
             .txtPrinted.SetText namaPrinted
-            .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
-            .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
-            .txtDeskripsi.SetText "Pendapatan R. Jalan Tgl " & Format(tglAwal, "dd MMMM yyyy")
-            .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
+            
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
-            .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
-            .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
+            .usNmPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
+            '.usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRegMR.SetUnboundFieldSource ("{ado.regcm}")
+            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usLayanan.SetUnboundFieldSource ("{ado.layanan}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+            .unKode.SetUnboundFieldSource ("{ado.kode}")
             '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
             '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
@@ -237,22 +242,26 @@ Public Sub CetakLaporanJurnalInap(idKasir As String, tglAwal As String, tglAkhir
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmLaporanJurnalHarian = Nothing
+Set frmLaporanJurnalDetail = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
     Dim str2 As String
     
     If idDepartemen <> "" Then
-        str1 = " AND ru3.objectdepartemenfk = '" & idDepartemen & "' "
+        str1 = " AND ru2.objectdepartemenfk in (16) "
     End If
+'    If idDepartemen <> "" Then
+'        str1 = "and ru.objectdepartemenfk=" & idDepartemen & " "
+'    End If
     If idRuangan <> "" Then
         str2 = " and apd.objectruanganfk=" & idRuangan & " "
     End If
     
     
-Set Report = New crLaporanJurnalHarian
-'    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk,case " & _
+Set Report = New crLaporanJurnalDetail
+            
+'    strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien, ru.namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah, case " & _
             "when jp.id in (99,25)                    then'Pendt. Akomodasi' || ' ' || ru.namaruangan " & _
             "when jp.id =100                          then 'Pendt. Konsultasi' || ' ' || ru.namaruangan " & _
             "when jp.id =101                          then 'Pendt. Visite' || ' ' || ru.namaruangan " & _
@@ -271,45 +280,51 @@ Set Report = New crLaporanJurnalHarian
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join ruangan_m as ru2 on ru2.id = apd.objectruanganasalfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666)" & _
+            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and jp.id in (25,99,100,101,102,36,103,107,97,27666)" & _
             str1 & _
-            str2 '& _
-            "group by pd.noregistrasi, ru.namaruangan, tp.produkfk, kp.id, pro.id, pro.namaproduk order by pro.id"
-    strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk, " & _
+            str2 & _
+            "order by ps.namapasien"
+            '            "group by pd.tglregistrasi, pd.noregistrasi, ps.namapasien, ps.nocm, tp.hargajual, tp.jumlah, ru.namaruangan, tp.produkfk, pro.namaproduk, pro.id, jp.id  "
+            
+    strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien,case when jp.id=97 then 'Farmasi' else ru.namaruangan end as namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah,  " & _
             "case when jp.id=97 then '41120040121001' else map.kdperkiraan end as kdperkiraan, " & _
-            "case when jp.id=97 then 'Pendt. Tindakan Ka Instalasi Farmasi' else map.namaperkiraan end as namaperkiraan, " & _
+            "case when jp.id=97 then 'Pendt. Tindakan Ka Instalasi Farmasi' else map.namaperkiraan end as namaperkiraan,   " & _
             "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
             "'Pendapatan R.Inap' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
+            "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec  " & _
             "LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru3 on ru3.id=pd.objectruanganlastfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
-            "left join ruangan_m as ru2 on ru2.id = apd.objectruanganasalfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'   and jp.id in (25,99,100,101,102,36,103,107,97,27666) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
+            "left JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=pro.id  " & _
+            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+            "where tp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "'  and pro.id in (10011572,10011571) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
-            str2 '& _
+            str2
 
-            
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
+            .txtjudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT INAP"
             .txtPrinted.SetText namaPrinted
-            .txtTanggal.SetText Format(tglAwal, "dd/MM/yyyy")
-            .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
-            .txtDeskripsi.SetText "Rekapitulasi Pendapatan R. Inap Tgl " & Format(tglAwal, "dd MMMM yyyy")
-            .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
+            .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
+            '.usTglRegis.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
-            .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
+            .usNmPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
+            '.usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
+            .usRegMR.SetUnboundFieldSource ("{ado.regcm}")
+            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+            .usLayanan.SetUnboundFieldSource ("{ado.layanan}")
+            .ucTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+            .unKode.SetUnboundFieldSource ("{ado.kode}")
             '.unDebet.SetUnboundFieldSource ("{ado.P_NonJM}")
             '.unKredit.SetUnboundFieldSource ("{ado.P_JM}")
             .ucTotal.SetUnboundFieldSource ("{ado.total}")
@@ -336,3 +351,5 @@ Exit Sub
 errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
+
+

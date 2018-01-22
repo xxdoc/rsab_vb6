@@ -180,7 +180,7 @@ Dim adocmd As New ADODB.Command
     nmKaInstalasi = arrStr(1)
     
     
-    dokterluar = " and pr.objectdetailjenisprodukfk=481 "
+'    dokterluar = " and pr.objectdetailjenisprodukfk=481 "
     If idDokter <> "" Then
         dokter = " and pg.id = '" & idDokter & "'"
         ReadRs2 "select * from pegawai_m where id = " & idDokter
@@ -194,6 +194,7 @@ Dim adocmd As New ADODB.Command
                 End If
                 SQLdate = SQLdate & strTglJamSQL
             Next
+            dokterluar = "  "
         Else
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
@@ -286,7 +287,7 @@ Set Report = New crLaporanffsRI
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .UnboundString1.SetUnboundFieldSource ("{ado.norec}")
-            .ucKPID.SetUnboundFieldSource ("{ado.kpid}")
+            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")

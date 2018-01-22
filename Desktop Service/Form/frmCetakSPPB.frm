@@ -179,7 +179,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select so.noorder, so.keterangankeperluan,so.noorderintern, so.tglorder, so.keteranganorder, so.nokontrakspk, " & _
+            strSQL = "select so.keteranganlainnya,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder, so.keterangankeperluan,so.noorderintern, so.tglorder, so.keteranganorder, so.nokontrakspk, " & _
                     "so.noorderrfq, so.namarekanansales, so.alamat, so.alamattempattujuan, so.keteranganorder || ' RSAB HK THN '|| so.noorderrfq as judul,  " & _
                     "pr.namaproduk, ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount, op.hargappn, " & _
                     "case when op.hargadiscount <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargadiscount else 0 end as persenDisc, " & _
@@ -196,9 +196,10 @@ bolStrukResep = True
             .database.AddADOCommand CN_String, adoReport
            
              .usNoSPPB.SetUnboundFieldSource ("{Ado.noorder}")
-             .usKebutuhan.SetUnboundFieldSource ("{Ado.keterangankeperluan}")
+             .usPengadaan.SetUnboundFieldSource ("{Ado.keterangankeperluan}")
+             .usKebutuhan.SetUnboundFieldSource ("{Ado.keteranganlainnya}")
              .usNo.SetUnboundFieldSource ("{Ado.noorderintern}")
-             .udTanggal.SetUnboundFieldSource ("{Ado.tglorder}")
+             .udTanggal.SetUnboundFieldSource ("{Ado.tglvalidasi}")
              .usNoKontrak.SetUnboundFieldSource ("{Ado.nokontrakspk}")
              .usTahun.SetUnboundFieldSource ("{Ado.noorderrfq}")
              .usNamaPerusahaan.SetUnboundFieldSource ("{Ado.namarekanansales}")
@@ -212,6 +213,7 @@ bolStrukResep = True
              .unDisc.SetUnboundFieldSource ("{Ado.persenDisc}")
              .unPPN.SetUnboundFieldSource ("{Ado.persenPpn}")
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")
+             .usQtyHari.SetUnboundFieldSource ("{Ado.nourutlogin}")
              
 '             Dim X As Double
 '             X = Round("{Ado.total}")

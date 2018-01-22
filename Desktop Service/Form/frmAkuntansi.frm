@@ -86,7 +86,18 @@ On Error Resume Next
                     Set Root = New JNode
                     Root("Status") = "Cetak Jurnal"
                 End If
-            
+            Case "cetak-jurnal-administrasi"
+                If Param4(1) = 16 Then
+                    Call frmLaporanJurnaAdmin.CetakLaporanJurnalInap(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                End If
+            Case "cetak-jurnal-administrasi-detail"
+                If Param4(1) = 16 Then
+                    Call frmLaporanJurnalAdminDetail.CetakLaporanJurnalInap(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                    Set Root = New JNode
+                    Root("Status") = "Cetak Jurnal"
+                End If
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
