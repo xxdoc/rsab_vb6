@@ -194,7 +194,7 @@ Dim strKet As Boolean
 '               "where sbp.nosbm='" & strNoregistrasi & "'"
         ElseIf Left(strNoregistrasi, 14) = "KEMBALIDEPOSIT" Then
             strNoregistrasi = Replace(strNoregistrasi, "KEMBALIDEPOSIT", "")
-            ReadRs "select sbp.nosbm as noregistrasi,sbp.totaldibayar as totaldibayar, ps.namapasien as namapasien, " & _
+            ReadRs "select sbp.nosbm as noregistrasi,sbp.totaldibayar as totaldibayar, 'RSAB Harapan Kita' as namapasien, " & _
                     "pg.namalengkap, sbp.keteranganlainnya,sbp.keteranganlainnya as namaruangan,ps.nocm as nocm " & _
                     "from strukpelayanan_t as sp inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
                     "left join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
