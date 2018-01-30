@@ -492,11 +492,11 @@ bolBuktiLayananRuanganBedah = False
               .txtAsalRujukan.SetText IIf(IsNull(RS("nmprovider")), "-", RS("nmprovider"))
               .txtPeserta.SetText IIf(IsNull(RS("jenispeserta")), "-", RS("jenispeserta"))
               .txtJenisrawat.SetText IIf(IsNull(RS("jenisrawat")), "-", RS("jenisrawat")) 'RS("jenisrawat")
-              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
-              .txtDiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
+              .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
               .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
               .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
-              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
               .txtNoPendaftaran2.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi"))
              End If
 
@@ -551,7 +551,8 @@ bolBuktiLayananRuanganBedah = False
             
             strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
                        " pd.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
-                       " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " (select pg.namalengkap from pegawai_m as pg INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pg.id " & _
+                       "where p3.pelayananpasien=tp.norec and p3.objectjenispetugaspefk=4 limit 1) AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
                        " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan,ks.namakelas,ar.asalrujukan, " & _
                        " CASE WHEN rek.namarekanan is null then '-' else rek.namarekanan END as namapenjamin,kmr.namakamar " & _
                        " FROM pasiendaftar_t AS pd INNER JOIN pasien_m AS ps ON pd.nocmfk = ps.id " & _
@@ -791,7 +792,8 @@ bolBuktiLayananRuanganBedah = False
             
             strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
                        " apdp.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
-                       " pp.namalengkap AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " (select pg.namalengkap from pegawai_m as pg INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pg.id " & _
+                       "where p3.pelayananpasien=tp.norec and p3.objectjenispetugaspefk=4 limit 1) AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
                        " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
                        " (case when tp.hargadiscount is null then 0 else tp.hargadiscount end)* tp.jumlah as diskon, " & _
                        " hargasatuan*tp.jumlah as total, ks.namakelas,ar.asalrujukan, " & _
@@ -908,7 +910,7 @@ bolBuktiLayananRuanganBedah = False
 
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
 
-        .txtTgl.SetText strTglLahir
+        .txttgl.SetText strTglLahir
         .txtnocm.SetText strNocm
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
@@ -1811,8 +1813,8 @@ bolBuktiLayananRuanganBedah = False
             
             strSQL = "SELECT pd.noregistrasi,ps.nocm,ps.tgllahir,ps.namapasien, " & _
                        " apdp.tglregistrasi,jk.reportdisplay AS jk,ru2.namaruangan AS ruanganperiksa,ru.namaruangan AS ruangakhir, " & _
-                       " case when ru.objectdepartemenfk =16 then (select pg.namalengkap from pegawai_m as pg INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pg.id " & _
-                       "where p3.pelayananpasien=tp.norec and p3.objectjenispetugaspefk=4 limit 1) else pp.namalengkap end AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
+                       " (select pg.namalengkap from pegawai_m as pg INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pg.id " & _
+                       "where p3.pelayananpasien=tp.norec and p3.objectjenispetugaspefk=4 limit 1) AS namadokter,kp.kelompokpasien,tp.produkfk, " & _
                        " pro.namaproduk,tp.jumlah,CASE WHEN tp.hargasatuan is null then tp.hargajual else tp.hargasatuan END as hargasatuan," & _
                        " (case when tp.hargadiscount is null then 0 else tp.hargadiscount end) as diskon, " & _
                        " hargasatuan*tp.jumlah as total,ks.namakelas,ar.asalrujukan,tp.tglpelayanan, " & _

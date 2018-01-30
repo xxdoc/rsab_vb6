@@ -105,7 +105,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crRekapHarianPemeriksaan
+Dim Report As New crRekapPemeriksaanRehabMedik
+Dim Reports As New crRekapPemeriksaanRehabMedikInap
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -119,10 +120,14 @@ Private Sub cmdCetak_Click()
     Report.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
     'PrinterNama = cboPrinter.Text
     Report.PrintOut False
+    Reports.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+    'PrinterNama = cboPrinter.Text
+    Reports.PrintOut False
 End Sub
 
 Private Sub CmdOption_Click()
     Report.PrinterSetup Me.hWnd
+    Reports.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -147,159 +152,124 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanPenerimaan = Nothing
 End Sub
 
-Public Sub cetak(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaKasir As String, view As String)
+Public Sub cetak(idKasir As String, tglAwal As String, idDepartemen As String, namaKasir As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCrRekapHarianPemeriksaan = Nothing
 Dim adocmd As New ADODB.Command
-'
-'    Dim str1 As String
+    Dim Tgl As String
+    Dim str1 As String
     Dim str2 As String
-'    Dim str3 As String
-'
-'    If idDokter <> "" Then
-'        str1 = "and apd.objectpegawaifk=" & idDokter & " "
-'    End If
-    If idRuangan <> "" Then
-        str2 = " and antrianpasiendiperiksa_t.objectruanganfk=" & idRuangan & " "
+    Dim str3 As String
+    Dim Tanggal As Date
+    
+    
+
+    If idDepartemen <> "" Then
+        If idDepartemen = 18 Then
+            str3 = " and ru.objectdepartemenfk in (18,28) and ru2.objectdepartemenfk in (28)"
+        ElseIf idDepartemen = 16 Then
+            str3 = " and ru.objectdepartemenfk in (16) and ru2.objectdepartemenfk in (28)"
+        End If
     End If
-'     If idKasir <> "" Then
-'        str3 = " and pg2.id=" & idKasir & " "
-'    End If
+    
+    Tgl = Format(tglAwal, "yyyy-MM-dd")
+    str1 = Format(tglAwal, "yyyy-MM-dd 00:00")
+    
+    ReadRs2 "SELECT (date_trunc('month', tanggal::date) + interval '1 month' - interval '1 day')::date ||' 23:59' " & _
+            "AS end_of_month from kalender_s where tanggal= '" & Tgl & "'"
+            
+    If (RS2.EOF = False) Then
+        str2 = (RS2!end_of_month)
+    End If
      
     
-Set Report = New crRekapHarianPemeriksaan
+Set Report = New crRekapPemeriksaanRehabMedik
     strSQL = "SELECT " & _
-                " produk_m.id, " & _
-                " produk_m.reportdisplay AS layanan, " & _
-                " Sum(pelayananpasien_t.jumlah) AS qty, " & _
-                " pelayananpasien_t.hargajual AS tarif, " & _
-                " Sum(case when pelayananpasien_t.hargadiscount is null then 0 else pelayananpasien_t.hargadiscount END) AS diskon, " & _
-                " Sum(pelayananpasien_t.jumlah * pelayananpasien_t.hargajual) AS subtotal, " & _
-                " 0 AS unitcost, " & _
-                " Sum(CASE WHEN pelayananpasiendetail_t.komponenhargafk= 38 then (pelayananpasiendetail_t.hargajual * pelayananpasien_t.jumlah) else 0 end) AS jasasarana, " & _
-                " Sum(CASE WHEN pelayananpasiendetail_t.komponenhargafk= 35 then (pelayananpasiendetail_t.hargajual * pelayananpasien_t.jumlah) else 0 end) AS jasamedis, " & _
-                "  Sum(CASE WHEN pelayananpasiendetail_t.komponenhargafk= 25 then (pelayananpasiendetail_t.hargajual * pelayananpasien_t.jumlah) else 0 end) AS jasaparamedis, " & _
-                "Sum(CASE WHEN pelayananpasiendetail_t.komponenhargafk= 30 then (pelayananpasiendetail_t.hargajual * pelayananpasien_t.jumlah) else 0 end) AS jasaumum " & _
-                " From " & _
-                " produk_m " & _
-                " INNER JOIN pelayananpasien_t ON pelayananpasien_t.produkfk = produk_m.id " & _
-                "INNER JOIN strukpelayanan_t on strukpelayanan_t.norec = pelayananpasien_t.strukfk " & _
-                "INNER JOIN pelayananpasiendetail_t ON pelayananpasiendetail_t.produkfk = produk_m.id " & _
-                "AND pelayananpasiendetail_t.pelayananpasien = pelayananpasien_t.norec " & _
-                "INNER JOIN antrianpasiendiperiksa_t ON pelayananpasien_t.noregistrasifk = antrianpasiendiperiksa_t.norec " & _
-                "AND pelayananpasiendetail_t.noregistrasifk = antrianpasiendiperiksa_t.norec " & _
+                " pp.tglpelayanan,dp.namadepartemen,kps.kelompokpasien,pr.id,pr.namaproduk, " & _
+                "pp.hargajual, pp.jumlah, pp.hargajual*pp.jumlah as subtotal " & _
+                "from pasiendaftar_t as pd " & _
+                "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+                "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
+                "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
+                "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
+                "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+                "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+                "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
                 " Where " & _
-                " pelayananpasien_t.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and strukpelayanan_t.statusenabled is null " & _
-                str2 & _
-                " Group By " & _
-                " produk_m.id, produk_m.id, pelayananpasien_t.jumlah, pelayananpasien_t.hargajual"
-                 '" pelayananpasien_t.noregistrasifk = '2f0b21d0-ca5b-11e7-abb3-4be9fade' AND " & _
+                " pp.tglpelayanan BETWEEN '" & str1 & "' and '" & str2 & "' and sp.statusenabled is null and pr.objectdepartemenfk=28 and pr.id <> 395 " & _
+                str3
 
-'   ReadRs2 "select pd.tglregistrasi,pg2.id,pg2.namalengkap as kasir,  apd.objectpegawaifk,pg.namalengkap, sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as cash, " & _
-'            "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then 1 else 0 end) as KK,sum(case when  pd.objectkelompokpasienlastfk > 1 then 1 else 0 end) as JM,sum(case when cb.id = 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_CH," & _
-'            "sum(case when cb.id > 1 and pd.objectkelompokpasienlastfk=1 then sp.totalharusdibayar else 0 end) as P_KK,sum(case when pd.objectkelompokpasienlastfk > 1 then (case when sp.totalprekanan is null then 0 else sp.totalprekanan end)+(case when sp.totalharusdibayar is null then 0 else sp.totalharusdibayar end) else 0 end)  as P_JM, " & _
-'            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah ) from pelayananpasiendetail_t ppd where ppd.komponenhargafk=35 and ppd.strukfk=sp.norec) as M_jasa, " & _
-'            "0 as M_Pph, 0 as M_Diterima, " & _
-'            "(select sum((ppd.hargajual-(case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end ))*ppd.jumlah )  from pelayananpasiendetail_t ppd where ppd.komponenhargafk=25 and ppd.strukfk=sp.norec) as Pr_Jasa, " & _
-'            "0 as Pr_Pph,0 as Pr_Diterima " & _
-'            "from strukpelayanan_t as sp " & _
-'            "LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec " & _
-'            "LEFT JOIN strukbuktipenerimaancarabayar_t as sbmc on sbm.norec=sbmc.nosbmfk " & _
-'            "left JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk " & _
-'            "left JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk " & _
-'            "left JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk " & _
-'            "inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=sp.noregistrasifk " & _
-'            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
-'            "inner JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
-'            "inner JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-'             "where sp.tglstruk between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null " & _
-'             "" & str1 & " " & str2 & " " & _
-'             "group by pd.tglregistrasi,pg2.id,pg2.namalengkap ,  apd.objectpegawaifk,pg.namalengkap,sp.norec " & _
-'            "order by pg.namalengkap"
-'    Dim tCash, tKk, tPj, tJm, tRemun, tPm, tPR As Double
-'    Dim i As Integer
-'
-'    For i = 0 To RS2.RecordCount - 1
-'        tCash = tCash + CDbl(IIf(IsNull(RS2!P_CH), 0, RS2!P_CH))
-'        tKk = tKk + CDbl(IIf(IsNull(RS2!P_KK), 0, RS2!P_KK))
-'        tPj = tPj + CDbl(IIf(IsNull(RS2!P_JM), 0, RS2!P_JM))
-'        tJm = tJm + CDbl(IIf(IsNull(RS2!M_jasa), 0, RS2!M_jasa))
-'        tPm = tPm + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
-'        If Weekday(RS2!tglregistrasi, vbMonday) < 6 Then
-'            If CDate(RS2!tglregistrasi) > CDate(Format(RS2!tglregistrasi, "yyyy-MM-dd 07:00")) And _
-'                CDate(RS2!tglregistrasi) < CDate(Format(RS2!tglregistrasi, "yyyy-MM-dd 13:00")) Then
-'                tRemun = tRemun + CDbl(IIf(IsNull(RS2!M_jasa), 0, RS2!M_jasa))
-'                tPR = tPR + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
-''                tJm = tJm + CDbl(IIf(IsNull(RS2!M_jasa), 0, RS2!M_jasa))
-''                tPm = tPm + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
-'            Else
-''                tRemun = tRemun + CDbl(IIf(IsNull(RS2!P_JM), 0, RS2!P_JM))
-''                tPR = tPR + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
-'            End If
-'        Else
-''            tJm = tJm + CDbl(IIf(IsNull(RS2!M_jasa), 0, RS2!M_jasa))
-''            tPm = tPm + CDbl(IIf(IsNull(RS2!Pr_Jasa), 0, RS2!Pr_Jasa))
-'            tRemun = 0
-'            tPR = 0
-'        End If
-'
-'
-'        RS2.MoveNext
-'    Next
-'
-'    Dim tAdmCc, tB3, tBPajak, tB5 As Double
-'
-'    tAdmCc = (tKk * 3) / 100
-'    tB3 = tJm '+ tRemun
-'    tRemun = (tRemun * 10) / 100
-'    tBPajak = (tB3 * 7.5) / 100
-'    tB5 = tB3 - tBPajak
-'
-'    Dim tC3, tCPajak, tC5, tC7 As Double
-'
-'    tC3 = tPm '+ tPR
-'    tPR = (tPR * 10) / 100
-'    tCPajak = (tC3 * 7.5) / 100
-'    tC5 = tC3 - tCPajak
-'    tC7 = tC5
+
+   ReadRs3 "SELECT " & _
+                " pp.tglpelayanan,dp.namadepartemen,kps.kelompokpasien,pr.id,pr.namaproduk, " & _
+                " case when kps.id in (2,4) then pp.hargajual else 0 end as tarif, " & _
+                " case when kps.id in (2,4) then pp.jumlah else 0 end as qtybpjs, " & _
+                " case when kps.id in (2,4) then pp.jumlah * pp.hargajual else 0 end as totalbpjs, " & _
+                " case when kps.id in (1,3,5) then pp.jumlah else 0 end as qtynonbpjs, " & _
+                " case when kps.id in (1,3,5) then pp.jumlah * pp.hargajual else 0 end as totalnonbpjs " & _
+                "from pasiendaftar_t as pd " & _
+                "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+                "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
+                "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
+                "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
+                "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+                "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+                "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+                " Where " & _
+                " pp.tglpelayanan BETWEEN '" & str1 & "' and '" & str2 & "' and sp.statusenabled is null and pr.id = 395" & _
+                str3
+    
+    Dim tqtybpjs, ttbpjs, ttrf, tqtynonbpjs, ttnonbpjs As Double
+    Dim i As Integer
+    
+    tqtybpjs = 0
+    ttbpjs = 0
+    tqtynonbpjs = 0
+    ttnonbpjs = 0
+    
+    If (RS3.EOF = False) Then
+        ttrf = CDbl(IIf(IsNull(RS3!tarif), 0, RS3!tarif))
+    End If
+
+    For i = 0 To RS3.RecordCount - 1
+        tqtybpjs = tqtybpjs + CDbl(IIf(IsNull(RS3!qtybpjs), 0, RS3!qtybpjs))
+        ttbpjs = ttbpjs + CDbl(IIf(IsNull(RS3!totalbpjs), 0, RS3!totalbpjs))
+        tqtynonbpjs = tqtybpjs + CDbl(IIf(IsNull(RS3!qtynonbpjs), 0, RS3!qtynonbpjs))
+        ttnonbpjs = ttbpjs + CDbl(IIf(IsNull(RS3!totalnonbpjs), 0, RS3!totalnonbpjs))
+        RS3.MoveNext
+        
+    Next
+
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
     With Report
         .database.AddADOCommand CN_String, adocmd
+            If idDepartemen = 18 Then
+                .txtDepartemen.SetText "Rawat Jalan"
+            ElseIf idDepartemen = 16 Then
+                .txtDepartemen.SetText "Rawat Inap"
+            End If
             .txtNamaKasir.SetText namaKasir
-            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & " ' "
-            .usLayanan.SetUnboundFieldSource ("{ado.layanan}")
-            .unQty.SetUnboundFieldSource ("{ado.qty}")
-            .unTarif.SetUnboundFieldSource ("{ado.tarif}")
-            .unDiskon.SetUnboundFieldSource ("{ado.diskon}")
-            .unSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
-            .unUnitCost.SetUnboundFieldSource ("{ado.unitcost}")
-            .unJasaSarana.SetUnboundFieldSource ("{ado.jasasarana}")
-            .unJasaMedis.SetUnboundFieldSource ("{ado.jasamedis}")
-            .unJasaParamedis.SetUnboundFieldSource ("{ado.jasaparamedis}")
-            .unJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
-'            .txtA1.SetText Format(tCash, "##,##0.00")
-'            .txtA2.SetText Format(tKk, "##,##0.00")
-'            .txtA3.SetText Format(tAdmCc, "##,##0.00")
-'            .txtA4.SetText Format(tPj, "##,##0.00")
-'
-'            .txtB1.SetText Format(tJm, "##,##0.00")
-'            .txtB2.SetText Format(tRemun, "##,##0.00")
-'            .txtB3.SetText Format(tB3, "##,##0.00")
-'            .txtB4.SetText Format(tBPajak, "##,##0.00")
-'            .txtB5.SetText Format(tB5, "##,##0.00")
-'
-'            .txtC1.SetText Format(tPm, "##,##0.00")
-'            .txtC2.SetText Format(0, "##,##0.00")
-'            .txtC3.SetText Format(tC3, "##,##0.00")
-'            .txtC4.SetText Format(tCPajak, "##,##0.00")
-'            .txtC5.SetText Format(tC5, "##,##0.00")
-'            .txtC6.SetText Format(0, "##,##0.00")
-'            .txtC7.SetText Format(tC7, "##,##0.00")
+            .txtPeriode.SetText "Bulan " & Format(tglAwal, "MMMM")
+            .usJenisTindakan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .unQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .unTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .unQtyBPJS.SetUnboundFieldSource tqtybpjs
+            .unTarifBPJS.SetUnboundFieldSource ttrf
+            .unTotalBPJS.SetUnboundFieldSource ttbpjs
+            .unQtyNonBPJS.SetUnboundFieldSource tqtynonbpjs
+            .unTarifnNonBPJS.SetUnboundFieldSource ttrf
+            .unTotalNonBPJS.SetUnboundFieldSource ttnonbpjs
             
             
             If view = "false" Then
@@ -312,6 +282,97 @@ Set Report = New crRekapHarianPemeriksaan
             Else
                 With CRViewer1
                     .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+End Sub
+Public Sub cetakinap(idKasir As String, tglAwal As String, idDepartemen As String, namaKasir As String, view As String)
+'On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmCrRekapHarianPemeriksaan = Nothing
+Dim adocmd As New ADODB.Command
+    Dim Tgl As String
+    Dim str1 As String
+    Dim str2 As String
+    Dim str3 As String
+    Dim Tanggal As Date
+    
+    
+
+    If idDepartemen <> "" Then
+        If idDepartemen = 18 Then
+            str3 = " and ru.objectdepartemenfk in (18,28) and ru2.objectdepartemenfk in (28)"
+        ElseIf idDepartemen = 16 Then
+            str3 = " and ru.objectdepartemenfk in (16) and ru2.objectdepartemenfk in (28)"
+        End If
+    End If
+    
+    Tgl = Format(tglAwal, "yyyy-MM-dd")
+    str1 = Format(tglAwal, "yyyy-MM-dd 00:00")
+    
+    ReadRs2 "SELECT (date_trunc('month', tanggal::date) + interval '1 month' - interval '1 day')::date ||' 23:59' " & _
+            "AS end_of_month from kalender_s where tanggal= '" & Tgl & "'"
+            
+    If (RS2.EOF = False) Then
+        str2 = (RS2!end_of_month)
+    End If
+     
+    
+Set Reports = New crRekapPemeriksaanRehabMedikInap
+    strSQL = "SELECT " & _
+                " pp.tglpelayanan,dp.namadepartemen,kps.kelompokpasien,pr.id,pr.namaproduk, " & _
+                "pp.hargajual, pp.jumlah, pp.hargajual*pp.jumlah as subtotal " & _
+                "from pasiendaftar_t as pd " & _
+                "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+                "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
+                "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
+                "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
+                "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+                "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+                "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+                " Where " & _
+                " pp.tglpelayanan BETWEEN '" & str1 & "' and '" & str2 & "' and sp.statusenabled is null and pr.objectdepartemenfk=28 and pr.id <> 395 " & _
+                str3
+
+            
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Reports
+        .database.AddADOCommand CN_String, adocmd
+            If idDepartemen = 18 Then
+                .txtDepartemen.SetText "Rawat Jalan"
+            ElseIf idDepartemen = 16 Then
+                .txtDepartemen.SetText "Rawat Inap"
+            End If
+            .txtNamaKasir.SetText namaKasir
+            .txtPeriode.SetText "Bulan " & Format(tglAwal, "MMMM")
+            .usJenisTindakan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .unQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .unTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            
+            
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Reports
                     .ViewReport
                     .Zoom 1
                 End With

@@ -143,14 +143,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmLaporanJurnalHarian = Nothing
+    Set frmLaporanJurnalAdminDetail = Nothing
 End Sub
 
 Public Sub CetakLaporanJurnal(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmLaporanJurnalHarian = Nothing
+Set frmLaporanJurnalAdminDetail = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
@@ -237,7 +237,7 @@ Public Sub CetakLaporanJurnalInap(idKasir As String, tglAwal As String, tglAkhir
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmLaporanJurnalHarian = Nothing
+Set frmLaporanJurnalAdminDetail = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
