@@ -120,6 +120,11 @@ On Error Resume Next
                     Set Root = New JNode
                     Root("Status") = "Cetak Laporan Rekap Pemeriksaan"
                 End If
+                
+            Case "cetak-rekapPendapatanObat"
+                Call frmCrRekapHarianPemeriksaan.cetakobat(Param1(1), Param2(1), (Param3(1)), Param4(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Pendapatan Obat"
             
             Case Else
                 Set Root = New JNode

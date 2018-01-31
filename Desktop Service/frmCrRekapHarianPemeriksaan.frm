@@ -107,6 +107,7 @@ Attribute VB_Exposed = False
 Option Explicit
 Dim Report As New crRekapPemeriksaanRehabMedik
 Dim Reports As New crRekapPemeriksaanRehabMedikInap
+Dim Reportobat As New crRekapPendapatanObatRehabMedik
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -121,13 +122,16 @@ Private Sub cmdCetak_Click()
     'PrinterNama = cboPrinter.Text
     Report.PrintOut False
     Reports.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+    Reportobat.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
     'PrinterNama = cboPrinter.Text
     Reports.PrintOut False
+    Reportobat.PrintOut False
 End Sub
 
 Private Sub CmdOption_Click()
     Report.PrinterSetup Me.hWnd
     Reports.PrinterSetup Me.hWnd
+    Reportobat.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -383,3 +387,80 @@ Set Reports = New crRekapPemeriksaanRehabMedikInap
 Exit Sub
 errLoad:
 End Sub
+Public Sub cetakobat(idKasir As String, tglAwal As String, namaKasir As String, view As String)
+'On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmCrRekapHarianPemeriksaan = Nothing
+Dim adocmd As New ADODB.Command
+    Dim Tgl As String
+    Dim str1 As String
+    Dim str2 As String
+    Dim str3 As String
+    Dim Tanggal As Date
+    
+    
+    
+    Tgl = Format(tglAwal, "yyyy-MM-dd")
+    str1 = Format(tglAwal, "yyyy-MM-dd 00:00")
+    
+    ReadRs2 "SELECT (date_trunc('month', tanggal::date) + interval '1 month' - interval '1 day')::date ||' 23:59' " & _
+            "AS end_of_month from kalender_s where tanggal= '" & Tgl & "'"
+            
+    If (RS2.EOF = False) Then
+        str2 = (RS2!end_of_month)
+    End If
+     
+    
+Set Reportobat = New crRekapPendapatanObatRehabMedik
+    strSQL = "SELECT " & _
+                " pp.tglpelayanan,dp.namadepartemen,pr.id,pr.namaproduk, " & _
+                "pp.hargajual, pp.jumlah, pp.hargajual*pp.jumlah as subtotal " & _
+                "from pasiendaftar_t as pd " & _
+                "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+                "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
+                "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
+                "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
+                "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+                "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+                " Where " & _
+                " pp.tglpelayanan BETWEEN '" & str1 & "' and '" & str2 & "' and sp.statusenabled is null and djp.objectjenisprodukfk=97 and dp2.id=28 "
+
+            
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Reportobat
+        .database.AddADOCommand CN_String, adocmd
+            .txtNamaKasir.SetText namaKasir
+            .txtPeriode.SetText "Bulan " & Format(tglAwal, "MMMM")
+            .usJenisTindakan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .unQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .unTarif.SetUnboundFieldSource ("{ado.hargajual}")
+            .unTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            
+            
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Reportobat
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+End Sub
+
+
