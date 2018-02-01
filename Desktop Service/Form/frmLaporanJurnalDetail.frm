@@ -187,7 +187,7 @@ Set Report = New crLaporanJurnalDetail
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk inner JOIN pasien_m as ps on ps.id=pd.nocmfk left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and jp.id in (25,99,100,101,102,36,103,107,97,27666) and djp.id not in (1318, 1296) and tp.produkfk not in (402611,10011572,10011571) and map.jenis='Pendapatan' " & _
             str1 & _
             str2 & _
             " order by ps.namapasien"
@@ -302,7 +302,7 @@ Set Report = New crLaporanJurnalDetail
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
             "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=jp.id or map.jpid=jp.id and map.objectruanganfk = 999 " & _
             "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and jp.id in (25,99,100,101,102,36,103,107,97,27666) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'  and jp.id in (25,99,100,101,102,36,103,107,97,27666) and tp.produkfk not in (402611,10011572,10011571) and map.jenis='Pendapatan' " & _
             str1 & _
             str2
 
