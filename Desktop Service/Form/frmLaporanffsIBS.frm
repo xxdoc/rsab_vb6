@@ -230,10 +230,6 @@ Dim adocmd As New ADODB.Command
     
         SQLdate = Right(SQLdate, Len(SQLdate) - 3)
     
-'    Dim dokter As String
-'    If idDokter <> "" Then
-'        dokter = " and pg.id = '" & idDokter & "'"
-'    End If
     
     Dim idRuangan As String
     If kdRuangan <> "" Then

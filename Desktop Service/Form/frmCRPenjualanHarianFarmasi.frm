@@ -163,7 +163,7 @@ Dim adocmd As New ADODB.Command
 Set Report = New crPenjualanHarianFarmasi
     strSQL = "select sr.tglresep, sr.noresep, pd.noregistrasi, upper(ps.namapasien) as namapasien," & _
             "case when jk.jeniskelamin = 'Laki-laki' then 'L' else 'P' end as jeniskelamin, " & _
-            "kp.kelompokpasien, pg.namalengkap, ru2.namaruangan,ru.namaruangan as ruanganapotik, pp.jumlah, pp.hargajual,pp.rke,  " & _
+            "kp.kelompokpasien, pg.namalengkap, ru2.namaruangan,ru.namaruangan as ruanganapotik, pp.jumlah, pp.hargajual,sr.noresep || pp.rke as rke,  " & _
             "(pp.jumlah)*(pp.hargajual) as subtotal," & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon, " & _
             "case when pp.jasa is null then 0 else pp.jasa end as jasa, 0 as ppn, (pp.jumlah*pp.hargajual)-0-0-0 as total, " & _
