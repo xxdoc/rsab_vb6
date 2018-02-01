@@ -180,7 +180,7 @@ bolStrukResep = True
             adoReport.ActiveConnection = CN_String
             
             strSQL = "select " & _
-                    "sp.norec,sp.tglorder,sp.noorder,pg.namalengkap as penanggungjawab,pg2.namalengkap as mengetahui, " & _
+                    "sp.norec,sp.tglorder,sp.noorder,pg.namalengkap as penanggungjawab, " & _
                     "sp.tglvalidasi as tglkebutuhan,sp.alamattempattujuan,sp.keteranganlainnya,sp.tglvalidasi,sp.noorderintern, " & _
                     "sp.keterangankeperluan,sp.keteranganorder,ru.namaruangan as ruangan,ru.id as ruid, " & _
                     "ru2.namaruangan as ruangantujuan,ru2.id as ruidtujuan, " & _
@@ -192,7 +192,6 @@ bolStrukResep = True
                     "left join produk_m pr on pr.id=op.objectprodukfk " & _
                     "left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
                     "LEFT JOIN pegawai_m as pg on pg.id=sp.objectpegawaiorderfk " & _
-                    "LEFT JOIN pegawai_m as pg2 on pg.id=sp.objectpetugasfk " & _
                     "LEFT JOIN ruangan_m as ru on ru.id=sp.objectruanganfk " & _
                     "LEFT JOIN ruangan_m as ru2 on ru2.id=sp.objectruangantujuanfk " & _
                     "where sp.norec = '" & strNorec & "'"
