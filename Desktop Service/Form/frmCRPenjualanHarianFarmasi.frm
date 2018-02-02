@@ -260,8 +260,8 @@ Set Report = New crPenjualanHarianFarmasi
             "'-' as namaruangan,ru.namaruangan as ruanganapotik, spd.qtyproduk as jumlah, spd.hargasatuan,spd.resepke,  (spd.qtyproduk)*(spd.hargasatuan) as subtotal, " & _
             "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa, " & _
             "0 as ppn, (spd.qtyproduk*spd.hargasatuan)-0-0-0 as total, case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, " & _
-             "case when pg2.namalengkap is null then pg3.namalengkap else pg2.namalengkap end  as kasir " & _
-             "from strukpelayanan_t as sp " & _
+            "case when pg3.namalengkap is null then '-' else pg3.namalengkap end  as kasir " & _
+            "from strukpelayanan_t as sp " & _
             "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
             "inner JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
             "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
