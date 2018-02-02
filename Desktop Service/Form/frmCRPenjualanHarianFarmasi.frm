@@ -198,7 +198,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usNoResep.SetUnboundFieldSource ("{ado.noresep}")
             .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -206,7 +206,7 @@ Set Report = New crPenjualanHarianFarmasi
             .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
-            .ucPPN.SetUnboundFieldSource ("{ado.ppn}")
+            .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
             .usKasir.SetUnboundFieldSource ("{ado.kasir}")
@@ -255,7 +255,7 @@ Dim adocmd As New ADODB.Command
 '    End If
     
 Set Report = New crPenjualanHarianFarmasi
-    strSQL = "select sp.tglstruk, sp.nostruk,  upper(ps.namapasien) as namapasien, '-' as noregistrasi, " & _
+    strSQL = "select sp.tglstruk, sp.nostruk,  upper(sp.namapasien_klien) as namapasien, '-' as noregistrasi, " & _
             "case when jk.jeniskelamin = 'Laki-laki' then 'L' else 'P' end as jeniskelamin, 'Umum/Sendiri' as kelompokpasien, pg.namalengkap, " & _
             "'-' as namaruangan,ru.namaruangan as ruanganapotik, spd.qtyproduk as jumlah, spd.hargasatuan,spd.resepke,  (spd.qtyproduk)*(spd.hargasatuan) as subtotal, " & _
             "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa, " & _
@@ -284,7 +284,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usNoResep.SetUnboundFieldSource ("{ado.nostruk}")
             .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -292,7 +292,7 @@ Set Report = New crPenjualanHarianFarmasi
             .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
-            .ucPPN.SetUnboundFieldSource ("{ado.ppn}")
+            .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
             .usKasir.SetUnboundFieldSource ("{ado.kasir}")
