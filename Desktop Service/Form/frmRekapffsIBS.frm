@@ -231,11 +231,11 @@ Dim adocmd As New ADODB.Command
     Dim Jasa As String
     
     If idJasa = "1" Then
-        Jasa = " and ppd.komponenhargafk=35 "
+        Jasa = " 35 "
     ElseIf idJasa = "2" Then
-        Jasa = " and ppd.komponenhargafk=21 "
+        Jasa = " 21 "
     ElseIf idJasa = "3" Then
-        Jasa = " and ppd.komponenhargafk=22 "
+        Jasa = " 22 "
     End If
     
     Dim idRuangan As String
@@ -267,7 +267,7 @@ Set Report = New crRekapffsIBS
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where  ppp.objectjenispetugaspefk = 4  and ru.objectdepartemenfk=25  " & Jasa & dokter & idRuangan & idKelompokPasien & "" & _
+            "Where  ppp.objectjenispetugaspefk = 4  and ru.objectdepartemenfk=25  " & dokter & idRuangan & idKelompokPasien & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
     If kpid <> "" Then
