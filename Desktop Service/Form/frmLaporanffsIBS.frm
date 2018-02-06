@@ -213,12 +213,13 @@ Dim adocmd As New ADODB.Command
         Next
     End If
     
+    
     If idJasa = "1" Then
-        Jasa = " and ppd.komponenhargafk=35 "
+        Jasa = " 35 "
     ElseIf idJasa = "2" Then
-        Jasa = " and ppd.komponenhargafk=21 "
+        Jasa = " 21 "
     ElseIf idJasa = "3" Then
-        Jasa = " and ppd.komponenhargafk=22 "
+        Jasa = " 22 "
     End If
     
     If tglLibur <> "" Then
@@ -260,7 +261,7 @@ Set Report = New crLaporanffsIBS
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
             "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as total,0 as remun, " & _
+            "case when ppd.komponenhargafk = " & Jasa & " then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as total,0 as remun, " & _
             " ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
@@ -272,7 +273,7 @@ Set Report = New crLaporanffsIBS
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where  objectjenispetugaspefk = 4  and ru.objectdepartemenfk=25  " & Jasa & dokter & idRuangan & idKelompokPasien & "" & _
+            "Where  objectjenispetugaspefk = 4  and ru.objectdepartemenfk=25  " & dokter & idRuangan & idKelompokPasien & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
     
@@ -292,12 +293,12 @@ Set Report = New crLaporanffsIBS
             .usNgaranPoe.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             If kpid = "" Then
-                .txtjudul.SetText "Type Pasien : ALL"
+                .txtJudul.SetText "Type Pasien : ALL"
             Else
                 If kpid = "153" Then
-                    .txtjudul.SetText "Type Pasien : Non BPJS"
+                    .txtJudul.SetText "Type Pasien : Non BPJS"
                 Else
-                    .txtjudul.SetText "Type Pasien : " & RS!kelompokpasien
+                    .txtJudul.SetText "Type Pasien : " & RS!kelompokpasien
                 End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -313,7 +314,7 @@ Set Report = New crLaporanffsIBS
             .usRemunerasi2.SetUnboundFieldSource ("{ado.totalTarif}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
+            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usNorec.SetUnboundFieldSource ("{ado.norec_ppd}")
             

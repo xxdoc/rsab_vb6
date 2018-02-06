@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRRekapffsIBS = Nothing
 End Sub
 
-Public Sub CetakLaporan(kpid As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String)
+Public Sub CetakLaporan(kpid As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, idJasa As String, kdRuangan As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -173,7 +173,6 @@ Dim adocmd As New ADODB.Command
         dokter = " and pg.id = '" & idDokter & "'"
         ReadRs2 "select * from pegawai_m where id = " & idDokter
         typeDokter = RS2!objecttypepegawaifk
-        
         If typeDokter = 1 Then
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
@@ -191,7 +190,7 @@ Dim adocmd As New ADODB.Command
         Else
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
                 SQLdate = SQLdate & strTglJamSQL
             Next
         End If
@@ -229,6 +228,15 @@ Dim adocmd As New ADODB.Command
     
         SQLdate = Right(SQLdate, Len(SQLdate) - 3)
     
+    Dim Jasa As String
+    
+    If idJasa = "1" Then
+        Jasa = " and ppd.komponenhargafk=35 "
+    ElseIf idJasa = "2" Then
+        Jasa = " and ppd.komponenhargafk=21 "
+    ElseIf idJasa = "3" Then
+        Jasa = " and ppd.komponenhargafk=22 "
+    End If
     
     Dim idRuangan As String
     If kdRuangan <> "" Then
@@ -248,7 +256,7 @@ Set Report = New crRekapffsIBS
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
             "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as total,0 as remun,ppd.jumlah,pg.objecttypepegawaifk " & _
+            "case when ppd.komponenhargafk = " & Jasa & " then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as total,0 as remun, ppd.jumlah,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -259,7 +267,7 @@ Set Report = New crRekapffsIBS
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppd.komponenhargafk = 35 and ppp.objectjenispetugaspefk = 4  and ru.objectdepartemenfk=25  " & dokter & idRuangan & idKelompokPasien & "" & _
+            "Where  ppp.objectjenispetugaspefk = 4  and ru.objectdepartemenfk=25  " & Jasa & dokter & idRuangan & idKelompokPasien & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
     If kpid <> "" Then
@@ -299,6 +307,14 @@ Set Report = New crRekapffsIBS
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
             .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
+            
+            If idJasa = "1" Then
+                .txtJasa.SetText "Jasa Medis"
+            ElseIf idJasa = "2" Then
+                .txtJasa.SetText "Jasa Dr Anestesi"
+            ElseIf idJasa = "3" Then
+                .txtJasa.SetText "Jasa Asisten Spesialis"
+            End If
             
 '            If view = "false" Then
 '                Dim strPrinter As String
