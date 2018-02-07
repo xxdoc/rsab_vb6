@@ -154,7 +154,15 @@ Public Sub cetak(tglAwal As String, tglAkhir As String, idDepartemen As String, 
 Set frmCrRekapHarianPemeriksaanLaborat = Nothing
 Dim adocmd As New ADODB.Command
 
-    Dim str1, str2 As String
+    Dim str1, str2, str3 As String
+    
+    If idDepartemen <> "" Then
+        If idDepartemen = 18 Then
+            str3 = " and dp.id <> 16 "
+        ElseIf idDepartemen = 16 Then
+            str3 = " and dp.id = 16 "
+        End If
+    End If
 
     If idRuangan <> "" Then
         str1 = " and ru.id=" & idRuangan & " "
@@ -179,17 +187,17 @@ Set Report = New crRekapHarianPemeriksaanLaborat
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "left join pelayananpasiendetail_t ppd on pp.norec=ppd.pelayananpasien  " & _
-            "left join pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
+            "left join ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
+            "left join departemen_m dp on dp.id=ru2.objectdepartemenfk " & _
             "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left join jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left join kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
-            "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
-            "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-            "where pr.objectdepartemenfk=3 and ppd.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and djp.objectjenisprodukfk <> 97 " & _
+            "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+            "where pr.objectdepartemenfk=3 and pp.tglpelayanan BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled is null and djp.objectjenisprodukfk <> 97 " & _
             str1 & _
             str2 & _
+            str3 & _
             "group by pp.tglpelayanan,dp.namadepartemen,ru.namaruangan,kps.kelompokpasien, pr.id, pr.namaproduk,pp.hargajual,pp.jumlah,pp.hargadiscount " & _
             "order by pp.tglpelayanan "
 '    Dim uc, tjs, tJm, tjp, tju As Double
@@ -212,6 +220,7 @@ Set Report = New crRekapHarianPemeriksaanLaborat
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaKasir
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & " ' "
+            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usDepartemen.SetUnboundFieldSource ("{ado.namadepartemen}")
