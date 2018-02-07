@@ -395,3 +395,11 @@ End Sub
 Private Sub mnuSettingPrinter_Click()
     frmSettingPrinter.Show vbModal
 End Sub
+
+'    Public LogFile As Integer
+'    LogFile = FreeFile(0)
+'
+'    Open "E:/txt.txt" For Append As #LogFile
+'    For i = 0 To 100
+'        Print #LogFile, "|" & "024040400415582003KD" & "|,|" & "AS@EPIC" & "|,|" & i & " neng ecie|;"
+'    Next
