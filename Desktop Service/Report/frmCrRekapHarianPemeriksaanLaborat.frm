@@ -235,7 +235,15 @@ Set Report = New crRekapHarianPemeriksaanLaborat
             .unJasaUmum.SetUnboundFieldSource ("{ado.jasaumum}")
 
 '            .txtC7.SetText Format(tC7, "##,##0.00")
-            
+            If idDepartemen <> "" Then
+                If idDepartemen = 18 Then
+                    .txtjudul.SetText "RAWAT JALAN"
+                ElseIf idDepartemen = 16 Then
+                    .txtjudul.SetText "RAWAT INAP"
+                End If
+            Else
+                .txtjudul.SetText "SEMUA INSTALASI"
+            End If
             
             If view = "false" Then
                 Dim strPrinter As String
