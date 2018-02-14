@@ -255,6 +255,7 @@ Private Sub Gossamer1_DynamicRequest( _
         If URI = "\printvb\Piutang" Then RespBody = frmPiutang.Piutang(Gossamer1.URLDecode(Params))
         If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.akuntansi(Gossamer1.URLDecode(Params))
         If URI = "\printvb\logistik" Then RespBody = frmLogistik.Logistik(Gossamer1.URLDecode(Params))
+        If URI = "\printvb\simakbmn" Then RespBody = frmSimakBmn.Fungsi(Gossamer1.URLDecode(Params))
        
         If Err Then
             ErrNumber = Err.Number
@@ -400,6 +401,9 @@ End Sub
 '    LogFile = FreeFile(0)
 '
 '    Open "E:/txt.txt" For Append As #LogFile
+'  sql
 '    For i = 0 To 100
 '        Print #LogFile, "|" & "024040400415582003KD" & "|,|" & "AS@EPIC" & "|,|" & i & " neng ecie|;"
 '    Next
+'  sql
+
