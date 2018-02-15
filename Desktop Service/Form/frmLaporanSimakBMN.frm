@@ -164,7 +164,7 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
      Dim fso As FileSystemObject
 
     LogFile = FreeFile(0)
-    Open "E:/txtPersediaan/SimakBMN" & Format(Now(), "yyyyMMdd_HHmm") & ".txt" For Append As #LogFile
+    Open "C:/psedia10/txtPersediaan/SimakBMN" & Format(Now(), "yyyyMMdd_HHmm") & ".txt" For Append As #LogFile
     
         'M01
         ReadRs4 "select sc.noclosing,sc.tglclosing,pr.id as kdproduk,pr.namaproduk,pr.kodebmn,ss.satuanstandar,spd.qtyproduksystem, " & _

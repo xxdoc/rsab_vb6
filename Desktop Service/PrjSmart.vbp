@@ -214,13 +214,8 @@ Designer=Report\crRekapPemeriksaanRehabMedik.Dsr
 Form=frmCrRekapHarianPemeriksaan.frm
 Form=Form\frmLaporanPendapatanInap.frm
 Designer=Report\crLaporanPendapatanInap.Dsr
-<<<<<<< HEAD
-Form=Report\frmCRCetakRekapBiayaInap.frm
-Designer=Report\crRekapBiayaPelayanan.Dsr
-=======
 Form=Form\frmLaporanJasaMedisRI.frm
 Form=Form\frmLogistik.frm
->>>>>>> 2dfc25fea2989bd5fd2059d84569fade4bc6b54e
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
