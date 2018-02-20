@@ -214,6 +214,7 @@ Designer=Report\crRekapPemeriksaanRehabMedik.Dsr
 Form=frmCrRekapHarianPemeriksaan.frm
 Form=Form\frmLaporanPendapatanInap.frm
 Designer=Report\crLaporanPendapatanInap.Dsr
+<<<<<<< HEAD
 Designer=Report\crRekapBiayaPelayanan.Dsr
 Form=Form\frmLaporanJasaMedisRI.frm
 Form=Form\frmLogistik.frm
@@ -222,6 +223,11 @@ Form=Form\frmLaporanffsIBS.frm
 Form=Form\frmRekapffsIBS.frm
 Form=Form\frmLaporanffsIBSAnes.frm
 Form=Form\frmRekapffsIBSAnes.frm
+=======
+Form=Form\frmLaporanJasaMedisRI.frm
+Form=Form\frmLogistik.frm
+IconForm="GossRESTMain"
+>>>>>>> 004f554c0d46029bc5036265f48a92dd13ddd67e
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
