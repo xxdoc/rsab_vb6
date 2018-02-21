@@ -156,7 +156,7 @@ Dim adocmd As New ADODB.Command
     Dim str1, str2, str3, str4, str5 As String
     
     If idDokter <> "" Then
-        str1 = "and apd.objectpegawaifk=" & idDokter & " "
+        str1 = "and ppp.objectpegawaifk=" & idDokter & " "
     End If
     If idDepartemen <> "" Then
         If idDepartemen = 16 Then
@@ -183,7 +183,7 @@ Dim adocmd As New ADODB.Command
     End If
 Set Report = New crRekapPendapatan
     
-    strSQL = "select distinct * from (select sp.statusenabled, apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
+    strSQL = "select * from (select distinct sp.statusenabled, apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
             "(case when pd.objectkelompokpasienlastfk = 1 then pd.noregistrasi else null end) as nonpj, " & _
             "(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as jm, " & _
             "pp.hargajual as hargapp, pp.jumlah as jumlahpp, pp.hargadiscount as diskonpp,kp.id as kpid, ppd.komponenhargafk as khid, " & _
@@ -192,7 +192,8 @@ Set Report = New crRekapPendapatan
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-            "left join pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
+            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "left join produk_m as pr on pr.id=pp.produkfk " & _
@@ -202,7 +203,7 @@ Set Report = New crRekapPendapatan
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left join strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
-            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and ppp.objectjenispetugaspefk=4 " & _
             " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
             "order by pg.namalengkap) as x where x.statusenabled is null "
    
