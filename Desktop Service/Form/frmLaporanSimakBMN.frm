@@ -160,11 +160,13 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
      Dim Tanggal1 As Date
      Dim Tanggal2 As Date
      Dim Tanggal3 As Date
+     Dim op As String
      
      Dim fso As FileSystemObject
 
     LogFile = FreeFile(0)
-    Open "C:/psedia10/txtPersediaan/SimakBMN" & Format(Now(), "yyyyMMdd_HHmm") & ".txt" For Append As #LogFile
+'    Open "C:/psedia10/txtPersediaan/SimakBMN" & Format(Now(), "yyyyMMdd_HHmm") & ".txt" For Append As #LogFile
+     Open "C:/SimakBMN" & Format(Now(), "yyyyMMdd_HHmm") & ".txt" For Append As #LogFile
     
         'M01
 '        ReadRs4 "select sc.noclosing,sc.tglclosing,pr.id as kdproduk,pr.namaproduk,pr.kodebmn,ss.satuanstandar,spd.qtyproduksystem, " & _
@@ -229,9 +231,9 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
          Tanggal = RS!tglstruk
          Print #LogFile, "|" & "024040100520611000KD" & "|,|" & RS!namaproduk & "|,|" & "2018" & "|,|" & _
                              "024040100520611000KD" & "2018" & KodeSequence & "M" & "|,|" & Format(Tanggal, "dd-MM-yyyy HH:mm:ss"); "," & _
-                             Format(Tanggal, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS!kodebmn & "|,|" & RS!ID & "|," & RS!qtyproduk; ",|" & _
+                             Format(Tanggal, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS!kodebmn & "|,|" & RS!ID & "|," & RS!QtyProduk; ",|" & _
                              RS!satuanstandar & "|,|" & RS!namarekanan & "|,|" & RS!nostruk & "|,|" & "M02" & "|," & _
-                             RS!harga; ","; RS!harga * RS!qtyproduk & ",|" & "1|"
+                             RS!harga; ","; RS!harga * RS!QtyProduk & ",|" & "1|"
                              
     RS.MoveNext
      
@@ -265,9 +267,9 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
          Tanggal1 = RS2!tglstruk
             Print #LogFile, "|" & "024040100520611000KD" & "|,|" & RS2!namaproduk & "|,|" & "2018" & "|,|" & _
                                 "024040100520611000KD" & "2018" & KodeSequence2 & "K" & "|,|" & Format(Tanggal1, "dd-MM-yyyy HH:mm:ss"); "," & _
-                                Format(Tanggal1, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS2!kodebmn & "|,|" & RS2!ID & "|," & RS2!qtyproduk; ",|" & _
+                                Format(Tanggal1, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS2!kodebmn & "|,|" & RS2!ID & "|," & RS2!QtyProduk; ",|" & _
                                 RS2!satuanstandar & "|,|" & "RSABHK" & "|,|" & "RSABHK" & "|,|" & "K01" & "|,|" & _
-                                RS2!harga; "," & RS2!harga * RS2!qtyproduk & ",|" & "1|"
+                                RS2!harga; "," & RS2!harga * RS2!QtyProduk & ",|" & "1|"
         
     RS2.MoveNext
     Next
