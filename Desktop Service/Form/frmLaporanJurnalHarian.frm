@@ -191,7 +191,8 @@ Set Report = New crLaporanJurnalHarian
             str1 & _
             str2 & _
             " order by pro.namaproduk"
-   
+            
+'   strSQL = tempSQLWebService(strSQL)
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -203,7 +204,7 @@ Set Report = New crLaporanJurnalHarian
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
             .txtDeskripsi.SetText "Pendapatan R. Jalan Tgl " & Format(tglAwal, "dd MMMM yyyy")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
@@ -293,8 +294,9 @@ Set Report = New crLaporanJurnalHarian
             "left join ruangan_m as ru2 on ru2.id = apd.objectruanganasalfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "'   and jp.id in (25,99,100,101,102,36,103,107,97,27666) and tp.produkfk not in (402611,10011571,10011572) and map.jenis='Pendapatan' " & _
             str1 & _
-            str2 '& _
-
+            str2
+            
+    'strSQL = tempSQLWebService(strSQL)
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -306,7 +308,7 @@ Set Report = New crLaporanJurnalHarian
             .txtPeriode.SetText Format(tglAwal, "MM-yyyy")
             .txtDeskripsi.SetText "Rekapitulasi Pendapatan R. Inap Tgl " & Format(tglAwal, "dd MMMM yyyy")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPerkiraan.SetUnboundFieldSource ("{ado.namaperkiraan}")
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.kdperkiraan}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keterangan}")
