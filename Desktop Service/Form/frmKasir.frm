@@ -268,6 +268,10 @@ On Error Resume Next
                 End If
               
              Case "cetak-rekap-ffs-bedah"
+                'Call frmCRRekapffsIBS.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
+                'Set Root = New JNode
+                'Root("Status") = "Cetak Laporan"
+                'Root("by") = "as@epic"
                 If Param7(1) = 1 Then
                     Call frmCRRekapffsIBS.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                     Set Root = New JNode
@@ -291,6 +295,31 @@ On Error Resume Next
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
                 
+             Case "cetak-laporan-ffs-penunjangRad"
+                Call frmCRLaporanffsPenunjangRad.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan"
+                Root("by") = "as@epic"
+                
+              
+             Case "cetak-rekap-ffs-penunjangRad"
+                Call frmCRRekapffsPenunjangRad.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan"
+                Root("by") = "as@epic"
+                
+             Case "cetak-laporan-ffs-penunjang"
+                Call frmCRLaporanffsPenunjang.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan"
+                Root("by") = "as@epic"
+                
+              
+             Case "cetak-rekap-ffs-penunjang"
+                Call frmCRRekapffsPenunjang.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan"
+                Root("by") = "as@epic"
             Case "cetak-RekapBiayaInap"
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
@@ -301,6 +330,9 @@ On Error Resume Next
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=&strNoStruk=S000000168&strNoKwitansi=&strIdPegawai=1&view=true
             
+                
+            
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
