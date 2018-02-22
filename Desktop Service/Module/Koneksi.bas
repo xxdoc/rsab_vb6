@@ -87,3 +87,11 @@ Public Function ReadRs5(sql As String)
   Set RS5 = Nothing
   RS5.Open sql, CN, adOpenStatic, adLockReadOnly
 End Function
+Public Function tempSQLWebService(sql As String) As String
+  Set myMSXML = CreateObject("Microsoft.XmlHttp")
+    myMSXML.Open "GET", "http://localhost:8200/service/transaksi/temp/save-sql-from-vb6?sql=" + sql, False
+    myMSXML.setRequestHeader "Content-Type", "application/json"
+    myMSXML.setRequestHeader "X-AUTH-TOKEN", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbi5sb2dpc3RpayJ9.amsHnk5s4cv1LvsIWY_fbq0NHBMomRQLUaY62GyvJm2QW0QCwgHxkYeRS918nGyhh6ovGr7Id4R_9JKQ3c66kA"
+    myMSXML.send
+    tempSQLWebService = myMSXML.responseText
+End Function
