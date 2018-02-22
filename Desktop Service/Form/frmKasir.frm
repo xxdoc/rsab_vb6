@@ -295,7 +295,7 @@ On Error Resume Next
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
                 Param6 = Split(arrItem(5), "=")
-                Call frmCRCetakRekapBiayaInap.CetakRincianBiaya(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
+                Call frmCRCetakRekapBiayaLayanan.CetakRincianBiaya(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Rincian Biaya"
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
