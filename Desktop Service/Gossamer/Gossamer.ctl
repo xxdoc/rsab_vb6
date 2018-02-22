@@ -367,6 +367,7 @@ Attribute StartListening.VB_Description = "Begin accepting HTTP connections, may
         If Len(AdapterIP) > 0 Then
             .Bind Me.Port, AdapterIP
         Else
+            
             .Bind Me.Port
         End If
         .Listen

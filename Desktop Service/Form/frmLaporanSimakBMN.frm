@@ -149,7 +149,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
-'On Error GoTo errLoad
+On Error GoTo errLoad
 'On Error Resume Next
 
      Dim KodeSequence As String
@@ -163,10 +163,14 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
      Dim op As String
      
      Dim fso As FileSystemObject
-
+     
+     tglAwal = tglAwal + " 00:00"
+     tglAkhir = tglAkhir + " 23:59"
+     
     LogFile = FreeFile(0)
 '    Open "C:/psedia10/txtPersediaan/SimakBMN" & Format(Now(), "yyyyMMdd_HHmm") & ".txt" For Append As #LogFile
      Open "C:/SimakBMN" & Format(Now(), "yyyyMMdd_HHmm") & ".txt" For Append As #LogFile
+     
     
         'M01
 '        ReadRs4 "select sc.noclosing,sc.tglclosing,pr.id as kdproduk,pr.namaproduk,pr.kodebmn,ss.satuanstandar,spd.qtyproduksystem, " & _
@@ -214,7 +218,6 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
                  "and sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "'"
                  
     ReadRs strSQL
-    
         'format txt
         '"|" & "KodeLokasi(024040400415582003KD)" & "|,|" & NamaProduk & "|,|" & "TahunAnggaran" & "|,|" & _
          "20DigitKodeLokasi(024040400415582003KD)" & "4DigitTahunAnggaran(2018)" & "KDSEQ" & "M" & "|,|" & _
@@ -234,7 +237,7 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
                              Format(Tanggal, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS!kodebmn & "|,|" & RS!ID & "|," & RS!QtyProduk; ",|" & _
                              RS!satuanstandar & "|,|" & RS!namarekanan & "|,|" & RS!nostruk & "|,|" & "M02" & "|," & _
                              RS!harga; ","; RS!harga * RS!QtyProduk & ",|" & "1|"
-                             
+   
     RS.MoveNext
      
      
@@ -291,7 +294,6 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
              "LEFT JOIN ruangan_m as ru on ru.id = sr.ruanganfk " & _
              "where djp.id = 474 and pr.statusenabled = 't' " & _
              "and sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "'"
-             
     'Print #LogFile, "|PENGELUARAN APOTEK|"
     RS3.MoveFirst
     
@@ -309,6 +311,7 @@ Public Sub CetakLaporan(tglAwal As String, tglAkhir As String, view As String)
     'Print #LogFile, "|PENGELUARAN|"
     
 'sql
+Close #LogFile
 Exit Sub
 errLoad:
 End Sub
