@@ -222,15 +222,14 @@ Set Report = New crLaporanPendapatan
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+            "left join pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
             "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left join jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk left join kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and ppp.objectjenispetugaspefk=4 " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97  " & _
              str1 & _
              str2 & _
              str3 & _
