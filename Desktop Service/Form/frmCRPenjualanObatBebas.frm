@@ -1,18 +1,16 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRDetailPengeluaranObat 
+Begin VB.Form frmCRPenjualanObatBebas 
    Caption         =   "Medifirst2000"
-   ClientHeight    =   7455
+   ClientHeight    =   7965
    ClientLeft      =   60
-   ClientTop       =   405
-   ClientWidth     =   6705
+   ClientTop       =   345
+   ClientWidth     =   6675
    LinkTopic       =   "Form1"
-   ScaleHeight     =   7455
-   ScaleWidth      =   6705
-   StartUpPosition =   3  'Windows Default
+   ScaleHeight     =   7965
+   ScaleWidth      =   6675
    WindowState     =   2  'Maximized
-   Begin VB.CommandButton cmdOption 
-      Caption         =   "Option"
+   Begin VB.ComboBox cboPrinter 
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -23,10 +21,10 @@ Begin VB.Form frmCRDetailPengeluaranObat
          Strikethrough   =   0   'False
       EndProperty
       Height          =   315
-      Left            =   4680
+      Left            =   960
       TabIndex        =   3
-      Top             =   480
-      Width           =   1095
+      Top             =   600
+      Width           =   2775
    End
    Begin VB.CommandButton cmdCetak 
       Caption         =   "Cetak"
@@ -42,10 +40,11 @@ Begin VB.Form frmCRDetailPengeluaranObat
       Height          =   315
       Left            =   3720
       TabIndex        =   2
-      Top             =   480
+      Top             =   600
       Width           =   975
    End
-   Begin VB.ComboBox cboPrinter 
+   Begin VB.CommandButton cmdOption 
+      Caption         =   "Option"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -56,16 +55,16 @@ Begin VB.Form frmCRDetailPengeluaranObat
          Strikethrough   =   0   'False
       EndProperty
       Height          =   315
-      Left            =   960
+      Left            =   4680
       TabIndex        =   1
-      Top             =   480
-      Width           =   2775
+      Top             =   600
+      Width           =   1095
    End
    Begin CRVIEWERLibCtl.CRViewer CRViewer1 
-      Height          =   6855
+      Height          =   7215
       Left            =   0
       TabIndex        =   0
-      Top             =   0
+      Top             =   120
       Width           =   5775
       DisplayGroupTree=   -1  'True
       DisplayToolbar  =   -1  'True
@@ -92,14 +91,13 @@ Begin VB.Form frmCRDetailPengeluaranObat
       EnableHelpButton=   0   'False
    End
 End
-Attribute VB_Name = "frmCRDetailPengeluaranObat"
+Attribute VB_Name = "frmCRPenjualanObatBebas"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim reportDetailPengeluaran As New crDetailPengeluaranObat
-Dim adoReport As New ADODB.Command
+Dim Report As New crDetailPengeluaranObatBebas
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -110,13 +108,13 @@ Dim strDriverName As String
 Dim strPort As String
 
 Private Sub cmdCetak_Click()
-    reportDetailPengeluaran.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+    Report.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
     'PrinterNama = cboPrinter.Text
-    reportDetailPengeluaran.PrintOut False
+    Report.PrintOut False
 End Sub
 
 Private Sub CmdOption_Click()
-    reportDetailPengeluaran.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -127,7 +125,7 @@ Private Sub Form_Load()
     For Each p In Printers
         cboPrinter.AddItem p.DeviceName
     Next
-    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LaporanPenjualan")
+    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
 End Sub
 
 Private Sub Form_Resize()
@@ -139,72 +137,78 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRDetailPengeluaranObat = Nothing
+    Set frmCRPenjualanObatBebas = Nothing
 End Sub
 
-Public Sub cetak(namaPrinted As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompokPasien As String, idPegawai As String, view As String)
+
+Public Sub Cetak(namaPrinted As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompokPasien As String, idPegawai As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRDetailPengeluaranObat = Nothing
+Set frmCRPenjualanObatBebas = Nothing
 Dim adocmd As New ADODB.Command
-Dim strSQL As String
     Dim str1 As String
     Dim str2 As String
     Dim str3 As String
     
     If idPegawai <> "" Then
-        str1 = "and sr.penulisresepfk=" & idPegawai & " "
+        str1 = "and sp.objectpegawaipenanggungjawabfk=" & idPegawai & " "
     End If
     If idRuangan <> "" Then
         str2 = " and ru.id=" & idRuangan & " "
     End If
-    If idKelompokPasien <> "" Then
-        str3 = " and kp.id=" & idKelompokPasien & " "
-    End If
+'    If idKelompokPasien <> "" Then
+'        str3 = " and kp.id=" & idKelompokPasien & " "
+'    End If
     
-    With reportDetailPengeluaran
-            Set adoReport = New ADODB.Command
-            adoReport.ActiveConnection = CN_String
-             strSQL = "select pg.namalengkap, ru.namaruangan as ruangan, ru2.namaruangan,dp.namadepartemen,sr.tglresep, sr.noresep, pr.kdproduk as kdproduk,pr.id as idproduk, pr.namaproduk, ss.satuanstandar, " & _
-                     "pp.jumlah, pp.hargajual,pp.hargadiscount, pp.jasa, pp.jumlah*pp.hargajual as subtotal, case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, case when jr.jenisracikan is null then '-' else jr.jenisracikan end as jenisracikan, " & _
-                     "'-' as kodefarmatologi, ps.namapasien, ps.tgllahir, ps.nocm, pd.noregistrasi, case when jk.id = '1' then 'L' else 'P' end as jeniskelamin ," & _
-                     "kp.kelompokpasien , ps.namaibu, al.alamatlengkap " & _
-                     "from strukresep_t as sr " & _
-                     "LEFT JOIN pelayananpasien_t as pp on pp.strukresepfk = sr.norec " & _
-                     "LEFT JOIN strukpelayanan_t as sp on sp.norec=pp.strukterimafk " & _
-                     "LEFT JOIN produk_m as pr on pr.id=pp.produkfk LEFT JOIN satuanstandar_m as ss on ss.id=pr.objectsatuanstandarfk " & _
-                     "left join jeniskemasan_m as jkm on jkm.id=pp.jeniskemasanfk left join jenisracikan_m as jr on jr.id=pp.jenisobatfk " & _
-                     "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
-                     "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
-                     "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-                     "inner join alamat_m as al on al.nocmfk= ps.id " & _
-                     "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-                     "inner JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
-                     "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbklastfk " & _
-                     "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
-                     "inner JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
-                     "inner JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
-                     "inner join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
-                     "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
-                     "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
-                     str1 & _
-                     str2 & _
-                     str3
-                     ''and dp.id=16 "
-            
-            ReadRs strSQL
-            
-            adoReport.CommandText = strSQL
-            adoReport.CommandType = adCmdUnknown
-            
-            .database.AddADOCommand CN_String, adoReport
-'            If RS.BOF Then
-'                .txtUmur.SetText "-"
-'            Else
-'                .txtUmur.SetText hitungUmurTahun(Format(RS!tgllahir, "dd/mm/yyyy"), Format(Now, "dd/mm/yyyy"))
-'            End If
-            
+Set Report = New crDetailPengeluaranObatBebas
+    strSQL = "select " & _
+            "sp.nostruk as noresep,pr.id as idproduk, pr.kdproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual," & _
+            "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as hargadiscount, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa," & _
+            "(spd.qtyproduk * spd.hargasatuan)+ spd.hargatambahan - spd.hargadiscount as subtotal,sp.tglstruk as tglresep,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan," & _
+            "'-' as jenisracikan,'-' as noregistrasi,case when ps.nocm is null then '-' else ps.nocm end as nocm,upper(sp.namapasien_klien) as namapasien," & _
+            "case when jk.jeniskelamin = 'laki-laki' then 'l' else 'p' end as jeniskelamin,al.alamatlengkap,ps.namaibu,pg.namalengkap," & _
+            "'-' as namaruangan,'umum/sendiri' as kelompokpasien,ru.namaruangan as ruangan, '-' as namadepartemen " & _
+            "from strukpelayanan_t as sp " & _
+            "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk " & _
+            "left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
+            "inner JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern inner join alamat_m as al on al.nocmfk= ps.id inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
+            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
+            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
+            str1 & _
+            str2 & _
+            str3 & " order by sp.nostruk"
+   
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Report
+        .database.AddADOCommand CN_String, adocmd
+'            .Text4.SetText "LAPORAN PENJUALAN OBAT BEBAS"
+'            .txtPrinted.SetText namaPrinted
+'            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
+'            .udtTglResep.SetUnboundFieldSource ("{ado.tglstruk}")
+'            .usNoResep.SetUnboundFieldSource ("{ado.nostruk}")
+'            .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
+'            .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+'            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+'            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+'            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+'            .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+'            .usJumlahResep.SetUnboundFieldSource ("{ado.jumlah}")
+'            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
+'            .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
+'            .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
+'            .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
+''            .ucTotal.SetUnboundFieldSource ("{ado.total}")
+'            .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
+'            .usKasir.SetUnboundFieldSource ("{ado.kasir}")
+'            .usrke.SetUnboundFieldSource ("{ado.resepke}")
+'            .usRuanganFarmasi.SetUnboundFieldSource ("{ado.ruanganapotik}")
+'
+            'sample
             .txtPrinted.SetText namaPrinted
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .txtNamaUser.SetText namaPrinted
@@ -235,16 +239,17 @@ Dim strSQL As String
             .usNamaIbu.SetUnboundFieldSource ("{ado.namaibu}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             
+            
             If view = "false" Then
                 Dim strPrinter As String
 '
-                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenjualanObatPerDokter")
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPenjualanHarianFarmasi")
                 .SelectPrinter "winspool", strPrinter, "Ne00:"
                 .PrintOut False
                 Unload Me
             Else
                 With CRViewer1
-                    .ReportSource = reportDetailPengeluaran
+                    .ReportSource = Report
                     .ViewReport
                     .Zoom 1
                 End With
@@ -255,5 +260,3 @@ Dim strSQL As String
 Exit Sub
 errLoad:
 End Sub
-
-
