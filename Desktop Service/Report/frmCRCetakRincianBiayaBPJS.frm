@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRCetakRekapBiaya 
+Begin VB.Form frmCRCetakRincianBiayaBPJS 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmCRCetakRekapBiaya.frx":0000
+   Icon            =   "frmCRCetakRincianBiayaBPJS.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmCRCetakRekapBiaya
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRCetakRekapBiaya"
+Attribute VB_Name = "frmCRCetakRincianBiayaBPJS"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crRekapBiayaPelayanan
+Dim Report As New crRincianBiayaPelayananBPJS
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,14 +144,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRCetakRekapBiaya = Nothing
+    Set frmCRCetakRincianBiayaBPJS = Nothing
 End Sub
 
 Public Sub CetakRincianBiaya(strNoregistrasi As String, strNoStruk As String, strNoKwitansi As String, strIdPegawai As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRCetakRekapBiaya = Nothing
+Set frmCRCetakRincianBiayaBPJS = Nothing
 Dim adocmd As New ADODB.Command
 Dim strFilter As String
 
@@ -165,7 +165,7 @@ Dim strFilter As String
 '    If strIdRuangan <> "" Then strFilter = strFilter & " AND apd.objectruanganfk = '" & strIdRuangan & "' "
 '    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
    
-Set Report = New crRekapBiayaPelayanan
+Set Report = New crRincianBiayaPelayananBPJS
     'strSQL = "SELECT pp.norec as norec_pp, sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan  as unit,ru.objectdepartemenfk,case when sr.noresep is not null then '' else kl.namakelas end as namakelas,   " & _
             "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, case when sr.noresep is not null then ru_sr.namaruangan || '     Resep No: ' || sr.noresep  else ru2.namaruangan  end as ruangantindakan, case when pp.rke is not null then 'R/' || pp.rke || ' ' || pr.namaproduk else pr.namaproduk end as namaproduk,pg_sr.namalengkap as penulisresep,case when sr.noresep is not null then 'Resep' else jp.jenisproduk end as jenisproduk, case when sr.noresep is not null then '' else (select pgw.namalengkap from pegawai_m as pgw INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pgw.id where p3.pelayananpasien=pp.norec and p3.objectjenispetugaspefk=4 limit 1) end as dokter,pp.jumlah,pp.hargajual,   " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
@@ -193,10 +193,10 @@ Set Report = New crRekapBiayaPelayanan
             
 '    strSQL = "select * from temp_billing_t where noregistrasi='" & strNoregistrasi & "' " & _
 '            "and tglpelayanan is not null and namaproduk not in ('Biaya Administrasi','Biaya Materai') order by tglpelayanan, namaproduk"
-            
+    
     strSQL = "select * from temp_billing_t where noregistrasi='" & strNoregistrasi & "' " & _
             "and tglpelayanan is not null order by tglpelayanan, namaproduk"
-    
+            
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
