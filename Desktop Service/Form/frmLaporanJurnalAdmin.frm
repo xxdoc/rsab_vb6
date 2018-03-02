@@ -280,7 +280,7 @@ Set Report = New crLaporanJurnalHarian
     strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk, " & _
             "case when jp.id=97 then '41120040121001' else map.kdperkiraan end as kdperkiraan, " & _
             "case when jp.id=97 then 'Pendt. Tindakan Ka Instalasi Farmasi' else map.namaperkiraan end as namaperkiraan, " & _
-            "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
+            "(tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end))*tp.jumlah as total, " & _
             "'Pendapatan R.Inap' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _
@@ -289,8 +289,8 @@ Set Report = New crLaporanJurnalHarian
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk left JOIN ruangan_m as ru3 on ru3.id=pd.objectruanganlastfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=pro.id  " & _
-            "left join ruangan_m as ru2 on ru2.id = apd.objectruanganasalfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
+            "left join ruangan_m as ru2 on ru2.id = apd.objectruanganfk  left join departemen_m as dp on dp.id = ru2.objectdepartemenfk " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru3.id and map.jpid=pro.id  " & _
             "where tp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "'   and  pro.id in (10011572,10011571) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
             str2 '& _

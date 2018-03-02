@@ -156,7 +156,7 @@ Dim adocmd As New ADODB.Command
     Dim str1, str2, str3, str4, str5 As String
     
     If idDokter <> "" Then
-        str1 = "and ppp.objectpegawaifk=" & idDokter & " "
+        str1 = "and apd.objectpegawaifk=" & idDokter & " "
     End If
     If idDepartemen <> "" Then
         If idDepartemen = 16 Then
