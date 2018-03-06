@@ -321,7 +321,7 @@ On Error Resume Next
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
                 
-            Case "cetak-RekapBiaya"
+            Case "cetak-RekapBiaya" 'rincian tanpa keterangan di bawah
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
                 Param6 = Split(arrItem(5), "=")
@@ -331,11 +331,21 @@ On Error Resume Next
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=&strNoStruk=S000000168&strNoKwitansi=&strIdPegawai=1&view=true
 
-            Case "cetak-RekapBiayaPelayanan"
+            Case "cetak-RekapBiayaPelayanan" 'rekap bpjs
                 Param4 = Split(arrItem(3), "=")
                 Param5 = Split(arrItem(4), "=")
                 Param6 = Split(arrItem(5), "=")
                 Call frmCRCetakRekapBilling.CetakRincianBiaya(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Rincian Biaya"
+                '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
+                '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=&strNoStruk=S000000168&strNoKwitansi=&strIdPegawai=1&view=true
+             
+             Case "xxx"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Call frmCRCetakRincianBiayaBPJS.CetakRincianBiaya(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Rincian Biaya"
                 '127.0.0.1:1237/printvb/kasir?cetak-RincianBiaya=1&strNoregistrasi=1707000166&strNoStruk=S000000159&strNoKwitansi=RV-17080000002&strIdPegawai=1&view=true
