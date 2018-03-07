@@ -105,7 +105,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crRekapHarianPemeriksaanLaborat
+'Dim Report As New crRekapHarianPemeriksaanLaborat
+Dim Report As New crRekapHarianPemeriksaanLaboratorium
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -147,7 +148,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCrRekapHarianPemeriksaanLaborat = Nothing
 End Sub
 
-Public Sub cetak(tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idKelompok As String, namaKasir As String, view As String)
+Public Sub Cetak(tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idKelompok As String, namaKasir As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -173,9 +174,9 @@ Dim adocmd As New ADODB.Command
     End If
      
     
-Set Report = New crRekapHarianPemeriksaanLaborat
+Set Report = New crRekapHarianPemeriksaanLaboratorium
 
-    strSQL = "SELECT pp.tglpelayanan,dp.namadepartemen,ru.namaruangan, kps.kelompokpasien, pr.id, pr.namaproduk, " & _
+    strSQL = "SELECT pd.noregistrasi, pp.tglpelayanan,dp.namadepartemen,ru.namaruangan, kps.kelompokpasien, pr.id, pr.namaproduk, " & _
             "pp.hargajual,pp.jumlah,pp.hargajual*pp.jumlah as subtotal, " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon, " & _
             "0 as unitcost, " & _
@@ -198,7 +199,7 @@ Set Report = New crRekapHarianPemeriksaanLaborat
             str1 & _
             str2 & _
             str3 & _
-            "group by pp.tglpelayanan,dp.namadepartemen,ru.namaruangan,kps.kelompokpasien, pr.id, pr.namaproduk,pp.hargajual,pp.jumlah,pp.hargadiscount " & _
+            "group by pd.noregistrasi,pp.tglpelayanan,dp.namadepartemen,ru.namaruangan,kps.kelompokpasien, pr.id, pr.namaproduk,pp.hargajual,pp.jumlah,pp.hargadiscount " & _
             "order by pp.tglpelayanan "
 '    Dim uc, tjs, tJm, tjp, tju As Double
 '    Dim i As Integer
@@ -220,7 +221,7 @@ Set Report = New crRekapHarianPemeriksaanLaborat
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText namaKasir
             .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & " ' "
-            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usDepartemen.SetUnboundFieldSource ("{ado.namadepartemen}")
