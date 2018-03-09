@@ -236,6 +236,7 @@ Designer=Report\crRincianBiayaPelayanan.Dsr
 Designer=crRekapHarianPemeriksaanLaboratorium.Dsr
 Designer=Report\cr_RincianBiayaResep_2.Dsr
 Form=Report\frmCetakFarmasiApotik.frm
+Form=Form\frmCRPenjualanHarianFarmasi.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
