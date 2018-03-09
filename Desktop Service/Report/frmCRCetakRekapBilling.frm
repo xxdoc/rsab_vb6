@@ -192,7 +192,7 @@ Set Report = New crRekapBilling
             "sbm.nosbm='" & strNoKwitansi & "' and pr.id not in (402611,10011572,10011571)  order by pp.tglpelayanan, pp.rke"
             
     strSQL = "select * from temp_billing_t where noregistrasi='" & strNoregistrasi & "' " & _
-            "and tglpelayanan is not null and namaproduk not in ('Biaya Administrasi','Biaya Materai') order by tglpelayanan, namaproduk"
+            "and tglpelayanan is not null  order by tglpelayanan, namaproduk"
     
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _

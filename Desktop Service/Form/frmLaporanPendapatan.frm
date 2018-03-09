@@ -229,7 +229,7 @@ Set Report = New crLaporanPendapatan
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 and ppp.objectjenispetugaspefk=4 " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97  " & _
              str1 & _
              str2 & _
              str3 & _
@@ -241,8 +241,8 @@ Set Report = New crLaporanPendapatan
             "from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
-            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec left join pegawai_m as pg on pg.id=apd.objectpegawaifk left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk left join ruangan_m as ru on ru.id=pd.objectruanganlastfk left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=35 and djp.objectjenisprodukfk <> 97 " & _
+            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec  left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk left join ruangan_m as ru on ru.id=pd.objectruanganlastfk left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=35 and djp.objectjenisprodukfk <> 97  " & _
              "" & str1 & " " & str2 & str3 & str4 & _
              ") as x where x.statusenabled is null"
              
@@ -250,7 +250,7 @@ Set Report = New crLaporanPendapatan
             "from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
-            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec left join pegawai_m as pg on pg.id=apd.objectpegawaifk  left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  left join ruangan_m as ru on ru.id=pd.objectruanganlastfk left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+            "INNER JOIN pelayananpasiendetail_t ppd on ppd.pelayananpasien=pp.norec   left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  left join ruangan_m as ru on ru.id=pd.objectruanganlastfk left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
              "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and ppd.komponenhargafk=25 and djp.objectjenisprodukfk <> 97  " & _
              "" & str1 & " " & str2 & str3 & str4 & _
              ") as x where x.statusenabled is null"
@@ -321,8 +321,8 @@ Dim tCash, tKk, tPj, tJm, tJR, tPm, tPR As Double
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")
             .ucEmbos.SetUnboundFieldSource ("{ado.embos}")

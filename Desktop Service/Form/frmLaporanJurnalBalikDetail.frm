@@ -164,16 +164,16 @@ Dim adocmd As New ADODB.Command
     strFilter = ""
     strFilter2 = ""
     
-    strFilter2 = " where pd.tglregistrasi BETWEEN '" & _
+    strFilter2 = " where pp.tglpelayanan BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and pp.hargadiscount <> 0 "
     
-    strFilter = " where pd.tglregistrasi BETWEEN '" & _
+    strFilter = " where sp.tglstruk BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' AND sp.statusenabled is null and sp.totalprekanan <> 0"
     
-    strFilter = strFilter & " AND ru.objectdepartemenfk  in(18,28,24) "
-    strFilter2 = strFilter2 & " AND ru.objectdepartemenfk in(18,28,24)"
+    strFilter = strFilter & " AND ru.objectdepartemenfk  <> 16 " 'in(18,28,24) "
+    strFilter2 = strFilter2 & " AND ru.objectdepartemenfk <> 16 " 'in(18,28,24)"
     
     If idDepartemen <> "" Then
 '        strFilter = strFilter & " AND ru.objectdepartemenfk  = '" & idDepartemen & "'"
@@ -184,15 +184,15 @@ Dim adocmd As New ADODB.Command
 
     If idRuangan <> "" Then strFilter = strFilter & " and pd.objectruanganlastfk=" & idRuangan & ""
     
-    strFilter = strFilter & " GROUP BY pd.tglregistrasi, pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
-    strFilter2 = strFilter2 & " GROUP BY pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
+    strFilter = strFilter & " GROUP BY sp.tglstruk, pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
+    strFilter2 = strFilter2 & " GROUP BY pp.tglpelayanan,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
     
 Set Report = New crLaporanJurnalBalikDetail
 
     strSQL = "select tgl,tglregistrasi,noregistrasi,nocm,namapasien,idruangan,namaruangan,iddepartemen," & _
             "sum(umum) as umum,sum(perusahaan) as perusahaan,sum(bpjs) as bpjs, sum(diskon) as diskon,sum(total) as total from ( " & _
-            "select to_char(pd.tglregistrasi, 'YYYY-MM-DD') AS tgl,pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
-            "sum(CASE WHEN kp.id in (6) then sp.totalprekanan else 0 end) as umum, " & _
+            "select to_char(sp.tglstruk , 'YYYY-MM-DD') AS tgl,sp.tglstruk as tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,dp.id  AS iddepartemen, " & _
+            "sum(CASE WHEN kp.id in (1,6) then sp.totalprekanan else 0 end) as umum, " & _
             "sum(CASE WHEN kp.id in (3,5) then sp.totalprekanan else 0 end) as perusahaan, " & _
             "sum(CASE WHEN kp.id in (2,4) then sp.totalprekanan else 0 end) as bpjs, 0 as diskon, " & _
             "sum(sp.totalprekanan) As total " & _
@@ -206,7 +206,7 @@ Set Report = New crLaporanJurnalBalikDetail
             "LEFT JOIN kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk left join pasien_m as ps on ps.id=pd.nocmfk " & _
             strFilter & _
             " Union All " & _
-            "select to_char(pd.tglregistrasi, 'YYYY-MM-DD') AS tgl, pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
+            "select to_char(pp.tglpelayanan, 'YYYY-MM-DD') AS tgl, pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan, dp.id  AS iddepartemen, " & _
             "0 as umum, " & _
             "0 as perusahaan, " & _
             "0 as bpjs, " & _
@@ -227,10 +227,10 @@ Set Report = New crLaporanJurnalBalikDetail
 '            .txtTglDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
 '            '.ucDebet.SetUnboundFieldSource ("{ado.tunai}")
 '            '.ucKredit.SetUnboundFieldSource ("{ado.nontunai}")
-            .ustgl.SetUnboundFieldSource ("{ado.tgl}")
+            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usRegMR.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             
             .ucPasien.SetUnboundFieldSource ("{ado.umum}")
@@ -280,15 +280,15 @@ Dim adocmd As New ADODB.Command
     strFilter2 = ""
     strFilter3 = ""
 
-    strFilter3 = " where pd.tglregistrasi BETWEEN '" & _
+    strFilter3 = " where pp.tglpelayanan BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and pp.hargajual <> 0  and pp.produkfk=402611  "
     
-    strFilter2 = " where pd.tglregistrasi BETWEEN '" & _
+    strFilter2 = " where pp.tglpelayanan BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and pp.hargadiscount <> 0 "
     
-    strFilter = " where pd.tglregistrasi BETWEEN '" & _
+    strFilter = " where sp.tglstruk BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' AND sp.statusenabled is null and sp.totalprekanan <> 0 "
     
@@ -299,14 +299,14 @@ Dim adocmd As New ADODB.Command
 
     If idRuangan <> "" Then strFilter = strFilter & " and pd.objectruanganlastfk=" & idRuangan & ""
     
-    strFilter = strFilter & " GROUP BY pd.tglregistrasi, pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
-    strFilter2 = strFilter2 & " GROUP BY pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
-    strFilter3 = strFilter3 & " GROUP BY pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
+    strFilter = strFilter & " GROUP BY sp.tglstruk, pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
+    strFilter2 = strFilter2 & " GROUP BY pp.tglpelayanan,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
+    strFilter3 = strFilter3 & " GROUP BY pp.tglpelayanan,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id,ru.namaruangan,dp.id"
 
 Set Reports = New crLaporanJurnalBalikDetailInap
 
     strSQL = "select tgl,tglregistrasi,noregistrasi,nocm,namapasien,idruangan,namaruangan,iddepartemen,sum(umum) as umum,sum(perusahaan) as perusahaan,sum(bpjs) as bpjs, sum(diskon) as diskon,sum(uangmuka) as uangmuka,sum(total) as total  " & _
-            "from (select to_char(pd.tglregistrasi, 'YYYY-MM-DD') AS tgl,pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
+            "from (select to_char(sp.tglstruk, 'YYYY-MM-DD') AS tgl,sp.tglstruk as tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
             "sum(CASE WHEN kp.id in (1,6) then sp.totalprekanan else 0 end) as umum, " & _
             "sum(CASE WHEN kp.id in (3,5) then sp.totalprekanan else 0 end) as perusahaan, " & _
             "sum(CASE WHEN kp.id in (2,4) then sp.totalprekanan else 0 end) as bpjs, 0 as diskon,0 as uangmuka, " & _
@@ -315,7 +315,7 @@ Set Reports = New crLaporanJurnalBalikDetailInap
             "LEFT JOIN strukpelayanan_t as sp on sp.noregistrasifk=pd.norec left join strukpelayananpenjamin_t as spp on spp.nostrukfk = sp.norec LEFT JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk left join departemen_m as dp on dp.id = ru.objectdepartemenfk left join rekanan_m as r on r.id = pd.objectrekananfk left join jenisrekanan_m as jr on jr.id = r.objectjenisrekananfk LEFT JOIN kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk left join pasien_m as ps on ps.id=pd.nocmfk " & _
             strFilter & _
             " Union All " & _
-            "select to_char(pd.tglregistrasi, 'YYYY-MM-DD') AS tgl, pd.tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
+            "select to_char(pp.tglpelayanan, 'YYYY-MM-DD') AS tgl, pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ps.nocm,ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
             "0 as umum, " & _
             "0 as perusahaan, " & _
             "0 as bpjs, " & _
@@ -323,7 +323,7 @@ Set Reports = New crLaporanJurnalBalikDetailInap
             "from pasiendaftar_t as pd inner join antrianpasiendiperiksa_t as adp on adp.noregistrasifk = pd.norec left join pelayananpasien_t as pp on pp.noregistrasifk = adp.norec left join pasien_m as ps on ps.id=pd.nocmfk left join ruangan_m as ru on ru.id=pd.objectruanganlastfk left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             strFilter2 & _
             " Union All " & _
-            "select to_char(pd.tglregistrasi, 'YYYY-MM-DD') AS tgl, pd.tglregistrasi,pd.noregistrasi,ps.nocm, " & _
+            "select to_char(pp.tglpelayanan, 'YYYY-MM-DD') AS tgl, pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ps.nocm, " & _
             "ps.namapasien,ru.id AS idruangan,ru.namaruangan,case when dp.id <> 16 then 18 else 16 end AS iddepartemen, " & _
             "0 as umum, 0 as perusahaan, 0 as bpjs, 0 as diskon, " & _
             "sum(case when pp.hargajual is null then 0 else pp.hargajual end) As uangmuka, 0 as total " & _
@@ -343,10 +343,10 @@ Set Reports = New crLaporanJurnalBalikDetailInap
 '            .txtTglDeskripsi.SetText Format(tglAwal, "dd/MM/yyyy")
 '            '.ucDebet.SetUnboundFieldSource ("{ado.tunai}")
 '            '.ucKredit.SetUnboundFieldSource ("{ado.nontunai}")
-            .ustgl.SetUnboundFieldSource ("{ado.tgl}")
+            .usTgl.SetUnboundFieldSource ("{ado.tgl}")
             .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usRegMR.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             
             .ucPasien.SetUnboundFieldSource ("{ado.umum}")
