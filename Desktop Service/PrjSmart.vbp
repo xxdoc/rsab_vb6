@@ -231,12 +231,17 @@ Designer=Form\crDetailPengeluaranObat.Dsr
 Form=Form\frmCRPenjualanObatBebas.frm
 Designer=Report\crRincianBiayaPelayananBPJS.Dsr
 Form=Report\frmCRCetakRincianBiayaBPJS.frm
-Form=Report\frmCRCetakRincianBiaya.frm
-Designer=Report\crRincianBiayaPelayanan.Dsr
+Form=Report\frmCRCetakRincianBiaya_kelasdijamin.frm
+Designer=Report\crRincianBiayaPelayanan_kelasdijamin.Dsr
 Designer=crRekapHarianPemeriksaanLaboratorium.Dsr
 Designer=Report\cr_RincianBiayaResep_2.Dsr
 Form=Report\frmCetakFarmasiApotik.frm
 Form=Form\frmCRPenjualanHarianFarmasi.frm
+Form=Form\frmLaporanffsIBSAsist.frm
+Form=Form\frmRekapffsIBSAsist.frm
+Form=Form\frmCetakBuktiPengeluaranBarang.frm
+Designer=Report\crRincianBiayaPelayanan.Dsr
+Form=Report\frmCRCetakRincianBiaya.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -252,7 +257,11 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
+<<<<<<< HEAD
 VersionComments="HK180306.4"
+=======
+VersionComments="HK180323.2"
+>>>>>>> 8635b578b87721be2ba43bbdd119fb78b1d1f01e
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0

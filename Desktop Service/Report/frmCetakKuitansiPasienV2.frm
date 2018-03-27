@@ -151,6 +151,8 @@ Public Sub CetakUlangJenisKuitansi(strNoregistrasi As String, jumlahCetak As Int
 On Error GoTo errLoad
 
 Dim strKet As Boolean
+Dim jenisKwitansi As String
+
 
     strKet = True
     
@@ -193,8 +195,9 @@ Dim strKet As Boolean
 '               "left join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
 '               "where sbp.nosbm='" & strNoregistrasi & "'"
         ElseIf Left(strNoregistrasi, 14) = "KEMBALIDEPOSIT" Then
+            jenisKwitansi = "KEMBALIDEPOSIT"
             strNoregistrasi = Replace(strNoregistrasi, "KEMBALIDEPOSIT", "")
-            ReadRs "select sbp.nosbm as noregistrasi,sbp.totaldibayar as totaldibayar, 'RSAB Harapan Kita' as namapasien, " & _
+            ReadRs "select sbp.nosbm as noregistrasi,sbp.totaldibayar as totaldibayar,  namapasien, " & _
                     "pg.namalengkap, sbp.keteranganlainnya,sbp.keteranganlainnya as namaruangan,ps.nocm as nocm " & _
                     "from strukpelayanan_t as sp inner join strukbuktipenerimaan_t as sbp  on sbp.nostrukfk=sp.norec " & _
                     "left join loginuser_s as lu on lu.id=sbp.objectpegawaipenerimafk " & _
@@ -242,6 +245,9 @@ Dim strKet As Boolean
                 .txtNamaPenyetor.SetText UCase(STD)
             End If
             .txtNamaPasien.SetText UCase(RS("namapasien"))
+            If jenisKwitansi = "KEMBALIDEPOSIT" Then
+                .txtNamaPenyetor.SetText "RSAB HARAPAN KITA"
+            End If
             If strKet = True Then
                 .txtKeterangan.SetText UCase("Biaya Layanan " & RS("namaruangan"))  'RS("keteranganlainnya")
             Else
