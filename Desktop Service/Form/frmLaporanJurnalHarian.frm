@@ -177,7 +177,7 @@ Set Report = New crLaporanJurnalHarian
     strSQL = "select pd.noregistrasi, ru.namaruangan, tp.produkfk, " & _
             "case when jp.id=97 then '41110040121001' else map.kdperkiraan end as kdperkiraan, " & _
             "case when jp.id=97 then 'Pendt. Tindakan Ka Instalasi Farmasi' else map.namaperkiraan end as namaperkiraan, " & _
-            "(tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end))*tp.jumlah as total, " & _
+            "(case when tp.hargajual is null then 0 else tp.hargajual end-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end))*tp.jumlah as total, " & _
             "'Pendapatan R.Jalan' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec " & _

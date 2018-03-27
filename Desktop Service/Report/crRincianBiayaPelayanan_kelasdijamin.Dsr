@@ -1,12 +1,12 @@
 VERSION 5.00
-Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crRincianBiayaPelayanan 
+Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crRincianBiayaPelayanan_kelasdijamin 
    ClientHeight    =   9900
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   15030
-   OleObjectBlob   =   "crRincianBiayaPelayanan.dsx":0000
+   OleObjectBlob   =   "crRincianBiayaPelayanan_kelasdijamin.dsx":0000
 End
-Attribute VB_Name = "crRincianBiayaPelayanan"
+Attribute VB_Name = "crRincianBiayaPelayanan_kelasdijamin"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -40,11 +40,12 @@ Private Sub Section11_Format(ByVal pFormattingInfo As Object)
     
 End Sub
 
-Private Sub Section12_Format(ByVal pFormattingInfo As Object)
-    If CDbl(ucDitanggungPerusahaan.Value) = 0 Then
+Private Sub Section14_Format(ByVal pFormattingInfo As Object)
+'    If CDbl(ucDitanggungPerusahaan.Value) = 0 Then
 '        txtTerbilang.SetText "# " & TerbilangDesimal(txtPembulatan.Text) & " #"
-        txtTerbilang.SetText "# " & TerbilangDesimal(ucJumlahBill.Value) & " #"
-    Else
-        txtTerbilang.SetText "# " & TerbilangDesimal(ucDitanggungPerusahaan.Value) & " #"
-    End If
+        txtTerbilang.SetText "# " & TerbilangDesimal(Field11.Value) & " #"
+'    Else
+'        txtTerbilang.SetText "# " & TerbilangDesimal(ucDitanggungPerusahaan.Value) & " #"
+'    End If
 End Sub
+

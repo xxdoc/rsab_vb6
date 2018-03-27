@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCRCetakRincianBiaya 
+Begin VB.Form frmCRCetakRincianBiaya_kelasdijamin 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmCRCetakRincianBiaya.frx":0000
+   Icon            =   "frmCRCetakRincianBiaya_kelasdijamin.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmCRCetakRincianBiaya
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCRCetakRincianBiaya"
+Attribute VB_Name = "frmCRCetakRincianBiaya_kelasdijamin"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crRincianBiayaPelayanan
+Dim Report As New crRincianBiayaPelayanan_kelasdijamin
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,14 +144,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCRCetakRincianBiaya = Nothing
+    Set frmCRCetakRincianBiaya_kelasdijamin = Nothing
 End Sub
 
 Public Sub CetakRincianBiaya(strNoregistrasi As String, strNoStruk As String, strNoKwitansi As String, strIdPegawai As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRCetakRincianBiaya = Nothing
+Set frmCRCetakRincianBiaya_kelasdijamin = Nothing
 Dim adocmd As New ADODB.Command
 Dim strFilter As String
 
@@ -165,7 +165,7 @@ Dim strFilter As String
 '    If strIdRuangan <> "" Then strFilter = strFilter & " AND apd.objectruanganfk = '" & strIdRuangan & "' "
 '    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
    
-Set Report = New crRincianBiayaPelayanan
+Set Report = New crRincianBiayaPelayanan_kelasdijamin
     'strSQL = "SELECT pp.norec as norec_pp, sp.tglstruk,sp.nostruk as nobilling,sbm.nosbm as nokwitansi, pd.noregistrasi,ps.nocm,(upper(ps.namapasien) || ' ( ' || jk.reportdisplay || ' )' ) as namapasienjk ,ru.namaruangan  as unit,ru.objectdepartemenfk,case when sr.noresep is not null then '' else kl.namakelas end as namakelas,   " & _
             "pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan,pp.tglpelayanan, case when sr.noresep is not null then ru_sr.namaruangan || '     Resep No: ' || sr.noresep  else ru2.namaruangan  end as ruangantindakan, case when pp.rke is not null then 'R/' || pp.rke || ' ' || pr.namaproduk else pr.namaproduk end as namaproduk,pg_sr.namalengkap as penulisresep,case when sr.noresep is not null then 'Resep' else jp.jenisproduk end as jenisproduk, case when sr.noresep is not null then '' else (select pgw.namalengkap from pegawai_m as pgw INNER JOIN pelayananpasienpetugas_t p3 on p3.objectpegawaifk=pgw.id where p3.pelayananpasien=pp.norec and p3.objectjenispetugaspefk=4 limit 1) end as dokter,pp.jumlah,pp.hargajual,   " & _
             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,(pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end as total, case when kmr.namakamar is null then '-' else kmr.namakamar end as namakamar ,klp.kelompokpasien as tipepasien,   " & _
@@ -285,12 +285,12 @@ Set Report = New crRincianBiayaPelayanan
 '            .ucAdministrasi.SetUnboundFieldSource ("0") '("{ado.administrasi}")
 '            .ucMaterai.SetUnboundFieldSource ("0") '("{ado.materai}")
 
-            If strNoStruk = "TOTALTOTALTOTAL" Then
-                TotalDeposit = 0
-                .Section11.Suppress = True
-            Else
-                .Section11.Suppress = False
-            End If
+'            If strNoStruk = "TOTALTOTALTOTAL" Then
+'                TotalDeposit = 0
+'                .Section11.Suppress = True
+'            Else
+'                .Section11.Suppress = False
+'            End If
             
             .ucDeposit.SetUnboundFieldSource (TotalDeposit) '("{ado.deposit}")
             '.ucDeposit.SetUnboundFieldSource 0 '(TotalDeposit) '("{ado.deposit}")
@@ -305,6 +305,10 @@ Set Report = New crRincianBiayaPelayanan
 '            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
+            
+            .usKelasDijamin.SetUnboundFieldSource ("{ado.nama_kelasasal}")
+            .ucTarifDijamin.SetUnboundFieldSource ("{ado.hargajual_kelasasal}")
+            .ucTotalDijamin.SetUnboundFieldSource ("{ado.total_kelasasal}")
             
             .txtVersi.SetText App.Comments
             
