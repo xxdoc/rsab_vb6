@@ -110,7 +110,8 @@ Dim ReportTracer As New Cr_cetakLabelTracer
 Dim reportSep As New crCetakSJP
 Dim reportBuktiLayanan As New Cr_cetakbuktilayanan
 Dim reportBuktiLayananRuangan As New Cr_cetakbuktilayananruangan
-Dim reportLabel As New Cr_cetakLabel
+'Dim reportLabel As New Cr_cetakLabel 'LAMA
+Dim reportLabel As New Cr_cetakLabel_2
 Dim reportLabelZebra As New Cr_cetakLabelZebra
 Dim reportSumList As New Cr_cetakSummaryList
 Dim reportRmk As New Cr_cetakRMK
@@ -627,9 +628,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -746,9 +747,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -871,9 +872,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -1758,9 +1759,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -1892,9 +1893,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2028,9 +2029,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2188,9 +2189,9 @@ bolBuktiLayananRuanganBedah = True
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
