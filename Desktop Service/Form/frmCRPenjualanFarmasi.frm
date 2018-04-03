@@ -208,7 +208,7 @@ Set Report = New crPenjualanHarianFarmasi
             "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk " & _
             "inner join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
-            "" & str2 & " " & str3 & " " & str4 & " " & _
+            "" & str2 & " " & str4 & " " & _
             " order by tglresep"
 
     adocmd.CommandText = strSQL
