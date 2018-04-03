@@ -242,6 +242,7 @@ Form=Form\frmRekapffsIBSAsist.frm
 Form=Form\frmCetakBuktiPengeluaranBarang.frm
 Designer=Report\crRincianBiayaPelayanan.Dsr
 Form=Report\frmCRCetakRincianBiaya.frm
+Designer=Report\Cr_cetakLabel_2.Dsr
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -257,8 +258,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-VersionComments="HK180327.1"
-
+VersionComments="HK180327.2"
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0
