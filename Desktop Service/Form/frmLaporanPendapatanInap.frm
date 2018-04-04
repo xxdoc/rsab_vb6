@@ -176,7 +176,55 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crLaporanPendapatanInap
-    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || km.namakamar as namaruangan, kps.kelompokpasien,pro.namaproduk, " & _
+'    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || km.namakamar as namaruangan, kps.kelompokpasien,pro.namaproduk, " & _
+'            "case when (kp.id in (25) and jp.id in (99,25)) then 'Akomodasi' " & _
+'            "when (kp.id in (26) and jp.id in (101,100)) then 'Visit' " & _
+'            "when kp.id in (1, 2, 3, 4, 8, 9, 10, 11, 13, 14) then 'Tindakan' when kp.id in (34) then 'Sewa Alat' end as jenisproduk, " & _
+'            "case when pp.hargajual is not null then pp.hargajual else 0 end as hargajual, " & _
+'            "case when pp.jumlah is not null and pp.hargajual is not null then pp.jumlah else 0 end as jumlah from pasiendaftar_t as pd " & _
+'            "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "inner join produk_m as pro on pro.id = pp.produkfk " & _
+'            "left join kamar_m as km on km.id = apd.objectkamarfk " & _
+'            "left join detailjenisproduk_m as djp on djp.id = pro.objectdetailjenisprodukfk " & _
+'            "left join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
+'            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+'            "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
+'            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+'            "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+'            "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+'            "and jp.id in (15,25,99,100,101,102,107,27666) and pro.id not in(402611) " & _
+'             str1 & _
+'             str2 & _
+'             str4 & _
+'             "order by pd.noregistrasi"
+             
+    
+'    strSQL = "select pd.noregistrasi, ru.namaruangan || ' ' || kls.namakelas as namaruangan, kps.kelompokpasien,pro.namaproduk, " & _
+'            "case when (kp.id in (25) and jp.id in (99,25)) then 'Akomodasi' " & _
+'            "when (kp.id in (26) and jp.id in (101,100)) then 'Visit' " & _
+'            "when kp.id in (1, 2, 3, 4, 8, 9, 10, 11, 13, 14) then 'Tindakan' when kp.id in (34) then 'Sewa Alat' end as jenisproduk, " & _
+'            "case when pp.hargajual is not null then pp.hargajual else 0 end as hargajual, " & _
+'            "case when pp.jumlah is not null and pp.hargajual is not null then pp.jumlah else 0 end as jumlah from pasiendaftar_t as pd " & _
+'            "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "inner join produk_m as pro on pro.id = pp.produkfk " & _
+'            "left join detailjenisproduk_m as djp on djp.id = pro.objectdetailjenisprodukfk " & _
+'            "left join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
+'            "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+'            "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
+'            "left join kelas_m as kls on kls.id = pd.objectkelasfk " & _
+'            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+'            "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+'            "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+'            "and jp.id in (15,25,99,100,101,102,107,27666) and pro.id not in(402611) " & _
+'             str1 & _
+'             str2 & _
+'             str4 & _
+'             "order by pd.noregistrasi"
+
+
+        strSQL = "select pd.noregistrasi, ru.namaruangan as namaruangan, kps.kelompokpasien,pro.namaproduk, " & _
             "case when (kp.id in (25) and jp.id in (99,25)) then 'Akomodasi' " & _
             "when (kp.id in (26) and jp.id in (101,100)) then 'Visit' " & _
             "when kp.id in (1, 2, 3, 4, 8, 9, 10, 11, 13, 14) then 'Tindakan' when kp.id in (34) then 'Sewa Alat' end as jenisproduk, " & _
@@ -185,7 +233,6 @@ Set Report = New crLaporanPendapatanInap
             "left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "inner join produk_m as pro on pro.id = pp.produkfk " & _
-            "left join kamar_m as km on km.id = apd.objectkamarfk " & _
             "left join detailjenisproduk_m as djp on djp.id = pro.objectdetailjenisprodukfk " & _
             "left join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
@@ -193,12 +240,11 @@ Set Report = New crLaporanPendapatanInap
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-            "and jp.id in (25,99,100,101,102,107,27666) " & _
+            "and jp.id in (15,25,99,100,101,102,107,27666) and pro.id not in(402611) " & _
              str1 & _
              str2 & _
              str4 & _
              "order by pd.noregistrasi"
-
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
