@@ -139,6 +139,11 @@ On Error Resume Next
                 Root("Status") = "Cetak Laporan Volume Kegiatan dan Pendapatan"
                 '127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
                 
+             Case "cetak-LaporanReservasiOnline"
+                Call frmLaporanReservasiOnline.CetakLaporanPendapatan(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Reservasi Online"
+                'http://127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanReservasiOnline=1&tglAwal=2018-01-01%2000:00:00&tglAkhir=2018-01-31%2023:59:59&statusId=Confirm&view=true
             
             Case Else
                 Set Root = New JNode
