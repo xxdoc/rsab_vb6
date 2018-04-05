@@ -161,8 +161,8 @@ Set Report = New crLaporanPasienPulang2
     orderby = ""
 
     strFilter = " where pd.tglpulang BETWEEN '" & _
-    Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "'" ' and pp.strukfk is not null "
+    Format(tglAwal, "yyyy-MM-dd hh:mm:ss") & "' AND '" & _
+    Format(tglAkhir, "yyyy-MM-dd hh:mm:ss") & "'" ' and pp.strukfk is not null "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
     If strIdDepartemen <> "" Then
@@ -220,7 +220,7 @@ Set Report = New crLaporanPasienPulang2
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
             .udTglBayar.SetUnboundFieldSource ("{ado.tglstruk}")
-            .usnocm.SetUnboundFieldSource ("{ado.nodaftar}")
+            .usNocm.SetUnboundFieldSource ("{ado.nodaftar}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -238,7 +238,7 @@ Set Report = New crLaporanPasienPulang2
             .usPembayaran.SetUnboundFieldSource ("{ado.namarekanan}")
             .usInap.SetUnboundFieldSource ("{ado.inap}")
             
-        .txtTgl.SetText Format(tglAwal, "dd/MM/yyyy 00:00:00") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy 23:59:59")
+        .txtTgl.SetText Format(tglAwal, "dd/MM/yyyy hh:mm") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy hh:mm")
         
         
         If strIdKelompokPasien <> "" Then
@@ -274,4 +274,5 @@ Set Report = New crLaporanPasienPulang2
     End With
 Exit Sub
 errLoad:
+    Debug.Print Err.Description
 End Sub
