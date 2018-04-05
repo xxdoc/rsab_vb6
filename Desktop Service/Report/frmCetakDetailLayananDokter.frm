@@ -179,7 +179,7 @@ Set Report = New crCetakDetailLayananDokter
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
   
     orderby = strFilter & " order by pg.namalengkap"
-    strSQL = "select DISTINCT pp.tglpelayanan, apd.objectruanganfk, ru.namaruangan, " & _
+    strSQL = "select DISTINCT pp.tglpelayanan, apd.objectruanganfk, ru.namaruangan,kl.namakelas, " & _
             "pg.namalengkap,pd.noregistrasi,ps.nocm, upper(ps.namapasien) as namapasien, " & _
             "case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap, " & _
             "kps.kelompokpasien, case when rk.namarekanan is not null then rk.namarekanan else '-' end as namarekanan, pr.namaproduk, pp.jumlah, " & _
@@ -200,6 +200,7 @@ Set Report = New crCetakDetailLayananDokter
             "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
             "left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
             "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left join kelas_m as kl on kl.id = apd.objectkelasfk " & _
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & orderby
         
 '    strSQL = "select DISTINCT pp.tglpelayanan, apd.objectruanganfk, ru.namaruangan,pg.namalengkap,pd.noregistrasi,ps.nocm ,  " & _
@@ -250,9 +251,9 @@ Set Report = New crCetakDetailLayananDokter
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

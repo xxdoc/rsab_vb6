@@ -227,6 +227,7 @@ Set Report = New crRincianBiayaPelayanan
     Dim TotalDeposit As Double
     TotalDeposit = IIf(IsNull(RS2(0)), 0, RS2(0))
     
+    
 '    ReadRs2 "SELECT " & _
 '            "sum((pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))) as total " & _
 '            "from pasiendaftar_t as pd " & _
@@ -253,7 +254,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -265,7 +266,7 @@ Set Report = New crRincianBiayaPelayanan
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-            .udtanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
@@ -283,6 +284,13 @@ Set Report = New crRincianBiayaPelayanan
             
 '            .ucAdministrasi.SetUnboundFieldSource ("0") '("{ado.administrasi}")
 '            .ucMaterai.SetUnboundFieldSource ("0") '("{ado.materai}")
+
+            If strNoStruk = "TOTALTOTALTOTAL" Then
+                TotalDeposit = 0
+                .Section11.Suppress = True
+            Else
+                .Section11.Suppress = False
+            End If
             
             .ucDeposit.SetUnboundFieldSource (TotalDeposit) '("{ado.deposit}")
             '.ucDeposit.SetUnboundFieldSource 0 '(TotalDeposit) '("{ado.deposit}")
@@ -308,7 +316,7 @@ Set Report = New crRincianBiayaPelayanan
 '            Else
 '                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
 '            End If
-            .txtuser.SetText UCase(strIdPegawai)
+            .txtUser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String

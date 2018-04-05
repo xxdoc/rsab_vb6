@@ -106,6 +106,7 @@ Private Sub Form_Load()
     Combo1.AddItem "CetakSep"
     Combo1.AddItem "Kwitansi"
     Combo1.AddItem "KartuPasien"
+    Combo1.AddItem "LabelFarmasi"
     Combo1.AddItem "LabelPasien"
     Combo1.AddItem "LaporanPasienPulang"
     Combo1.AddItem "LaporanPendapatanRuangan"

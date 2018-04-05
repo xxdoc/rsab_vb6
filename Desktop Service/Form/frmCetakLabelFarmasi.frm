@@ -125,7 +125,7 @@ Private Sub Form_Load()
     For Each p In Printers
         cboPrinter.AddItem p.DeviceName
     Next
-    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LabelFarmasi")
 End Sub
 
 Private Sub Form_Resize()
@@ -183,21 +183,21 @@ Set Report = New Cr_cetakLabelFarmasi
             .usNamaProduk.SetUnboundFieldSource ("{ado.namaproduk}")
             .usAturanPakai.SetUnboundFieldSource ("{ado.aturanpakai}")
             
-            If view = "false" Then
+'            If view = "false" Then
                 Dim strPrinter As String
 '
                 strPrinter = GetTxt("Setting.ini", "Printer", "LabelFarmasi")
                 .SelectPrinter "winspool", strPrinter, "Ne00:"
                 .PrintOut False
                 Unload Me
-            Else
-                With CRViewer1
-                    .ReportSource = Report
-                    .ViewReport
-                    .Zoom 1
-                End With
-                Me.Show
-            End If
+'            Else
+'                With CRViewer1
+'                    .ReportSource = Report
+'                    .ViewReport
+'                    .Zoom 1
+'                End With
+'                Me.Show
+'            End If
         'End If
     End With
 Exit Sub

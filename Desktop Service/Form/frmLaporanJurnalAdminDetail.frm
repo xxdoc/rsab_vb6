@@ -198,7 +198,7 @@ Set Report = New crLaporanJurnalDetail
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .txtjudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT JALAN"
+            .txtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT JALAN"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
             
@@ -291,7 +291,7 @@ Set Report = New crLaporanJurnalDetail
     strSQL = "select pd.tglregistrasi, pd.noregistrasi || '/' || ps.nocm as regcm, ps.namapasien,case when jp.id=97 then 'Farmasi' else ru.namaruangan end as namaruangan, tp.produkfk as kode, pro.namaproduk as layanan, tp.hargajual, tp.jumlah,  " & _
             "case when jp.id=97 then '41120040121001' else map.kdperkiraan end as kdperkiraan, " & _
             "case when jp.id=97 then 'Pendt. Tindakan Ka Instalasi Farmasi' else map.namaperkiraan end as namaperkiraan,   " & _
-            "case when (tp.hargajual* tp.jumlah) is null then 0 else (tp.hargajual* tp.jumlah) end as total, " & _
+            "(tp.hargajual-(case when tp.hargadiscount is null then 0 else tp.hargadiscount end))*tp.jumlah as total, " & _
             "'Pendapatan R.Inap' as keterangan " & _
             "from pasiendaftar_t as pd left JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as tp on tp.noregistrasifk = apd.norec  " & _
@@ -299,8 +299,8 @@ Set Report = New crLaporanJurnalDetail
             "left JOIN detailjenisproduk_m as djp on djp.id=pro.objectdetailjenisprodukfk " & _
             "left JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
             "left JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "left JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
-            "left join mapjurnalmanual as map on map.objectruanganfk = ru.id and map.jpid=pro.id  " & _
+            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk  left join departemen_m as dp on dp.id = ru.objectdepartemenfk left JOIN ruangan_m as ru2 on ru2.id=pd.objectruanganlastfk " & _
+            "left join mapjurnalmanual as map on map.objectruanganfk = ru2.id and map.jpid=pro.id  " & _
             "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "where tp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "'  and pro.id in (10011572,10011571) and tp.produkfk not in (402611) and map.jenis='Pendapatan' " & _
             str1 & _
@@ -311,7 +311,7 @@ Set Report = New crLaporanJurnalDetail
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .txtjudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT INAP"
+            .txtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN RAWAT INAP"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
             '.usTglRegis.SetUnboundFieldSource ("{ado.tglregistrasi}")
