@@ -102,7 +102,7 @@ Form=Form\frmCetakLabelFarmasi.frm
 Designer=Report\Cr_cetakLabelFarmasi.Dsr
 Form=Report\frmCetakPendaftaran.frm
 Form=Form\frmLaporanPenerimaanKasir.frm
-Form=Form\frmCRLaporanTagihanPenjamin.frm
+Form=Form\frmCRKartuPiutangPerusahaan.frm
 Designer=Report\crLaporanTagihanPenjamin.Dsr
 Form=Form\frmCRLaporanTagihanPenjaminSurat.frm
 Designer=Report\crLaporanTagihanPenjaminSurat.Dsr
@@ -132,8 +132,6 @@ Designer=Report\crCetakDetailLayananDokter.Dsr
 Form=Report\frmCetakDetailLayananDokter.frm
 Form=Form\frmLaporanPendapatanInapKsm.frm
 Designer=Report\crLaporanPendapatanInapKsm.Dsr
-Form=Form\frmLaporanReservasiOnline.frm
-Designer=Report\crLaporanReservasiOnline.Dsr
 Form=Form\frmLaporanJurnalAdminDetail.frm
 Designer=Report\crLaporanJurnaBalikDetailInap.Dsr
 Designer=Report\crLaporanJurnalBalikInap.Dsr
@@ -245,11 +243,9 @@ Form=Form\frmCetakBuktiOrderBarang.frm
 Designer=Report\crRincianBiayaPelayanan.Dsr
 Form=Report\frmCRCetakRincianBiaya.frm
 Designer=Report\Cr_cetakLabel_2.Dsr
-<<<<<<< HEAD
 Form=Form\frmCetakBuktiPengeluaranBarang.frm
 Designer=Report\cr_BuktiPengeluaranBarang.Dsr
-=======
->>>>>>> 379595a440286db5b0786baf9b748f66e341cc90
+Form=Form\frmCRLaporanTagihanPenjamin.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -265,11 +261,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-<<<<<<< HEAD
 VersionComments="HK180323.2"
-=======
-VersionComments="HK180405.5"
->>>>>>> 379595a440286db5b0786baf9b748f66e341cc90
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0

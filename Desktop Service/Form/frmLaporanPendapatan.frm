@@ -104,7 +104,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Option Explicit
+    Option Explicit
 Dim Report As New crLaporanPendapatan
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
