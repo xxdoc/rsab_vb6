@@ -159,9 +159,11 @@ Dim adocmd As New ADODB.Command
     If idDepartemen <> "" Then
         If idDepartemen = 16 Then
             str1 = " and dp.id in (16,17,26)"
+        ElseIf idDepartemen = 25 Then
+            str1 = " and dp.id in (25)"
         Else
             If idDepartemen <> "" Then
-                str1 = " and dp.id not in (16,17,26)"
+                str1 = " and dp.id not in (16,17,26,25)"
             End If
         End If
     End If
@@ -240,7 +242,7 @@ Set Report = New crLaporanPendapatanInap
             "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
             "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
             "where pp.tglpelayanan between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
-            "and jp.id in (15,25,99,100,101,102,107,27666) and pro.id not in(402611) " & _
+            "and jp.id in (15,25,26,99,100,101,102,107,27666) and pro.id not in(402611) " & _
              str1 & _
              str2 & _
              str4 & _
