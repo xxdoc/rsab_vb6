@@ -245,7 +245,10 @@ Form=Report\frmCRCetakRincianBiaya.frm
 Designer=Report\Cr_cetakLabel_2.Dsr
 Form=Form\frmCetakBuktiPengeluaranBarang.frm
 Designer=Report\cr_BuktiPengeluaranBarang.Dsr
+<<<<<<< HEAD
 Form=Form\frmCRLaporanTagihanPenjamin.frm
+=======
+>>>>>>> a0756265f6235c55b328cdbd1c19b424a57ed100
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -261,7 +264,11 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
+<<<<<<< HEAD
 VersionComments="HK180323.2"
+=======
+VersionComments="HK180410.1"
+>>>>>>> a0756265f6235c55b328cdbd1c19b424a57ed100
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0
