@@ -43,7 +43,8 @@ Public Sub openConnection()
                             "PWD=" & password & ""
         .ConnectionString = CN_String
         StatusCN = host
-        .ConnectionTimeout = 10
+        .CommandTimeout = 60
+        .ConnectionTimeout = 60
         .Open
 
         If CN.State = adStateOpen Then
