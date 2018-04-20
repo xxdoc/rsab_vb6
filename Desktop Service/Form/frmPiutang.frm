@@ -77,6 +77,28 @@ On Error Resume Next
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
             
+            Case "cetak-KartuPiutangPerusahaan"
+                Call frmCRKartuPiutangPerusahaan.cetak(Param2(1), (Param3(1)), Param4(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kartu Piutang Perusahaan"
+                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            
+            Case "cetak-RekapSaldoPiutangPerusahaan"
+                Call frmCRKartuPiutangPerusahaan.cetakRekapSaldo(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kartu Piutang Perusahaan"
+                '127.0.0.1:1237/printvb/kasir?cetak-LaporanPasienPulang=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdPegawai=1&view=true
+            
+            Case "cetak-DaftarPembayaranPiutangPerusahaan"
+                Call frmCRPembayaranPiutangPerusahaan.cetak(Param2(1), (Param3(1)), Param4(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kartu Piutang Perusahaan"
+            
+             Case "cetak-DaftarPembayaranPiutangPerusahaanPeriode"
+                Call frmCRPembayaranPiutangPerusahaan.cetakTgl(Param2(1), (Param3(1)), Param4(1), Param5(1), (Param6(1)), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kartu Piutang Perusahaan"
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
