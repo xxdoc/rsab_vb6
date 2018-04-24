@@ -182,30 +182,7 @@ Dim adocmd As New ADODB.Command
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-'            .txtNamaKasir.SetText namaPrinted
-'            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
-'            .udTglRegistrasi.SetUnboundFieldSource ("{ado.tglregistrasi}")
-'            .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-'            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-'            .unKarcis.SetUnboundFieldSource ("{ado.karcis}")
-'            .unEmbos.SetUnboundFieldSource ("{ado.embos}")
-'            .unKonsul.SetUnboundFieldSource ("{ado.konsul}")
-'            .unTindakan.SetUnboundFieldSource ("{ado.tindakan}")
-            '.unDiskon.SetUnboundFieldSource ("{ado.diskon}")
-'            .unResep.SetUnboundFieldSource ("{ado.totalresep}")
-'            .unCash.SetUnboundFieldSource ("{ado.aa}")
-'            .unTagihan.SetUnboundFieldSource ("{ado.bb}")
-            '.usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-'            .usNamaPenjamin.SetUnboundFieldSource ("{ado.namarekanan}")
-'            .unMaterai.SetUnboundFieldSource tmaterai
-            
-            '.ucCash2.SetUnboundFieldSource (tCash)
-'            .unTagihan2.SetUnboundFieldSource (tPiutang)
-            '.ucCash2.SetUnboundFieldSource (RS2!cash)
-            '.ucTagihan2.SetUnboundFieldSource (RS2!totalpiutangpenjamin)
-            '.txtA1.SetText Format(RS2!cash, "##,##0.00")
-            '.txtA2.SetText Format(RS2!totalpiutangpenjamin, "##,##0.00")
-            
+
             If view = "false" Then
                 Dim strPrinter As String
 '
