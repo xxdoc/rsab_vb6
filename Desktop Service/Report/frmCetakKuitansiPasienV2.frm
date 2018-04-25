@@ -245,9 +245,9 @@ Dim jenisKwitansi As String
                 .txtNamaPenyetor.SetText UCase(STD)
             End If
             .txtNamaPasien.SetText UCase(RS("namapasien"))
-            If jenisKwitansi = "KEMBALIDEPOSIT" Then
-                .txtNamaPenyetor.SetText "RSAB HARAPAN KITA"
-            End If
+'            If jenisKwitansi = "KEMBALIDEPOSIT" Then
+'                .txtNamaPenyetor.SetText "RSAB HARAPAN KITA"
+'            End If
             If strKet = True Then
                 .txtKeterangan.SetText UCase("Biaya Layanan " & RS("namaruangan"))  'RS("keteranganlainnya")
             Else
