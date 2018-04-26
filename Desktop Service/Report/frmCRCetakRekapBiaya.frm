@@ -193,6 +193,11 @@ Set Report = New crRekapBiayaPelayanan
             
     strSQL = "select * from temp_billing_t where noregistrasi='" & strNoregistrasi & "' " & _
             "and tglpelayanan is not null  order by tglpelayanan, namaproduk"
+            
+    ReadRs "select case when pa.nosep is null then '-' else pa.nosep end as sep, pd.objectkelompokpasienlastfk as KelompokPasien " & _
+            "from pemakaianasuransi_t as pa " & _
+            "left join pasiendaftar_t as pd on pd.norec=pa.noregistrasifk " & _
+            "where pd.noregistrasi='" & strNoregistrasi & "' "
     
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
@@ -216,7 +221,6 @@ Set Report = New crRekapBiayaPelayanan
     Dim TotalDiskonMedis  As Double
     Dim TotalDiskonUmum  As Double
     Dim i As Integer
-    
     
     For i = 0 To RS3.RecordCount - 1
         If RS3!komponenhargafk = 35 Then TotalDiskonMedis = TotalDiskonMedis + CDbl(IIf(IsNull(RS3!hargadiscount), 0, RS3!hargadiscount))
@@ -280,7 +284,6 @@ Set Report = New crRekapBiayaPelayanan
             .usNorecpp.SetUnboundFieldSource ("{ado.norec_pp}")
             .usPenulisResep.SetUnboundFieldSource ("{ado.penulisresep}")
             
-            
 '            .ucAdministrasi.SetUnboundFieldSource ("0") '("{ado.administrasi}")
 '            .ucMaterai.SetUnboundFieldSource ("0") '("{ado.materai}")
             
@@ -297,6 +300,14 @@ Set Report = New crRekapBiayaPelayanan
 '            .ucDitanggungSendiri.SetUnboundFieldSource ("{ado.totalharusdibayar}")
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
+            
+            If RS!KelompokPasien = 2 Or RS!KelompokPasien = 4 Then
+                .txtNoSep.SetText RS!sep
+            Else
+                .txtNoSep.Suppress = True
+                .txtLblSep.Suppress = True
+                .txtLblSep2.Suppress = True
+            End If
             
             .txtVersi.SetText App.Comments
             
