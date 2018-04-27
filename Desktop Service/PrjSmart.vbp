@@ -31,7 +31,7 @@ Form=Form\frmFarmasiApotik.frm
 Designer=Report\Cr_cetakBuktiPendaftaran.Dsr
 Designer=Report\Cr_cetakRMK.Dsr
 Designer=Report\Cr_cetakLabelTracer.Dsr
-Designer=Report\crCetakSJP.Dsr
+Designer=Report\crCetakSEP.Dsr
 Form=Report\frmCetakBuktiLayananFarmasi.frm
 Designer=Report\Cr_cetakbuktilayanan.Dsr
 Designer=Report\Cr_cetakLembarGC.Dsr
@@ -102,7 +102,6 @@ Form=Form\frmCetakLabelFarmasi.frm
 Designer=Report\Cr_cetakLabelFarmasi.Dsr
 Form=Report\frmCetakPendaftaran.frm
 Form=Form\frmLaporanPenerimaanKasir.frm
-Form=Form\frmCRKartuPiutangPerusahaan.frm
 Designer=Report\crLaporanTagihanPenjamin.Dsr
 Form=Form\frmCRLaporanTagihanPenjaminSurat.frm
 Designer=Report\crLaporanTagihanPenjaminSurat.Dsr
@@ -245,11 +244,7 @@ Form=Report\frmCRCetakRincianBiaya.frm
 Designer=Report\Cr_cetakLabel_2.Dsr
 Form=Form\frmCetakBuktiPengeluaranBarang.frm
 Designer=Report\cr_BuktiPengeluaranBarang.Dsr
-<<<<<<< HEAD
-Form=Form\frmCRLaporanTagihanPenjamin.frm
-=======
->>>>>>> a0756265f6235c55b328cdbd1c19b424a57ed100
-IconForm="GossRESTMain"
+Designer=Report\crCetakSJP.Dsr
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
@@ -264,11 +259,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-<<<<<<< HEAD
-VersionComments="HK180323.2"
-=======
 VersionComments="HK180410.1"
->>>>>>> a0756265f6235c55b328cdbd1c19b424a57ed100
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0
