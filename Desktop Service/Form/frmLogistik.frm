@@ -124,6 +124,14 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
+            
+            Case "cetak-rekap-amprahan"
+'                lblStatus.Caption = "Cetak Struk Resep"
+                Call frmCetakRekapAmprah.cetak(Param2(1), Param3(1), Param4(1), Param5(1))
+                'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
                 
             Case Else
                 Set Root = New JNode

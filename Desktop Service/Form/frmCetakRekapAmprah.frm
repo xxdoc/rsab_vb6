@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakBuktiOrderBarang 
+Begin VB.Form frmCetakRekapAmprah 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   9075
-   Icon            =   "frmCetakBuktiOrderBarang.frx":0000
+   Icon            =   "frmCetakRekapAmprah.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   9075
@@ -99,13 +99,13 @@ Begin VB.Form frmCetakBuktiOrderBarang
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakBuktiOrderBarang"
+Attribute VB_Name = "frmCetakRekapAmprah"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim ReportResep As New cr_BuktiOrderBarang
+Dim ReportResep As New cr_RekapPengeluaranBarang
 
 Dim ii As Integer
 Dim tempPrint1 As String
@@ -163,13 +163,13 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCetakBuktiOrderBarang = Nothing
+    Set frmCetakRekapAmprah = Nothing
 
 End Sub
 
-Public Sub cetak(strNoKirim As String, view As String, strUser As String)
+Public Sub cetak(tglAwal As String, tglAkhir As String, view As String, strUser As String)
 On Error GoTo errLoad
-Set frmCetakBuktiOrderBarang = Nothing
+Set frmCetakRekapAmprah = Nothing
 Dim strSQL As String
 
 bolStrukResep = True
@@ -179,51 +179,37 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select so.tglorder, so.noorder, jp.name,ru2.namaruangan as ruangantujuan, " & _
-                    "ru.namaruangan as ruangan, 'KA. '||dp.namadepartemen as kepalaBagian, pg.namalengkap, jp.name ||' '|| ru.namaruangan || ' Tgl '|| so.tglorder as keteranganorder, " & _
-                    "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, op.qtyproduk, so.totalhargasatuan as hargasatuan, (so.totalhargasatuan * op.qtyproduk) as total " & _
-                    "from strukorder_t as so " & _
-                    "left join orderpelayanan_t as op on op.strukorderfk = so.norec " & _
-                    "left join produk_m as pr on pr.id = op.objectprodukfk " & _
-                    "left join satuanstandar_m as ss on ss.id = pr.objectsatuanstandarfk " & _
-                    "left join jenis_permintaan_m as jp on jp.id = so.jenispermintaanfk " & _
-                    "left join ruangan_m as ru on ru.id = so.objectruanganfk " & _
-                    "left join ruangan_m as ru2 on ru2.id = so.objectruangantujuanfk " & _
-                    "left JOIN departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
-                    "left join pegawai_m as pg on pg.id = so.objectpegawaiorderfk " & _
-                    "where so.norec = '" & strNoKirim & "'"
+            strSQL = "select " & _
+                    "dp2.namadepartemen, " & _
+                    "ru2.namaruangan as ruangantujuan, " & _
+                    "djp.id as jenis, " & _
+                    "count(sk.nokirim) as qty, " & _
+                    "(kp.hargasatuan * kp.qtyproduk) as total " & _
+                    "from strukkirim_t as sk " & _
+                    "left join kirimproduk_t as kp on kp.nokirimfk = sk.norec " & _
+                    "left join strukorder_t as so on so.norec = sk.noorderfk " & _
+                    "left join produk_m as pr on pr.id = kp.objectprodukfk " & _
+                    "left join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
+                    "left join jenis_permintaan_m as jp on jp.id = sk.jenispermintaanfk " & _
+                    "left join ruangan_m as ru2 on ru2.id = sk.objectruangantujuanfk " & _
+                    "left join departemen_m as dp2 on dp2.id = ru2.objectdepartemenfk " & _
+                    "where sk.tglkirim between '" & tglAwal & "' and '" & tglAkhir & "' and sk.jenispermintaanfk in (1,2) and dp2.id in (16,18,24,3,17,35,25,28) " & _
+                    "and kp.hargasatuan <> 0  and kp.qtyproduk <> 0 " & _
+                    "GROUP BY dp2.namadepartemen,ru2.namaruangan,djp.id,kp.hargasatuan,kp.qtyproduk,sk.nokirim " & _
+                    "order by sk.nokirim"
 
-             ReadRs strSQL
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
             .database.AddADOCommand CN_String, adoReport
 
-             .txtuser.SetText strUser
-           
-             .udtglDok.SetUnboundFieldSource ("{Ado.tglorder}")
-'             .udTglPermintaan.SetUnboundFieldSource ("{Ado.tglorder}")
-'             .udTglTerima.SetUnboundFieldSource ("{Ado.tglorder}")
-             .usNoDok.SetUnboundFieldSource ("{Ado.noorder}")
-'             .usNoPemesanan.SetUnboundFieldSource ("{Ado.noorder}")
-             .usRuangKirim.SetUnboundFieldSource ("{Ado.ruangan}")
-             .usKeterangan.SetUnboundFieldSource ("{Ado.keteranganorder}")
-             .usRuangTujuan.SetUnboundFieldSource ("{Ado.ruangantujuan}")
-             .usKdBarang.SetUnboundFieldSource ("{ado.idproduk}")
-             .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
-             .usSatuan.SetUnboundFieldSource ("{ado.satuanstandar}")
-'             .ucHarga.SetUnboundFieldSource ("{Ado.hargasatuan}")
-             .unDiminta.SetUnboundFieldSource ("{Ado.qtyproduk}")
-'             .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
-             .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
-             
-             .txtKepalaBagian.SetText UCase(IIf(IsNull(RS!kepalaBagian), "-", RS!kepalaBagian))
-             '.usKepalaBagian.SetUnboundFieldSource ("{Ado.kepalaBagian}")
-'             .usNamaPenyerah.SetUnboundFieldSource ("{Ado.pegawaipengirim}")
-'             .usNIPPenyerah.SetUnboundFieldSource ("{Ado.nippengirim}")
-'             .usPnjPenerima.SetUnboundFieldSource ("{Ado.pnjPenerima}")
-'             .usNamaPenerima.SetUnboundFieldSource ("{Ado.pegawaipenerima}")
-'             .usNIPPenerima.SetUnboundFieldSource ("{Ado.nippenerima}")
+             .txtPeriode.SetText "Bulan " & Format(tglAwal, "mmmm yyyy")
+             .usDepartemen.SetUnboundFieldSource ("{Ado.namadepartemen}")
+             .usNamaRuangan.SetUnboundFieldSource ("{Ado.ruangantujuan}")
+             .usJenis.SetUnboundFieldSource ("{Ado.jenis}")
+             '.usNoKirim.SetUnboundFieldSource ("{Ado.nokirim}")
+             .unQty.SetUnboundFieldSource ("{Ado.qty}")
+             .ucTotal.SetUnboundFieldSource ("{Ado.total}")
              
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "Logistik_A4")
