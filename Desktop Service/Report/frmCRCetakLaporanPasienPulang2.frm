@@ -180,7 +180,7 @@ Set Report = New crLaporanPasienPulang2
   
     orderby = strFilter & "group by pd.tglregistrasi,pa.nosep,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru.namaruangan, " & _
             "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya,ru.objectdepartemenfk " & _
-            "order by ps.namapasien"
+            "order by pa.nosep"
             'sp.tglstruk"
 
         
@@ -239,7 +239,7 @@ Set Report = New crLaporanPasienPulang2
             .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
             '.udTglBayar.SetUnboundFieldSource ("{ado.tglstruk}")
             .usNoSep.SetUnboundFieldSource ("{ado.nosep}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nodaftar}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nodaftar}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
