@@ -192,7 +192,7 @@ Set Report = New crLaporanPasienPulang2
             "left join antrianpasiendiperiksa_t as apd on apd.norec=pd.norec " & _
             "left join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
             "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec " & _
-            "inner join pemakaianasuransi_t as pa on pa.noregistrasifk=pd.norec " & _
+            "left join pemakaianasuransi_t as pa on pa.noregistrasifk=pd.norec " & _
             "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
             "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk  " & _
             "inner JOIN produk_m as pr on pr.id=pp.produkfk  " & _
@@ -239,7 +239,7 @@ Set Report = New crLaporanPasienPulang2
             .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
             '.udTglBayar.SetUnboundFieldSource ("{ado.tglstruk}")
             .usNoSep.SetUnboundFieldSource ("{ado.nosep}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nodaftar}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nodaftar}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
@@ -269,9 +269,9 @@ Set Report = New crLaporanPasienPulang2
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
         If RS2.BOF Then
-            .txtUser.SetText "-"
+            .txtuser.SetText "-"
         Else
-            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then
