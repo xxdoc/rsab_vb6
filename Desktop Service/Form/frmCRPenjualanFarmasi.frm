@@ -178,7 +178,7 @@ Set Report = New crPenjualanHarianFarmasi
             "inner join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
             "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
             "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-            "inner join pegawai_m as pg on pg.id=sr.penulisresepfk " & _
+            "left join pegawai_m as pg on pg.id=sr.penulisresepfk " & _
             "left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
             "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
             "left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
@@ -201,7 +201,7 @@ Set Report = New crPenjualanHarianFarmasi
             "left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
             "inner join pasien_m as ps on ps.nocm=sp.nostruk_intern " & _
             "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-            "inner join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
+            "left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
             "left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
             "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
             "left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
@@ -222,7 +222,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usNoResep.SetUnboundFieldSource ("{ado.noresep}")
             .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
