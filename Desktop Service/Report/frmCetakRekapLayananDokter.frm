@@ -165,15 +165,7 @@ Set Report = New crCetakRekapLayananDokter
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null and jpg.id=1 " ' and djp.objectjenisprodukfk <> 97 and kp.id in (1,2,3,4,8,9,10,11,13,14,26) and sp.statusenabled is null "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
-    If strIdDepartemen <> "" Then
-        If strIdDepartemen = 16 Then
-            strFilter = strFilter & " AND ru.objectdepartemenfk in (16,17,25,26) "
-        Else
-            If strIdDepartemen <> "" Then
-                strFilter = strFilter & " AND ru2.objectdepartemenfk not in (16,17,25,26)  "
-            End If
-        End If
-    End If
+    If strIdDepartemen <> "" Then strFilter = strFilter & " AND ru.objectdepartemenfk = '" & strIdDepartemen & "'"
     If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
@@ -225,9 +217,9 @@ Set Report = New crCetakRekapLayananDokter
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtUser.SetText "-"
+            .txtuser.SetText "-"
         Else
-            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then
