@@ -156,7 +156,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanPenerimaan = Nothing
 End Sub
 
-Public Sub cetak(idKasir As String, tglAwal As String, idDepartemen As String, namaKasir As String, view As String)
+Public Sub Cetak(idKasir As String, tglAwal As String, idDepartemen As String, namaKasir As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -179,7 +179,7 @@ Dim adocmd As New ADODB.Command
     End If
     
     Tgl = Format(tglAwal, "yyyy-MM-dd")
-    str1 = Format(tglAwal, "yyyy-MM-dd 00:00")
+    str1 = Format(tglAwal, "yyyy-MM-01 00:00")
     
     ReadRs2 "SELECT (date_trunc('month', tanggal::date) + interval '1 month' - interval '1 day')::date ||' 23:59' " & _
             "AS end_of_month from kalender_s where tanggal= '" & Tgl & "'"
@@ -196,7 +196,7 @@ Set Report = New crRekapPemeriksaanRehabMedik
                 "from pasiendaftar_t as pd " & _
                 "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
                 "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
                 "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
                 "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
                 "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
@@ -218,7 +218,7 @@ Set Report = New crRekapPemeriksaanRehabMedik
                 "from pasiendaftar_t as pd " & _
                 "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
                 "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
                 "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
                 "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
                 "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
@@ -244,8 +244,8 @@ Set Report = New crRekapPemeriksaanRehabMedik
     For i = 0 To RS3.RecordCount - 1
         tqtybpjs = tqtybpjs + CDbl(IIf(IsNull(RS3!qtybpjs), 0, RS3!qtybpjs))
         ttbpjs = ttbpjs + CDbl(IIf(IsNull(RS3!totalbpjs), 0, RS3!totalbpjs))
-        tqtynonbpjs = tqtybpjs + CDbl(IIf(IsNull(RS3!qtynonbpjs), 0, RS3!qtynonbpjs))
-        ttnonbpjs = ttbpjs + CDbl(IIf(IsNull(RS3!totalnonbpjs), 0, RS3!totalnonbpjs))
+        tqtynonbpjs = tqtynonbpjs + CDbl(IIf(IsNull(RS3!qtynonbpjs), 0, RS3!qtynonbpjs))
+        ttnonbpjs = ttnonbpjs + CDbl(IIf(IsNull(RS3!totalnonbpjs), 0, RS3!totalnonbpjs))
         RS3.MoveNext
         
     Next
@@ -319,7 +319,7 @@ Dim adocmd As New ADODB.Command
     End If
     
     Tgl = Format(tglAwal, "yyyy-MM-dd")
-    str1 = Format(tglAwal, "yyyy-MM-dd 00:00")
+    str1 = Format(tglAwal, "yyyy-MM-01 00:00")
     
     ReadRs2 "SELECT (date_trunc('month', tanggal::date) + interval '1 month' - interval '1 day')::date ||' 23:59' " & _
             "AS end_of_month from kalender_s where tanggal= '" & Tgl & "'"
@@ -402,7 +402,7 @@ Dim adocmd As New ADODB.Command
     
     
     Tgl = Format(tglAwal, "yyyy-MM-dd")
-    str1 = Format(tglAwal, "yyyy-MM-dd 00:00")
+    str1 = Format(tglAwal, "yyyy-MM-01 00:00")
     
     ReadRs2 "SELECT (date_trunc('month', tanggal::date) + interval '1 month' - interval '1 day')::date ||' 23:59' " & _
             "AS end_of_month from kalender_s where tanggal= '" & Tgl & "'"
