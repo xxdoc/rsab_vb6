@@ -108,6 +108,7 @@ Option Explicit
 Dim Report As New Cr_cetakBuktiPendaftaran
 Dim ReportTracer As New Cr_cetakLabelTracer
 Dim reportSep As New crCetakSJP
+Dim reportSepNew As New crCetakSEP
 Dim reportBuktiLayanan As New Cr_cetakbuktilayanan
 Dim reportBuktiLayananRuangan As New Cr_cetakbuktilayananruangan
 Dim reportLabel As New Cr_cetakLabel 'LAMA
@@ -493,11 +494,11 @@ bolBuktiLayananRuanganBedah = False
               .txtAsalRujukan.SetText IIf(IsNull(RS("nmprovider")), "-", RS("nmprovider"))
               .txtPeserta.SetText IIf(IsNull(RS("jenispeserta")), "-", RS("jenispeserta"))
               .txtJenisrawat.SetText IIf(IsNull(RS("jenisrawat")), "-", RS("jenisrawat")) 'RS("jenisrawat")
-              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
-              .txtDiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
+              .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
               .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
               .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
-              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
               .txtNoPendaftaran2.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi"))
              End If
 
@@ -511,6 +512,105 @@ bolBuktiLayananRuanganBedah = False
              Else
                 With CRViewer1
                     .ReportSource = reportSep
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+                Screen.MousePointer = vbDefault
+            End If
+     
+    End With
+Exit Sub
+errLoad:
+
+    MsgBox Err.Number & " " & Err.Description
+End Sub
+
+
+Public Sub cetakSepNew(strNorec As String, view As String)
+On Error GoTo errLoad
+Set frmCetakPendaftaran = Nothing
+Dim strSQL As String
+
+bolBuktiPendaftaran = False
+bolBuktiLayanan = False
+bolBuktiLayananRuangan = False
+bolBuktiLayananRuanganPerTindakan = False
+bolcetakSep = True
+bolTracer1 = False
+bolKartuPasien = False
+boolLabelPasien = False
+boolLabelPasienZebra = False
+boolSumList = False
+boolLembarRMK = False
+boolLembarPersetujuan = False
+bolBuktiLayananRuanganBedah = False
+
+    With reportSepNew
+            Set adoReport = New ADODB.Command
+             adoReport.ActiveConnection = CN_String
+            
+            strSQL = "select pa.nosep,pa.tanggalsep,pa.nokepesertaan,pi.nocm,pd.noregistrasi, " & _
+                       " pa.norujukan,ap.namapeserta,pi.tgllahir,jk.jeniskelamin, " & _
+                       " rp.namaruangan,rp.kdinternal as namapolibpjs,pa.ppkrujukan, " & _
+                       " (CASE WHEN rp.objectdepartemenfk=16 then 'R. Inap' else 'R. Jalan' END) as jenisrawat, " & _
+                       " dg.kddiagnosa, (case when dg.namadiagnosa is null then '-' else dg.namadiagnosa end) as namadiagnosa , " & _
+                       " ap.jenispeserta,ap.kdprovider,ap.nmprovider, pa.catatan, " & _
+                       " (case when rp.objectdepartemenfk=16 then kls.namakelas else '-' end) as namakelas, " & _
+                       " ap.notelpmobile,pa.penjaminlaka," & _
+                       " (case when pa.penjaminlaka='1' then 'Jasa Raharja PT' " & _
+                       " when pa.penjaminlaka='2' then 'BPJS Ketenagakerjaan' " & _
+                       " when pa.penjaminlaka='3' then 'TASPEN PT' " & _
+                       " when pa.penjaminlaka='4' then 'ASABRI PT' " & _
+                       " Else '-' end) as penjaminlakalantas " & _
+                       " from pemakaianasuransi_t pa " & _
+                       " LEFT JOIN asuransipasien_m ap on pa.objectasuransipasienfk= ap.id " & _
+                       " LEFT JOIN pasiendaftar_t pd on pd.norec=pa.noregistrasifk " & _
+                       " LEFT JOIN pasien_m pi on pi.id=pd.nocmfk " & _
+                       " LEFT JOIN jeniskelamin_m jk on jk.id=pi.objectjeniskelaminfk " & _
+                       " LEFT JOIN ruangan_m rp on rp.id=pd.objectruanganlastfk " & _
+                       " LEFT JOIN diagnosa_m dg on pa.diagnosisfk=dg.id" & _
+                       " LEFT JOIN kelas_m kls on kls.id=ap.objectkelasdijaminfk " & _
+                       " where pd.noregistrasi ='" & strNorec & "' "
+            
+            ReadRs strSQL
+            
+            adoReport.CommandText = strSQL
+            adoReport.CommandType = adCmdUnknown
+            
+            .database.AddADOCommand CN_String, adoReport
+
+             If Not RS.EOF Then
+              .txtnosjp.SetText IIf(IsNull(RS("nosep")), "-", RS("nosep")) 'RS("nosep")
+              .txtTglSep.SetText Format(RS("tanggalsep"), "dd/MM/yyyy")
+              .txtNomorKartuBpjs.SetText IIf(IsNull(RS("nokepesertaan")), "-", RS("nokepesertaan"))
+              .txtNamaPasien.SetText IIf(IsNull(RS("namapeserta")), "-", RS("namapeserta")) 'RS("namapeserta")
+              .txtkelamin.SetText IIf(IsNull(RS("jeniskelamin")), "-", RS("jeniskelamin")) 'RS("jeniskelamin")
+              .txtTanggalLahir.SetText IIf(IsNull(RS("tgllahir")), "-", Format(RS("tgllahir"), "dd/MM/yyyy")) 'Format(RS("tgllahir"), "dd/mm/yyyy")
+              .txtTujuan.SetText RS("namapolibpjs") & " / " & RS("namaruangan")
+              .txtAsalRujukan.SetText IIf(IsNull(RS("nmprovider")), "-", RS("nmprovider"))
+              .txtPeserta.SetText IIf(IsNull(RS("jenispeserta")), "-", RS("jenispeserta"))
+              .txtJenisrawat.SetText IIf(IsNull(RS("jenisrawat")), "-", RS("jenisrawat")) 'RS("jenisrawat")
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
+              .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
+              .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
+              .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
+              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+              .txtNoPendaftaran2.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi"))
+              .txtNoTelpon.SetText IIf(IsNull(RS("notelpmobile")), "-", RS("notelpmobile"))
+              .txtPenjamin.SetText IIf(IsNull(RS("penjaminlakalantas")), "-", RS("penjaminlakalantas"))
+             End If
+
+            If view = "false" Then
+               
+                strPrinter1 = GetTxt("Setting.ini", "Printer", "CetakSep")
+                .SelectPrinter "winspool", strPrinter1, "Ne00:"
+                .PrintOut False
+                Unload Me
+                Screen.MousePointer = vbDefault
+             Else
+                With CRViewer1
+                    .ReportSource = reportSepNew
                     .ViewReport
                     .Zoom 1
                 End With
@@ -628,9 +728,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -747,9 +847,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -872,9 +972,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -931,7 +1031,7 @@ bolBuktiLayananRuanganBedah = False
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
 
         .txtTgl.SetText strTglLahir
-        .txtnocm.SetText strNocm
+        .txtNoCM.SetText strNocm
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
@@ -1759,9 +1859,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -1893,9 +1993,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2029,9 +2129,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2189,9 +2289,9 @@ bolBuktiLayananRuanganBedah = True
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then

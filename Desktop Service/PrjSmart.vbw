@@ -242,3 +242,4 @@ cr_BuktiPengeluaranBarang = 0, 0, 0, 0, C, 52, 52, 1037, 734, C
 frmCetakBuktiPengeluaranBarang = 156, 156, 835, 608, C, 182, 182, 861, 634, C
 frmLaporanReservasiOnline = 182, 182, 982, 634, C, 156, 156, 956, 608, C
 crLaporanReservasiOnline = 0, 0, 800, 452, C, 208, 208, 1180, 863, C
+crCetakSEP = 0, 0, 0, 0, C, 312, 312, 1280, 1003, C
