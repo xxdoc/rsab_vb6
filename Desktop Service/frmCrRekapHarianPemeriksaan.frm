@@ -196,7 +196,7 @@ Set Report = New crRekapPemeriksaanRehabMedik
                 "from pasiendaftar_t as pd " & _
                 "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
                 "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
                 "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
                 "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
                 "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
@@ -218,7 +218,7 @@ Set Report = New crRekapPemeriksaanRehabMedik
                 "from pasiendaftar_t as pd " & _
                 "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
                 "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
                 "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
                 "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
                 "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
