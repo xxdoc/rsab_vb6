@@ -194,6 +194,11 @@ Set Report = New crRincianBiayaPelayanan
     strSQL = "select * from temp_billing_t where noregistrasi='" & strNoregistrasi & "' " & _
             "and tglpelayanan is not null and namaproduk not in ('Biaya Administrasi','Biaya Materai') order by tglpelayanan, namaproduk"
     
+    ReadRs "select case when pa.nosep is null then '-' else pa.nosep end as sep, pd.objectkelompokpasienlastfk as KelompokPasien " & _
+            "from pemakaianasuransi_t as pa " & _
+            "left join pasiendaftar_t as pd on pd.norec=pa.noregistrasifk " & _
+            "where pd.noregistrasi='" & strNoregistrasi & "' "
+            
     ReadRs2 "select sum(hargajual) as totalDeposit from pasiendaftar_t pd " & _
             "INNER JOIN antrianpasiendiperiksa_t apd on apd.noregistrasifk=pd.norec " & _
             "INNER JOIN pelayananpasien_t pp on pp.noregistrasifk=apd.norec " & _
@@ -254,7 +259,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -292,6 +297,20 @@ Set Report = New crRincianBiayaPelayanan
                 .Section11.Suppress = False
             End If
             
+            If RS.EOF = False Then
+                If RS!kelompokpasien = 2 Or RS!kelompokpasien = 4 Then
+                    .txtNoSep.SetText RS!sep
+                Else
+                    .txtNoSep.Suppress = True
+                    .txtLblSep.Suppress = True
+                    .txtLblSep2.Suppress = True
+                End If
+            Else
+                .txtNoSep.Suppress = True
+                .txtLblSep.Suppress = True
+                .txtLblSep2.Suppress = True
+            End If
+            
             .ucDeposit.SetUnboundFieldSource (TotalDeposit) '("{ado.deposit}")
             '.ucDeposit.SetUnboundFieldSource 0 '(TotalDeposit) '("{ado.deposit}")
             .ucDiskonJasaMedis.SetUnboundFieldSource (TotalDiskonMedis)
@@ -316,7 +335,7 @@ Set Report = New crRincianBiayaPelayanan
 '            Else
 '                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
 '            End If
-            .txtUser.SetText UCase(strIdPegawai)
+            .txtuser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String

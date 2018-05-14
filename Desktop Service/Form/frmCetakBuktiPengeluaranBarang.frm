@@ -197,7 +197,7 @@ bolStrukResep = True
                     "left JOIN departemen_m as dp2 on dp2.id = ru2.objectdepartemenfk " & _
                     "left join pegawai_m as pg on pg.id = sk.objectpegawaipengirimfk " & _
                     "left join pegawai_m as pg2 on pg2.id = sk.objectpegawaipenerimafk  " & _
-                    "where sk.norec = '" & strNoKirim & "'"
+                    "where sk.norec = '" & strNoKirim & "' and kp.qtyproduk <> 0"
 
              ReadRs strSQL
              

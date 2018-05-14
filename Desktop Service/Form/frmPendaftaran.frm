@@ -110,6 +110,15 @@ Public Function Pendaftaran(ByVal QueryText As String) As Byte()
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
+            
+            Case "cetak-sep-new"
+                lblStatus.Caption = "Cetak SEP"
+                Call frmCetakPendaftaran.cetakSepNew(Param2(1), Param3(1))
+                'http://127.0.0.1:1237/printvb/Pendaftaran?cetak-sep-new=1&norec=40288c835ba4c322015ba816f5d0002c&view=false
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+                
                 
             Case "cetak-buktilayanan"
                 Param4 = Split(arrItem(3), "=")

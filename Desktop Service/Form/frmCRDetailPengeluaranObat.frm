@@ -193,7 +193,7 @@ Dim strSQL As String
                      str3
                      ''and dp.id=16 "
             
-            ReadRs strSQL
+            'ReadRs strSQL
             
             adoReport.CommandText = strSQL
             adoReport.CommandType = adCmdUnknown
@@ -212,6 +212,7 @@ Dim strSQL As String
             .usNamaUnit.SetUnboundFieldSource ("{ado.namaruangan}")
             .usUnit.SetUnboundFieldSource ("{ado.ruangan}")
             .udtTanggal.SetUnboundFieldSource ("{ado.tglresep}")
+            .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
 '            .udtJam.SetUnboundFieldSource ("{ado.tglresep}")
             .usDepart.SetUnboundFieldSource ("{ado.namadepartemen}")
             .unIDProduk.SetUnboundFieldSource ("{ado.idproduk}")
