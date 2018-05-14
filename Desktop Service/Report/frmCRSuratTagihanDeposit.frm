@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRSuratTagihanDeposit = Nothing
 End Sub
 
-Public Sub Cetak(noregistrasi As String, view As String)
+Public Sub Cetak(noregistrasi As String, total As String, deposit As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -162,34 +162,38 @@ Set Report = New cr_SuratTagihanDeposit
             "INNER JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
             "where pd.noregistrasi='" & noregistrasi & "'"
     
-    ReadRs "select sum(((case when pp.hargajual is null then 0 else pp.hargajual  end - " & _
-            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end) * pp.jumlah) + " & _
-            "case when pp.jasa is null then 0 else pp.jasa end) as totaltagihan " & _
-            "from pasiendaftar_t as pd " & _
-            "INNER JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "INNER JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk not in (402611)"
-            
-    ReadRs2 "SELECT case when pp.hargajual is null then 0 else pp.hargajual end as deposit " & _
-            "from pasiendaftar_t as pd " & _
-            "INNER join antrianpasiendiperiksa_t as apd on apd.noregistrasifk = pd.norec " & _
-            "INNER join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk=402611"
+'    ReadRs "select sum(((case when pp.hargajual is null then 0 else pp.hargajual  end - " & _
+'            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end) * pp.jumlah) + " & _
+'            "case when pp.jasa is null then 0 else pp.jasa end) as totaltagihan " & _
+'            "from pasiendaftar_t as pd " & _
+'            "INNER JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "INNER JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk not in (402611)"
+'
+'    ReadRs2 "SELECT case when pp.hargajual is null then 0 else pp.hargajual end as deposit " & _
+'            "from pasiendaftar_t as pd " & _
+'            "INNER join antrianpasiendiperiksa_t as apd on apd.noregistrasifk = pd.norec " & _
+'            "INNER join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk=402611"
             
     Dim tsisa, tdeposit, ttagihan As Double
+    Dim totals As String
     
-    Dim i As Integer
-    
-    For i = 0 To RS.RecordCount - 1
-        ttagihan = ttagihan + CDbl(IIf(IsNull(RS!totaltagihan), 0, RS!totaltagihan))
-        RS.MoveNext
-        
-    Next
-    For i = 0 To RS2.RecordCount - 1
-        tdeposit = tdeposit + CDbl(IIf(IsNull(RS2!deposit), 0, RS2!deposit))
-        RS2.MoveNext
-        
-    Next
+'    Dim i As Integer
+'
+'    For i = 0 To RS.RecordCount - 1
+'        ttagihan = ttagihan + CDbl(IIf(IsNull(RS!totaltagihan), 0, RS!totaltagihan))
+'        RS.MoveNext
+'
+'    Next
+'    For i = 0 To RS2.RecordCount - 1
+'        tdeposit = tdeposit + CDbl(IIf(IsNull(RS2!deposit), 0, RS2!deposit))
+'        RS2.MoveNext
+'
+'    Next
+    totals = Replace(total, ".", ",")
+    ttagihan = totals
+    tdeposit = deposit
     tsisa = ttagihan - tdeposit
     If tsisa < 0 Then
         tsisa = 0
