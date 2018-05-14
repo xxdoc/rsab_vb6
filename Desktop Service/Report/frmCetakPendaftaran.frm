@@ -149,7 +149,6 @@ Dim boolLembarPersetujuan As Boolean
 Dim boolBuktiLayananJasa As Boolean
 Dim bolBuktiLayananRuanganBedah  As Boolean
 
-
 Dim strPrinter As String
 Dim strPrinter1 As String
 Dim PrinterNama As String
@@ -628,9 +627,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -747,9 +746,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -872,9 +871,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -931,7 +930,7 @@ bolBuktiLayananRuanganBedah = False
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
 
         .txtTgl.SetText strTglLahir
-        .txtnocm.SetText strNocm
+        .txtNoCM.SetText strNocm
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
@@ -1759,9 +1758,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -1893,9 +1892,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2029,9 +2028,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2189,9 +2188,9 @@ bolBuktiLayananRuanganBedah = True
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
