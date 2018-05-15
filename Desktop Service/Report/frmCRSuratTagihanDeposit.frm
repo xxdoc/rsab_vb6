@@ -147,100 +147,86 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRSuratTagihanDeposit = Nothing
 End Sub
 
-Public Sub Cetak(noregistrasi As String, view As String)
+Public Sub Cetak(noregistrasi As String, total As String, deposit As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRSuratTagihanDeposit = Nothing
 Dim adocmd As New ADODB.Command
-Dim strFilter, orderby As String
 Set Report = New cr_SuratTagihanDeposit
         
-    strSQL = "select to_char(tglregistrasi, 'dd')as hari,to_char(tglregistrasi, 'dd')as tgl, " & _
-            "to_char(tglregistrasi, 'mm')as bln,to_char(tglregistrasi, 'yyyy')as thn, " & _
-            "pd.tglregistrasi, ps.nocm, ps.namapasien, ru.namaruangan " & _
+    strSQL = "select CURRENT_DATE as dates, " & _
+            "to_char(pd.tglregistrasi, 'yyyy/MM/dd') as tglregistrasi, ps.nocm, ps.namapasien, ru.namaruangan " & _
             "from pasiendaftar_t as pd " & _
             "INNER JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
             "INNER JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
             "where pd.noregistrasi='" & noregistrasi & "'"
     
-    ReadRs "select sum(((case when pp.hargajual is null then 0 else pp.hargajual  end - " & _
-            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end) * pp.jumlah) + " & _
-            "case when pp.jasa is null then 0 else pp.jasa end) as totaltagihan " & _
-            "from pasiendaftar_t as pd " & _
-            "INNER JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "INNER JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk not in (402611)"
+'    ReadRs "select sum(((case when pp.hargajual is null then 0 else pp.hargajual  end - " & _
+'            "case when pp.hargadiscount is null then 0 else pp.hargadiscount end) * pp.jumlah) + " & _
+'            "case when pp.jasa is null then 0 else pp.jasa end) as totaltagihan " & _
+'            "from pasiendaftar_t as pd " & _
+'            "INNER JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "INNER JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk not in (402611)"
+'
+'    ReadRs2 "SELECT case when pp.hargajual is null then 0 else pp.hargajual end as deposit " & _
+'            "from pasiendaftar_t as pd " & _
+'            "INNER join antrianpasiendiperiksa_t as apd on apd.noregistrasifk = pd.norec " & _
+'            "INNER join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk=402611"
             
-    ReadRs2 "SELECT case when pp.hargajual is null then 0 else pp.hargajual end as deposit " & _
-            "from pasiendaftar_t as pd " & _
-            "INNER join antrianpasiendiperiksa_t as apd on apd.noregistrasifk = pd.norec " & _
-            "INNER join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "where pd.noregistrasi='" & noregistrasi & "' and pp.produkfk=402611"
-            
-    Dim tSisa, tdeposit, ttagihan As Double
-    ttagihan = RS!totaltagihan
-    tdeposit = RS2!deposit
-    tSisa = ttagihan - tdeposit
-    If tSisa < 0 Then
-        tSisa = 0
+    Dim tsisa, tdeposit, ttagihan As Double
+    Dim totals As String
+    
+'    Dim i As Integer
+'
+'    For i = 0 To RS.RecordCount - 1
+'        ttagihan = ttagihan + CDbl(IIf(IsNull(RS!totaltagihan), 0, RS!totaltagihan))
+'        RS.MoveNext
+'
+'    Next
+'    For i = 0 To RS2.RecordCount - 1
+'        tdeposit = tdeposit + CDbl(IIf(IsNull(RS2!deposit), 0, RS2!deposit))
+'        RS2.MoveNext
+'
+'    Next
+    totals = Replace(total, ".", ",")
+    ttagihan = totals
+    tdeposit = deposit
+    tsisa = ttagihan - tdeposit
+    If tsisa < 0 Then
+        tsisa = 0
     End If
     
     ReadRs3 strSQL
     
-    Dim day, hari, month, bln, tgl, thn As String
+    Dim dayPrint, datePrint, monthPrint, yearPrint, days, dates, months, years, tglCetak, Tgl As String
+    Dim strPasien, strNoMR, strRuangRawat As String
+    Dim strTgl, strDate As String
     
-    If RS2.EOF Then
-       day = "-"
+    If RS3.EOF Then
+       strPasien = "-"
+       strNoMR = "-"
+       strRuangRawat = "-"
     Else
-        day = RS3!hari
-        month = RS3!bln
-        tgl = RS3!tgl
-        thn = RS3!thn
-        If day = "06" Then
-            hari = "Minggu"
-        ElseIf day = "07" Then
-            hari = "Senin"
-        ElseIf day = "01" Then
-            hari = "Selasa"
-        ElseIf day = "02" Then
-            hari = "Rabu"
-        ElseIf day = "03" Then
-            hari = "Kamis"
-        ElseIf day = "04" Then
-            hari = "Jumat"
-        ElseIf day = "01" Then
-            hari = "Sabtu"
-        End If
+        strDate = RS3!dates
+        dayPrint = getHari(Format(strDate, "yyyy/MM/dd"))
+        monthPrint = getBulan(Format(strDate, "yyyy/MM/dd"))
+        datePrint = Format(strDate, "dd")
+        yearPrint = Format(strDate, "yyyy")
+        tglCetak = dayPrint + " " + datePrint + " " + monthPrint + " " + yearPrint
         
-        If month = "01" Then
-            bln = "Januari"
-        ElseIf month = "02" Then
-            bln = "Februari"
-        ElseIf month = "03" Then
-            bln = "Maret"
-        ElseIf month = "04" Then
-            bln = "April"
-        ElseIf month = "05" Then
-            bln = "Mei"
-        ElseIf month = "06" Then
-            bln = "Juni"
-        ElseIf month = "07" Then
-            bln = "Juli"
-        ElseIf month = "08" Then
-            bln = "Agustus"
-        ElseIf month = "09" Then
-            bln = "September"
-        ElseIf month = "10" Then
-            bln = "Oktober"
-        ElseIf month = "11" Then
-            bln = "November"
-        ElseIf month = "12" Then
-            bln = "Desember"
-        Else
-            bln = month
-        End If
+        strTgl = RS3!tglregistrasi
+        days = getHari(Format(strTgl, "yyyy/MM/dd"))
+        months = getBulan(Format(strTgl, "yyyy/MM/dd"))
+        dates = Format(strTgl, "dd")
+        years = Format(strTgl, "yyyy")
+        Tgl = days + ", " + dates + " " + months + " " + years
         
+        strPasien = UCase(IIf(IsNull(RS3("namapasien")), "-", RS3("namapasien")))
+        strNoMR = UCase(IIf(IsNull(RS3("nocm")), "-", RS3("nocm")))
+        strRuangRawat = UCase(IIf(IsNull(RS3("namaruangan")), "-", RS3("namaruangan")))
     End If
     
     adocmd.CommandText = strSQL
@@ -248,16 +234,15 @@ Set Report = New cr_SuratTagihanDeposit
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-        'If Not RS.EOF Then
-            
-            .txtTglRegis.SetText hari + ", " + tgl + " " + bln + " " & thn
-            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
-            .usPasienHead.SetUnboundFieldSource ("{ado.namapasien}")
-            .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usRuangRawat.SetUnboundFieldSource ("{ado.namaruangan}")
-            .ucTotalTagihan.SetUnboundFieldSource ttagihan
-            .ucTotalDeposit.SetUnboundFieldSource tdeposit
-            .ucTotalSisa.SetUnboundFieldSource tSisa
+            .txtCetak.SetText "Jakarta, " & tglCetak
+            .txtTglRegis.SetText Tgl
+            .txtNoMR.SetText strNoMR
+            .txtPasienHead.SetText strPasien
+            .txtPasien.SetText strPasien
+            .txtRuangRawat.SetText strRuangRawat
+            .txtTotalTagihan.SetText Format(ttagihan, "##,##0.00")
+            .txtTotalDeposit.SetText Format(tdeposit, "##,##0.00")
+            .txtTotalSisa.SetText Format(tsisa, "##,##0.00")
             
             If view = "false" Then
                 Dim strPrinter As String
