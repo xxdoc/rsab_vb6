@@ -233,8 +233,8 @@ On Error GoTo errLoad
          KodeSequence = Strings.Right(RS!nostruk, 5)
          Tanggal = RS!tglstruk
          Print #LogFile, "|" & "024040100520611000KD" & "|,|" & RS!namaproduk & "|,|" & "2018" & "|,|" & _
-                             "024040100520611000KD" & "2018" & KodeSequence & "M" & "|,|" & Format(Tanggal, "dd-MM-yyyy HH:mm:ss"); "," & _
-                             Format(Tanggal, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS!kodebmn & "|,|" & RS!ID & "|," & RS!QtyProduk; ",|" & _
+                             "024040100520611000KD" & "2018" & KodeSequence & "M" & "|," & Format(Tanggal, "dd-MM-yyyy HH:mm:ss"); "," & _
+                             Format(Tanggal, "dd-MM-yyyy HH:mm:ss") & ",|" & Strings.Left(RS!kodebmn, 10) & "|,|" & RS!ID & "|," & RS!QtyProduk; ",|" & _
                              RS!satuanstandar & "|,|" & RS!namarekanan & "|,|" & RS!nostruk & "|,|" & "M02" & "|," & _
                              RS!harga; ","; RS!harga * RS!QtyProduk & ",|" & "1|"
    
@@ -269,8 +269,8 @@ On Error GoTo errLoad
          KodeSequence1 = Strings.Right(RS2!nostruk, 5)
          Tanggal1 = RS2!tglstruk
             Print #LogFile, "|" & "024040100520611000KD" & "|,|" & RS2!namaproduk & "|,|" & "2018" & "|,|" & _
-                                "024040100520611000KD" & "2018" & KodeSequence2 & "K" & "|,|" & Format(Tanggal1, "dd-MM-yyyy HH:mm:ss"); "," & _
-                                Format(Tanggal1, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS2!kodebmn & "|,|" & RS2!ID & "|," & RS2!QtyProduk; ",|" & _
+                                "024040100520611000KD" & "2018" & KodeSequence2 & "K" & "|," & Format(Tanggal1, "dd-MM-yyyy HH:mm:ss"); "," & _
+                                Format(Tanggal1, "dd-MM-yyyy HH:mm:ss") & ",|" & Strings.Left(RS2!kodebmn, 10) & "|,|" & RS2!ID & "|," & RS2!QtyProduk; ",|" & _
                                 RS2!satuanstandar & "|,|" & "RSABHK" & "|,|" & "RSABHK" & "|,|" & "K01" & "|,|" & _
                                 RS2!harga; "," & RS2!harga * RS2!QtyProduk & ",|" & "1|"
         
@@ -301,8 +301,8 @@ On Error GoTo errLoad
         KodeSequence2 = Strings.Right(RS3!noresep, 5)
         Tanggal2 = RS3!tglpelayanan
         Print #LogFile, "|" & "024040100520611000KD" & "|,|" & RS3!namaproduk & "|,|" & "2018" & "|,|" & _
-                            "024040100520611000KD" & "2018" & KodeSequence2 & "K" & "|,|" & Format(Tanggal2, "dd-MM-yyyy HH:mm:ss"); "," & _
-                            Format(Tanggal2, "dd-MM-yyyy HH:mm:ss") & "|,|" & RS3!kodebmn & "|," & RS3!produkfk & "|," & RS3!jumlah; ",|" & _
+                            "024040100520611000KD" & "2018" & KodeSequence2 & "K" & "|," & Format(Tanggal2, "dd-MM-yyyy HH:mm:ss"); "," & _
+                            Format(Tanggal2, "dd-MM-yyyy HH:mm:ss") & ",|" & Strings.Left(RS2!kodebmn, 10) & "|," & RS3!produkfk & "|," & RS3!jumlah; ",|" & _
                             RS3!satuanstandar & "|,|" & "RSABHK" & "|,|" & "RSABHK" & "|,|" & "K01" & "|,|" & _
                             RS3!harga; "," & RS3!harga * RS3!jumlah & ",|" & "1|"
 
