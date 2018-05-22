@@ -146,7 +146,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRPembayaranPiutangPerusahaan = Nothing
 End Sub
 
-Public Sub cetakTgl(tglAwal As String, tglAkhir As String, noCollecting As String, idPerusahaan As String, namaPrinted As String, view As String)
+Public Sub cetakTgl(tglAwal As String, tglAkhir As String, idPerusahaan As String, noCollecting As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -155,7 +155,7 @@ Dim adocmd As New ADODB.Command
     Dim str1, str2 As String
     
     If idPerusahaan <> "" Then
-        str1 = " and p.id=" & idPerusahaan & " "
+        str1 = " and rkn.id=" & idPerusahaan & " "
     End If
     If noCollecting <> "" Then
         str2 = " and  php.noposting='" & noCollecting & "' "
