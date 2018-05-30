@@ -259,7 +259,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -335,7 +335,7 @@ Set Report = New crRincianBiayaPelayanan
 '            Else
 '                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
 '            End If
-            .txtuser.SetText UCase(strIdPegawai)
+            .txtUser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String

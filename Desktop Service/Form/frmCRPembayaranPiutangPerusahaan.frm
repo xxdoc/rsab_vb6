@@ -164,7 +164,7 @@ Dim adocmd As New ADODB.Command
     Set Report = New crPembayaranPiutangPerusahaan
     
     strSQL = "select sbm.tglsbm, php.noposting,rkn.id as idrekanan,rkn.namarekanan,php.statusenabled, " & _
-            "sbm.keteranganlainnya, sbm.totaldibayar " & _
+            "sbm.keteranganlainnya, sum(sbm.totaldibayar) as totaldibayar " & _
             "FROM postinghutangpiutang_t as php " & _
             "left JOIN strukpelayananpenjamin_t as spp on spp.norec=php.nostrukfk " & _
             "inner join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = spp.nostrukfk " & _
@@ -176,6 +176,7 @@ Dim adocmd As New ADODB.Command
             "where sbm.tglsbm between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled = 1 and sbm.objectkelompoktransaksifk = 76 " & _
             str1 & _
             str2 & _
+            "group by sbm.tglsbm, php.noposting,rkn.id,rkn.namarekanan,php.statusenabled,sbm.keteranganlainnya " & _
             "order by sbm.tglsbm"
     
     ReadRs strSQL
@@ -198,7 +199,7 @@ Dim adocmd As New ADODB.Command
             .txtPrinter.SetText namaPrinted
             '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usNamaPerusahaan.SetUnboundFieldSource ("{ado.namarekanan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noposting}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noposting}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keteranganlainnya}")
             .udTglKeluar.SetUnboundFieldSource ("{ado.tglsbm}")
             .unSubtotal.SetUnboundFieldSource ("{ado.totaldibayar}")
@@ -228,7 +229,7 @@ errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
 
-Public Sub cetak(noPosting As String, namaPrinted As String, view As String)
+Public Sub Cetak(noposting As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -236,14 +237,14 @@ Set frmCRPembayaranPiutangPerusahaan = Nothing
 Dim adocmd As New ADODB.Command
     Dim str1 As String
     
-    If noPosting <> "" Then
-        str1 = " and php.noposting= '" & noPosting & "' "
+    If noposting <> "" Then
+        str1 = " and php.noposting= '" & noposting & "' "
     End If
                 
     Set Report = New crPembayaranPiutangPerusahaan
     
     strSQL = "select sbm.tglsbm, php.noposting,rkn.id as idrekanan,rkn.namarekanan,php.statusenabled, " & _
-            "sbm.keteranganlainnya, sbm.totaldibayar " & _
+            "sbm.keteranganlainnya, sum(sbm.totaldibayar)as totaldibayar " & _
             "FROM postinghutangpiutang_t as php " & _
             "left JOIN strukpelayananpenjamin_t as spp on spp.norec=php.nostrukfk " & _
             "inner join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = spp.nostrukfk " & _
@@ -254,6 +255,7 @@ Dim adocmd As New ADODB.Command
             "left JOIN loginuser_s as lu on lu.id=sp.kdhistorylogins " & _
             "where sp.statusenabled = 1 and sbm.objectkelompoktransaksifk = 76 " & _
             str1 & _
+            "group by sbm.tglsbm, php.noposting,rkn.id,rkn.namarekanan,php.statusenabled,sbm.keteranganlainnya " & _
             "order by sbm.tglsbm"
     
     ReadRs strSQL
@@ -276,7 +278,7 @@ Dim adocmd As New ADODB.Command
             .txtPrinter.SetText namaPrinted
             '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usNamaPerusahaan.SetUnboundFieldSource ("{ado.namarekanan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noposting}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noposting}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keteranganlainnya}")
             .udTglKeluar.SetUnboundFieldSource ("{ado.tglsbm}")
             .unSubtotal.SetUnboundFieldSource ("{ado.totaldibayar}")
