@@ -205,6 +205,18 @@ Dim jenisKwitansi As String
                     "left join pegawai_m as pg on pg.id=lu.objectpegawaifk " & _
                     "where sbp.nosbm='" & strNoregistrasi & "'"
             strKet = False
+        ElseIf Left(strNoregistrasi, 13) = "KWITANSITOTAL" Then
+            jenisKwitansi = "KWITANSITOTAL"
+            strNoregistrasi = Replace(strNoregistrasi, "KWITANSITOTAL", "")
+            ReadRs "select pd.noregistrasi as noregistrasi," & STD & " as totaldibayar,  ps.namapasien,'" & strIdPegawai & "' as namalengkap, " & _
+                   " '' as keteranganlainnya,ru.namaruangan as namaruangan,ps.nocm " & _
+                   "from pasiendaftar_t as pd " & _
+                   "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
+                   "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+                   "where pd.noregistrasi='" & strNoregistrasi & "'"
+            strKet = False
+'            jumlahDuit = STD
+            STD = ""
         Else
             Dim noreg, nostruk As String
             noreg = Left(strNoregistrasi, 10)
@@ -245,9 +257,9 @@ Dim jenisKwitansi As String
                 .txtNamaPenyetor.SetText UCase(STD)
             End If
             .txtNamaPasien.SetText UCase(RS("namapasien"))
-            If jenisKwitansi = "KEMBALIDEPOSIT" Then
-                .txtNamaPenyetor.SetText "RSAB HARAPAN KITA"
-            End If
+'            If jenisKwitansi = "KEMBALIDEPOSIT" Then
+'                .txtNamaPenyetor.SetText "RSAB HARAPAN KITA"
+'            End If
             If strKet = True Then
                 .txtKeterangan.SetText UCase("Biaya Layanan " & RS("namaruangan"))  'RS("keteranganlainnya")
             Else
