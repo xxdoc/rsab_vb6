@@ -2,8 +2,13 @@ GossRESTDB = 0, 0, 0, 0, C
 JNode = 78, 78, 953, 415, C
 GossEvent = 0, 0, 0, 0, C
 GossClient = 0, 0, 0, 0, C, 52, 52, 888, 468, C
+<<<<<<< HEAD
 Gossamer = 48, 118, 1005, 487, C, 78, 78, 914, 494, C
 GossRESTMain = 46, 168, 925, 602, C, 85, 53, 1005, 495, C
+=======
+Gossamer = -65, 122, 892, 491, C, 78, 78, 914, 494, C
+GossRESTMain = 46, 168, 925, 602, , 85, 53, 1005, 495, C
+>>>>>>> 5e5886dd4da2fb8e98c5856c762e9a96d8b25fb6
 frmSettingPrinter = 0, 0, 0, 0, C, 130, 130, 966, 546, C
 Koneksi = 40, 271, 927, 713, C
 frmCetakAntrian = 104, 104, 1024, 520, C, 78, 78, 998, 494, C
@@ -30,7 +35,7 @@ bar39 = 0, 0, 0, 0, C
 GIF = 0, 0, 0, 0, C
 Barcode_128 = 0, 0, 0, 0, C
 Cr_cetakKartuPasien = 0, 0, 0, 0, C, 26, 26, 1035, 467, C
-frmPendaftaran = 156, 156, 959, 572, C, 156, 156, 992, 572, C
+frmPendaftaran = 156, 156, 959, 572, , 156, 156, 992, 572, C
 frmCRLabelFarmasi = 0, 0, 0, 0, C, 182, 182, 1018, 598, CZ
 cr_RincianBiayaResep_3 = 0, 0, 0, 0, C, 104, 104, 1116, 795, C
 Cr_cetakSummaryList = 0, 0, 0, 0, C, 78, 78, 1075, 769, C
@@ -168,7 +173,11 @@ cr_RekapPenerimaanBarang2 = 0, 0, 0, 0, C, 156, 156, 1141, 838, C
 frmCetakBuktiPenerimaanBarang2 = 208, 208, 1128, 624, C, 182, 182, 1102, 598, CZ
 cr_LaporanStokOpname = 0, 0, 0, 0, C, 182, 182, 1167, 864, C
 crLaporanJasaMedisRI = 0, 0, 0, 0, C, 208, 208, 1193, 890, C
+<<<<<<< HEAD
 frmLaporanSimakBMN = 104, 44, 918, 425, C, 97, 308, 984, 750, CZ
+=======
+frmLaporanSimakBMN = 104, 44, 918, 425, C, 97, 308, 984, 750, C
+>>>>>>> 5e5886dd4da2fb8e98c5856c762e9a96d8b25fb6
 frmCRLaporanffsRI = 0, 0, 0, 0, C, 156, 156, 992, 572, CZ
 frmCRLaporanPenerimaanFFS = 0, 0, 0, 0, C, 182, 182, 1018, 598, CZ
 crLaporanPenerimaanFFS = 0, 0, 0, 0, C, 0, 0, 1062, 691, C
