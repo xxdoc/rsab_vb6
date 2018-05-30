@@ -141,7 +141,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 
-Public Sub Cetak(namaPrinted As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompokPasien As String, idPegawai As String, view As String)
+Public Sub Cetak(namaPrinted As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompokPasien As String, idPegawai As String, karyawan As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -156,6 +156,15 @@ Dim adocmd As New ADODB.Command
     End If
     If idRuangan <> "" Then
         str2 = " and ru.id=" & idRuangan & " "
+    End If
+    If karyawan <> "" Then
+        If karyawan = "Karyawan" Then
+            str3 = " and sp.namakurirpengirim='" & karyawan & "' "
+        Else
+            str3 = " and sp.namakurirpengirim='" & karyawan & "' "
+        End If
+    Else
+        str3 = " and sp.namakurirpengirim in (null,'') "
     End If
 '    If idKelompokPasien <> "" Then
 '        str3 = " and kp.id=" & idKelompokPasien & " "
@@ -186,7 +195,11 @@ Set Report = New crDetailPengeluaranObatBebas
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-'            .Text4.SetText "LAPORAN PENJUALAN OBAT BEBAS"
+        If karyawan = "Karyawan" Then
+            .Text4.SetText "LAPORAN PENJUALAN OBAT KARYAWAN"
+        ElseIf karyawan = "Poli Karyawan" Then '
+            .Text4.SetText "LAPORAN PENJUALAN OBAT POLI KARYAWAN"
+        End If
 '            .txtPrinted.SetText namaPrinted
 '            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
 '            .udtTglResep.SetUnboundFieldSource ("{ado.tglstruk}")
@@ -232,9 +245,9 @@ Set Report = New crDetailPengeluaranObatBebas
             .usJenisRacikan.SetUnboundFieldSource ("{ado.jenisracikan}")
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaIbu.SetUnboundFieldSource ("{ado.namaibu}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
