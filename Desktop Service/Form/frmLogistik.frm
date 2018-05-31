@@ -26,6 +26,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
     Dim Param3() As String
     Dim Param4() As String
     Dim Param5() As String
+    Dim Param6() As String
     Dim arrItem() As String
    
     If CN.State = adStateClosed Then Call openConnection
@@ -37,6 +38,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
         Param3 = Split(arrItem(2), "=")
         Param4 = Split(arrItem(3), "=")
         Param5 = Split(arrItem(4), "=")
+        Param6 = Split(arrItem(5), "=")
         Select Case Param1(0)
             Case "cek-konek"
 '                lblStatus.Caption = "Cek"
@@ -45,7 +47,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 
             Case "cetak-rincian-penerimaan"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiPenerimaanBarang.cetak(Param2(1), Param3(1), Param4(1))
+                Call frmCetakBuktiPenerimaanBarang.Cetak(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -53,7 +55,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 
             Case "cetak-bukti-penerimaan"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiPenerimaanBarang2.cetak(Param2(1), Param3(1), Param4(1))
+                Call frmCetakBuktiPenerimaanBarang2.Cetak(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -61,7 +63,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
             
             Case "cetak-bukti-pengeluaran"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiPengeluaranBarang.cetak(Param2(1), Param3(1), Param4(1))
+                Call frmCetakBuktiPengeluaranBarang.Cetak(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -69,7 +71,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
             
             Case "cetak-bukti-order"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiOrderBarang.cetak(Param2(1), Param3(1), Param4(1))
+                Call frmCetakBuktiOrderBarang.Cetak(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -77,7 +79,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
             
             Case "cetak-rekap-pengeluaran"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakRekapPengeluaranBarang.cetak(Param2(1), Param3(1), Param4(1), Param5(1))
+                Call frmCetakRekapPengeluaranBarang.Cetak(Param2(1), Param3(1), Param4(1), Param5(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -85,7 +87,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 
             Case "cetak-rekap-penerimaan"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakRekapPenerimaanBarang.cetak(Param2(1), Param3(1), Param4(1), Param5(1))
+                Call frmCetakRekapPenerimaanBarang.Cetak(Param2(1), Param3(1), Param4(1), Param5(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
@@ -108,27 +110,41 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Root("by") = "as@epic"
             
             Case "cetak-stokopname"
-                Call frmCetakStokOpname.cetak(Param2(1), Param3(1), Param4(1), Param5(1))
+                Call frmCetakStokOpname.Cetak(Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+'                'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-stokopname=1&tglAwal=6a287c10-8cce-11e7-943b-2f7b4944&cetak=1
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
                 
             Case "cetak-SPPB"
-                Call frmCetakSPPB.cetak(Param2(1), Param3(1))
+                Call frmCetakSPPB.Cetak(Param2(1), Param3(1))
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
             
             Case "cetak-usulanpermintaanbarang"
-                Call frmCetakUsulanPermintaanBarang.cetak(Param2(1), Param3(1))
+                Call frmCetakUsulanPermintaanBarang.Cetak(Param2(1), Param3(1))
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
             
             Case "cetak-rekap-amprahan"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakRekapAmprah.cetak(Param2(1), Param3(1), Param4(1), Param5(1))
+                Call frmCetakRekapAmprah.Cetak(Param2(1), Param3(1), Param4(1), Param5(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+                
+            Case "cetak-usulanpelaksanaankegiatan"
+                Call frmCetakUsulanPelaksanaanKegiatan.Cetak(Param2(1), Param3(1))
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+                
+            Case "cetak-riwayatpersediaan"
+                Call frmCetakRiwayatPenerimaandanPengeluaran.Cetak(Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+'               http://127.0.0.1:1237/printvb/logistik?cetak-riwayatpersediaan=1&tglAwal=2018-05-31%2000:00&tglAkhir=2018-05-31%2023:59&idriwayat=IR18050001&view=true&user=Administrator
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
