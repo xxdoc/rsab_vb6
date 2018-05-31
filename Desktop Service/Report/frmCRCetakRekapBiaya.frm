@@ -257,7 +257,7 @@ Set Report = New crRekapBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -269,7 +269,7 @@ Set Report = New crRekapBiayaPelayanan
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .udtanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
@@ -301,12 +301,14 @@ Set Report = New crRekapBiayaPelayanan
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             
-            If RS!KelompokPasien = 2 Or RS!KelompokPasien = 4 Then
-                .txtNoSep.SetText RS!sep
-            Else
-                .txtNoSep.Suppress = True
-                .txtLblSep.Suppress = True
-                .txtLblSep2.Suppress = True
+            If RS.RecordCount > 0 Then
+                If RS!kelompokpasien = 2 Or RS!kelompokpasien = 4 Then
+                    .txtNoSep.SetText RS!sep
+                Else
+                    .txtNoSep.Suppress = True
+                    .txtLblSep.Suppress = True
+                    .txtLblSep2.Suppress = True
+                End If
             End If
             
             .txtVersi.SetText App.Comments
@@ -319,7 +321,7 @@ Set Report = New crRekapBiayaPelayanan
 '            Else
 '                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
 '            End If
-            .txtUser.SetText UCase(strIdPegawai)
+            .txtuser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String

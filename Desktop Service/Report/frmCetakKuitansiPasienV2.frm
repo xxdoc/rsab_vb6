@@ -257,9 +257,9 @@ Dim jenisKwitansi As String
                 .txtNamaPenyetor.SetText UCase(STD)
             End If
             .txtNamaPasien.SetText UCase(RS("namapasien"))
-'            If jenisKwitansi = "KEMBALIDEPOSIT" Then
-'                .txtNamaPenyetor.SetText "RSAB HARAPAN KITA"
-'            End If
+            If jenisKwitansi = "KEMBALIDEPOSIT" Then
+                .txtNamaPenyetor.SetText "RSAB HARAPAN KITA"
+            End If
             If strKet = True Then
                 .txtKeterangan.SetText UCase("Biaya Layanan " & RS("namaruangan"))  'RS("keteranganlainnya")
             Else
@@ -279,6 +279,9 @@ Dim jenisKwitansi As String
             .txtNoCM2.SetText RS("nocm")
             .txtPrintTglBKM.SetText "Jakarta, " & Format(Now(), "dd MMM yyyy")
             .txtPetugasKasir.SetText RS("namalengkap")
+            If jenisKwitansi = "KEMBALIDEPOSIT" Then
+                .txtPetugasKasir.SetText RS("namapasien")
+            End If
             .txtDesc.SetText UCase("NAMA/MR/No.REG  : " & RS("namapasien") & "/ " & RS("nocm") & "/ " & RS("noregistrasi"))
 '            .txtDesc.SetText UCase("NAMA/MR/No.REG  : " & RS("namapasien") & "/ " & RS("nocm") & "/ " & "1711001100")
             .txtPetugasCetak.SetText strIdPegawai
