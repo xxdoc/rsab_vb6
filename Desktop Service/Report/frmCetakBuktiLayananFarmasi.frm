@@ -254,15 +254,17 @@ bolStrukResep = True
              .txtNamaDokter.SetText IIf(IsNull(RS("namalengkap")), "-", RS("namalengkap")) 'RS("namalengkap")
              .txtuser.SetText strUser
             If Left(RS("noresep"), 2) = "OB" Then
-                .txtTglLahir.SetText IIf(IsNull(Format(RS("tgllahir"), "dd/mm/yyyy")), "-", Format(RS("tgllahir"), "dd/mm/yyyy")) 'RS!tgllahir
+                .txtTgllahir.SetText IIf(IsNull(Format(RS("tgllahir"), "dd/mm/yyyy")), "-", Format(RS("tgllahir"), "dd/mm/yyyy")) 'RS!tgllahir
                 .txtTelp2.SetText IIf(IsNull(RS("noteleponfaks")), "-", RS("noteleponfaks")) 'RS!noteleponfaks
                 .txtAl2.SetText IIf(IsNull(RS("alamat")), "-", RS("alamat")) 'RS!alamat
                 .txtTgl.SetText IIf(IsNull(Format(RS("tgl"), "dd/mm/yyyy HH:mm:ss")), "-", Format(RS("tgl"), "dd/mm/yyyy HH:mm:ss")) 'RS!tgl
             Else
-                .txtTglLahir.SetText IIf(IsNull(RS("tgllahir")), "-", RS("tgllahir")) 'RS!tgllahir
+                .txtTgllahir.SetText IIf(IsNull(RS("tgllahir")), "-", RS("tgllahir")) 'RS!tgllahir
                 .txtTelp2.SetText IIf(IsNull(RS("noteleponfaks")), "-", RS("noteleponfaks")) 'RS!noteleponfaks
                 .txtAl2.SetText IIf(IsNull(RS("alamat")), "-", RS("alamat")) 'RS!alamat
-                .txtKamar.SetText IIf(IsNull(RS2("kamar")), "-", RS2("kamar")) 'RS!noteleponfaks
+                If RS2.RecordCount > 0 Then
+                    .txtKamar.SetText IIf(IsNull(RS2("kamar")), "-", RS2("kamar")) 'RS!noteleponfaks
+                End If
                 .txtTgl.SetText IIf(IsNull(Format(RS("tgl"), "dd/mm/yyyy HH:mm:ss")), "-", Format(RS("tgl"), "dd/mm/yyyy HH:mm:ss")) 'RS!tgl
                 .txtAlergi.SetText IIf(IsNull(RS("alergi")), "-", RS("alergi")) 'RS!alergi
 

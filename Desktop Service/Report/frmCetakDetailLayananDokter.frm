@@ -166,13 +166,7 @@ Set Report = New crCetakDetailLayananDokter
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
     If strIdDepartemen <> "" Then
-        If strIdDepartemen = 16 Then
-            strFilter = strFilter & " AND ru.objectdepartemenfk in (16,17,25,26) "
-        Else
-            If strIdDepartemen <> "" Then
-                strFilter = strFilter & " AND ru2.objectdepartemenfk not in (16,17,25,26)  "
-            End If
-        End If
+        strFilter = strFilter & " AND ru.objectdepartemenfk = '" & strIdDepartemen & "'"
     End If
     If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
@@ -234,7 +228,7 @@ Set Report = New crCetakDetailLayananDokter
         'If Not RS.EOF Then
             
             .udTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -251,9 +245,9 @@ Set Report = New crCetakDetailLayananDokter
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtUser.SetText "-"
+            .txtuser.SetText "-"
         Else
-            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

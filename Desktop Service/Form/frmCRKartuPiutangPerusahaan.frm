@@ -103,7 +103,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-    Option Explicit
+Option Explicit
 Dim Report As New crKartuPiutangPerusahaan
 Dim Reports As New crRekapSaldoPiutangPerusahaan
 'Dim bolSuppresDetailSection10 As Boolean
@@ -205,7 +205,7 @@ errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
 
-Public Sub cetak(idPerusahaan As String, namaPrinted As String, view As String)
+Public Sub Cetak(idPerusahaan As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -219,12 +219,13 @@ Dim adocmd As New ADODB.Command
                 
     Set Report = New crKartuPiutangPerusahaan
     
-    strSQL = "select sp.norec, sp.tglposting, php.noposting,'KPS - ' || rkn.id as idrekanan,rkn.namarekanan, " & _
+    strSQL = "select sp.norec, sbm.tglsbm,sbm.keteranganlainnya, php.noposting,'KPS - ' || rkn.id as idrekanan,rkn.namarekanan, " & _
             "php.statusenabled,p.namalengkap,SUM(spp.totalppenjamin) as totalpenjamin,sum(spp.totalsudahdibayar) as totalsudahdibayar, " & _
             "SUM(spp.totalppenjamin)-SUM(spp.totalsudahdibayar) as saldo " & _
             "FROM postinghutangpiutang_t as php " & _
             "left JOIN strukpelayananpenjamin_t as spp on spp.norec=php.nostrukfk " & _
             "left JOIN strukpelayanan_t as spy on spy.norec=spp.nostrukfk " & _
+            "left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = spp.nostrukfk " & _
             "left JOIN pasiendaftar_t as pd on pd.norec=spy.noregistrasifk " & _
             "left JOIN rekanan_m as rkn on rkn.id=pd.objectrekananfk " & _
             "left JOIN strukposting_t as sp on sp.noposting=php.noposting " & _
@@ -232,8 +233,8 @@ Dim adocmd As New ADODB.Command
             "left JOIN pegawai_m as p on p.id=lu.objectpegawaifk " & _
             "where " & _
             str1 & _
-            "group by sp.norec, sp.tglposting, php.noposting,rkn.id,rkn.namarekanan,php.statusenabled,p.namalengkap " & _
-            "order by sp.tglposting"
+            "group by sp.norec,sbm.tglsbm,sbm.keteranganlainnya, php.noposting,rkn.id,rkn.namarekanan,php.statusenabled,p.namalengkap " & _
+            "order by php.noposting"
     
     ReadRs strSQL
     
@@ -256,8 +257,9 @@ Dim adocmd As New ADODB.Command
             '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usKode.SetUnboundFieldSource ("{ado.idrekanan}")
             .usNamaPerusahaan.SetUnboundFieldSource ("{ado.namarekanan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noposting}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noposting}")
             .udTglKeluar.SetUnboundFieldSource ("{ado.tglposting}")
+            .usKeterangan.SetUnboundFieldSource ("{ado.keteranganlainnya}")
             .unPiutang.SetUnboundFieldSource ("{ado.totalpenjamin}")
             .unBayar.SetUnboundFieldSource ("{ado.totalsudahdibayar}")
             .unSaldo.SetUnboundFieldSource ("{ado.saldo}")
