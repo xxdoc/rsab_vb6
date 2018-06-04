@@ -1,4 +1,5 @@
 VERSION 5.00
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
 Begin VB.Form frmLogistik 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Logistik"
@@ -12,6 +13,13 @@ Begin VB.Form frmLogistik
    ScaleHeight     =   960
    ScaleWidth      =   5040
    StartUpPosition =   3  'Windows Default
+   Begin MSComDlg.CommonDialog CommonDialog1 
+      Left            =   1920
+      Top             =   240
+      _ExtentX        =   847
+      _ExtentY        =   847
+      _Version        =   393216
+   End
 End
 Attribute VB_Name = "frmLogistik"
 Attribute VB_GlobalNameSpace = False
@@ -132,6 +140,40 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
 '                lblStatus.Caption = "Cetak Struk Resep"
                 Call frmCetakRekapAmprah.Cetak(Param2(1), Param3(1), Param4(1), Param5(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+            
+            Case "upload-file-so"
+                Me.Show
+                CommonDialog1.Filter = "Apps (*.txt)|*.txt|All files (*.*)|*.*"
+                CommonDialog1.DefaultExt = "txt"
+                CommonDialog1.DialogTitle = "Select File"
+                CommonDialog1.ShowOpen
+                
+                Dim strEmpFileName As String
+                Dim strBackSlash As String
+                Dim intEmpFileNbr As Integer
+                
+                Dim kd As String
+                Dim qty As Double
+                 
+                
+                strBackSlash = IIf(Right$(App.Path, 1) = "\", "", "\")
+                strEmpFileName = CommonDialog1.filename 'App.Path & strBackSlash & "EMPLOYEE.DAT"
+                intEmpFileNbr = FreeFile
+                
+                Open strEmpFileName For Input As #intEmpFileNbr
+                
+                Do Until EOF(intEmpFileNbr)
+                    Input #intEmpFileNbr, kd
+                    MsgBox kd
+                Loop
+                
+                'The FileName property gives you the variable you need to use
+'                MsgBox CommonDialog1.filename
+                
+                'Call frmCetakRekapAmprah.cetak(Param2(1), Param3(1), Param4(1), Param5(1))
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
