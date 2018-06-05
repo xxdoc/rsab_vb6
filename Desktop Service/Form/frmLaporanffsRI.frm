@@ -194,14 +194,14 @@ Dim adocmd As New ADODB.Command
                 End If
                 SQLdate = SQLdate & strTglJamSQL
             Next
-            dokterluar = "  "
+            dokterluar = " and djp.objectjenisprodukfk in (100,101) "
         Else
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
                 strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
                 SQLdate = SQLdate & strTglJamSQL
             Next
-            dokterluar = "  "
+            dokterluar = "   "
             
         End If
     Else
@@ -257,15 +257,14 @@ Set Report = New crLaporanffsRI
             "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
+            "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 " & dokterluar & " and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & "" & _
+            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4  " & dokterluar & " and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
-            'hanya visite
-
-'
+ 
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -287,7 +286,7 @@ Set Report = New crLaporanffsRI
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .UnboundString1.SetUnboundFieldSource ("{ado.norec}")
-            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
+            .ucKPID.SetUnboundFieldSource ("{ado.kpid}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")

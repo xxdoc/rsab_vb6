@@ -257,7 +257,7 @@ Set Report = New crRekapBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -301,12 +301,7 @@ Set Report = New crRekapBiayaPelayanan
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             
-            If RS.EOF Then
-                .txtNoSep.SetText "-"
-                .txtNoSep.Suppress = False
-                .txtLblSep.Suppress = False
-                .txtLblSep2.Suppress = False
-            Else
+            If RS.RecordCount > 0 Then
                 If RS!kelompokpasien = 2 Or RS!kelompokpasien = 4 Then
                     .txtNoSep.SetText RS!sep
                 Else
@@ -315,8 +310,6 @@ Set Report = New crRekapBiayaPelayanan
                     .txtLblSep2.Suppress = True
                 End If
             End If
-            
-            
             
             .txtVersi.SetText App.Comments
             
