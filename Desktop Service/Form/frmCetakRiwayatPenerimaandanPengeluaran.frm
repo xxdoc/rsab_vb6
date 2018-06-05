@@ -164,8 +164,8 @@ Dim adocmd As New ADODB.Command
     
 Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
 
-'///**DATA BARANG'
-strSQL = "select * from tempriwayatpersediaan_t where idriwayat='" & idriwayat & "'"
+    '///**DATA BARANG'
+    strSQL = "select * from tempriwayatpersediaan_t where idriwayat='" & idriwayat & "'"
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
