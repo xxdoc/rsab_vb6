@@ -269,7 +269,7 @@ Set Report = New crRekapBiayaPelayanan
             .usTipe.SetUnboundFieldSource ("{ado.tipepasien}")
                      
             .usJenisProduk.SetUnboundFieldSource ("{ado.jenisproduk}")
-            .udTanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .udtanggal.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
@@ -301,13 +301,22 @@ Set Report = New crRekapBiayaPelayanan
             .ucSurplusMinusRS.SetUnboundFieldSource ("0") '("{ado.SurplusMinusRS}")
             .usUser.SetUnboundFieldSource ("{ado.user}")
             
-            If RS!KelompokPasien = 2 Or RS!KelompokPasien = 4 Then
-                .txtNoSep.SetText RS!sep
+            If RS.EOF Then
+                .txtNoSep.SetText "-"
+                .txtNoSep.Suppress = False
+                .txtLblSep.Suppress = False
+                .txtLblSep2.Suppress = False
             Else
-                .txtNoSep.Suppress = True
-                .txtLblSep.Suppress = True
-                .txtLblSep2.Suppress = True
+                If RS!kelompokpasien = 2 Or RS!kelompokpasien = 4 Then
+                    .txtNoSep.SetText RS!sep
+                Else
+                    .txtNoSep.Suppress = True
+                    .txtLblSep.Suppress = True
+                    .txtLblSep2.Suppress = True
+                End If
             End If
+            
+            
             
             .txtVersi.SetText App.Comments
             
@@ -319,7 +328,7 @@ Set Report = New crRekapBiayaPelayanan
 '            Else
 '                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
 '            End If
-            .txtUser.SetText UCase(strIdPegawai)
+            .txtuser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String
