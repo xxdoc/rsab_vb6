@@ -191,6 +191,13 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
                 
+            Case "cetak-spk"
+                Call frmCetakSuratPerintahKerja.Cetak(Param2(1), Param3(1))
+'               http://127.0.0.1:1237/printvb/logistik?cetak-spk=1&nores=2c7ab260-2bfc-11e8-831c-359d06cb&view=true&user=Administrator
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
