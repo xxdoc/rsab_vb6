@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakUsulanPermintaanBarang 
+Begin VB.Form frmCetakUsulanPelaksanaanKegiatan 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   9075
-   Icon            =   "frmCetakUsulanPermintaanBarang.frx":0000
+   Icon            =   "frmCetakUsulanPelaksanaanKegiatan.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   9075
@@ -99,13 +99,13 @@ Begin VB.Form frmCetakUsulanPermintaanBarang
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakUsulanPermintaanBarang"
+Attribute VB_Name = "frmCetakUsulanPelaksanaanKegiatan"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim ReportResep As New crUsulanPermintaanBarangJasa
+Dim ReportResep As New crUsulanPelaksanaanKegiatan
 
 Dim ii As Integer
 Dim tempPrint1 As String
@@ -163,13 +163,13 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCetakUsulanPermintaanBarang = Nothing
+    Set frmCetakUsulanPelaksanaanKegiatan = Nothing
 
 End Sub
 
 Public Sub Cetak(strNorec As String, view As String)
 On Error GoTo errLoad
-Set frmCetakUsulanPermintaanBarang = Nothing
+Set frmCetakUsulanPelaksanaanKegiatan = Nothing
 Dim strSQL As String
 
 bolStrukResep = True
@@ -186,16 +186,22 @@ bolStrukResep = True
                     "ru2.namaruangan as ruangantujuan,ru2.id as ruidtujuan, " & _
                     "sp.totalhargasatuan , sp.Status,pr.kdproduk,pr.namaproduk,ss.satuanstandar,op.qtyproduk,op.hargasatuan,op.hargadiscount, " & _
                     "case when op.hargappn is null then 0 else op.hargappn end as hargappn,(op.qtyproduk*(op.hargasatuan)) as total,op.tglpelayananakhir as tglkebutuhan, " & _
-                    "op.deskripsiprodukquo as spesifikasi,pr.id as prid " & _
+                    "op.deskripsiprodukquo as spesifikasi,pr.id as prid,sv.noverifikasi as noconfirm,sv.tglverifikasi as tglconfirm,sv.objectpegawaipjawabfk as pegawaiupkid,pg1.namalengkap as pegawaiupk " & _
                     "from strukorder_t sp " & _
-                    "left join orderpelayanan_t op on op.strukorderfk=sp.norec " & _
-                    "left join produk_m pr on pr.id=op.objectprodukfk " & _
-                    "left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
+                    "LEFT JOIN orderpelayanan_t op on op.strukorderfk=sp.norec " & _
+                    "LEFT JOIN produk_m pr on pr.id=op.objectprodukfk " & _
+                    "LEFT JOIN satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
                     "LEFT JOIN pegawai_m as pg on pg.id=sp.objectpegawaiorderfk " & _
                     "LEFT JOIN ruangan_m as ru on ru.id=sp.objectruanganfk " & _
                     "LEFT JOIN ruangan_m as ru2 on ru2.id=sp.objectruangantujuanfk " & _
+                    "LEFT JOIN strukverifikasi_t as sv on sv.norec = sp.objectsrukverifikasifk " & _
+                    "LEFT JOIN pegawai_m as pg1 on pg1.id=sv.objectpegawaipjawabfk " & _
                     "where sp.norec = '" & strNorec & "'"
                     
+             ReadRs2 "select pg.id,pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                     "from pegawai_m as pg " & _
+                     "left join jabatan_m as jb on jb.id = pg.objectjabatanfungsionalfk " & _
+                     "where objectjabatanfungsionalfk in (733,140) and pg.id=41"
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
@@ -203,10 +209,8 @@ bolStrukResep = True
            
              .usNoUsulan.SetUnboundFieldSource ("{Ado.noorderintern}")
              .usJenisUsulan.SetUnboundFieldSource ("{Ado.keteranganorder}")
-             .usKoordinator.SetUnboundFieldSource ("{Ado.keteranganlainnya}")
-             .usUnitPengusul.SetUnboundFieldSource ("{Ado.ruangan}")
-             .usPenanggungJawab.SetUnboundFieldSource ("{Ado.penanggungjawab}")
              .usUnitTujuan.SetUnboundFieldSource ("{Ado.ruangantujuan}")
+             .usUnitPengusul.SetUnboundFieldSource ("{Ado.ruangan}")
              .udTglUsulan.SetUnboundFieldSource ("{Ado.tglorder}")
              .udTglDibutuhkan.SetUnboundFieldSource ("{Ado.tglkebutuhan}")
              .udTglKebutuhan.SetUnboundFieldSource ("{Ado.tglkebutuhan}")
@@ -218,7 +222,12 @@ bolStrukResep = True
              .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
              .ucPpn.SetUnboundFieldSource ("{Ado.hargappn}")
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")
-             
+             .usNoConfirm.SetUnboundFieldSource ("{Ado.noconfirm}")
+             .udTglConfirm.SetUnboundFieldSource ("{Ado.tglconfirm}")
+             .txtpenangungjawab1.SetText RS2!namalengkap
+             .txtJabatan.SetText RS2!namajabatan
+             .txtnip.SetText RS2!nippns
+             .txtpenangungjawab.SetText RS2!namalengkap
              
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "Logistik_A4")

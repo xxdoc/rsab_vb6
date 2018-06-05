@@ -10,6 +10,7 @@ Begin VB.Form GossRESTMain
    LinkTopic       =   "GossRESTMain"
    MaxButton       =   0   'False
    MinButton       =   0   'False
+   OLEDropMode     =   1  'Manual
    ScaleHeight     =   645
    ScaleWidth      =   4560
    ShowInTaskbar   =   0   'False
@@ -42,6 +43,7 @@ Begin VB.Form GossRESTMain
       EndProperty
       Height          =   255
       Left            =   1560
+      OLEDropMode     =   1  'Manual
       TabIndex        =   0
       Top             =   360
       Width           =   3135
@@ -183,7 +185,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Shell_NotifyIcon NIM_DELETE, nid
     If CN.State = adStateOpen Then CN.Close
 End Sub
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, y As Single)
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim msg As Long
     Dim sFilter As String
     
@@ -217,6 +219,8 @@ Sub minimize_to_tray()
     nid.szTip = "RSAB Harapan Kita" & vbNullChar
     Shell_NotifyIcon NIM_ADD, nid
 End Sub
+
+
 
 Private Sub Gossamer1_DynamicRequest( _
     ByVal Method As String, _
@@ -406,4 +410,9 @@ End Sub
 '        Print #LogFile, "|" & "024040400415582003KD" & "|,|" & "AS@EPIC" & "|,|" & i & " neng ecie|;"
 '    Next
 '  sql
+
+Private Sub Picture1_Click()
+
+End Sub
+
 
