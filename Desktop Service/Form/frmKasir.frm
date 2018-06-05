@@ -367,6 +367,12 @@ On Error Resume Next
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
                 
+            Case "cetak-setoranKasir"
+                Call frmCRSetoranKasir.Cetak(Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan"
+                Root("by") = "as@epic"
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
