@@ -174,7 +174,7 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
              .txtuser.SetText strUser
              .txtPeriode.SetText str1 & Format(tglAwal, " yyyy")
 '            .txtPeriode.SetText Format(tglAkhir, "MMMM yyyy")
-'             .usNo.SetUnboundFieldSource ("{Ado.nomor}")
+'            .usNo.SetUnboundFieldSource ("{Ado.nomor}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
              .usSumberDana.SetUnboundFieldSource ("{Ado.asalproduk}")
@@ -184,7 +184,7 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
              .usTglMasuk.SetUnboundFieldSource ("{Ado.tglstruk}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyawal}")
              .ucJumlah.SetUnboundFieldSource ("{Ado.ttlawal}")
-             .ucHargasatuan.SetUnboundFieldSource ("{Ado.harga}")
+             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.harga}")
              .unQtyPenerimaan.SetUnboundFieldSource ("{Ado.qtymasuk}")
              .ucJmPnerimaan.SetUnboundFieldSource ("{Ado.ttlmasuk}")
              .unQtyPengeluaran.SetUnboundFieldSource ("{Ado.qtykeluar}")
