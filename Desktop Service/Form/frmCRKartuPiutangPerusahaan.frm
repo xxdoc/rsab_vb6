@@ -205,7 +205,102 @@ errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
 
-Public Sub Cetak(idPerusahaan As String, namaPrinted As String, view As String)
+Public Sub cetakDetailPeriode(tglAwal As String, tglAkhir As String, idPerusahaan As String, noPosting As String, namaPrinted As String, view As String)
+On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmCRKartuPiutangPerusahaan = Nothing
+Dim adocmd As New ADODB.Command
+    Dim str1, str2 As String
+    
+    If idPerusahaan <> "" Then
+        str1 = " and rkn.id=" & idPerusahaan & " "
+    End If
+    If noPosting <> "" Then
+        str2 = " and sp.noposting=" & noPosting & " "
+    End If
+                
+    Set Report = New crKartuPiutangPerusahaan
+    
+    strSQL = "SELECT x.tglposting,x.keteranganlainnya,x.noposting,x.idrekanan,x.namarekanan,x.kps,x.adm,x.totalpenjamin,x.totalsudahdibayar,x.saldo FROM " & _
+            "(select sp.tglposting,sbm.keteranganlainnya,php.noposting,rkn.id as idrekanan, rkn.namarekanan,'KPS-'|| rkn.id ||' ' || rkn.namarekanan as kps, " & _
+            "0 as adm,sum(spp.totalppenjamin) as totalpenjamin,sum(spp.totalsudahdibayar) as totalsudahdibayar,sum(spp.totalppenjamin)-sum(spp.totalsudahdibayar) as saldo " & _
+            "from postinghutangpiutang_t as php " & _
+            "inner join strukpelayananpenjamin_t as spp on spp.norec = php.nostrukfk " & _
+            "inner join strukpelayanan_t as spy on spy.norec = spp.nostrukfk " & _
+            "inner join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = spy.norec " & _
+            "inner join pasiendaftar_t as pd on pd.norec = spy.noregistrasifk " & _
+            "inner join rekanan_m as rkn on rkn.id = pd.objectrekananfk " & _
+            "inner join strukposting_t as sp on sp.noposting = php.noposting " & _
+            "where sp.tglposting between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled = 1 and sbm.objectkelompoktransaksifk=76 " & _
+            str1 & str2 & _
+            "group by sp.tglposting,sbm.keteranganlainnya,php.noposting,rkn.id,rkn.namarekanan,php.statusenabled " & _
+            "union all " & _
+            "select sp.tglposting,sp.keteranganlainnya,php.noposting,rkn.id as idrekanan,rkn.namarekanan,'KPS-'|| rkn.id ||' ' || rkn.namarekanan as kps, " & _
+            "0 as adm,sum(spp.totalppenjamin) as totalpenjamin,sum(spp.totalsudahdibayar) as totalsudahdibayar,sum(spp.totalppenjamin)-sum(spp.totalsudahdibayar) as saldo " & _
+            "from postinghutangpiutang_t as php " & _
+            "inner join strukpelayananpenjamin_t as spp on spp.norec = php.nostrukfk " & _
+            "inner join strukpelayanan_t as spy on spy.norec = spp.nostrukfk " & _
+            "inner join pasiendaftar_t as pd on pd.norec = spy.noregistrasifk " & _
+            "inner join rekanan_m as rkn on rkn.id = pd.objectrekananfk " & _
+            "inner join strukposting_t as sp on sp.noposting = php.noposting " & _
+            "where sp.tglposting between '" & tglAwal & "' and '" & tglAkhir & "' and sp.statusenabled = 1 " & _
+            str1 & str2 & _
+            "group by sp.tglposting,sp.keteranganlainnya,php.noposting,rkn.id,rkn.namarekanan,php.statusenabled)x order by x.tglposting,x.noposting,x.keteranganlainnya"
+    
+    ReadRs strSQL
+    
+    Dim tSaldo As Double
+    Dim i As Integer
+    Dim x As Double
+    
+    For i = 0 To RS.RecordCount - 1
+        tSaldo = tSaldo + CDbl(IIf(IsNull(RS!saldo), 0, RS!saldo))
+        
+        RS.MoveNext
+    Next i
+            
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Report
+        .database.AddADOCommand CN_String, adocmd
+            .txtPrinter.SetText namaPrinted
+            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
+            .usKode.SetUnboundFieldSource ("{ado.idrekanan}")
+            .usNamaPerusahaan.SetUnboundFieldSource ("{ado.namarekanan}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noposting}")
+            .udTglKeluar.SetUnboundFieldSource ("{ado.tglposting}")
+            .usKeterangan.SetUnboundFieldSource ("{ado.keteranganlainnya}")
+            .unPiutang.SetUnboundFieldSource ("{ado.totalpenjamin}")
+            .unBayar.SetUnboundFieldSource ("{ado.totalsudahdibayar}")
+            .unSaldo.SetUnboundFieldSource ("{ado.saldo}")
+            
+            x = Round(tSaldo)
+            .txtTerbilang.SetText "# " & TERBILANG(x) & " #"
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanTagihanPenjamin")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+End Sub
+
+Public Sub cetak(idPerusahaan As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -240,7 +335,7 @@ Dim adocmd As New ADODB.Command
     
     Dim tSaldo As Double
     Dim i As Integer
-    Dim X As Double
+    Dim x As Double
     
     For i = 0 To RS.RecordCount - 1
         tSaldo = tSaldo + CDbl(IIf(IsNull(RS!saldo), 0, RS!saldo))
@@ -258,14 +353,14 @@ Dim adocmd As New ADODB.Command
             .usKode.SetUnboundFieldSource ("{ado.idrekanan}")
             .usNamaPerusahaan.SetUnboundFieldSource ("{ado.namarekanan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noposting}")
-            .udTglKeluar.SetUnboundFieldSource ("{ado.tglposting}")
+            .udTglKeluar.SetUnboundFieldSource ("{ado.tglsbm}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keteranganlainnya}")
             .unPiutang.SetUnboundFieldSource ("{ado.totalpenjamin}")
             .unBayar.SetUnboundFieldSource ("{ado.totalsudahdibayar}")
             .unSaldo.SetUnboundFieldSource ("{ado.saldo}")
             
-            X = Round(tSaldo)
-            .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
+            x = Round(tSaldo)
+            .txtTerbilang.SetText "# " & TERBILANG(x) & " #"
             
             If view = "false" Then
                 Dim strPrinter As String
@@ -288,16 +383,21 @@ Exit Sub
 errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
-Public Sub cetakRekapSaldo(tglAwal As String, tglAkhir As String, idPerusahaan As String, namaPrinted As String, view As String)
+Public Sub cetakRekapSaldo(tglAwal As String, tglAkhir As String, idPerusahaan As String, noPosting As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRKartuPiutangPerusahaan = Nothing
 Dim adocmd As New ADODB.Command
-    Dim str1 As String
+    Dim str1, str2, monthPrint As String
+    
+    monthPrint = getBulan(Format(tglAwal, "yyyy/MM/dd"))
     
     If idPerusahaan <> "" Then
         str1 = " rkn.id=" & idPerusahaan & " "
+    End If
+    If noPosting <> "" Then
+        str2 = " and sp.noposting=" & noPosting & " "
     End If
                 
     Set Reports = New crRekapSaldoPiutangPerusahaan
@@ -313,7 +413,7 @@ Dim adocmd As New ADODB.Command
             "left JOIN loginuser_s as lu on lu.id=sp.kdhistorylogins " & _
             "left JOIN pegawai_m as p on p.id=lu.objectpegawaifk " & _
             "where sp.tglposting between '" & tglAwal & "' and '" & tglAkhir & "'" & _
-            str1 & _
+            str1 & str2 & _
             "group by rkn.id,rkn.namarekanan " & _
             "order by rkn.id"
     
@@ -321,7 +421,7 @@ Dim adocmd As New ADODB.Command
     
     Dim tSaldo As Double
     Dim i As Integer
-    Dim X As Double
+    Dim x As Double
     
     For i = 0 To RS.RecordCount - 1
         tSaldo = tSaldo + CDbl(IIf(IsNull(RS!saldo), 0, RS!saldo))
@@ -335,13 +435,14 @@ Dim adocmd As New ADODB.Command
     With Reports
         .database.AddADOCommand CN_String, adocmd
             .txtPrinter.SetText namaPrinted
-            .txtPeriode.SetText "Periode : " & Format(tglAwal, "mmmm yyyy") & ""
+'            .txtPeriode.SetText "Periode : " & Format(tglAwal, "mmmm yyyy") & ""monthPrint
+            .txtPeriode.SetText "Periode : " & monthPrint
             .usKode.SetUnboundFieldSource ("{ado.idrekanan}")
             .usNamaPerusahaan.SetUnboundFieldSource ("{ado.namarekanan}")
             .unSaldo.SetUnboundFieldSource ("{ado.saldo}")
             
-            X = Round(tSaldo)
-            .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
+            x = Round(tSaldo)
+            .txtTerbilang.SetText "# " & TERBILANG(x) & " #"
             
             If view = "false" Then
                 Dim strPrinter As String
