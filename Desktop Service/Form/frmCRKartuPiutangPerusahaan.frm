@@ -300,16 +300,19 @@ errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
 
-Public Sub cetak(idPerusahaan As String, namaPrinted As String, view As String)
+Public Sub Cetak(idPerusahaan As String, noPosting As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRKartuPiutangPerusahaan = Nothing
 Dim adocmd As New ADODB.Command
-    Dim str1 As String
+    Dim str1, str2 As String
     
     If idPerusahaan <> "" Then
         str1 = " rkn.id=" & idPerusahaan & " "
+    End If
+     If noPosting <> "" Then
+        str2 = " and sp.noposting='" & noPosting & "' "
     End If
                 
     Set Report = New crKartuPiutangPerusahaan
@@ -328,6 +331,7 @@ Dim adocmd As New ADODB.Command
             "left JOIN pegawai_m as p on p.id=lu.objectpegawaifk " & _
             "where " & _
             str1 & _
+            str2 & _
             "group by sp.norec,sbm.tglsbm,sbm.keteranganlainnya, php.noposting,rkn.id,rkn.namarekanan,php.statusenabled,p.namalengkap " & _
             "order by php.noposting"
     
@@ -394,7 +398,7 @@ Dim adocmd As New ADODB.Command
     monthPrint = getBulan(Format(tglAwal, "yyyy/MM/dd"))
     
     If idPerusahaan <> "" Then
-        str1 = " rkn.id=" & idPerusahaan & " "
+        str1 = "and rkn.id=" & idPerusahaan & " "
     End If
     If noPosting <> "" Then
         str2 = " and sp.noposting=" & noPosting & " "
