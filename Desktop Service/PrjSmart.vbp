@@ -101,7 +101,6 @@ Designer=Report\Cr_cetakLabelFarmasi.Dsr
 Form=Report\frmCetakPendaftaran.frm
 Form=Form\frmLaporanPenerimaanKasir.frm
 Form=Form\frmCRPembayaranPiutangPerusahaan.frm
-Designer=Report\crRekapPembayaranPiutangPerusahaan.Dsr
 Form=Form\frmCRLaporanTagihanPenjaminSurat.frm
 Designer=Report\crLaporanTagihanPenjaminSurat.Dsr
 Designer=Report\crKuitansiPiutangPenjamin.Dsr
@@ -257,27 +256,21 @@ Designer=Report\cr_RincianRetur.Dsr
 Designer=Form\crDetailPengeluaranObatBebas.Dsr
 Designer=Report\cr_BuktiPengeluaranBarang.Dsr
 Form=Report\frmCRCetakLaporanPasienPulang.frm
-<<<<<<< HEAD
 Form=Report\frmCRSuratTagihanDeposit.frm
 Designer=Report\Cr_cetakbuktilayananruangan.Dsr
 Designer=Report\cr_SetoranKasir.Dsr
 Designer=Report\crLaporanPendapatan.Dsr
-=======
-<<<<<<< HEAD
 Designer=Report\crPembayaranPiutangPerusahaan.Dsr
-=======
 Designer=Report\crUsulanPermintaanBarangJasa.Dsr
 Form=Form\frmCetakUsulanPermintaanBarang.frm
 Form=Form\frmCetakStokOpname.frm
 Designer=Report\cr_LaporanStokOpname.Dsr
 Designer=Report\crUsulanPelaksanaanKegiatan.Dsr
 IconForm="GossRESTMain"
->>>>>>> 15b5b804983874269e7c38897eefad16d87f911c
->>>>>>> 1680bee6d1ae12cde7affe1b9e2d966f18701d69
 Startup="GossRESTMain"
 HelpFile=""
 Title="Smart_DesktopService"
-ExeName32="DesktopService.exe"
+ExeName32="DesktopServiceNew.exe"
 Path32="C:\DS"
 Command32=""
 Name="DesktopService"
@@ -288,11 +281,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-<<<<<<< HEAD
-VersionComments="HK180522.2"
-=======
 VersionComments="HK180531.1"
->>>>>>> 1680bee6d1ae12cde7affe1b9e2d966f18701d69
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0
