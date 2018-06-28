@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakRiwayatPenerimaandanPengeluaran 
+Begin VB.Form frmCetakStokRuangan 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   9075
-   Icon            =   "frmCetakRiwayatPenerimaandanPengeluaran.frx":0000
+   Icon            =   "frmCetakStokRuangan.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   9075
@@ -99,14 +99,13 @@ Begin VB.Form frmCetakRiwayatPenerimaandanPengeluaran
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakRiwayatPenerimaandanPengeluaran"
+Attribute VB_Name = "frmCetakStokRuangan"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New cr_LaporanRiwayatPenerimaandanPengeluaran
-
+Dim Report As New cr_LaporanStokRuangan
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -145,52 +144,54 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCetakRiwayatPenerimaandanPengeluaran = Nothing
+    Set frmCetakStokRuangan = Nothing
 End Sub
 
-Public Sub Cetak(tglAwal As String, tglAkhir As String, idriwayat As String, view As String, strUser As String)
+Public Sub Cetak(strIdRuangan As String, view As String, strUser As String)
+'tglAwal As String, tglAkhir As String,
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCetakRiwayatPenerimaandanPengeluaran = Nothing
+Set frmCetakStokRuangan = Nothing
 Dim adocmd As New ADODB.Command
 
- Dim str1, str2 As String
-
- str1 = getBulan(Format(tglAwal, "yyyy/MM/dd"))
-'    If strIdRuangan <> "" Then
-'        str1 = " spd.objectruanganfk=" & strIdRuangan & " "
-'    End If
+    Dim str1, str2 As String
+    If strIdRuangan <> "" Then
+        str1 = " where ru.id=" & strIdRuangan & " "
+    End If
     
-Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
-
-    '///**DATA BARANG'
-    strSQL = "select * from tempriwayatpersediaan_t where idriwayat='" & idriwayat & "'"
+Set Report = New cr_LaporanStokRuangan
+            strSQL = "select sp.nostruk as noterima,spd.objectprodukfk as kdproduk,pr.kodebmn,pr.namaproduk,ap.asalproduk, " & _
+                     "ss.satuanstandar,spd.tglkadaluarsa,spd.nobatch,spd.qtyproduk,spd.harganetto1,(spd.qtyproduk*spd.harganetto1) as total," & _
+                     "spd.norec as norec_spd,spd.nostrukterimafk,spd.tglpelayanan,spd.objectruanganfk,ru.namaruangan " & _
+                     "from stokprodukdetail_t as spd " & _
+                     "inner join strukpelayanan_t as sp on sp.norec = spd.nostrukterimafk " & _
+                     "inner join produk_m as pr on pr.id = spd.objectprodukfk " & _
+                     "inner join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
+                     "inner join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
+                     "inner join asalproduk_m as ap on ap.id = spd.objectasalprodukfk " & _
+                     "inner join satuanstandar_m as ss on ss.id = pr.objectsatuanstandarfk " & _
+                     "inner join ruangan_m as ru on ru.id = spd.objectruanganfk " & _
+                     str1
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
+
     With Report
         .database.AddADOCommand CN_String, adocmd
              .txtuser.SetText strUser
-             .txtPeriode.SetText str1 & Format(tglAwal, " yyyy")
-'            .txtPeriode.SetText Format(tglAkhir, "MMMM yyyy")
-'            .usNo.SetUnboundFieldSource ("{Ado.nomor}")
-             .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
-             .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
-             .usSumberDana.SetUnboundFieldSource ("{Ado.asalproduk}")
-             .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
+'             .txtPeriode.SetText Format(tglAwal, "MMMM yyyy")
+'             .txtPeriode.SetText Format(tglAkhir, "MMMM yyyy")
+'             .udTglTerima.SetUnboundFieldSource ("{Ado.tglstruk}")
+'             .udTglED.SetUnboundFieldSource ("{Ado.tglkadaluarsa}")
+             .usRuangan.SetUnboundFieldSource ("{Ado.namaruangan}")
+             .unKdBarang.SetUnboundFieldSource ("{Ado.kdproduk}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
-             .usTglMasuk.SetUnboundFieldSource ("{Ado.tglstruk}")
-             .unQty.SetUnboundFieldSource ("{Ado.qtyawal}")
-             .ucJumlah.SetUnboundFieldSource ("{Ado.ttlawal}")
-             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.harga}")
-             .unQtyPenerimaan.SetUnboundFieldSource ("{Ado.qtymasuk}")
-             .ucJmPnerimaan.SetUnboundFieldSource ("{Ado.ttlmasuk}")
-             .unQtyPengeluaran.SetUnboundFieldSource ("{Ado.qtykeluar}")
-             .ucJmlPngluaran.SetUnboundFieldSource ("{Ado.ttlkeluar}")
-             .unQtyAkhir.SetUnboundFieldSource ("{Ado.qtyakhir}")
-             .ucJmlSaldoAkhir.SetUnboundFieldSource ("{Ado.ttlakhir}")
+             .unBanyak.SetUnboundFieldSource ("{Ado.qtyproduk}")
+             .ucHarga.SetUnboundFieldSource ("{Ado.harganetto1}")
+             .ucTotal.SetUnboundFieldSource ("{Ado.total}")
+             .UsKdeBmn.SetUnboundFieldSource ("{Ado.kodebmn}")
             
             If view = "false" Then
                 Dim strPrinter As String

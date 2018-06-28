@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakRiwayatPenerimaandanPengeluaran 
+Begin VB.Form frmCetakLaporanPersediaan 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   9075
-   Icon            =   "frmCetakRiwayatPenerimaandanPengeluaran.frx":0000
+   Icon            =   "frmCetakLaporanPersediaan.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   9075
@@ -99,13 +99,13 @@ Begin VB.Form frmCetakRiwayatPenerimaandanPengeluaran
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakRiwayatPenerimaandanPengeluaran"
+Attribute VB_Name = "frmCetakLaporanPersediaan"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New cr_LaporanRiwayatPenerimaandanPengeluaran
+Dim Report As New cr_LaporanPersediaan
 
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
@@ -145,52 +145,73 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCetakRiwayatPenerimaandanPengeluaran = Nothing
+    Set frmCetakLaporanPersediaan = Nothing
 End Sub
 
-Public Sub Cetak(tglAwal As String, tglAkhir As String, idriwayat As String, view As String, strUser As String)
+Public Sub Cetak(tglAwal As String, tglAkhir As String, strIdRuangan As String, view As String, strUser As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCetakRiwayatPenerimaandanPengeluaran = Nothing
+Set frmCetakLaporanPersediaan = Nothing
 Dim adocmd As New ADODB.Command
 
- Dim str1, str2 As String
+ Dim str1, str2, namaruangan As String
 
- str1 = getBulan(Format(tglAwal, "yyyy/MM/dd"))
-'    If strIdRuangan <> "" Then
-'        str1 = " spd.objectruanganfk=" & strIdRuangan & " "
-'    End If
+ str2 = getBulan(Format(tglAwal, "yyyy/MM/dd"))
+    If strIdRuangan <> "" Then
+        str1 = " and rp.objectruanganfk=" & strIdRuangan & " "
+        
+    End If
     
-Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
+Set Report = New cr_LaporanPersediaan
 
     '///**DATA BARANG'
-    strSQL = "select * from tempriwayatpersediaan_t where idriwayat='" & idriwayat & "'"
-            
+    strSQL = "select pr.kodebmn,rp.produkfk, pr.namaproduk, sas.satuanstandar, rp.bawal, rp.hargaawal, rp.jumlahawal, " & _
+             "rp.bpenerimaan, rp.hargapenerimaan, rp.jumlahpenerimaan, rp.bpengeluaran, rp.hargapengeluaran, " & _
+             "rp.jumlahpengeluaran , rp.bakhir, rp.hargaakhir, rp.jumlahakhir, rp.hargaakhir, rp.sumberdana, " & _
+             "rp.tglmasuk, rp.tglkeluar, sc.tglclosing, rp.objectruanganfk, ru.namaruangan " & _
+             "from rekappersediaan_t as rp " & _
+             "inner join produk_m as pr on pr.id = rp.produkfk " & _
+             "left join satuanstandar_m as sas on sas.id = pr.objectsatuanstandarfk " & _
+             "left join strukclosing_t as sc on sc.norec = rp.strukclosingfk " & _
+             "left join ruangan_m as ru on ru.id = rp.objectruanganfk " & _
+             "where sc.tglclosing BETWEEN '" & tglAwal & "' and '" & tglAkhir & "'" & _
+              str1
+              
+       ReadRs strSQL
+             If RS.EOF = False Then
+                namaruangan = RS!namaruangan
+             Else
+                namaruangan = "ALL"
+             End If
+             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
     With Report
         .database.AddADOCommand CN_String, adocmd
              .txtuser.SetText strUser
-             .txtPeriode.SetText str1 & Format(tglAwal, " yyyy")
+             .txtPeriode.SetText str2 & Format(tglAwal, " yyyy")
+             .txtNamaRuangan.SetText namaruangan
 '            .txtPeriode.SetText Format(tglAkhir, "MMMM yyyy")
 '            .usNo.SetUnboundFieldSource ("{Ado.nomor}")
-             .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
-             .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
-             .usSumberDana.SetUnboundFieldSource ("{Ado.asalproduk}")
              .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
-             .usTglMasuk.SetUnboundFieldSource ("{Ado.tglstruk}")
-             .unQty.SetUnboundFieldSource ("{Ado.qtyawal}")
-             .ucJumlah.SetUnboundFieldSource ("{Ado.ttlawal}")
-             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.harga}")
-             .unQtyPenerimaan.SetUnboundFieldSource ("{Ado.qtymasuk}")
-             .ucJmPnerimaan.SetUnboundFieldSource ("{Ado.ttlmasuk}")
-             .unQtyPengeluaran.SetUnboundFieldSource ("{Ado.qtykeluar}")
-             .ucJmlPngluaran.SetUnboundFieldSource ("{Ado.ttlkeluar}")
-             .unQtyAkhir.SetUnboundFieldSource ("{Ado.qtyakhir}")
-             .ucJmlSaldoAkhir.SetUnboundFieldSource ("{Ado.ttlakhir}")
+             .UsSumberDana.SetUnboundFieldSource ("{Ado.sumberdana}")
+             .UdTglMasuk.SetUnboundFieldSource ("{Ado.tglmasuk}")
+             .UnBanyaknya1.SetUnboundFieldSource ("{Ado.bawal}")
+             .UnBanyaknya2.SetUnboundFieldSource ("{Ado.bpenerimaan}")
+             .UnBanyaknya3.SetUnboundFieldSource ("{Ado.bpengeluaran}")
+             .UnBanyak4.SetUnboundFieldSource ("{Ado.bakhir}")
+             .UcHargaSatuan1.SetUnboundFieldSource ("{Ado.hargaawal}")
+             .UcHargasatuan2.SetUnboundFieldSource ("{Ado.hargapenerimaan}")
+             .UcHargasatuan3.SetUnboundFieldSource ("{Ado.hargapengeluaran}")
+             .UcHargaSatuan4.SetUnboundFieldSource ("{Ado.hargaakhir}")
+             .UcJumlah1.SetUnboundFieldSource ("{Ado.jumlahawal}")
+             .UcJumlah2.SetUnboundFieldSource ("{Ado.jumlahpenerimaan}")
+             .UcJumlah3.SetUnboundFieldSource ("{Ado.jumlahpengeluaran}")
+             .UcJumlah4.SetUnboundFieldSource ("{Ado.jumlahakhir}")
+             
             
             If view = "false" Then
                 Dim strPrinter As String

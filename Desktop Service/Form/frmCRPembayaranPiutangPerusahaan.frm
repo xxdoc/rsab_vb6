@@ -103,8 +103,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-    Option Explicit
+Option Explicit
 Dim Report As New crPembayaranPiutangPerusahaan
+Dim Reports As New crRekapPembayaranPiutangPerusahaan
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -116,12 +117,15 @@ Dim strPort As String
 
 Private Sub cmdCetak_Click()
     Report.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+    Reports.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
     'PrinterNama = cboPrinter.Text
     Report.PrintOut False
+    Reports.PrintOut False
 End Sub
 
 Private Sub CmdOption_Click()
     Report.PrinterSetup Me.hWnd
+    Reports.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -296,6 +300,71 @@ Dim adocmd As New ADODB.Command
             Else
                 With CRViewer1
                     .ReportSource = Report
+                    .ViewReport
+                    .Zoom 1
+                End With
+                Me.Show
+            End If
+        'End If
+    End With
+Exit Sub
+errLoad:
+    MsgBox Err.Number & " " & Err.Description
+End Sub
+Public Sub cetakRekap(tglAwal As String, tglAkhir As String, idPerusahaan As String, namaPrinted As String, view As String)
+On Error GoTo errLoad
+'On Error Resume Next
+
+Set frmCRPembayaranPiutangPerusahaan = Nothing
+Dim adocmd As New ADODB.Command
+    Dim str1, str2 As String
+    
+    If idPerusahaan <> "" Then
+        str1 = " and rkn.id=" & idPerusahaan & " "
+    End If
+    
+    str2 = getBulan(Format(tglAwal, "yyyy/MM/dd"))
+                
+    Set Reports = New crRekapPembayaranPiutangPerusahaan
+    
+    strSQL = "SELECT x.tglbayar, x.adm, sum(x.totaldibayar)as totaldibayar from " & _
+             "(select to_char(sbm.tglsbm,'dd-MM-yyyy') as tglbayar,  0 as adm, " & _
+             "sbm.totaldibayar " & _
+             "from postinghutangpiutang_t as php " & _
+             "inner join strukpelayananpenjamin_t as spp on spp.norec = php.nostrukfk " & _
+             "inner join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = spp.nostrukfk " & _
+             "inner join strukpelayanan_t as spy on spy.norec = spp.nostrukfk " & _
+             "inner join strukposting_t as sp on sp.noposting = php.noposting " & _
+             "inner join pasiendaftar_t as pd on pd.norec = spy.noregistrasifk " & _
+             "inner join rekanan_m as rkn on rkn.id = pd.objectrekananfk " & _
+             "where sbm.tglsbm between '" & tglAwal & "' and '" & tglAkhir & "' " & _
+             "and sp.statusenabled = 1 and sbm.objectkelompoktransaksifk = 76)as x " & _
+             str1 & _
+             "group by x.tglbayar,x.adm " & _
+             "order by x.tglbayar"
+            
+    adocmd.CommandText = strSQL
+    adocmd.CommandType = adCmdText
+        
+    With Reports
+        .database.AddADOCommand CN_String, adocmd
+            
+            .txtPrinter.SetText namaPrinted
+            .txtPeriode.SetText "Periode " & str2 & " " & Format(tglAwal, "yyyy") & ""
+            .udTglBayar.SetUnboundFieldSource ("{ado.tglbayar}")
+            .unAdm.SetUnboundFieldSource ("{ado.adm}")
+            .unTotalBayar.SetUnboundFieldSource ("{ado.totaldibayar}")
+            
+            If view = "false" Then
+                Dim strPrinter As String
+'
+                strPrinter = GetTxt("Setting.ini", "Printer", "LaporanPembayaranPiutangPerusahaan")
+                .SelectPrinter "winspool", strPrinter, "Ne00:"
+                .PrintOut False
+                Unload Me
+            Else
+                With CRViewer1
+                    .ReportSource = Reports
                     .ViewReport
                     .Zoom 1
                 End With
