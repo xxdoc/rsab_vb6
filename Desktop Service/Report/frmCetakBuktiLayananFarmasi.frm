@@ -167,7 +167,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub cetakStrukResep(strNores As String, view As String, strUser As String)
+Public Sub cetakStrukResep(strNores As String, view As String, strUser As String, counterId As String)
 On Error GoTo errLoad
 Set frmCetakBuktiLayananFarmasi = Nothing
 Dim strSQL As String
@@ -254,12 +254,12 @@ bolStrukResep = True
              .txtNamaDokter.SetText IIf(IsNull(RS("namalengkap")), "-", RS("namalengkap")) 'RS("namalengkap")
              .txtuser.SetText strUser
             If Left(RS("noresep"), 2) = "OB" Then
-                .txtTgllahir.SetText IIf(IsNull(Format(RS("tgllahir"), "dd/mm/yyyy")), "-", Format(RS("tgllahir"), "dd/mm/yyyy")) 'RS!tgllahir
+                .txtTglLahir.SetText IIf(IsNull(Format(RS("tgllahir"), "dd/mm/yyyy")), "-", Format(RS("tgllahir"), "dd/mm/yyyy")) 'RS!tgllahir
                 .txtTelp2.SetText IIf(IsNull(RS("noteleponfaks")), "-", RS("noteleponfaks")) 'RS!noteleponfaks
                 .txtAl2.SetText IIf(IsNull(RS("alamat")), "-", RS("alamat")) 'RS!alamat
                 .txtTgl.SetText IIf(IsNull(Format(RS("tgl"), "dd/mm/yyyy HH:mm:ss")), "-", Format(RS("tgl"), "dd/mm/yyyy HH:mm:ss")) 'RS!tgl
             Else
-                .txtTgllahir.SetText IIf(IsNull(RS("tgllahir")), "-", RS("tgllahir")) 'RS!tgllahir
+                .txtTglLahir.SetText IIf(IsNull(RS("tgllahir")), "-", RS("tgllahir")) 'RS!tgllahir
                 .txtTelp2.SetText IIf(IsNull(RS("noteleponfaks")), "-", RS("noteleponfaks")) 'RS!noteleponfaks
                 .txtAl2.SetText IIf(IsNull(RS("alamat")), "-", RS("alamat")) 'RS!alamat
                 If RS2.RecordCount > 0 Then
@@ -269,6 +269,8 @@ bolStrukResep = True
                 .txtAlergi.SetText IIf(IsNull(RS("alergi")), "-", RS("alergi")) 'RS!alergi
 
             End If
+            
+            .txtCounterId.SetText counterId
              
              
            '  .usSatuan.SetUnboundFieldSource ("{ado.SatuanJmlK}")
