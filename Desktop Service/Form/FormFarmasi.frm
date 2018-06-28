@@ -91,6 +91,14 @@ On Error Resume Next
                 Call frmCRLaporanRekapRetur.Cetak(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Detail Penjualan Obat Non Layanan"
+            Case "cetak-detailPemakaianVaksin"
+                Call frmCRPemakaianVaksin.CetakDetail(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Detail Penjualan Obat Non Layanan"
+            Case "cetak-RekapPemakaianVaksin"
+                Call frmCRPemakaianVaksin.CetakRekap(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Detail Penjualan Obat Non Layanan"
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
