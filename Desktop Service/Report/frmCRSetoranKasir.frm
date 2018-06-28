@@ -175,6 +175,10 @@ Set Report = New cr_SetoranKasir
             " where sbm.tglsbm between '" & tglAwal & "' and '" & tglAkhir & "' and p.id = '" & kasirId & "'  "
              
     ReadRs strSQL
+    Dim noClose As String
+        
+    noClose = RS!noclosing
+   
     
     Dim tCash, tKk, tKd, tTotal As Double
     Dim i As Integer
@@ -184,6 +188,7 @@ Set Report = New cr_SetoranKasir
     tKd = 0
     tTotal = 0
     For i = 0 To RS.RecordCount - 1
+       
         If (RS!idcarabayar = 1) Then
             tCash = tCash + CDbl(IIf(IsNull(RS!totaldibayar), 0, RS!totaldibayar))
         ElseIf (RS!idcarabayar = 2) Then
@@ -194,19 +199,21 @@ Set Report = New cr_SetoranKasir
         tTotal = tTotal + CDbl(IIf(IsNull(RS!totaldibayar), 0, RS!totaldibayar))
         RS.MoveNext
     Next
+  
 
     ReadRs2 "select DISTINCT sc.noclosing,to_char(sc.tglclosing,'dd-MM-yyyy HH:mm')as tgldiclose,sc.totaldibayar as total," & _
                " sc.objectpegawaidiclosefk,pg.namalengkap as namakasir," & _
                " sck.carabayarfk,cb.carabayar,sck.totaldibayar as jmlsetor," & _
-               " sh.objectcarasetorfk ,cs.carasetor,sh.objectpegawaiterimafk,pg2.namalengkap as namapenerima" & _
+               " sck.objectcarasetorfk ,cs.carasetor,sh.objectpegawaiterimafk,pg2.namalengkap as namapenerima" & _
                " from strukclosing_t as sc" & _
                " inner join strukclosingkasir_t as sck on sck.noclosingfk=sc.norec" & _
                " left join strukhistori_t as sh on sh.noclosing=sc.noclosing" & _
                " left join carabayar_m  as cb on cb.id=sck.carabayarfk" & _
-               " left join carasetor_m as cs on cs.id=sh.objectcarasetorfk" & _
+               " left join carasetor_m as cs on cs.id=sck.objectcarasetorfk" & _
                " left join pegawai_m as pg on pg.id=sc.objectpegawaidiclosefk" & _
                " left join pegawai_m as pg2 on pg2.id=sh.objectpegawaiterimafk" & _
-               " where sc.tglawal BETWEEN '" & tglAwal & "' and '" & tglAkhir & "'  and sc.objectpegawaidiclosefk = '" & kasirId & "' "
+               " where sc.tglawal BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sc.objectpegawaidiclosefk = '" & kasirId & "' and sc.noclosing = '" & noClose & "' "
+               
             
     Dim sCash, sKk, sKd, sTotal As Double, Penerima As String, tglClose As String
     Dim j As Integer
