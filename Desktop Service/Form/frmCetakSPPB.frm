@@ -167,10 +167,11 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub cetak(strNorec As String, view As String)
+Public Sub Cetak(strNorec As String, view As String)
 On Error GoTo errLoad
 Set frmCetakSPPB = Nothing
 Dim strSQL As String
+Dim str1, str2 As String
 
 bolStrukResep = True
     
@@ -184,12 +185,21 @@ bolStrukResep = True
                     "pr.namaproduk, ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount, op.hargappn, " & _
                     "case when op.hargadiscount <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargadiscount else 0 end as persenDisc, " & _
                     "case when op.hargappn <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargappn else 0 end as persenPpn, " & _
-                    "(op.hargasatuan * op.qtyproduk)-(hargadiscount+hargappn)as total " & _
+                    "(op.hargasatuan * op.qtyproduk)-(hargadiscount+hargappn)as total,pg.namalengkap,pg.nippns " & _
                     "from strukorder_t so " & _
                     "left join orderpelayanan_t op on op.strukorderfk=so.norec " & _
                     "left join produk_m pr on pr.id=op.objectprodukfk " & _
                     "left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
+                    "left join pegawai_m as pg on pg.id = so.objectpegawaiorderfk " & _
                     "where so.norec = '" & strNorec & "'"
+             ReadRs strSQL
+             If RS.EOF = False Then
+                str1 = RS!namalengkap
+                str2 = RS!nippns
+             Else
+                str1 = "-"
+                str2 = "-"
+             End If
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
@@ -214,6 +224,8 @@ bolStrukResep = True
              .unPPN.SetUnboundFieldSource ("{Ado.persenPpn}")
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")
              .usQtyHari.SetUnboundFieldSource ("{Ado.nourutlogin}")
+             .Text47.SetText str1
+             .Text3.SetText str2
              
 '             Dim X As Double
 '             X = Round("{Ado.total}")
