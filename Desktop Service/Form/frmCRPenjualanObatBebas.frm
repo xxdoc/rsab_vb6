@@ -182,9 +182,7 @@ Set Report = New crDetailPengeluaranObatBebas
             "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk " & _
             "left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
             "inner JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern inner join alamat_m as al on al.nocmfk= ps.id inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
-            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
-            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             str1 & _
             str2 & _
@@ -246,8 +244,8 @@ Set Report = New crDetailPengeluaranObatBebas
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usJk.SetUnboundFieldSource ("{ado.jeniskelamin}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaIbu.SetUnboundFieldSource ("{ado.namaibu}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
