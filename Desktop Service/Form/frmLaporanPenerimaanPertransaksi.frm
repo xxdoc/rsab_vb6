@@ -142,8 +142,6 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakLaporanPenerimaanPertransaksi(idKasir As String, tglAwal As String, tglAkhir As String, idRuangan As String, idDokter As String, view As String, strIdPegawai As String)
-'On Error GoTo errLoad
-'On Error Resume Next
 
 Set frmCRLaporanPenerimaanPertransaksi = Nothing
 Dim adocmd As New ADODB.Command
