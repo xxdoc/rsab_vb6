@@ -84,7 +84,6 @@ Form=Form\frmLaporanPenerimaanRemun.frm
 Designer=crLaporanPenerimaan.Dsr
 Form=Form\frmLaporanPendapatanFFS.frm
 Designer=Report\crLaporanPendapatanFFS.Dsr
-Designer=Report\crLaporanHarianKasBku.Dsr
 Form=Form\frmCRPenjualanFarmasi.frm
 Form=Form\FormFarmasi.frm
 Form=Form\frmCRDetailPengeluaranObat.frm
@@ -272,13 +271,9 @@ Designer=crDetailPemkaianVaksin.Dsr
 Designer=crRekapPemkaianVaksin.Dsr
 Form=Form\frmLaporanPenerimaanKasir.frm
 Designer=Report\crPenerimaanKasir1.Dsr
-<<<<<<< HEAD
-Form=Form\frmLaporanPenerimaanPertransaksi.frm
 Designer=Report\crLaporanffsIBS.Dsr
 Designer=Report\crPenerimaanPertransaksi.Dsr
-=======
 Form=Form\frmCRPenjualanKaryawanFarmasi.frm
->>>>>>> b6cc3c47d7ce0135065cd832f302e6a21eeb2a81
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -294,7 +289,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-VersionComments="HK180704.1"
+VersionComments="HK180705.1"
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0
