@@ -11,9 +11,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-<<<<<<< HEAD
 Private Sub Section1_Format(ByVal pFormattingInfo As Object)
 
 End Sub
-=======
->>>>>>> 77473985196b4ad4c70df85b72ce24babd516373

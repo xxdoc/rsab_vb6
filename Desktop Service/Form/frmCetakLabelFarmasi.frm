@@ -181,7 +181,7 @@ Set Report = New Cr_cetakLabelFarmasi
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .udtTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNamaProduk.SetUnboundFieldSource ("{ado.namaproduk}")
-            .usAturanPakai.SetUnboundFieldSource ("{ado.aturanpakai}")
+'            .usAturanPakai.SetUnboundFieldSource ("{ado.aturanpakai}")
             
 '            If view = "false" Then
                 Dim strPrinter As String
