@@ -1,12 +1,12 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
 Begin VB.Form Form2 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Panggil Antrian"
-   ClientHeight    =   5070
+   ClientHeight    =   5205
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   5310
+   ClientWidth     =   5175
    BeginProperty Font 
       Name            =   "Tahoma"
       Size            =   11.25
@@ -20,9 +20,39 @@ Begin VB.Form Form2
    LinkTopic       =   "Form2"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   5070
-   ScaleWidth      =   5310
+   ScaleHeight     =   5205
+   ScaleWidth      =   5175
    StartUpPosition =   3  'Windows Default
+   Begin VB.TextBox E1 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   960
+      TabIndex        =   35
+      Text            =   "E"
+      Top             =   4440
+      Width           =   735
+   End
+   Begin VB.TextBox E2 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   1680
+      TabIndex        =   34
+      Text            =   "0"
+      Top             =   4440
+      Width           =   1575
+   End
+   Begin VB.TextBox E4 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   3240
+      TabIndex        =   33
+      Text            =   "0"
+      Top             =   4440
+      Width           =   855
+   End
    Begin VB.TextBox D4 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
@@ -245,7 +275,7 @@ Begin VB.Form Form2
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   2535
+      Height          =   2895
       Left            =   0
       TabIndex        =   13
       Top             =   2280
@@ -547,6 +577,10 @@ Private Sub infotainment()
     D2 = 0
     D3 = 0
     D4 = 0
+    
+    
+    E2 = 0
+    E4 = 0
     For i = 0 To RS.RecordCount - 1
         If RS!jenis = A1 Then
             A2 = RS!Last
@@ -559,6 +593,9 @@ Private Sub infotainment()
         End If
         If RS!jenis = D1 Then
             D2 = RS!Last
+        End If
+        If RS!jenis = E1 Then
+            E2 = RS!Last
         End If
         A3 = Val(A2) + 1
         B3 = Val(B2) + 1
@@ -578,6 +615,9 @@ Private Sub infotainment()
         End If
         If RS2!jenis = D1 Then
             D4 = RS2!sisa
+        End If
+        If RS2!jenis = E1 Then
+            E4 = RS2!sisa
         End If
         RS2.MoveNext
     Next
