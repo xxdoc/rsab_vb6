@@ -142,7 +142,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRDetailPengeluaranObat = Nothing
 End Sub
 
-Public Sub cetak(namaPrinted As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompokPasien As String, idPegawai As String, view As String)
+Public Sub Cetak(namaPrinted As String, tglAwal As String, tglAkhir As String, idRuangan As String, idKelompokPasien As String, idPegawai As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -166,7 +166,7 @@ Dim strSQL As String
     With reportDetailPengeluaran
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
-             strSQL = "select pg.namalengkap, ru.namaruangan as ruangan, ru2.namaruangan,dp.namadepartemen,sr.tglresep, sr.noresep, pr.kdproduk as kdproduk,pr.id as idproduk, pr.namaproduk, ss.satuanstandar, " & _
+             strSQL = "select pg.namalengkap, ru.namaruangan as ruangan, ru2.namaruangan,dp.namadepartemen,sr.tglresep, EXTRACT(HOUR from sr.tglresep) || ':' || EXTRACT(MINUTE from sr.tglresep) as jamresep, sr.noresep, pr.kdproduk as kdproduk,pr.id as idproduk, pr.namaproduk, ss.satuanstandar, " & _
                      "pp.jumlah, pp.hargajual,pp.hargadiscount, pp.jasa, pp.jumlah*pp.hargajual as subtotal, case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, case when jr.jenisracikan is null then '-' else jr.jenisracikan end as jenisracikan, " & _
                      "'-' as kodefarmatologi, ps.namapasien, ps.tgllahir, ps.nocm, pd.noregistrasi, case when jk.id = '1' then 'L' else 'P' end as jeniskelamin ," & _
                      "kp.kelompokpasien , ps.namaibu, al.alamatlengkap " & _
@@ -211,7 +211,8 @@ Dim strSQL As String
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usNamaUnit.SetUnboundFieldSource ("{ado.namaruangan}")
             .usUnit.SetUnboundFieldSource ("{ado.ruangan}")
-            .udtTanggal.SetUnboundFieldSource ("{ado.tglresep}")
+            .udTglEntry.SetUnboundFieldSource ("{ado.tglresep}")
+            .utJamEntry.SetUnboundFieldSource ("{ado.jamresep}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
 '            .udtJam.SetUnboundFieldSource ("{ado.tglresep}")
             .usDepart.SetUnboundFieldSource ("{ado.namadepartemen}")
