@@ -191,7 +191,7 @@ Set Report = New cr_SuratTagihanDeposit
 '        RS2.MoveNext
 '
 '    Next
-    totals = Replace(total, ".", ",")
+    totals = total ' Replace(total, ".", ",")
     ttagihan = totals
     tdeposit = deposit
     tsisa = ttagihan - tdeposit
