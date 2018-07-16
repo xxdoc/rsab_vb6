@@ -3,10 +3,10 @@ Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
 Begin VB.Form Form2 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Panggil Antrian"
-   ClientHeight    =   5205
+   ClientHeight    =   5655
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   5175
+   ClientWidth     =   5190
    BeginProperty Font 
       Name            =   "Tahoma"
       Size            =   11.25
@@ -20,9 +20,69 @@ Begin VB.Form Form2
    LinkTopic       =   "Form2"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   5205
-   ScaleWidth      =   5175
+   ScaleHeight     =   5655
+   ScaleWidth      =   5190
    StartUpPosition =   3  'Windows Default
+   Begin VB.TextBox G4 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   3240
+      TabIndex        =   41
+      Text            =   "0"
+      Top             =   5160
+      Width           =   855
+   End
+   Begin VB.TextBox G2 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   1680
+      TabIndex        =   40
+      Text            =   "0"
+      Top             =   5160
+      Width           =   1575
+   End
+   Begin VB.TextBox G1 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   960
+      TabIndex        =   39
+      Text            =   "G"
+      Top             =   5160
+      Width           =   735
+   End
+   Begin VB.TextBox F4 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   3240
+      TabIndex        =   38
+      Text            =   "0"
+      Top             =   4800
+      Width           =   855
+   End
+   Begin VB.TextBox F2 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   1680
+      TabIndex        =   37
+      Text            =   "0"
+      Top             =   4800
+      Width           =   1575
+   End
+   Begin VB.TextBox F1 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   390
+      Left            =   960
+      TabIndex        =   36
+      Text            =   "F"
+      Top             =   4800
+      Width           =   735
+   End
    Begin VB.TextBox E1 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
@@ -275,7 +335,7 @@ Begin VB.Form Form2
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   2895
+      Height          =   3375
       Left            =   0
       TabIndex        =   13
       Top             =   2280
@@ -581,6 +641,12 @@ Private Sub infotainment()
     
     E2 = 0
     E4 = 0
+    
+    F2 = 0
+    F4 = 0
+    
+    G2 = 0
+    G4 = 0
     For i = 0 To RS.RecordCount - 1
         If RS!jenis = A1 Then
             A2 = RS!Last
@@ -596,6 +662,12 @@ Private Sub infotainment()
         End If
         If RS!jenis = E1 Then
             E2 = RS!Last
+        End If
+        If RS!jenis = F1 Then
+            F2 = RS!Last
+        End If
+        If RS!jenis = G1 Then
+            G2 = RS!Last
         End If
         A3 = Val(A2) + 1
         B3 = Val(B2) + 1
@@ -618,6 +690,12 @@ Private Sub infotainment()
         End If
         If RS2!jenis = E1 Then
             E4 = RS2!sisa
+        End If
+        If RS2!jenis = F1.Text Then
+            F4 = RS2!sisa
+        End If
+        If RS2!jenis = G1.Text Then
+            G4 = RS2!sisa
         End If
         RS2.MoveNext
     Next
