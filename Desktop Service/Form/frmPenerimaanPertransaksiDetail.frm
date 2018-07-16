@@ -160,11 +160,11 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crPenerimaanPertransaksiDetail
-    strSQL = "select sum(case when kpr2.id = 25 then spd.hargasatuan* spd.qtyproduk else 0 end) as nl_akomodasi, sum(case when kpr2.id = 24 then spd.hargasatuan* spd.qtyproduk else 0 end) as nl_farmasi, " & _
+    strSQL = "select case when cb.id = 1 then sbm.totaldibayar else 0 end as tunai,case when cb.id > 1 then sbm.totaldibayar else 0 end as nontunai ,sum(case when kpr2.id = 25 then spd.hargasatuan* spd.qtyproduk else 0 end) as nl_akomodasi, sum(case when kpr2.id = 24 then spd.hargasatuan* spd.qtyproduk else 0 end) as nl_farmasi, " & _
              "sum(case when kpr2.id = 20 then spd.hargasatuan* spd.qtyproduk else 0 end) as nl_laundry,sum(case when kpr2.id = 16 then spd.hargasatuan* spd.qtyproduk else 0 end) as nl_jenazah, " & _
              "sum(case when kpr.id = 25 then (pp.hargajual* pp.jumlah)-pp.hargadiscount else 0 end) as karcis,sum(case when kpr.id = 26 and pp.hargadiscount is not null then (pp.hargajual* pp.jumlah)-pp.hargadiscount  when kpr.id = 26 and pp.hargadiscount is null then pp.hargajual* pp.jumlah else 0 end) as konsul, " & _
              "sum(case when kpr.id in (3, 4, 8, 9, 10, 11, 13, 14) and pp.hargadiscount is not null then (pp.hargajual* pp.jumlah)-pp.hargadiscount when kpr.id in (3, 4, 8, 9, 10, 11, 13, 14) and pp.hargadiscount is  null then pp.hargajual* pp.jumlah else 0 end) as tindakan, sum(case when kpr.id =1 and pp.hargadiscount is not null then (pp.hargajual* pp.jumlah)-pp.hargadiscount when kpr.id =1 and pp.hargadiscount is  null then pp.hargajual* pp.jumlah else 0 end) as lab, sum(case when kpr.id =2 and pp.hargadiscount is not null then (pp.hargajual* pp.jumlah)-pp.hargadiscount " & _
-                "when kpr.id =2 and pp.hargadiscount is null then pp.hargajual* pp.jumlah else 0 end) as radiologi, " & _
+            "when kpr.id =2 and pp.hargadiscount is null then pp.hargajual* pp.jumlah else 0 end) as radiologi, " & _
              "sum(case when pp.aturanpakai is not null then (pp.hargajual* pp.jumlah)+ pp.jasa else 0 end) as farmasi,case when pd.noregistrasi is null then sp.nostruk else pd.noregistrasi end as noregistrasi, sbm.tglsbm, ps.nocm,case when ps.namapasien is null then sp.namapasien_klien else ps.namapasien end as namapasien,case when kp.kelompokpasien is null then 'non layanan' else kp.kelompokpasien end as kelompokpasien, " & _
              "ru.namaruangan,  pg.namalengkap, pg2.namalengkap as kasir,  sbm.totaldibayar, case when sp.totalprekanan is null then 0 else sp.totalprekanan end as hutangpenjamin,sp.totalharusdibayar,  lu.namauser as namalogin " & _
              "from strukbuktipenerimaan_t as sbm " & _
@@ -215,8 +215,8 @@ Set Report = New crPenerimaanPertransaksiDetail
             .ucFarmasiNL.SetUnboundFieldSource ("{ado.nl_farmasi}")
             .ucHutangPenjamin.SetUnboundFieldSource ("{ado.hutangpenjamin}")
 '            .ucJmlBayar.SetUnboundFieldSource ("{ado.totalharusdibayar}")
-'            .ucTunai.SetUnboundFieldSource ("{ado.tunai}")
-'            .ucCard.SetUnboundFieldSource ("{ado.nontunai}")
+            .ucTunai.SetUnboundFieldSource ("{ado.tunai}")
+            .ucCard.SetUnboundFieldSource ("{ado.nontunai}")
             If view = "false" Then
                 Dim strPrinter As String
 '
