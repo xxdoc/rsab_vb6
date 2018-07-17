@@ -185,11 +185,11 @@ Private Sub Form_Unload(Cancel As Integer)
     Shell_NotifyIcon NIM_DELETE, nid
     If CN.State = adStateOpen Then CN.Close
 End Sub
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
     Dim msg As Long
     Dim sFilter As String
     
-    msg = X / Screen.TwipsPerPixelX
+    msg = x / Screen.TwipsPerPixelX
     Select Case msg
         Case WM_LBUTTONDOWN
             Me.Show ' tampilkan form
@@ -260,6 +260,7 @@ Private Sub Gossamer1_DynamicRequest( _
         If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.akuntansi(Gossamer1.URLDecode(Params))
         If URI = "\printvb\logistik" Then RespBody = frmLogistik.Logistik(Gossamer1.URLDecode(Params))
         If URI = "\printvb\simakbmn" Then RespBody = frmSimakBmn.Fungsi(Gossamer1.URLDecode(Params))
+        If URI = "\printvb\gizi" Then RespBody = frmGizi.Gizi(Gossamer1.URLDecode(Params))
        
         If Err Then
             ErrNumber = Err.Number
