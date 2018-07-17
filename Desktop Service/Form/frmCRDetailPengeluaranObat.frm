@@ -166,7 +166,7 @@ Dim strSQL As String
     With reportDetailPengeluaran
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
-             strSQL = "select pg.namalengkap, ru.namaruangan as ruangan, ru2.namaruangan,dp.namadepartemen,sr.tglresep, EXTRACT(HOUR from sr.tglresep) || ':' || EXTRACT(MINUTE from sr.tglresep) as jamresep, sr.noresep, pr.kdproduk as kdproduk,pr.id as idproduk, pr.namaproduk, ss.satuanstandar, " & _
+             strSQL = "select pg.namalengkap, ru.namaruangan as ruangan, ru2.namaruangan,dp.namadepartemen,sr.tglresep, to_char(sr.tglresep, 'HH12:MI PM') as jamresep, sr.noresep, pr.kdproduk as kdproduk,pr.id as idproduk, pr.namaproduk, ss.satuanstandar, " & _
                      "pp.jumlah, pp.hargajual,pp.hargadiscount, pp.jasa, pp.jumlah*pp.hargajual as subtotal, case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, case when jr.jenisracikan is null then '-' else jr.jenisracikan end as jenisracikan, " & _
                      "'-' as kodefarmatologi, ps.namapasien, ps.tgllahir, ps.nocm, pd.noregistrasi, case when jk.id = '1' then 'L' else 'P' end as jeniskelamin ," & _
                      "kp.kelompokpasien , ps.namaibu, al.alamatlengkap " & _
@@ -212,7 +212,7 @@ Dim strSQL As String
             .usNamaUnit.SetUnboundFieldSource ("{ado.namaruangan}")
             .usUnit.SetUnboundFieldSource ("{ado.ruangan}")
             .udTglEntry.SetUnboundFieldSource ("{ado.tglresep}")
-            .utJamEntry.SetUnboundFieldSource ("{ado.jamresep}")
+            .usJamEntry.SetUnboundFieldSource ("{ado.jamresep}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
 '            .udtJam.SetUnboundFieldSource ("{ado.tglresep}")
             .usDepart.SetUnboundFieldSource ("{ado.namadepartemen}")
@@ -230,7 +230,7 @@ Dim strSQL As String
             .usJenisRacikan.SetUnboundFieldSource ("{ado.jenisracikan}")
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")
