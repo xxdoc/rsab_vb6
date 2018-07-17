@@ -98,6 +98,15 @@ On Error Resume Next
                     Set Root = New JNode
                     Root("Status") = "Cetak Jurnal"
                 End If
+            
+            Case "cetak-jurnal-rev"
+                Call frmLaporanJurnalRev.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Jurnal"
+            Case "cetak-jurnal-detail-rev"
+                Call frmLaporanJurnalDetailRev.CetakLaporanJurnal(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Jurnal"
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"

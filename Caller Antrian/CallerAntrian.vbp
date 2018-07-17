@@ -21,6 +21,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
+VersionComments="HK180713.1"
 VersionCompanyName="Microsoft"
 CompilationType=0
 OptimizationType=0
