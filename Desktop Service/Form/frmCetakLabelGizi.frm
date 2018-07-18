@@ -115,13 +115,13 @@ Dim PrinterNama As String
 
 Dim adoReport As New ADODB.Command
 Private Sub cmdCetak_Click()
-    Report.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
+    reportLabel.SelectPrinter "winspool", cboPrinter.Text, "Ne00:"
     'PrinterNama = cboPrinter.Text
-    Report.PrintOut False
+    reportLabel.PrintOut False
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    reportLabel.PrinterSetup Me.hWnd
     CRViewer1.Refresh
 End Sub
 
@@ -203,9 +203,9 @@ Dim jml As Integer
                 .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             .txtTglLahir.SetText Format(RS!tgllahir, "yyyy/MM/dd")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
 '            .udtTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usRuangan.SetUnboundFieldSource ("{ado.ruanganasal}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
