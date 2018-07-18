@@ -280,9 +280,14 @@ Form=Form\frmPenerimaanPertransaksiDetail.frm
 Designer=Report\crPenerimaanPertransaksiDetail.Dsr
 Form=Form\frmLaporanPenerimaanPertransaksi.frm
 Designer=Report\crPenerimaanPertransaksi.Dsr
+<<<<<<< HEAD
+Form=Form\frmLaporanReservasiOnline.frm
+Designer=Report\crLaporanReservasiOnline.Dsr
+=======
 Form=Form\frmSimakBMN.frm
 Form=Form\frmCetakLabelFarmasi.frm
 Designer=Report\Cr_cetakLabelFarmasi.Dsr
+>>>>>>> 099ffd2cf4711b8bb34e692224d35c2af2ed5a2a
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
