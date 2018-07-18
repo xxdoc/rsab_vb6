@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{6BF52A50-394A-11D3-B153-00C04F79FAA6}#1.0#0"; "wmp.dll"
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
 Begin VB.Form Form1 
    BorderStyle     =   0  'None
    Caption         =   "Form1"
@@ -1691,8 +1691,10 @@ Private Sub Timer4_Timer()
     If WindowsMediaPlayer1.Controls.currentPosition + 2 > WindowsMediaPlayer1.currentMedia.duration Then
         vdeo = vdeo + 1
         If vdeo > File1.ListCount - 1 Then vdeo = 0
-        'WindowsMediaPlayer1.URL = App.Path & "\video\" & File1.List(0)
-        WindowsMediaPlayer1.URL = App.Path & "\video\" & File1.List(vdeo)
+        If File1.List(vdeo) <> "Thumbs.db" Then
+            'WindowsMediaPlayer1.URL = App.Path & "\video\" & File1.List(0)
+            WindowsMediaPlayer1.URL = App.Path & "\video\" & File1.List(vdeo)
+        End If
     End If
     Label1.Caption = WindowsMediaPlayer1.Controls.currentPosition
 Error_Handler:
