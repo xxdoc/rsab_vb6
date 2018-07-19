@@ -178,11 +178,11 @@ Set Report = New crLaporanPasienPulang2
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND idkelompokpasien = '" & strIdKelompokPasien & "' "
     If strIdPerusahaan <> "" Then strFilter = strFilter & " AND rk.id = '" & strIdPerusahaan & "' "
   
-    orderby = strFilter
-            & "group by pd.tglregistrasi,pa.nosep,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru.namaruangan, " & _
+    orderby = strFilter & _
+            "group by pd.tglregistrasi,pa.nosep,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru.namaruangan, " & _
             "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya,ru.objectdepartemenfk " & _
-            "order by pa.nosep"
-            sp.tglstruk ""
+            "order by pa.nosep" & _
+            "sp.tglstruk "
 
         
 '    strSQL = "select pd.tglregistrasi,pd.tglpulang,case when pa.nosep is null then '-' else pa.nosep end as nosep,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
