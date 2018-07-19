@@ -282,6 +282,7 @@ Designer=Report\crPenerimaanPertransaksi.Dsr
 Form=Form\frmLaporanReservasiOnline.frm
 Designer=Report\crLaporanReservasiOnline.Dsr
 Form=Report\frmCRCetakLaporanPasienPulang2.frm
+Form=Form\frmGizi.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
