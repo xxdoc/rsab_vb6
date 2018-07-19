@@ -255,7 +255,7 @@ strSQL = "select * from templaporanpasienpulang_t where idlappulang = '" & idlap
             .unDeposit.SetUnboundFieldSource ("{ado.jumlahdeposit}")
             .unDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .unPiutang.SetUnboundFieldSource ("{ado.totalppenjamin}")
-            .unTanggunganPasien.SetUnboundFieldSource ("{ado.totalharusdibayar}")
+            .unTanggunganPasien.SetUnboundFieldSource ("{ado.totalharusbayar}")
 '            .ucKembalian.SetUnboundFieldSource ("{ado.Kembalian}")
             .unLainlain.SetUnboundFieldSource ("{ado.pendapatanlainlain}")
             .usPembayaran.SetUnboundFieldSource ("{ado.namarekanan}")

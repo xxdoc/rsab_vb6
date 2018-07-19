@@ -149,7 +149,7 @@ End Sub
 
 Public Sub CetakLaporanPasienPulang(tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
                                         strIdKelompokPasien As String, strIdPegawai As String, strIdPerusahaan As String, view As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRCetakLaporanPasienPulang2 = Nothing
@@ -160,7 +160,7 @@ Set Report = New crLaporanPasienPulang2
     strFilter = ""
     orderby = ""
     
-    strFilter = " where pd.tglpulang BETWEEN '" & _
+    strFilter = "where pd.tglpulang BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd HH:mm") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd HH:mm") & "'" ' and pp.strukfk is not null "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
@@ -175,58 +175,59 @@ Set Report = New crLaporanPasienPulang2
         End If
     End If
     If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
-    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
+    If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND idkelompokpasien = '" & strIdKelompokPasien & "' "
     If strIdPerusahaan <> "" Then strFilter = strFilter & " AND rk.id = '" & strIdPerusahaan & "' "
   
-    orderby = strFilter & "group by pd.tglregistrasi,pa.nosep,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru.namaruangan, " & _
+    orderby = strFilter & _
+            "group by pd.tglregistrasi,pa.nosep,pd.tglpulang,sp.tglstruk,ps.nocm,pd.noregistrasi,ps.namapasien,sp.objectruanganfk,ru.namaruangan, " & _
             "kl.namakelas,sp.nostruk,sbm.nosbm,rk.namarekanan,sp.totalharusdibayar,sp.totalprekanan,sp.totalbiayatambahan,pd.objectkelompokpasienlastfk,klp.kelompokpasien ,sbm.keteranganlainnya,ru.objectdepartemenfk " & _
-            "order by pa.nosep"
-            'sp.tglstruk"
+            "order by pa.nosep" & _
+            "sp.tglstruk "
 
         
-    strSQL = "select pd.tglregistrasi,pd.tglpulang,case when pa.nosep is null then '-' else pa.nosep end as nosep,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
-            "sum(case when pp.produkfk not  in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahbiaya, sum((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah) as diskon,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
-            "sum(case when pp.produkfk      in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahdeposit, " & _
-            "sp.totalharusdibayar,(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap " & _
-            "from pasiendaftar_t as pd " & _
-            "left join antrianpasiendiperiksa_t as apd on apd.norec=pd.norec " & _
-            "left join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
-            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec " & _
-            "left join pemakaianasuransi_t as pa on pa.noregistrasifk=pd.norec " & _
-            "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
-            "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk  " & _
-            "inner JOIN produk_m as pr on pr.id=pp.produkfk  " & _
-            "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  " & _
-            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk  " & _
-            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
-            "left join kelas_m  as kl on kl.id=pd.objectkelasfk  " & _
-            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby
-    
-'    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
+'    strSQL = "select pd.tglregistrasi,pd.tglpulang,case when pa.nosep is null then '-' else pa.nosep end as nosep,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
 '            "sum(case when pp.produkfk not  in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahbiaya, sum((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah) as diskon,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
 '            "sum(case when pp.produkfk      in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahdeposit, " & _
 '            "sp.totalharusdibayar,(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap " & _
-'            "from strukpelayanan_t as sp " & _
-'            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec   " & _
-'            "LEFT JOIN strukbuktipenerimaancarabayar_t as sbmc on sbm.norec=sbmc.nosbmfk  " & _
-'            "left JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk  " & _
-'            "left JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk  " & _
-'            "left JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk  " & _
-'            "left JOIN ruangan_m as ru2 on ru2.id=sp.objectruanganfk  " & _
-'            "LEFT join departemen_m as dp on dp.id = ru2.objectdepartemenfk  " & _
-'            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
-'            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
+'            "from pasiendaftar_t as pd " & _
+'            "left join antrianpasiendiperiksa_t as apd on apd.norec=pd.norec " & _
+'            "left join strukpelayanan_t as sp on sp.noregistrasifk=pd.norec " & _
+'            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec " & _
+'            "left join pemakaianasuransi_t as pa on pa.noregistrasifk=pd.norec " & _
 '            "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
 '            "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk  " & _
 '            "inner JOIN produk_m as pr on pr.id=pp.produkfk  " & _
 '            "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  " & _
-'            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk  " & _
-'            "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk  " & _
 '            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk  " & _
 '            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
 '            "left join kelas_m  as kl on kl.id=pd.objectkelasfk  " & _
-'            "LEFT JOIN strukpelayananpenjamin_t as sppj on sp.norec=sppj.nostrukfk " & _
 '            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby
+    
+    strSQL = "select pd.tglregistrasi,pd.tglpulang,sp.tglstruk,(ps.nocm || ' / ' || pd.noregistrasi) as nodaftar,upper(ps.namapasien) as namapasien,sp.objectruanganfk,ru.namaruangan,kl.namakelas,pd.noregistrasi as nobilling,sbm.nosbm as nokwitansi,sum(case when djp.objectjenisprodukfk = 97 then (((pp.hargajual - (case when pp.hargadiscount is null then 0 else pp.hargadiscount end))* pp.jumlah)+case when pp.jasa is null then 0 else pp.jasa end) else 0 end) as totalresep, " & _
+            "sum(case when pp.produkfk not  in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahbiaya, sum((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)* pp.jumlah) as diskon,case when rk.namarekanan is null then '-' else rk.namarekanan end as namarekanan, " & _
+            "sum(case when pp.produkfk      in (402611) then (pp.jumlah*(pp.hargajual-case when pp.hargadiscount is null then 0 else pp.hargadiscount end))+case when pp.jasa is null then 0 else pp.jasa end else 0 end) as jumlahdeposit, " & _
+            "sp.totalharusdibayar,(case when sp.totalprekanan is null then 0 else sp.totalprekanan end) as totalppenjamin,(case when sp.totalbiayatambahan is null then 0 else sp.totalbiayatambahan end) as pendapatanlainlain,pd.objectkelompokpasienlastfk as idkelompokpasien,klp.kelompokpasien, sbm.keteranganlainnya,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap " & _
+            "from strukpelayanan_t as sp " & _
+            "left JOIN pelayananpasien_t as pp on pp.strukfk=sp.norec  LEFT JOIN strukbuktipenerimaan_t as sbm on sp.nosbmlastfk=sbm.norec   " & _
+            "LEFT JOIN strukbuktipenerimaancarabayar_t as sbmc on sbm.norec=sbmc.nosbmfk  " & _
+            "left JOIN carabayar_m as cb on cb.id=sbmc.objectcarabayarfk  " & _
+            "left JOIN loginuser_s as lu on lu.id=sbm.objectpegawaipenerimafk  " & _
+            "left JOIN pegawai_m as pg2 on pg2.id=lu.objectpegawaifk  " & _
+            "left JOIN ruangan_m as ru2 on ru2.id=sp.objectruanganfk  " & _
+            "LEFT join departemen_m as dp on dp.id = ru2.objectdepartemenfk  " & _
+            "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk  " & _
+            "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk  " & _
+            "left JOIN pegawai_m as pg on pg.id=apd.objectpegawaifk  " & _
+            "inner JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk  " & _
+            "inner JOIN produk_m as pr on pr.id=pp.produkfk  " & _
+            "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk  " & _
+            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk  " & _
+            "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk  " & _
+            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk  " & _
+            "INNER JOIN kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
+            "left join kelas_m  as kl on kl.id=pd.objectkelasfk  " & _
+            "LEFT JOIN strukpelayananpenjamin_t as sppj on sp.norec=sppj.nostrukfk " & _
+            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText

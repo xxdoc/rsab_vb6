@@ -171,8 +171,7 @@ Dim adocmd As New ADODB.Command
 '    End If
     
 Set Report = New crDetailPengeluaranObatBebas
-    strSQL = "select " & _
-            "sp.nostruk as noresep,pr.id as idproduk, pr.kdproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual," & _
+    strSQL = "select * from (select sp.nostruk as noresep,pr.id as idproduk, pr.kdproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual," & _
             "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as hargadiscount, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa," & _
             "(spd.qtyproduk * spd.hargasatuan)+ spd.hargatambahan - spd.hargadiscount as subtotal,sp.tglstruk as tglresep,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan," & _
             "'-' as jenisracikan,'-' as noregistrasi,case when ps.nocm is null then '-' else ps.nocm end as nocm,upper(sp.namapasien_klien) as namapasien," & _
@@ -183,10 +182,21 @@ Set Report = New crDetailPengeluaranObatBebas
             "left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
             "inner JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern inner join alamat_m as al on al.nocmfk= ps.id inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
             "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and ps.nocm <> '-' " & _
+            str1 & str2 & str3 & _
+            "union all select sp.nostruk as noresep,pr.id as idproduk, pr.kdproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual," & _
+            "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as hargadiscount, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa," & _
+            "(spd.qtyproduk * spd.hargasatuan)+ spd.hargatambahan - spd.hargadiscount as subtotal,sp.tglstruk as tglresep,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan," & _
+            "'-' as jenisracikan,'-' as noregistrasi,'-' as nocm,upper(sp.namapasien_klien) as namapasien, " & _
+            "'-' as jeniskelamin,sp.alamattempattujuan as alamatlengkap,'-' as namaibu,pg.namalengkap, " & _
+            "'-' as namaruangan,'umum/sendiri' as kelompokpasien,ru.namaruangan as ruangan, '-' as namadepartemen " & _
+            "from strukpelayanan_t as sp " & _
+            "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk " & _
+            "left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
+            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
-            str1 & _
-            str2 & _
-            str3 & " order by sp.nostruk"
+            str1 & str2 & str3 & " ) as x order by x.noresep"
+
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
