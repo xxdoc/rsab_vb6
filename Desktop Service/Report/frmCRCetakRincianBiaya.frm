@@ -193,6 +193,12 @@ Set Report = New crRincianBiayaPelayanan
             
     strSQL = "select * from temp_billing_t where noregistrasi='" & strNoregistrasi & "' " & _
             "and tglpelayanan is not null and namaproduk not in ('Biaya Administrasi','Biaya Materai') order by tglpelayanan, namaproduk"
+'strSQL = "select nobilling,nocm,noregistrasi,nocm,namapasienjk,unit,objectdepartemenfk,namakelas,dokterpj,tglregistrasi, " & _
+'         "tglpulang,namarekanan,tglpelayanan,ruangantindakan,namaproduk,penulisresep,jenisproduk,dokter,jumlah, " & _
+'         "hargajual,diskon,total,namakamar,tipepasien,totalharusdibayar,totalprekanan,totalppenjamin,totalbiayatambahan,user, " & _
+'         "namakelaspd,hargajual_kelasasal,total_kelasasal,norec,norec_pp,tglstruk,(total-diskon) as totalsetelahdiskon " & _
+'         "from temp_billing_t where noregistrasi='" & strNoregistrasi & "' " & _
+'         "and tglpelayanan is not null and namaproduk not in ('Biaya Administrasi','Biaya Materai') order by tglpelayanan, namaproduk"
     
     ReadRs "select case when pa.nosep is null then '-' else pa.nosep end as sep, pd.objectkelompokpasienlastfk as KelompokPasien " & _
             "from pemakaianasuransi_t as pa " & _
@@ -259,7 +265,7 @@ Set Report = New crRincianBiayaPelayanan
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasienjk}")
             .usRuangan.SetUnboundFieldSource ("{ado.unit}")
             .usKamar.SetUnboundFieldSource IIf(IsNull("{ado.namakamar}") = True, "-", ("{ado.namakamar}"))
@@ -335,7 +341,7 @@ Set Report = New crRincianBiayaPelayanan
 '            Else
 '                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
 '            End If
-            .txtUser.SetText UCase(strIdPegawai)
+            .txtuser.SetText UCase(strIdPegawai)
             
             If view = "false" Then
                 Dim strPrinter As String

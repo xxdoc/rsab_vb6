@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crRincianBiayaPelayanan 
-   ClientHeight    =   9900
+   ClientHeight    =   9360
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   15060
+   ClientWidth     =   15585
    OleObjectBlob   =   "crRincianBiayaPelayanan.dsx":0000
 End
 Attribute VB_Name = "crRincianBiayaPelayanan"
@@ -15,22 +15,22 @@ Private Sub Section11_Format(ByVal pFormattingInfo As Object)
 'kata bo rose tgl 26oktober 2017, pasien tidak mendapatkan billing
 'sehingga terbilang ke tagihan perusahaan
 
-    Dim X As Double
-    X = Round(ucJumlahBill.Value)
-    txtPembulatan.SetText Format(X, "##,##0.00")
+    Dim x As Double
+    x = Round(ucJumlahBill.Value)
+    txtPembulatan.SetText Format(x, "##,##0.00")
     
-    X = CDbl(ucDitanggungPerusahaan.Value) 'Round(CDbl(ucDitanggungPerusahaan.Value))
-    a.SetText Format(X, "##,##0.#0")
-    X = CDbl(ucDitanggungRS.Value) 'Round(CDbl(ucDitanggungRS.Value))
-    b.SetText Format(X, "##,##0.#0")
-    X = CDbl(ucDitanggungSendiri.Value) 'Round(CDbl(ucDitanggungSendiri.Value))
-    If X < 0 Then
+    x = CDbl(ucDitanggungPerusahaan.Value) 'Round(CDbl(ucDitanggungPerusahaan.Value))
+    a.SetText Format(x, "##,##0.#0")
+    x = CDbl(ucDitanggungRS.Value) 'Round(CDbl(ucDitanggungRS.Value))
+    b.SetText Format(x, "##,##0.#0")
+    x = CDbl(ucDitanggungSendiri.Value) 'Round(CDbl(ucDitanggungSendiri.Value))
+    If x < 0 Then
         c.SetText Format(0, "##,##0.#0")
     Else
-        c.SetText Format(X, "##,##0.#0")
+        c.SetText Format(x, "##,##0.#0")
     End If
-    X = CDbl(ucSurplusMinusRS.Value) 'Round(CDbl(ucSurplusMinusRS.Value))
-    d.SetText Format(X, "##,##0.#0")
+    x = CDbl(ucSurplusMinusRS.Value) 'Round(CDbl(ucSurplusMinusRS.Value))
+    d.SetText Format(x, "##,##0.#0")
     
     'If usTipe.Value = "Umum/Pribadi" Then
     
