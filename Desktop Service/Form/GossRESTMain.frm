@@ -249,8 +249,8 @@ Private Sub Gossamer1_DynamicRequest( _
         urlLengkap = URI
         If URI = "\printvb\query" Then RespBody = Query(Gossamer1.URLDecode(Params))
         If URI = "\printvb\cetak-antrian" Then RespBody = frmCetakAntrian.CetakAntrian(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\kasir" Then RespBody = frmKasir.Kasir(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\tata-rekening" Then RespBody = frmTataRekening.TataRekening(Gossamer1.URLDecode(Params))
+        If URI = "\printvb\kasir" Then RespBody = frmKasir.Kasir(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\tata-rekening" Then RespBody = frmTataRekening.TataRekening(Gossamer1.URLDecode(Params)) 'XX
         If URI = "\printvb\Pendaftaran" Then RespBody = frmPendaftaran.Pendaftaran(Gossamer1.URLDecode(Params))
         If URI = "\printvb\farmasiApotik" Then RespBody = frmFarmasiApotik.farmasiApotik(Gossamer1.URLDecode(Params))
         If URI = "\printvb\laporanPelayanan" Then RespBody = frmLaporanPelayanan.laporanPelayanan(Gossamer1.URLDecode(Params))
