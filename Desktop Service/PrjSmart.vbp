@@ -195,7 +195,7 @@ Designer=Report\crRekapffsRI.Dsr
 Designer=Report\crLaporanPenerimaanRemun.Dsr
 Designer=Report\crLaporanffsRI.Dsr
 Designer=Report\cr_RekapPengeluaranBarang2.Dsr
-Form=Form\frmCetakSPPB.frm
+Form=Form\frmCetakSPK.frm
 Form=Form\frmLaporanPendapatan.frm
 Form=Report\frmCrRekapHarianPemeriksaanLab.frm
 Designer=Report\crRekapHarianPemeriksaanLab.Dsr
@@ -295,6 +295,13 @@ Form=Form\frmLaporanJasaMedisRI.frm
 Form=Form\frmCetakSPK.frm
 Form=Form\frmCetakLabelGizi.frm
 Designer=Report\crCetakLabelGizi.Dsr
+<<<<<<< HEAD
+Form=Form\frmCetakSPPB.frm
+Form=frmCRPenjualanObatPerDokter.frm
+Designer=crPenjualanObatPerDokter.Dsr
+=======
+>>>>>>> 0b235f45e25af7feb66944d02671834747c82a21
+>>>>>>> 10fb9e5382c6ec3314bc56285975b4aa24b9a667
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
