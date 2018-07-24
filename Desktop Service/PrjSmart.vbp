@@ -276,6 +276,19 @@ Form=Form\frmCRPemakaianVaksin.frm
 Designer=crDetailPemkaianVaksin.Dsr
 Designer=crRekapPemkaianVaksin.Dsr
 Form=Report\frmCetakRekapLayananDokterRev.frm
+<<<<<<< HEAD
+Form=Form\frmPenerimaanPertransaksiDetail.frm
+Designer=Report\crPenerimaanPertransaksiDetail.Dsr
+Form=Form\frmCrPasienDalamPerawatan.frm
+Designer=Report\crPasienDalamPerawatan.Dsr
+Form=Form\frmLaporanReservasiOnline.frm
+Designer=Report\crLaporanReservasiOnline.Dsr
+Form=Form\frmSimakBMN.frm
+Form=Form\frmCetakLabelFarmasi.frm
+Designer=Report\Cr_cetakLabelFarmasi.Dsr
+Form=Form\frmLaporanPenerimaanPertransaksi.frm
+Designer=Report\crPenerimaanPertransaksi.Dsr
+=======
 Form=Form\frmLaporanPenerimaanPertransaksi.frm
 Designer=Report\crPenerimaanPertransaksi.Dsr
 Form=Form\frmLaporanReservasiOnline.frm
@@ -284,9 +297,13 @@ Form=Report\frmCRCetakLaporanPasienPulang2.frm
 Form=Form\frmGizi.frm
 Form=Form\frmLaporanPendapatanInap.frm
 Designer=Report\crLaporanPendapatanInap.Dsr
+<<<<<<< HEAD
 Form=Form\frmCetakSPPB.frm
 Form=frmCRPenjualanObatPerDokter.frm
 Designer=crPenjualanObatPerDokter.Dsr
+=======
+>>>>>>> 0b235f45e25af7feb66944d02671834747c82a21
+>>>>>>> 10fb9e5382c6ec3314bc56285975b4aa24b9a667
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
