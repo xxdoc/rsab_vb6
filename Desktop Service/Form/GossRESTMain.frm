@@ -249,17 +249,17 @@ Private Sub Gossamer1_DynamicRequest( _
         urlLengkap = URI
         If URI = "\printvb\query" Then RespBody = Query(Gossamer1.URLDecode(Params))
         If URI = "\printvb\cetak-antrian" Then RespBody = frmCetakAntrian.CetakAntrian(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\kasir" Then RespBody = frmKasir.Kasir(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\tata-rekening" Then RespBody = frmTataRekening.TataRekening(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\Pendaftaran" Then RespBody = frmPendaftaran.Pendaftaran(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\farmasiApotik" Then RespBody = frmFarmasiApotik.farmasiApotik(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\laporanPelayanan" Then RespBody = frmLaporanPelayanan.laporanPelayanan(Gossamer1.URLDecode(Params))
-        If URI = "\formvb\rawat-jalan" Then RespBody = frmRajal.RawatJalan(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\farmasi" Then RespBody = FormFarmasi.Farmasi(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\Piutang" Then RespBody = frmPiutang.Piutang(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.akuntansi(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\logistik" Then RespBody = frmLogistik.Logistik(Gossamer1.URLDecode(Params))
-        If URI = "\printvb\simakbmn" Then RespBody = frmSimakBmn.Fungsi(Gossamer1.URLDecode(Params))
+        If URI = "\printvb\kasir" Then RespBody = frmKasir.Kasir(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\tata-rekening" Then RespBody = frmTataRekening.TataRekening(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\Pendaftaran" Then RespBody = frmPendaftaran.Pendaftaran(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\farmasiApotik" Then RespBody = frmFarmasiApotik.farmasiApotik(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\laporanPelayanan" Then RespBody = frmLaporanPelayanan.laporanPelayanan(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\formvb\rawat-jalan" Then RespBody = frmRajal.RawatJalan(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\farmasi" Then RespBody = FormFarmasi.Farmasi(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\Piutang" Then RespBody = frmPiutang.Piutang(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.akuntansi(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\logistik" Then RespBody = frmLogistik.Logistik(Gossamer1.URLDecode(Params)) 'XX
+        If URI = "\printvb\simakbmn" Then RespBody = frmSimakBmn.Fungsi(Gossamer1.URLDecode(Params)) 'XX
         If URI = "\printvb\gizi" Then RespBody = frmGizi.Gizi(Gossamer1.URLDecode(Params))
        
         If Err Then

@@ -146,7 +146,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmLaporanJurnalHarian = Nothing
 End Sub
 
-Public Sub CetakLaporanJurnal(nojurnal As String, tglAwal As String, tglAkhir As String, deskripsi As String, noPosted As String, namaPrinted As String, view As String)
+Public Sub CetakLaporanJurnal(noJurnal As String, tglAwal As String, tglAkhir As String, deskripsi As String, noPosted As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -198,7 +198,7 @@ Set Report = New crLaporanJurnalRev
              "'' as nojurnal from postingjurnaltransaksi_t as pj " & _
              "INNER JOIN postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated " & _
              "INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
-             "where nojurnal_intern='" & nojurnal & "'  " & _
+             "where nojurnal_intern='" & noJurnal & "'  " & _
              "group by pjd.objectaccountfk, coa.noaccount,coa.namaaccount  " & _
              ""
             
