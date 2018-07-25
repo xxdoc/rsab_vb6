@@ -173,12 +173,12 @@ Dim jml As Integer
             "inner join pasien_m as ps on ps.id = op.nocmfk " & _
             "left join jeniskelamin_m as jk on jk.id = ps.objectjeniskelaminfk " & _
             "inner join strukorder_t as so on so.norec = op.strukorderfk " & _
-            "left join strukkirim_t as sk on sk.noregistrasifk = pd.norec " & _
+            "left join strukkirim_t as sk on  sk.norec = op.strukkirimfk " & _
             "inner join jeniswaktu_m as jw on jw.id = op.objectjeniswaktufk " & _
             "inner join jenisdiet_m as jd on jd.id = op.objectjenisdietfk " & _
             "inner join kategorydiet_m as kd on kd.id = op.objectkategorydietfk " & _
             "left join kelas_m as kls on kls.id = op.objectkelasfk " & _
-            "where pd.noregistrasi= '" & noregistrasi & "' "
+            "where sk.nokirim= '" & noregistrasi & "' "
 '
               ReadRs strSQL
 '            jml = qty - 1
@@ -203,9 +203,9 @@ Dim jml As Integer
                 .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
             .txtTglLahir.SetText Format(RS!tgllahir, "yyyy/MM/dd")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
 '            .udtTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usRuangan.SetUnboundFieldSource ("{ado.ruanganasal}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")

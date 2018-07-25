@@ -276,6 +276,7 @@ Form=Form\frmCRPemakaianVaksin.frm
 Designer=crDetailPemkaianVaksin.Dsr
 Designer=crRekapPemkaianVaksin.Dsr
 Form=Report\frmCetakRekapLayananDokterRev.frm
+Form=Form\frmPenerimaanPertransaksiDetail.frm
 Designer=Report\crPenerimaanPertransaksiDetail.Dsr
 Form=Form\frmCrPasienDalamPerawatan.frm
 Designer=Report\crPasienDalamPerawatan.Dsr
