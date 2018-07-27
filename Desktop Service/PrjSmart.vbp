@@ -292,16 +292,10 @@ Designer=Report\crLaporanPendapatanInap.Dsr
 Form=Form\frmLaporanJurnalDetailRev.frm
 Designer=Report\crLaporanJurnalDetailRev.Dsr
 Form=Form\frmLaporanJasaMedisRI.frm
-Form=Form\frmCetakSPK.frm
 Form=Form\frmCetakLabelGizi.frm
 Designer=Report\crCetakLabelGizi.Dsr
-<<<<<<< HEAD
-Form=Form\frmCetakSPPB.frm
 Form=frmCRPenjualanObatPerDokter.frm
 Designer=crPenjualanObatPerDokter.Dsr
-=======
->>>>>>> 0b235f45e25af7feb66944d02671834747c82a21
->>>>>>> 10fb9e5382c6ec3314bc56285975b4aa24b9a667
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""
@@ -317,7 +311,7 @@ MinorVer=0
 RevisionVer=0
 AutoIncrementVer=0
 ServerSupportFiles=0
-VersionComments="HK180724.1"
+VersionComments="HK180726.2"
 VersionCompanyName="ab"
 CompilationType=0
 OptimizationType=0
