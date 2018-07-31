@@ -155,23 +155,36 @@ Public Sub CetakPasienDaftar(tglAwal As String, tglAkhir As String, strIdRuangan
 
 Set frmCRCetakDaftarPasien = Nothing
 Dim adocmd As New ADODB.Command
-Dim strFilter As String
+Dim strFilter, strFilter1 As String
 'Set Report = New crLaporanPasienDaftar
 Set Report = New crLaporanPasienDaftar1
 
     strFilter = ""
-
-    strFilter = " AND pd.tglregistrasi BETWEEN '" & _
+    strFilter1 = ""
+    
+    strFilter = " Where apd.tglregistrasi BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
     Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "'"
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
-    If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
-    If strIdDepartement <> "" Then strFilter = strFilter & " AND ru.objectdepartemenfk = '" & strIdDepartement & "' "
+    If strIdRuangan <> "" Then strFilter = strFilter & " AND ru2.id = '" & strIdRuangan & "' "
+    If strIdDepartement <> "" Then strFilter = strFilter & " AND ru2.objectdepartemenfk = '" & strIdDepartement & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND klp.id = '" & strIdKelompokPasien & "' "
 '    If strIdDokter <> "" Then strFilter = strFilter & " AND pg2.id = '" & strIdDokter & "' "
     
-    strFilter = strFilter & " order by pd.tglregistrasi "
+    strFilter = strFilter & " order by apd.tglregistrasi "
+    
+    strFilter1 = " Where pd.tglregistrasi BETWEEN '" & _
+    Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
+    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "'"
+'    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
+    
+    If strIdRuangan <> "" Then strFilter1 = strFilter1 & " AND ru.id = '" & strIdRuangan & "' "
+    If strIdDepartement <> "" Then strFilter1 = strFilter1 & " AND ru.objectdepartemenfk = '" & strIdDepartement & "' "
+    If strIdKelompokPasien <> "" Then strFilter1 = strFilter1 & " AND klp.id = '" & strIdKelompokPasien & "'"
+'    If strIdDokter <> "" Then strFilter = strFilter & " AND pg2.id = '" & strIdDokter & "' "
+    
+    strFilter1 = strFilter1 & " AND br.norec is null) as x order by x.tglregistrasi "
         
 '    strSQL = "SELECT DISTINCT pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk,ru.namaruangan as ruanganakhir,kl.namakelas,   " & _
 '"                 pg.namalengkap as dokterpj,apd.tglregistrasi,pd.tglpulang,rk.namarekanan,ru2.namaruangan as ruangandaftar,case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap,   " & _
@@ -195,21 +208,30 @@ Set Report = New crLaporanPasienDaftar1
 '"                 inner join departemen_m as dpt on dpt.id=ru2.objectdepartemenfk" & strFilter
       
       
-    strSQL = "select br.norec,pd.noregistrasi,ps.nocm,ps.namapasien,ps.tgllahir,age(ps.tgllahir) as umur,jk.reportdisplay as jk,ru.namaruangan as ruangandaftar, " & _
-             "kl.namakelas,pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,rk.namarekanan,case when ru.objectdepartemenfk in (16,35) then 'y' else 'n' end as inap, " & _
-             "klp.id as idkelompokpasien,klp.kelompokpasien,alm.alamatlengkap,kdp.kondisipasien,dpt.namadepartemen " & _
+    strSQL = "select DISTINCT x.noregistrasi,x.nocm,x.namapasien,x.tgllahir,x.umur,x.jk,x.namakelas,x.dokterpj,x.tglregistrasi, " & _
+             "x.tglpulang,x.namarekanan,x.ruangandaftar,x.iddepartementdaftar,x.idkelompokpasien,x.kelompokpasien, " & _
+             "x.alamatlengkap , x.namadepartemen,x.norec " & _
+             "from(SELECT pd.noregistrasi,pm.nocm,pm.namapasien,pm.tgllahir,age(pm.tgllahir) as umur,jk.reportdisplay as jk, " & _
+             "kl.namakelas,pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,rk.namarekanan, " & _
+             "ru.namaruangan as ruangandaftar,ru.id as idruangandaftar,ru.objectdepartemenfk as iddepartementdaftar, " & _
+             "klp.id as idkelompokpasien,klp.kelompokpasien,ar.asalrujukan, " & _
+             "case when apd.statuskunjungan='BARU' then 'y' else 'n' end as statuskunjungan, " & _
+             "alm.alamatlengkap,kdp.kondisipasien,dpt.namadepartemen,br.norec " & _
              "from pasiendaftar_t as pd " & _
-             "left join pasien_m as ps on ps.id = pd.nocmfk " & _
-             "left join jeniskelamin_m as jk on jk.id = ps.objectjeniskelaminfk " & _
-             "left join ruangan_m as ru on ru.id = pd.objectruanganasalfk " & _
-             "left join kelas_m as kl on kl.id = pd.objectkelasfk " & _
-             "left join pegawai_m as pg on pg.id = pd.objectpegawaifk " & _
-             "left join rekanan_m as rk on rk.id = pd.objectrekananfk " & _
-             "inner join kelompokpasien_m as klp on klp.id = pd.objectkelompokpasienlastfk " & _
-             "left join alamat_m as alm on ps.id = alm.nocmfk " & _
-             "left join kondisipasien_m as kdp on kdp.id = pd.objectkondisipasienfk " & _
-             "left join batalregistrasi_t as br on br.pasiendaftarfk=pd.norec " & _
-             "inner join departemen_m as dpt on dpt.id = ru.objectdepartemenfk where br.norec is null " & strFilter
+             "inner join antrianpasiendiperiksa_t as apd on apd.noregistrasifk = pd.norec " & _
+             "inner join pasien_m as pm on pm.id = pd.nocmfk " & _
+             "inner join jeniskelamin_m as jk on jk.id=pm.objectjeniskelaminfk " & _
+             "inner join ruangan_m  as ru on ru.id=apd.objectruanganfk " & _
+             "left join kelas_m as kl on kl.id=pd.objectkelasfk " & _
+             "left join pegawai_m  as pg on pg.id=pd.objectpegawaifk " & _
+             "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
+             "left join kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
+             "left join asalrujukan_m as ar on ar.id=apd.objectasalrujukanfk " & _
+             "left join alamat_m as alm on alm.nocmfk = pm.id " & _
+             "left join kondisipasien_m as kdp on kdp.id=pd.objectkondisipasienfk " & _
+             "left join departemen_m as dpt on dpt.id=ru.objectdepartemenfk " & _
+             "left join batalregistrasi_t as br on br.pasiendaftarfk = pd.norec " & strFilter1
+    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -226,7 +248,7 @@ Set Report = New crLaporanPasienDaftar1
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usUmur.SetUnboundFieldSource ("{ado.umur}")
 '            .usBaru.SetUnboundFieldSource ("{ado.statuskunjungan}")
-            .usInap.SetUnboundFieldSource ("{ado.inap}")
+'            .usInap.SetUnboundFieldSource ("{ado.inap}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas})  then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
 '            .usBed.SetUnboundFieldSource ("if isnull({ado.nobed})  then "" - "" else {ado.nobed} ") '("{ado.nobed}")
@@ -235,7 +257,7 @@ Set Report = New crLaporanPasienDaftar1
 '            .usAsalPasien.SetUnboundFieldSource ("{ado.asalrujukan}")
             .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
 '            .usCaraMasuk.SetUnboundFieldSource ("{ado.caramasuk}")
-            .usKeadaan.SetUnboundFieldSource ("if isnull({ado.kondisipasien})  then "" - "" else {ado.kondisipasien} ") '("{ado.kondisipasien}")
+'            .usKeadaan.SetUnboundFieldSource ("if isnull({ado.kondisipasien})  then "" - "" else {ado.kondisipasien} ") '("{ado.kondisipasien}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usDepartement.SetUnboundFieldSource ("{ado.namadepartemen}")
             
