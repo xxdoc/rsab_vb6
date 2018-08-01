@@ -210,13 +210,14 @@ Set Report = New crLaporanPasienDaftar1
       
     strSQL = "select DISTINCT x.noregistrasi,x.nocm,x.namapasien,x.tgllahir,x.umur,x.jk,x.namakelas,x.dokterpj,x.tglregistrasi, " & _
              "x.tglpulang,x.namarekanan,x.ruangandaftar,x.iddepartementdaftar,x.idkelompokpasien,x.kelompokpasien, " & _
-             "x.alamatlengkap , x.namadepartemen,x.norec " & _
+             "x.alamatlengkap , x.namadepartemen,x.norec,x.dokterapd " & _
              "from(SELECT pd.noregistrasi,pm.nocm,pm.namapasien,pm.tgllahir,age(pm.tgllahir) as umur,jk.reportdisplay as jk, " & _
              "kl.namakelas,pg.namalengkap as dokterpj,pd.tglregistrasi,pd.tglpulang,rk.namarekanan, " & _
              "ru.namaruangan as ruangandaftar,ru.id as idruangandaftar,ru.objectdepartemenfk as iddepartementdaftar, " & _
              "klp.id as idkelompokpasien,klp.kelompokpasien,ar.asalrujukan, " & _
              "case when apd.statuskunjungan='BARU' then 'y' else 'n' end as statuskunjungan, " & _
-             "alm.alamatlengkap,kdp.kondisipasien,dpt.namadepartemen,br.norec " & _
+             "alm.alamatlengkap,kdp.kondisipasien,dpt.namadepartemen,br.norec, " & _
+             "pg2.id as apddokterid,pg.namalengkap as dokterapd " & _
              "from pasiendaftar_t as pd " & _
              "inner join antrianpasiendiperiksa_t as apd on apd.noregistrasifk = pd.norec " & _
              "inner join pasien_m as pm on pm.id = pd.nocmfk " & _
@@ -224,6 +225,7 @@ Set Report = New crLaporanPasienDaftar1
              "inner join ruangan_m  as ru on ru.id=apd.objectruanganfk " & _
              "left join kelas_m as kl on kl.id=pd.objectkelasfk " & _
              "left join pegawai_m  as pg on pg.id=pd.objectpegawaifk " & _
+             "left join pegawai_m as pg2 on pg2.id=apd.objectpegawaifk " & _
              "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & _
              "left join kelompokpasien_m as klp on klp.id=pd.objectkelompokpasienlastfk " & _
              "left join asalrujukan_m as ar on ar.id=apd.objectasalrujukanfk " & _
@@ -252,7 +254,7 @@ Set Report = New crLaporanPasienDaftar1
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usKelas.SetUnboundFieldSource ("if isnull({ado.namakelas})  then "" - "" else {ado.namakelas} ") '("{ado.namakelas}")
 '            .usBed.SetUnboundFieldSource ("if isnull({ado.nobed})  then "" - "" else {ado.nobed} ") '("{ado.nobed}")
-            .usDokter.SetUnboundFieldSource ("if isnull({ado.dokterpj})  then "" - "" else {ado.dokterpj} ") '("{ado.dokterpj}")
+            .usDokter.SetUnboundFieldSource ("if isnull({ado.dokterapd})  then "" - "" else {ado.dokterapd} ") '("{ado.dokterapd}")
 '            .usDokterPengirim.SetUnboundFieldSource ("{ado.dokterpengirim}")
 '            .usAsalPasien.SetUnboundFieldSource ("{ado.asalrujukan}")
             .udTglPulang.SetUnboundFieldSource ("{ado.tglpulang}")
