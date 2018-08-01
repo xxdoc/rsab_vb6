@@ -192,7 +192,12 @@ Set Report = New crCetakRekapLayananDokter
         tglLibur = tglLibur & a
         RS.MoveNext
     Next
-    sqltgl = Right(tglLibur, Len(tglLibur) - 3)
+    If RS.BOF Then
+       sqltgl = ""
+    Else
+       sqltgl = Right(tglLibur, Len(tglLibur) - 3)
+    End If
+    
     
     For i = 0 To diff
             strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")

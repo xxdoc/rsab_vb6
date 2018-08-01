@@ -152,7 +152,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub Cetak(noregistrasi As String, view As String, qty As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 Set frmCetakLabelGizi = Nothing
 Dim strSQL As String
 Dim i As Integer
@@ -165,24 +165,27 @@ Dim jml As Integer
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
             
-            strSQL = "select  pd.noregistrasi, sk.nokirim, sk.qtyproduk as qtykirim,sk.keteranganlainnyakirim, pd.tglregistrasi,  ps.tgllahir, " & _
-            "ps.namapasien, ps.nocm,  ru.namaruangan as ruanganasal,  jw.jeniswaktu,  jd.jenisdiet,  op.qtyproduk,  kls.namakelas " & _
+            strSQL = "select pd.noregistrasi, sk.nokirim, sk.qtyproduk as qtykirim,sk.keteranganlainnyakirim, pd.tglregistrasi,  ps.tgllahir, " & _
+            "to_date(to_char(ps.tgllahir, 'YYYY/MM/DD'), 'YYYY/MM/DD') as tgllahirNew,ps.namapasien, ps.nocm, ru.namaruangan as ruanganasal, " & _
+            "jw.jeniswaktu,jd.jenisdiet,  op.qtyproduk,kls.namakelas " & _
             "from orderpelayanan_t as op " & _
             "inner join pasiendaftar_t as pd on pd.norec = op.noregistrasifk " & _
             "inner join ruangan_m as ru on ru.id = op.objectruanganfk " & _
             "inner join pasien_m as ps on ps.id = op.nocmfk " & _
             "left join jeniskelamin_m as jk on jk.id = ps.objectjeniskelaminfk " & _
             "inner join strukorder_t as so on so.norec = op.strukorderfk " & _
-            "left join strukkirim_t as sk on sk.noregistrasifk = pd.norec " & _
+            "left join strukkirim_t as sk on  sk.norec = op.strukkirimfk " & _
             "inner join jeniswaktu_m as jw on jw.id = op.objectjeniswaktufk " & _
             "inner join jenisdiet_m as jd on jd.id = op.objectjenisdietfk " & _
             "inner join kategorydiet_m as kd on kd.id = op.objectkategorydietfk " & _
             "left join kelas_m as kls on kls.id = op.objectkelasfk " & _
-            "where pd.noregistrasi= '" & noregistrasi & "' "
+            "where sk.norec= '" & noregistrasi & "' "
 '
               ReadRs strSQL
 '            jml = qty - 1
-            
+             Dim strDate
+'             strDate = getBulan(Format(RS!tgllahir, "yyyy/MM/dd"))
+'             strDate = Format(RS!tgllahir, "yyyy/MM/dd")
              str = ""
              If Val(qty) - 1 = 0 Then
                  adoReport.CommandText = strSQL
@@ -200,12 +203,12 @@ Dim jml As Integer
            If RS.BOF Then
                 .txtUmur.SetText "-"
             Else
-                .txtUmur.SetText hitungUmur(Format(RS!tgllahir, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
+                .txtUmur.SetText hitungUmur(Format(RS!tgllahirNew, "yyyy/MM/dd"), Format(Now, "yyyy/MM/dd"))
             End If
-            .txtTglLahir.SetText Format(RS!tgllahir, "yyyy/MM/dd")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usTglLahir.SetUnboundFieldSource ("{ado.tgllahirNew}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
 '            .udtTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usRuangan.SetUnboundFieldSource ("{ado.ruanganasal}")
             .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
