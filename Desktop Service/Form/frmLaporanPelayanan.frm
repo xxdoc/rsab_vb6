@@ -49,6 +49,7 @@ On Error Resume Next
         Param7 = Split(arrItem(6), "=")
         Param8 = Split(arrItem(7), "=")
         Param9 = Split(arrItem(8), "=")
+        Param10 = Split(arrItem(9), "=")
         Select Case Param1(0)
             Case "cetak-BukuRegisterPelayanan"
                 Call frmCRCetakBukuRegisterPelayanan.CetakBukuRegisterPelayanan(Param2(1), (Param3(1)), Param4(1), Param5(1), (Param6(1)), Param7(1), Param8(1), Param9(1))
@@ -87,17 +88,25 @@ On Error Resume Next
                 '127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
             
             Case "cetak-detaillayanan"
-                Call frmCetakDetailLayananDokter.CetakDetailLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Laporan Rekap Layanan"
-                '127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
-                
+            Param4 = Split(arrItem(3), "=")
+            Param5 = Split(arrItem(4), "=")
+            Param6 = Split(arrItem(5), "=")
+            Param7 = Split(arrItem(6), "=")
+            Call frmCetakDetailLayananDokter.CetakDetailLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
+            Set Root = New JNode
+            Root("Status") = "Cetak Laporan Rekap Layanan"
+            '127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
+            
             Case "cetak-rekaplayanan"
+            Param4 = Split(arrItem(3), "=")
+            Param5 = Split(arrItem(4), "=")
+            Param6 = Split(arrItem(5), "=")
+            Param7 = Split(arrItem(6), "=")
 '                Call frmCetakRekapLayananDokterRev.CetakRekapLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
-                 Call frmCetakRekapLayananDokter.CetakRekapLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
-                Set Root = New JNode
-                Root("Status") = "Cetak Laporan Rekap Layanan"
-                '127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
+            Call frmCetakRekapLayananDokter.CetakRekapLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
+            Set Root = New JNode
+            Root("Status") = "Cetak Laporan Rekap Layanan"
+            '127.0.0.1:1237/printvb/laporanPelayanan?cetak-LaporanPendapatanPoli=1&tglAwal=2017-08-01%2000:00:00&tglAkhir=2017-09-08%2023:59:59&strIdRuangan=18&strIdKelompokPasien=1&strIdDokter=3&strIdPegawai=1&view=true
             
             Case "cetak-rekapJasaMedisRI"
                 Call frmLaporanJasaMedisRI.CetakLaporan(Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))

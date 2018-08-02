@@ -148,7 +148,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub CetakRekapLayanan(ID As String, tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
-                                        strIdKelompokPasien As String, strIdDokter As String, view As String)
+                                        strIdKelompokPasien As String, Layanan As String, strIdDokter As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -162,11 +162,13 @@ Set Report = New crCetakRekapLayananDokter
 
     strFilter = " where pp.tglpelayanan BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null and jpg.id=1 " ' and djp.objectjenisprodukfk <> 97 and kp.id in (1,2,3,4,8,9,10,11,13,14,26) and sp.statusenabled is null "
+    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and djp.objectjenisprodukfk <> 97 and jpg.id=1 " ' and djp.objectjenisprodukfk <> 97 and kp.id in (1,2,3,4,8,9,10,11,13,14,26) and sp.statusenabled is null "
+'    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null and jpg.id=1 " ' and djp.objectjenisprodukfk <> 97 and kp.id in (1,2,3,4,8,9,10,11,13,14,26) and sp.statusenabled is null "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
     If strIdDepartemen <> "" Then strFilter = strFilter & " AND ru.objectdepartemenfk = '" & strIdDepartemen & "'"
     If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
+    If Layanan <> "" Then strFilter = strFilter & " AND pr.id = '" & Layanan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
   
@@ -177,7 +179,7 @@ Set Report = New crCetakRekapLayananDokter
             "case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap, " & _
             "kps.kelompokpasien, case when rk.namarekanan is not null then rk.namarekanan else '-' end as namarekanan, pr.namaproduk, pp.jumlah, " & _
             "case when pp.hargajual is not null then pp.hargajual else 0 end as harga, " & _
-            "case when sbm.norec is null then 'N' else 'Y' end as sbm " & _
+            "case when pd.nosbmlastfk is null then 'n' else 'y' end as sbm " & _
             "from pasiendaftar_t as pd inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
             "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien = pp.norec " & _
@@ -217,9 +219,9 @@ Set Report = New crCetakRekapLayananDokter
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then
