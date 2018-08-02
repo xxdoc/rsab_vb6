@@ -156,7 +156,7 @@ Dim adocmd As New ADODB.Command
 
     Dim str1 As String
     Dim str2 As String
-    
+    Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3 As String
     Dim diff As Integer
     
     diff = DateDiff("d", tglAwal, tglAkhir)
@@ -262,7 +262,45 @@ Set Report = New crRekapffsIGD
             "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.id=400 and ru.objectdepartemenfk=24  " & dokter & idRuangan & "" & _
             "order by pd.tglregistrasi) as x where  " & SQLdate
 
-'
+    ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 82" '82
+            
+    ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 155"
+    
+    ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 438"
+            
+   If RS2.EOF = False Then
+        NamaDirut = RS2!namalengkap
+        nippns1 = "NIP. " & RS2!nippns
+    Else
+        NamaDirut = "-"
+        nippns1 = "NIP. -"
+    End If
+    
+    If RS3.EOF = False Then
+        Namakeuangan = RS3!namalengkap
+        nippns2 = "NIP. " & RS3!nippns
+    Else
+        Namakeuangan = "-"
+        nippns2 = "NIP. -"
+    End If
+    
+     If RS4.EOF = False Then
+        NamaKplInst = RS4!namalengkap
+        nippns3 = "NIP. " & RS4!nippns
+    Else
+        NamaKplInst = "-"
+        nippns3 = "NIP. -"
+    End If
+    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -284,7 +322,12 @@ Set Report = New crRekapffsIGD
             .ucJasaMedis.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
-            
+            .Text17.SetText NamaDirut
+            .Text19.SetText nippns1
+            .Text14.SetText Namakeuangan
+            .Text16.SetText nippns2
+            .Text20.SetText NamaKplInst
+            .Text21.SetText nippns3
 '            If view = "false" Then
 '                Dim strPrinter As String
 ''

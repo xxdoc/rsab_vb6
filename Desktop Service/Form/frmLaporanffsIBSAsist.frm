@@ -156,7 +156,7 @@ Dim adocmd As New ADODB.Command
 
     Dim str1 As String
     Dim str2 As String
-    
+    Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3 As String
     Dim diff As Integer
     
     diff = DateDiff("d", tglAwal, tglAkhir)
@@ -300,7 +300,46 @@ Set Report = New crLaporanffsIBS
     If kpid <> "" Then
         ReadRs "Select * from kelompokpasien_m where id= '" & kpid & "'"
     End If
-'
+    
+    ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 82"
+            
+    ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 155"
+    
+    ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 437 "
+            
+    If RS2.EOF = False Then
+        NamaDirut = RS2!namalengkap
+        nippns1 = "NIP. " & RS2!nippns
+    Else
+        NamaDirut = "-"
+        nippns1 = "NIP. -"
+    End If
+    
+    If RS3.EOF = False Then
+        Namakeuangan = RS3!namalengkap
+        nippns2 = "NIP. " & RS3!nippns
+    Else
+        Namakeuangan = "-"
+        nippns2 = "NIP. -"
+    End If
+    
+     If RS4.EOF = False Then
+        NamaKplInst = RS4!namalengkap
+        nippns3 = "NIP. " & RS4!nippns
+    Else
+        NamaKplInst = "-"
+        nippns3 = "NIP. -"
+    End If
+    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -313,12 +352,12 @@ Set Report = New crLaporanffsIBS
             .usNgaranPoe.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             If kpid = "" Then
-                .TxtJudul.SetText "Type Pasien : ALL"
+                .txtjudul.SetText "Type Pasien : ALL"
             Else
                 If kpid = "153" Then
-                    .TxtJudul.SetText "Type Pasien : Non BPJS"
+                    .txtjudul.SetText "Type Pasien : Non BPJS"
                 Else
-                    .TxtJudul.SetText "Type Pasien : " & RS!kelompokpasien
+                    .txtjudul.SetText "Type Pasien : " & RS!kelompokpasien
                 End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -334,9 +373,15 @@ Set Report = New crLaporanffsIBS
             .usRemunerasi2.SetUnboundFieldSource ("{ado.totalTarif}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
+            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usNorec.SetUnboundFieldSource ("{ado.norec_ppd}")
+            .Text17.SetText NamaDirut
+            .Text22.SetText nippns1
+            .Text19.SetText Namakeuangan
+            .Text20.SetText nippns2
+            .Text24.SetText NamaKplInst
+            .Text25.SetText nippns3
             
             If idJasa = "1" Then
                 .txtJasa.SetText "Jasa Medis"

@@ -226,9 +226,8 @@ Set Report = New crCetakDetailLayananDokter
     With Report
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
-            
             .udTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -245,9 +244,9 @@ Set Report = New crCetakDetailLayananDokter
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

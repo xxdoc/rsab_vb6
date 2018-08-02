@@ -156,7 +156,7 @@ Dim adocmd As New ADODB.Command
 
     Dim str1 As String
     Dim str2 As String
-    
+    Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3 As String
     Dim diff As Integer
     
     diff = DateDiff("d", tglAwal, tglAkhir)
@@ -264,7 +264,45 @@ Set Report = New crLaporanffsRI
             "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4  " & dokterluar & " and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
- 
+    ReadRs5 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 82"
+            
+    ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 155"
+    
+    ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 436 "
+            
+   If RS5.EOF = False Then
+        NamaDirut = RS5!namalengkap
+        nippns1 = "NIP. " & RS5!nippns
+    Else
+        NamaDirut = "-"
+        nippns1 = "NIP. -"
+    End If
+    
+    If RS3.EOF = False Then
+        Namakeuangan = RS3!namalengkap
+        nippns2 = "NIP. " & RS3!nippns
+    Else
+        Namakeuangan = "-"
+        nippns2 = "NIP. -"
+    End If
+    
+     If RS4.EOF = False Then
+        NamaKplInst = RS4!namalengkap
+        nippns3 = "NIP. " & RS4!nippns
+    Else
+        NamaKplInst = "-"
+        nippns3 = "NIP. -"
+    End If
+    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -286,10 +324,15 @@ Set Report = New crLaporanffsRI
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .UnboundString1.SetUnboundFieldSource ("{ado.norec}")
-            .ucKPID.SetUnboundFieldSource ("{ado.kpid}")
+            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")
+            .Text23.SetText NamaDirut
+            .Text24.SetText nippns1
+            .Text20.SetText Namakeuangan
+            .Text21.SetText nippns2
+            
             
             If nmKaInstalasi = 1 Then
                 .txtKainsnm.SetText "Ka. Instalasi Perinatal Risiko Tinggi"
