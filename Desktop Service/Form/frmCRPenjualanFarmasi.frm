@@ -163,7 +163,7 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crPenjualanHarianFarmasi
-    strSQL = "select sr.tglresep,sr.noresep,pd.noregistrasi,upper(ps.namapasien) as namapasien," & _
+    strSQL = "select DISTINCT sr.tglresep,sr.noresep,pd.noregistrasi,upper(ps.namapasien) as namapasien," & _
             "case when jk.jeniskelamin = 'laki-laki' then 'l' else 'p' end as jeniskelamin," & _
             "kp.kelompokpasien,pg.namalengkap,ru2.namaruangan,ru.namaruangan as ruanganapotik," & _
             "pp.jumlah,pp.hargajual as harga,pp.rke as rke,(pp.jumlah)*(pp.hargajual) as subtotal," & _
@@ -189,7 +189,7 @@ Set Report = New crPenjualanHarianFarmasi
             "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             "" & str1 & " " & str2 & " " & str3 & ""
     strSQL = strSQL & " UNION ALL " & _
-            "select sp.tglstruk,sp.nostruk,'-' as noregistrasi,upper(sp.namapasien_klien) as namapasien," & _
+            "select DISTINCT sp.tglstruk,sp.nostruk,'-' as noregistrasi,upper(sp.namapasien_klien) as namapasien," & _
             "case when jk.jeniskelamin = 'laki-laki' then 'l' else 'p' end as jeniskelamin," & _
             "'umum/sendiri' as kelompokpasien,pg.namalengkap,'-' as namaruangan,ru.namaruangan as ruanganapotik," & _
             "spd.qtyproduk as jumlah,spd.hargasatuan as harga,cast(spd.resepke as text) as rke,(spd.qtyproduk)*(spd.hargasatuan) as subtotal," & _
@@ -227,7 +227,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usJumlahResep.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
