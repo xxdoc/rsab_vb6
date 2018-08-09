@@ -249,8 +249,8 @@ Set Report = New crLaporanffsPenunjangRad
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
             "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "case when ppd.komponenhargafk = 35 then ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as total,0 as remun, " & _
-            " ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
+            "case when ppd.komponenhargafk = 35 then ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) else 0 end as total,0 as remun, " & _
+            " ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -320,12 +320,12 @@ Set Report = New crLaporanffsPenunjangRad
             .usNgaranPoe.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             If kpid = "" Then
-                .txtjudul.SetText "Type Pasien : ALL"
+                .TxtJudul.SetText "Type Pasien : ALL"
             Else
                 If kpid = "153" Then
-                    .txtjudul.SetText "Type Pasien : Non BPJS"
+                    .TxtJudul.SetText "Type Pasien : Non BPJS"
                 Else
-                    .txtjudul.SetText "Type Pasien : " & RS!kelompokpasien
+                    .TxtJudul.SetText "Type Pasien : " & RS!kelompokpasien
                 End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -341,7 +341,7 @@ Set Report = New crLaporanffsPenunjangRad
             .usRemunerasi2.SetUnboundFieldSource ("{ado.totalTarif}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
+            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usNorec.SetUnboundFieldSource ("{ado.norec_ppd}")
             .Text17.SetText NamaDirut
