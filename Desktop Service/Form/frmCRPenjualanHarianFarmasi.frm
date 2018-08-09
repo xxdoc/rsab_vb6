@@ -203,7 +203,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usJumlahResep.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
@@ -255,7 +255,7 @@ Dim adocmd As New ADODB.Command
 '    End If
     
 Set Report = New crPenjualanHarianFarmasi
-    strSQL = "select sp.tglstruk, sp.nostruk,  upper(sp.namapasien_klien) as namapasien, '-' as noregistrasi, " & _
+    strSQL = "select * from (select sp.tglstruk, sp.nostruk,  upper(sp.namapasien_klien) as namapasien, '-' as noregistrasi, " & _
             "case when jk.jeniskelamin = 'Laki-laki' then 'L' else 'P' end as jeniskelamin, 'Umum/Sendiri' as kelompokpasien, pg.namalengkap, " & _
             "'-' as namaruangan,ru.namaruangan as ruanganapotik, spd.qtyproduk as jumlah, spd.hargasatuan,spd.resepke,  (spd.qtyproduk)*(spd.hargasatuan) as subtotal, " & _
             "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa, " & _
@@ -263,14 +263,29 @@ Set Report = New crPenjualanHarianFarmasi
             "case when pg3.namalengkap is null then '-' else pg3.namalengkap end  as kasir " & _
             "from strukpelayanan_t as sp " & _
             "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
-            "inner JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
+            "left JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+            "left JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk " & _
             "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
-            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
-            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
+            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.nostruk_intern <> '-' and sp.namakurirpengirim in (null,'') " & _
             str1 & _
             str2 & _
-            str3 & " order by sp.nostruk"
+            str3 & ""
+    strSQL = strSQL & "union all select sp.tglstruk, sp.nostruk,  upper(sp.namapasien_klien) as namapasien, '-' as noregistrasi, " & _
+            "'-' as jeniskelamin, 'Umum/Sendiri' as kelompokpasien, pg.namalengkap, " & _
+            "'-' as namaruangan,ru.namaruangan as ruanganapotik, spd.qtyproduk as jumlah, spd.hargasatuan,spd.resepke,  (spd.qtyproduk)*(spd.hargasatuan) as subtotal, " & _
+            "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa, " & _
+            "0 as ppn, (spd.qtyproduk*spd.hargasatuan)-0-0-0 as total, case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, " & _
+            "case when pg3.namalengkap is null then '-' else pg3.namalengkap end  as kasir " & _
+            "from strukpelayanan_t as sp " & _
+            "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
+            "left JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk " & _
+            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
+            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.nostruk_intern = '-' and sp.namakurirpengirim in (null,'') " & _
+            str1 & _
+            str2 & _
+            str3 & " )as x order by x.nostruk"
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -289,7 +304,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usJumlahResep.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
