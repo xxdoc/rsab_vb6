@@ -159,12 +159,12 @@ Dim adocmd As New ADODB.Command
     End If
     If karyawan <> "" Then
         If karyawan = "Karyawan" Then
-            str3 = " and sp.namakurirpengirim='" & karyawan & "' "
+            str3 = " and sp.namakurirpengirim='Karyawan' "
         Else
-            str3 = " and sp.namakurirpengirim='" & karyawan & "' "
+            str3 = " and sp.namakurirpengirim='Poli Karyawan' "
         End If
     Else
-        str3 = " and sp.namakurirpengirim in (null,'') "
+        str3 = " and sp.namakurirpengirim in (null,'')"
     End If
 '    If idKelompokPasien <> "" Then
 '        str3 = " and kp.id=" & idKelompokPasien & " "
@@ -178,11 +178,11 @@ Set Report = New crDetailPengeluaranObatBebas
             "case when jk.jeniskelamin = 'laki-laki' then 'l' else 'p' end as jeniskelamin,al.alamatlengkap,ps.namaibu,pg.namalengkap," & _
             "'-' as namaruangan,'umum/sendiri' as kelompokpasien,ru.namaruangan as ruangan, '-' as namadepartemen " & _
             "from strukpelayanan_t as sp " & _
-            "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk " & _
+            "left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk " & _
             "left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
-            "inner JOIN pasien_m as ps on ps.nocm=sp.nostruk_intern inner join alamat_m as al on al.nocmfk= ps.id inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
-            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and ps.nocm <> '-' " & _
+            "left join pasien_m as ps on ps.nocm=sp.nostruk_intern left join alamat_m as al on al.nocmfk= ps.id left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+            "left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.nostruk_intern <> '-' " & _
             str1 & str2 & str3 & _
             "union all select sp.nostruk as noresep,pr.id as idproduk, pr.kdproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual," & _
             "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as hargadiscount, case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa," & _
@@ -191,12 +191,11 @@ Set Report = New crDetailPengeluaranObatBebas
             "'-' as jeniskelamin,sp.alamattempattujuan as alamatlengkap,'-' as namaibu,pg.namalengkap, " & _
             "'-' as namaruangan,'umum/sendiri' as kelompokpasien,ru.namaruangan as ruangan, '-' as namadepartemen " & _
             "from strukpelayanan_t as sp " & _
-            "LEFT JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk " & _
+            "left JOIN strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk " & _
             "left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
-            "inner JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk inner JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
-            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
-            str1 & str2 & str3 & " ) as x order by x.noresep"
-
+            "left JOIN pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  " & _
+            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.nostruk_intern = '-' " & _
+            str1 & str2 & str3 & ") as x order by x.noresep"
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -254,7 +253,7 @@ Set Report = New crDetailPengeluaranObatBebas
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaIbu.SetUnboundFieldSource ("{ado.namaibu}")
