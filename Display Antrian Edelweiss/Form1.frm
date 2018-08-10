@@ -682,7 +682,7 @@ If KeyCode = 112 Then frmSetServer.Show: Unload Me
 End Sub
 
 Private Sub Form_Load()
-On Error GoTo hell
+'On Error GoTo hell
     Me.Move 0, 0, Screen.Width, Screen.Height
     lblconn.Caption = dbConn
     Timer1.Enabled = True
