@@ -235,7 +235,7 @@ Set Report = New crLaporanJurnalDetailRev
         End If
     End If
     If Mid(noJurnal, 5, 2) = "PN" And (Right(noJurnal, 5) = "00003" Or Right(noJurnal, 5) = "00004") Then
-    strSQL = "select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien , pp.produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
+        strSQL = "select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien , pp.produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
                  "pj.deskripsiproduktransaksi,pp.jumlah, pp.statusenabled,pp.norec,((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) * pp.jumlah as Total, " & _
                  "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand, " & _
                  "((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as hargaPP,0 as totalprekanan " & _
@@ -262,6 +262,17 @@ Set Report = New crLaporanJurnalDetailRev
                  "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand <>0"
 
         
+    End If
+    If Mid(noJurnal, 5, 2) = "KS" And (Right(noJurnal, 5) = "00001") Then
+        strSQL = "select ru.namaruangan, sbm.nosbm  as nomr,  ps.namapasien , '0' as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
+                 "pj.deskripsiproduktransaksi,1 as jumlah, sbm.statusenabled,sbmc.norec,sbmc.totaldibayar as total, pjd.objectaccountfk as accountid, " & _
+                 "pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand, sbmc.totaldibayar as hargapp,0 as totalprekanan " & _
+                 "from postingjurnaltransaksi_t as pj " & _
+                 "inner join postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated  inner join strukbuktipenerimaancarabayar_t as sbmc on sbmc.norec=pj.norecrelated " & _
+                 "inner join strukbuktipenerimaan_t as sbm on sbm.norec=sbmc.nosbmfk  left join strukpelayanan_t as sp on sp.norec=sbm.nostrukfk " & _
+                 "left join pasiendaftar_t as pd on pd.norec=sp.noregistrasifk  left join pasien_m as ps on ps.id=sp.nocmfk " & _
+                 "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk  inner join chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
+                 "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand <>0 "
     End If
     
 

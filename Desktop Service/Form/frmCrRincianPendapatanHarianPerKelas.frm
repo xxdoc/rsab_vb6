@@ -191,7 +191,7 @@ Set Report = New crRncianPendapatanHarianPerkelas
              "LEFT JOIN antrianpasiendiperiksa_t AS apd ON apd.noregistrasifk = pd.norec LEFT JOIN pelayananpasien_t AS pp ON pp.noregistrasifk = apd.norec  INNER JOIN produk_m AS pro ON pro.id = pp.produkfk " & _
              "left join kamar_m as km on km.id = apd.objectkamarfk  LEFT JOIN detailjenisproduk_m AS djp ON djp.id = pro.objectdetailjenisprodukfk LEFT JOIN jenisproduk_m AS jp ON jp.id = djp.objectjenisprodukfk  LEFT JOIN kelompokproduk_m AS kp ON kp.id = jp.objectkelompokprodukfk " & _
              "LEFT JOIN ruangan_m AS ru ON ru.id = apd.objectruanganfk  LEFT JOIN departemen_m AS dp ON dp.id = ru.objectdepartemenfk INNER JOIN pasien_m ON pd.nocmfk = pasien_m.id Where pp.tglpelayanan between '" & tglAwal & "' and " & _
-            "'" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND jp.id IN (25, 99, 101, 102, 27666)  " & _
+            "'" & tglAkhir & "' AND djp.objectjenisprodukfk <> 97 AND jp.id IN (25, 99, 101, 102, 27666) and pro.id not in (10011572,10011571,402611) " & _
             strReg & _
             str1 & _
             str2 & _
@@ -209,7 +209,7 @@ Set Report = New crRncianPendapatanHarianPerkelas
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usKelas.SetUnboundFieldSource ("{ado.namakamar}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .unVolAkomodasi.SetUnboundFieldSource ("{ado.VolAkomodasi}")
@@ -227,12 +227,12 @@ Set Report = New crRncianPendapatanHarianPerkelas
 
             If idDepartemen <> "" Then
                 If idDepartemen = 16 Then
-                    .txtJudul.SetText "RINCIAN PENDAPATAN HARIAN PER KELAS RAWAT INAP"
+                    .TxtJudul.SetText "RINCIAN PENDAPATAN HARIAN PER KELAS RAWAT INAP"
                 ElseIf idDepartemen = 18 Then
-                    .txtJudul.SetText "RINCIAN PENDAPATAN HARIAN PER KELAS RAWAT JALAN"
+                    .TxtJudul.SetText "RINCIAN PENDAPATAN HARIAN PER KELAS RAWAT JALAN"
                 End If
             Else
-                .txtJudul.SetText "RINCIAN PENDAPATAN HARIAN PER KELAS"
+                .TxtJudul.SetText "RINCIAN PENDAPATAN HARIAN PER KELAS"
             End If
             
             If view = "false" Then
