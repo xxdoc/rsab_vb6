@@ -32,6 +32,7 @@ On Error Resume Next
     Dim Param7() As String
     Dim Param8() As String
     Dim Param9() As String
+    Dim Param10() As String
     
     Dim arrItem() As String
     
@@ -102,7 +103,8 @@ On Error Resume Next
             Param5 = Split(arrItem(4), "=")
             Param6 = Split(arrItem(5), "=")
             Param7 = Split(arrItem(6), "=")
-'                Call frmCetakRekapLayananDokterRev.CetakRekapLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
+'            Call frmCetakRekapLayananDokterRev.CetakRekapLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
+'            Call frmCetakRekapLayananDokter.CetakRekapLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1), Param10(1))
             Call frmCetakRekapLayananDokter.CetakRekapLayanan(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
             Set Root = New JNode
             Root("Status") = "Cetak Laporan Rekap Layanan"
