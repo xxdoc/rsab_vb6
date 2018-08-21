@@ -167,6 +167,11 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
     '///**DATA BARANG'
     strSQL = "select * from tempriwayatpersediaan_t where idriwayat='" & idriwayat & "'"
             
+    ReadRs2 "select pg.id,pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "left join jabatan_m as jb on jb.id = pg.objectjabataninternalfk " & _
+            "where objectjabataninternalfk in (853) and pg.id=285"
+            
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
     With Report
@@ -184,14 +189,17 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
              .usTglMasuk.SetUnboundFieldSource ("{Ado.tglstruk}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyawal}")
              .ucJumlah.SetUnboundFieldSource ("{Ado.ttlawal}")
-             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.harga}")
+             .ucHargasatuan.SetUnboundFieldSource ("{Ado.harga}")
              .unQtyPenerimaan.SetUnboundFieldSource ("{Ado.qtymasuk}")
              .ucJmPnerimaan.SetUnboundFieldSource ("{Ado.ttlmasuk}")
              .unQtyPengeluaran.SetUnboundFieldSource ("{Ado.qtykeluar}")
              .ucJmlPngluaran.SetUnboundFieldSource ("{Ado.ttlkeluar}")
              .unQtyAkhir.SetUnboundFieldSource ("{Ado.qtyakhir}")
              .ucJmlSaldoAkhir.SetUnboundFieldSource ("{Ado.ttlakhir}")
-            
+             .txtpenangungjawab1.SetText RS2!namalengkap
+             .txtJabatan.SetText RS2!namajabatan
+             .txtnip.SetText RS2!nippns
+'             .txtpenangungjawab1.SetText RS2!namalengkap
             If view = "false" Then
                 Dim strPrinter As String
 '
