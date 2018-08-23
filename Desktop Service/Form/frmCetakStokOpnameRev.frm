@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakStokOpname 
+Begin VB.Form frmCetakStokOpnameRev 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
@@ -99,13 +99,13 @@ Begin VB.Form frmCetakStokOpname
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakStokOpname"
+Attribute VB_Name = "frmCetakStokOpnameRev"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New cr_LaporanStokOpname
+Dim Report As New cr_LaporanStokOpnameRev
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -144,24 +144,33 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCetakStokOpname = Nothing
+    Set frmCetakStokOpnameRev = Nothing
 End Sub
 
 Public Sub Cetak(tglAwal As String, tglAkhir As String, strIdRuangan As String, view As String, strUser As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCetakStokOpname = Nothing
+Set frmCetakStokOpnameRev = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1, str2 As String
     If strIdRuangan <> "" Then
         str1 = " and ru.id=" & strIdRuangan & " "
     End If
+    str2 = ") as x GROUP BY  x.kdproduk, x.tglclosing,x.namaproduk,x.satuanstandar, x.namaruangan , x.tglkadaluarsa, x.tglstruk "
+
     
-Set Report = New cr_LaporanStokOpname
-            strSQL = "select distinct pr.id as kdproduk,sc.tglclosing,pr.namaproduk,ss.satuanstandar, " & _
-                    "spd.qtyproduksystem,spd.harganetto1,spd.qtyproduksystem * spd.harganetto1 as total,sp.tglstruk,ru.namaruangan,spdt.tglkadaluarsa " & _
+Set Report = New cr_LaporanStokOpnameRev
+
+            strSQL = "select x.kdproduk,x.tglstruk, " & _
+                    "x.tglclosing,x.namaproduk,x.satuanstandar, " & _
+                    "x.namaruangan,x.tglkadaluarsa, " & _
+                    "sum(x.qtyproduksystem) as qtyproduksystem, " & _
+                    "sum(x.harganetto1) as harganetto1, " & _
+                    "sum (x.total) as total  from ( " & _
+                    "select DISTINCT pr.id as kdproduk, sp.tglstruk,sc.tglclosing, pr.namaproduk, ss.satuanstandar, " & _
+                    "spd.qtyproduksystem,spd.harganetto1,spd.qtyproduksystem * spd.harganetto1 as total,ru.namaruangan,spdt.tglkadaluarsa " & _
                     "from strukclosing_t sc " & _
                     "left join stokprodukdetailopname_t spd on spd.noclosingfk=sc.norec " & _
                     "left join strukpelayanan_t sp on sp.norec=spd.nostrukterimafk " & _
@@ -170,8 +179,9 @@ Set Report = New cr_LaporanStokOpname
                     "left join satuanstandar_m ss on ss.id=pr.objectsatuanstandarfk " & _
                     "left join ruangan_m ru on ru.id=spd.objectruanganfk " & _
                     "where sc.tglclosing between '" & tglAwal & "' and '" & tglAkhir & "' " & _
-                    str1
-            
+                    str1 & _
+                    str2
+
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         

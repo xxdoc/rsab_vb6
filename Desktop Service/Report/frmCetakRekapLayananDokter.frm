@@ -147,54 +147,60 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCetakRekapLayananDokter = Nothing
 End Sub
 
-Public Sub CetakRekapLayanan(ID As String, tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
-                                        strIdKelompokPasien As String, strIdDokter As String, view As String)
-On Error GoTo errLoad
+Public Sub CetakRekapLayanan(ID As String, tglAwal As String, tglAkhir As String, idlaporan As String, strIdDepartemen As String, strIdRuangan As String, _
+                                        strIdKelompokPasien As String, Layanan As String, strIdDokter As String)
+'On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCetakRekapLayananDokter = Nothing
 Dim adocmd As New ADODB.Command
 Dim strFilter, orderby As String
 Set Report = New crCetakRekapLayananDokter
+Dim view As Boolean
+view = True
 
     strFilter = ""
     orderby = ""
 
     strFilter = " where pp.tglpelayanan BETWEEN '" & _
     Format(tglAwal, "yyyy-MM-dd 00:00:00") & "' AND '" & _
-    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null and jpg.id=1 " ' and djp.objectjenisprodukfk <> 97 and kp.id in (1,2,3,4,8,9,10,11,13,14,26) and sp.statusenabled is null "
+    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and djp.objectjenisprodukfk <> 97 and jpg.id=1 " ' and djp.objectjenisprodukfk <> 97 and kp.id in (1,2,3,4,8,9,10,11,13,14,26) and sp.statusenabled is null "
+'    Format(tglAkhir, "yyyy-MM-dd 23:59:59") & "' and djp.objectjenisprodukfk <> 97 and sp.statusenabled is null and jpg.id=1 " ' and djp.objectjenisprodukfk <> 97 and kp.id in (1,2,3,4,8,9,10,11,13,14,26) and sp.statusenabled is null "
 '    strFilter = strFilter & " and IdRuangan like '%" & strIdRuangan & "%' and IdDepartement like '%" & strIdDepartement & "%' and IdKelompokPasien like '%" & strIdKelompokPasien & "%' and IdDokter Like '%" & strIdDokter & "%'"
     
     If strIdDepartemen <> "" Then strFilter = strFilter & " AND ru.objectdepartemenfk = '" & strIdDepartemen & "'"
     If strIdRuangan <> "" Then strFilter = strFilter & " AND ru.id = '" & strIdRuangan & "' "
+    If Layanan <> "" Then strFilter = strFilter & " AND pr.id = '" & Layanan & "' "
     If strIdKelompokPasien <> "" Then strFilter = strFilter & " AND pd.objectkelompokpasienlastfk = '" & strIdKelompokPasien & "' "
     If strIdDokter <> "" Then strFilter = strFilter & " AND pg.id = '" & strIdDokter & "' "
   
     orderby = strFilter & "order by pg.namalengkap"
         
-    strSQL = "select DISTINCT pp.tglpelayanan, apd.objectruanganfk, ru.namaruangan, kl.namakelas, " & _
-            "pg.namalengkap,pd.noregistrasi,ps.nocm, upper(ps.namapasien) as namapasien, " & _
-            "case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap, " & _
-            "kps.kelompokpasien, case when rk.namarekanan is not null then rk.namarekanan else '-' end as namarekanan, pr.namaproduk, pp.jumlah, " & _
-            "case when pp.hargajual is not null then pp.hargajual else 0 end as harga, " & _
-            "case when sbm.norec is null then 'N' else 'Y' end as sbm " & _
-            "from pasiendaftar_t as pd inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien = pp.norec " & _
-            "left JOIN pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
-            "inner join jenispegawai_m as jpg on jpg.id=pg.objectjenispegawaifk " & _
-            "inner JOIN produk_m as pr on pr.id=pp.produkfk " & _
-            "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
-            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
-            "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
-            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-            "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
-            "left join rekanan_m as rk on rk.id=pd.objectrekananfk " & _
-            "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
-            "left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
-            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join kelas_m as kl on kl.id = apd.objectkelasfk " & _
-            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & orderby
+'    strSQL = "select DISTINCT pp.tglpelayanan, apd.objectruanganfk, ru.namaruangan, kl.namakelas, " & _
+'            "pg.namalengkap,pd.noregistrasi,ps.nocm, upper(ps.namapasien) as namapasien, " & _
+'            "case when ru.objectdepartemenfk in (16,35) then 'Y' ELSE 'N' END as inap, " & _
+'            "kps.kelompokpasien, case when rk.namarekanan is not null then rk.namarekanan else '-' end as namarekanan, pr.namaproduk, pp.jumlah, " & _
+'            "case when pp.hargajual is not null then pp.hargajual else 0 end as harga, " & _
+'            "case when pd.nosbmlastfk is null then 'n' else 'y' end as sbm " & _
+'            "from pasiendaftar_t as pd inner JOIN antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left JOIN pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien = pp.norec " & _
+'            "left JOIN pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+'            "inner join jenispegawai_m as jpg on jpg.id=pg.objectjenispegawaifk " & _
+'            "inner JOIN produk_m as pr on pr.id=pp.produkfk " & _
+'            "inner JOIN detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+'            "inner JOIN jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+'            "inner JOIN kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+'            "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+'            "left JOIN kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+'            "left join rekanan_m as rk on rk.id=pd.objectrekananfk " & _
+'            "left JOIN strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+'            "left JOIN strukbuktipenerimaan_t as sbm  on sbm.norec=sp.nosbmlastfk " & _
+'            "left JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+'            "left join kelas_m as kl on kl.id = apd.objectkelasfk " & _
+'            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & orderby
+
+strSQL = "select * from templaporanlayanan_t where idlaplayanan = '" & idlaporan & "'"
             
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -203,23 +209,23 @@ Set Report = New crCetakRekapLayananDokter
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             
-            .udTglPelayanan.SetUnboundFieldSource ("{ado.tglpelayanan}")
+            .udTglPelayanan.SetUnboundFieldSource ("{ado.tgllayanan}")
             '.usRuanganPelayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usKamar.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usKelas.SetUnboundFieldSource ("{ado.namakelas}")
-            .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+            .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
+            .usKamar.SetUnboundFieldSource ("{ado.unit}")
+            .usKelas.SetUnboundFieldSource ("{ado.kelas}")
+            .usLayanan.SetUnboundFieldSource ("{ado.layanan}")
             '.ucHargaLayanan.SetUnboundFieldSource ("{ado.harga}")
-            .ucHarga.SetUnboundFieldSource ("{ado.harga}")
+            .ucHarga.SetUnboundFieldSource ("{ado.tarif}")
             .unJumlah.SetUnboundFieldSource ("{ado.jumlah}")
             
         .txtTgl.SetText "TANGGAL " & Format(tglAwal, "dd-MM-yyyy") & "  s/d  " & Format(tglAkhir, "dd-MM-yyyy")
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

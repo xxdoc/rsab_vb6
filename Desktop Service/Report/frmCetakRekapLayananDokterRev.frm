@@ -149,7 +149,7 @@ End Sub
 
 Public Sub CetakRekapLayanan(ID As String, tglAwal As String, tglAkhir As String, strIdDepartemen As String, strIdRuangan As String, _
                                         strIdKelompokPasien As String, strIdDokter As String, view As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCetakRekapLayananDokterRev = Nothing
@@ -192,7 +192,12 @@ Set Report = New crCetakRekapLayananDokter
         tglLibur = tglLibur & a
         RS.MoveNext
     Next
-    sqltgl = Right(tglLibur, Len(tglLibur) - 3)
+    If RS.BOF Then
+       sqltgl = ""
+    Else
+       sqltgl = Right(tglLibur, Len(tglLibur) - 3)
+    End If
+    
     
     For i = 0 To diff
             strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
@@ -271,9 +276,9 @@ Set Report = New crCetakRekapLayananDokter
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & ID & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then

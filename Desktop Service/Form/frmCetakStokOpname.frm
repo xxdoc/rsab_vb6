@@ -160,7 +160,7 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New cr_LaporanStokOpname
-            strSQL = "select distinct pr.id as kdproduk,sc.tglclosing,pr.namaproduk,ss.satuanstandar, " & _
+            strSQL = "select pr.id as kdproduk,sc.tglclosing,pr.namaproduk,ss.satuanstandar, " & _
                     "spd.qtyproduksystem,spd.harganetto1,spd.qtyproduksystem * spd.harganetto1 as total,sp.tglstruk,ru.namaruangan,spdt.tglkadaluarsa " & _
                     "from strukclosing_t sc " & _
                     "left join stokprodukdetailopname_t spd on spd.noclosingfk=sc.norec " & _

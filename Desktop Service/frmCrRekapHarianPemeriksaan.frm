@@ -330,13 +330,29 @@ Dim adocmd As New ADODB.Command
      
     
 Set Reports = New crRekapPemeriksaanRehabMedikInap
-    strSQL = "SELECT " & _
+'    strSQL = "SELECT " & _
+'                " pp.tglpelayanan,dp.namadepartemen,kps.kelompokpasien,pr.id,pr.namaproduk, " & _
+'                "pp.hargajual, pp.jumlah, pp.hargajual*pp.jumlah as subtotal " & _
+'                "from pasiendaftar_t as pd " & _
+'                "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'                "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+'                "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
+'                "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
+'                "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _
+'                "left join produk_m as pr on pr.id=pp.produkfk left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+'                "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+'                "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
+'                " Where " & _
+'                " pp.tglpelayanan BETWEEN '" & str1 & "' and '" & str2 & "' and sp.statusenabled is null and pr.objectdepartemenfk=28 and pr.id <> 395 " & _
+'                str3
+        strSQL = "SELECT " & _
                 " pp.tglpelayanan,dp.namadepartemen,kps.kelompokpasien,pr.id,pr.namaproduk, " & _
                 "pp.hargajual, pp.jumlah, pp.hargajual*pp.jumlah as subtotal " & _
                 "from pasiendaftar_t as pd " & _
                 "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
                 "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-                "left join ruangan_m as ru on ru.id=pd.objectruanganasalfk " & _
+                "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
                 "left join departemen_m dp on dp.id=ru.objectdepartemenfk " & _
                 "left join ruangan_m ru2 on ru2.id=apd.objectruanganfk " & _
                 "left join departemen_m dp2 on dp2.id=ru2.objectdepartemenfk " & _

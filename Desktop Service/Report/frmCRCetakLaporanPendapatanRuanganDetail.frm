@@ -308,7 +308,7 @@ Set Report2 = New crLaporanPendapatanRuanganDetail
         .database.AddADOCommand CN_String, adocmd
         'If Not RS.EOF Then
             .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .UsPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .usPenjamin.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .unJmlKarcis.SetUnboundFieldSource ("{ado.jmlkarcis}")
             .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")
             .unJmlEmbos.SetUnboundFieldSource ("{ado.jmlembos}")
@@ -319,7 +319,7 @@ Set Report2 = New crLaporanPendapatanRuanganDetail
             .ucTindakan.SetUnboundFieldSource ("{ado.tindakan}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usStatusBayar.SetUnboundFieldSource ("{ado.statusbayar}")
             
@@ -327,9 +327,9 @@ Set Report2 = New crLaporanPendapatanRuanganDetail
         
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
 

@@ -154,6 +154,7 @@ On Error GoTo errLoad
 Set frmRekapPendapatan = Nothing
 Dim adocmd As New ADODB.Command
     Dim str1, str2, str3, str4, str5 As String
+    Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3 As String
     
     If idDokter <> "" Then
         str1 = "and apd.objectpegawaifk=" & idDokter & " "
@@ -206,6 +207,47 @@ Set Report = New crRekapPendapatan
             " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
             "order by pg.namalengkap) as x where x.statusenabled is null "
    
+   
+    ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 82"
+            
+    ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 155"
+    
+    ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 436 "
+            
+   If RS2.EOF = False Then
+        NamaDirut = RS2!namalengkap
+        nippns1 = "NIP. " & RS2!nippns
+    Else
+        NamaDirut = "-"
+        nippns1 = "NIP. -"
+    End If
+    
+    If RS3.EOF = False Then
+        Namakeuangan = RS3!namalengkap
+        nippns2 = "NIP. " & RS3!nippns
+    Else
+        Namakeuangan = "-"
+        nippns2 = "NIP. -"
+    End If
+    
+     If RS4.EOF = False Then
+        NamaKplInst = RS4!namalengkap
+        nippns3 = "NIP. " & RS4!nippns
+    Else
+        NamaKplInst = "-"
+        nippns3 = "NIP. -"
+    End If
+    
+   
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
         
@@ -228,6 +270,12 @@ Set Report = New crRekapPendapatan
             .ucHargaPPD.SetUnboundFieldSource ("{ado.hargappd}")
             .ucJumlahPPD.SetUnboundFieldSource ("{ado.jumlahppd}")
             .ucDiskonPPD.SetUnboundFieldSource ("{ado.diskonppd}")
+            .txtPegawai2.SetText NamaDirut
+            .txtnip2.SetText nippns1
+            .txtPegawai1.SetText Namakeuangan
+            .txtnip1.SetText nippns2
+            .txtPegawai3.SetText NamaKplInst
+            .txtnip3.SetText nippns3
             
 '        ReadRs2 "SELECT pg.namalengkap, jb.namajabatan, pg.nippns FROM pegawai_m as pg " & _
 '                "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _

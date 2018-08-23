@@ -209,7 +209,7 @@ Set Report = New crLaporanJurnalDetailRev
                      "INNER JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
                      "INNER JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
                      "INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
-                     "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank >0 " & _
+                     "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank <>0 " & _
                      "and case when pjd.hargasatuand =0 then  pjd.hargasatuank else pjd.hargasatuand end  <> " & _
                      "(case when pp.hargajual is null then 0 else pp.hargajual end-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) *pp.jumlah " & _
                      "order by coa.namaaccount;"
@@ -230,37 +230,38 @@ Set Report = New crLaporanJurnalDetailRev
                      "INNER JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
                      "INNER JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
                      "INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
-                     "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank >0 " & _
+                     "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank <>0 " & _
                      "order by coa.namaaccount; "
         End If
     End If
     If Mid(noJurnal, 5, 2) = "PN" And (Right(noJurnal, 5) = "00003" Or Right(noJurnal, 5) = "00004") Then
-        
-        strSQL = " select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien , '-' as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
-                 "pj.deskripsiproduktransaksi, 1 as jumlah, sp.statusenabled,sp.norec, pjd.hargasatuand as Total, " & _
-                 "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand , " & _
-                 "pjd.hargasatuand as hargaPP,sp.totalprekanan " & _
-                 "from postingjurnaltransaksi_t as pj " & _
-                 "INNER JOIN postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated " & _
-                 "INNER JOIN strukpelayanan_t as sp on sp.norec=pj.norecrelated " & _
-                 "INNER JOIN pasiendaftar_t as pd on pd.norec=sp.noregistrasifk " & _
-                 "INNER JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-                 "INNER JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk " & _
-                 "INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
-                 "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand >0 " & _
+    strSQL = "select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien , pp.produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
+                 "pj.deskripsiproduktransaksi,pp.jumlah, pp.statusenabled,pp.norec,((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) * pp.jumlah as Total, " & _
+                 "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand, " & _
+                 "((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as hargaPP,0 as totalprekanan " & _
+                 "from postingjurnaltransaksi_t as pj INNER JOIN postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated " & _
+                 "INNER JOIN pelayananpasien_t as pp on pp.norec=pj.norecrelated INNER JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
+                 "INNER JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk INNER JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+                 "INNER JOIN ruangan_m as ru on ru.id=apd.objectruanganfk INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
+                 "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank <>0 " & _
                  "Union All " & _
-                 "select '-' as namaruangan,  ps.nocm as noMR, ps.namapasien , '-' as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
+                 " select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien , 0 as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
+                 "pj.deskripsiproduktransaksi, 1 as jumlah, sp.statusenabled,sp.norec, pjd.hargasatuand as Total, " & _
+                 "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount,case when rkn.namarekanan is null then coa.namaaccount  else coa.namaaccount || ' -> ' || rkn.namarekanan end as namaaccount, pjd.hargasatuank , pjd.hargasatuand , " & _
+                 "pjd.hargasatuand as hargaPP,sp.totalprekanan " & _
+                 "from postingjurnaltransaksi_t as pj INNER JOIN postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated INNER JOIN strukpelayanan_t as sp on sp.norec=pj.norecrelated INNER JOIN pasiendaftar_t as pd on pd.norec=sp.noregistrasifk left JOIN rekanan_m as rkn on rkn.id=pd.objectrekananfk " & _
+                 "INNER JOIN pasien_m as ps on ps.id=pd.nocmfk INNER JOIN ruangan_m as ru on ru.id=pd.objectruanganlastfk INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
+                 "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand <>0 " & _
+                 "Union All " & _
+                 "select '-' as namaruangan,  ps.nocm as noMR, ps.namapasien , 0 as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
                  "pj.deskripsiproduktransaksi, 1 as jumlah, sp.statusenabled,sp.norec,sbm.totaldibayar as Total, " & _
                  "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand , " & _
                  "sbm.totaldibayar as hargaPP,sp.totalprekanan " & _
-                 "from postingjurnaltransaksi_t as pj " & _
-                 "INNER JOIN postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated " & _
-                 "INNER JOIN strukbuktipenerimaancarabayar_t as sbmc on sbmc.norec=pj.norecrelated " & _
-                 "INNER JOIN strukbuktipenerimaan_t as sbm on sbm.norec=sbmc.nosbmfk " & _
-                 "INNER JOIN strukpelayanan_t as sp on sbm.nostrukfk=sp.norec " & _
-                 "INNER JOIN pasien_m as ps on ps.id=sp.nocmfk " & _
-                 "INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
-                 "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand >0"
+                 "from postingjurnaltransaksi_t as pj INNER JOIN postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated INNER JOIN strukbuktipenerimaancarabayar_t as sbmc on sbmc.norec=pj.norecrelated INNER JOIN strukbuktipenerimaan_t as sbm on sbm.norec=sbmc.nosbmfk " & _
+                 "left JOIN strukpelayanan_t as sp on sbm.nostrukfk=sp.norec left JOIN pasien_m as ps on ps.id=sp.nocmfk INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
+                 "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand <>0"
+
+        
     End If
     
 
@@ -270,7 +271,7 @@ Set Report = New crLaporanJurnalDetailRev
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .txtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN"
+            .TxtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
             
