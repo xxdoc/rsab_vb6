@@ -300,6 +300,7 @@ Form=frmCRPenjualanObatPerDokter.frm
 Designer=crPenjualanObatPerDokter.Dsr
 Form=Form\frmCetakStokOpname.frm
 Designer=Report\cr_LaporanStokOpname.Dsr
+Designer=Report\crLaporanPasienDaftar1.Dsr
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""

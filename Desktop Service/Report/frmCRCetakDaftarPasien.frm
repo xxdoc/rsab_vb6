@@ -242,7 +242,7 @@ Set Report = New crLaporanPasienDaftar1
         'If Not RS.EOF Then
             .udTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoPendaftaran.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRuanganPelayanan.SetUnboundFieldSource ("{ado.ruangandaftar}")
             .usPenjamin.SetUnboundFieldSource ("if isnull({ado.namarekanan})  then "" - "" else {ado.namarekanan} ")
@@ -267,9 +267,9 @@ Set Report = New crLaporanPasienDaftar1
              
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtUser.SetText "-"
+                .txtuser.SetText "-"
             Else
-                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If strIdKelompokPasien <> "" Then

@@ -158,12 +158,12 @@ Dim adocmd As New ADODB.Command
     If strIdRuangan <> "" Then
         str1 = " and ru.id=" & strIdRuangan & " "
     End If
-    str2 = ") as x GROUP BY  x.kdproduk, x.tglclosing,x.namaproduk,x.satuanstandar, x.namaruangan , x.tglkadaluarsa, x.tglstruk "
+    str2 = ") as x GROUP BY  x.kdproduk, x.tglclosing,x.namaproduk,x.satuanstandar, x.namaruangan , x.tglkadaluarsa "
 
     
 Set Report = New cr_LaporanStokOpnameRev
 
-            strSQL = "select x.kdproduk,x.tglstruk, " & _
+            strSQL = "select x.kdproduk, " & _
                     "x.tglclosing,x.namaproduk,x.satuanstandar, " & _
                     "x.namaruangan,x.tglkadaluarsa, " & _
                     "sum(x.qtyproduksystem) as qtyproduksystem, " & _
@@ -190,7 +190,7 @@ Set Report = New cr_LaporanStokOpnameRev
              .txtuser.SetText strUser
              .txtPeriode.SetText Format(tglAwal, "MMMM yyyy")
              .txtPeriode.SetText Format(tglAkhir, "MMMM yyyy")
-             .udTglTerima.SetUnboundFieldSource ("{Ado.tglstruk}")
+            ' .udTglTerima.SetUnboundFieldSource ("{Ado.tglstruk}")
              .udTglED.SetUnboundFieldSource ("{Ado.tglkadaluarsa}")
              .usRuangan.SetUnboundFieldSource ("{Ado.namaruangan}")
              .unKdBarang.SetUnboundFieldSource ("{Ado.kdproduk}")
