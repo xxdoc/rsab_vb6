@@ -219,7 +219,7 @@ bolStrukResep = True
              .usNamaBarang.SetUnboundFieldSource ("{ado.namaproduk}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
-             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
+             .ucHargasatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
              .unDisc.SetUnboundFieldSource ("{Ado.persenDisc}")
              .unPPN.SetUnboundFieldSource ("{Ado.persenPpn}")
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")

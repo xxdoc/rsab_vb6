@@ -167,7 +167,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub cetak(strNores As String, view As String, strUser As String)
+Public Sub Cetak(strNores As String, view As String, strUser As String)
 On Error GoTo errLoad
 Set frmCetakBuktiPenerimaanBarang2 = Nothing
 Dim strSQL As String
@@ -179,7 +179,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select sp.nostruk, sp.nofaktur, sp.tglstruk, sp.tglspk, " & _
+            strSQL = "select sp.nostruk, sp.nofaktur,sp.nokontrak,sp.tglstruk, sp.tglspk, " & _
                     "case when ap.asalproduk is null then '-' else ap.asalproduk end as asalproduk," & _
                     "case when sp.totaldiscount is null then '0,00%' else (sp.totaldiscount * 100) / sp.totalhargasatuan || ',00%' end as persendiskon," & _
                     "case when sp.totalppn is null then '0,00%' else (sp.totalppn * 100) / sp.totalhargasatuan || ',00%' end as persenppn," & _
@@ -211,7 +211,7 @@ bolStrukResep = True
              .udTglSPK.SetUnboundFieldSource ("{Ado.tglspk}")
              .usResep.SetUnboundFieldSource ("{Ado.nofaktur}")
              .usPemesanan.SetUnboundFieldSource ("{Ado.nostruk}")
-             .usPersenDiskon.SetUnboundFieldSource ("{Ado.persendiskon}")
+             .usPersenDiskon.SetUnboundFieldSource ("{Ado.nokontrak}")
              .usPersenPpn.SetUnboundFieldSource ("{Ado.persenppn}")
              .usRekanan.SetUnboundFieldSource ("{Ado.rekanan}")
              .usNamaRuangan.SetUnboundFieldSource ("{Ado.gudang}")
@@ -222,6 +222,7 @@ bolStrukResep = True
              .ucHarga.SetUnboundFieldSource ("{Ado.harga}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .ucTotalBayar.SetUnboundFieldSource ("{Ado.totalharusdibayar}")
+             .usNoKontrak.SetUnboundFieldSource ("{Ado.nokontrak}")
              
              
             If view = "false" Then

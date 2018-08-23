@@ -182,7 +182,7 @@ bolStrukResep = True
             
             strSQL = "select so.keteranganlainnya,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder, so.keterangankeperluan,so.noorderintern, so.tglorder, so.keteranganorder, " & _
                     "so.nokontrakspk,so.noorderrfq,so.namarekanansales,so.alamat,so.alamattempattujuan,so.keteranganorder || ' RSAB HK THN '|| so.noorderrfq as judul, " & _
-                    "pr.namaproduk, ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount,op.hargappn,so.tglkontrak, " & _
+                    "pr.namaproduk,so.totalbiayakirim,ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount,op.hargappn,so.tglkontrak, " & _
                     "case when op.hargadiscount <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargadiscount else 0 end as persenDisc, " & _
                     "case when op.hargappn <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargappn else 0 end as persenPpn, " & _
                     "(op.hargasatuan * op.qtyproduk)-(hargadiscount+hargappn)as total,pg.namalengkap,pg1.namalengkap as pegawaispk,pg.nippns, " & _
@@ -199,7 +199,7 @@ bolStrukResep = True
              If RS.EOF = False Then
                 str1 = RS!namalengkap
                 str2 = RS!nippns
-                str3 = RS!noorderintern
+                str3 = RS!nokontrakspk
              Else
                 str1 = "-"
                 str2 = "-"
@@ -211,7 +211,7 @@ bolStrukResep = True
             .database.AddADOCommand CN_String, adoReport
                 
              .txtNoKontrak.SetText str3
-             .usNoUsulan.SetUnboundFieldSource ("{Ado.nokontrakspk}")
+             .usNoUsulan.SetUnboundFieldSource ("{Ado.noorderintern}")
              .udTglSpk.SetUnboundFieldSource ("{Ado.tglkontrak}")
              .udTglStruk.SetUnboundFieldSource ("{Ado.tglorder}")
              .usNamaRekanan.SetUnboundFieldSource ("{Ado.namarekanan}")
@@ -222,6 +222,7 @@ bolStrukResep = True
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
              .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
+             .ucBiayaKirim.SetUnboundFieldSource ("{Ado.totalbiayakirim}")
 '             .unDisc.SetUnboundFieldSource ("{Ado.persenDisc}")
              .ucPajak.SetUnboundFieldSource ("{Ado.hargappn}")
 '             .ucTotal.SetUnboundFieldSource ("{Ado.total}")

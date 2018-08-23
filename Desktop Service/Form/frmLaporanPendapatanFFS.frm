@@ -323,7 +323,7 @@ Set Report = New crLaporanPendapatanFFS
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucKarcis.SetUnboundFieldSource ("{ado.karcis}")

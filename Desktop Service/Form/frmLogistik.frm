@@ -117,7 +117,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "as@epic"
             
-            Case "cetak-stokopname"
+                Case "cetak-stokopname"
                 Call frmCetakStokOpname.Cetak(Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
 '                'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-stokopname=1&tglAwal=6a287c10-8cce-11e7-943b-2f7b4944&cetak=1
                 Set Root = New JNode
@@ -208,6 +208,13 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
             Case "cetak-stokruangan"
                 Call frmCetakStokRuangan.Cetak(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/logistik?cetak-stokruangan=1&strIdRuangan=94&view=true&user=Administrator
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+            
+            Case "cetak-stokopname2"
+                Call frmCetakStokOpnameRev.Cetak(Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
+'                'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-stokopname=1&tglAwal=6a287c10-8cce-11e7-943b-2f7b4944&cetak=1
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
