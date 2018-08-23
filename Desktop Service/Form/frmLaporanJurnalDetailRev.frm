@@ -155,22 +155,7 @@ Dim adocmd As New ADODB.Command
 
     Dim str1 As String
     Dim str2 As String
-    
-'    If idDepartemen <> "" Then
-'        If idDepartemen = 18 Then
-'            str1 = " AND ru2.objectdepartemenfk <> 16"
-'        Else
-'            If idDepartemen <> "" Then
-'                str1 = " AND ru2.objectdepartemenfk = '" & idDepartemen & "' "
-'            End If
-'        End If
-'    End If
-''    If idDepartemen <> "" Then
-''        str1 = "and ru.objectdepartemenfk=" & idDepartemen & " "
-''    End If
-'    If idRuangan <> "" Then
-'        str2 = " and apd.objectruanganfk=" & idRuangan & " "
-'    End If
+    Dim Judul As String
     
     
 Set Report = New crLaporanJurnalDetailRev
@@ -194,6 +179,7 @@ Set Report = New crLaporanJurnalDetailRev
     
 
     If Mid(noJurnal, 5, 2) = "PN" And (Right(noJurnal, 5) = "00001" Or Right(noJurnal, 5) = "00002") Then
+        Judul = "RINCIAN JURNAL PENDAPATAN HARIAN"
         If typeDetail = "BEDAHARGA" Then
             strSQL = "select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien ,pp.produkfk, " & _
                      "pj.namaproduktransaksi as keteranganlainnya, " & _
@@ -235,6 +221,7 @@ Set Report = New crLaporanJurnalDetailRev
         End If
     End If
     If Mid(noJurnal, 5, 2) = "PN" And (Right(noJurnal, 5) = "00003" Or Right(noJurnal, 5) = "00004") Then
+        Judul = "RINCIAN JURNAL PENDAPATAN NON TUNAI"
         strSQL = "select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien , pp.produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
                  "pj.deskripsiproduktransaksi,pp.jumlah, pp.statusenabled,pp.norec,((case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) * pp.jumlah as Total, " & _
                  "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand, " & _
@@ -264,6 +251,7 @@ Set Report = New crLaporanJurnalDetailRev
         
     End If
     If Mid(noJurnal, 5, 2) = "KS" And (Right(noJurnal, 5) = "00001") Then
+        Judul = "RINCIAN JURNAL PENERIMAAN KAS"
         strSQL = "select ru.namaruangan, sbm.nosbm  as nomr,  ps.namapasien , '0' as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
                  "pj.deskripsiproduktransaksi,1 as jumlah, sbm.statusenabled,sbmc.norec,sbmc.totaldibayar as total, pjd.objectaccountfk as accountid, " & _
                  "pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand, sbmc.totaldibayar as hargapp,0 as totalprekanan " & _
@@ -272,6 +260,17 @@ Set Report = New crLaporanJurnalDetailRev
                  "inner join strukbuktipenerimaan_t as sbm on sbm.norec=sbmc.nosbmfk  left join strukpelayanan_t as sp on sp.norec=sbm.nostrukfk " & _
                  "left join pasiendaftar_t as pd on pd.norec=sp.noregistrasifk  left join pasien_m as ps on ps.id=sp.nocmfk " & _
                  "left join ruangan_m as ru on ru.id=pd.objectruanganlastfk  inner join chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
+                 "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand <>0 "
+    End If
+    If Mid(noJurnal, 5, 2) = "RS" And (Right(noJurnal, 5) = "00001") Then
+        Judul = "RINCIAN JURNAL HUTANG DAGANG"
+        strSQL = "select ru.namaruangan,  sp.nostruk  as nomr,  rkn.namarekanan as  namapasien , '0' as produkfk, " & _
+                 "pj.namaproduktransaksi as keteranganlainnya, pj.deskripsiproduktransaksi,1 as jumlah, sp.statusenabled, " & _
+                 "sp.norec,sp.totalharusdibayar as total, pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, " & _
+                 "pjd.hargasatuank , pjd.hargasatuand, sp.totalharusdibayar as hargapp,0 as totalprekanan  " & _
+                 "from postingjurnaltransaksi_t as pj  inner join postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated " & _
+                 "inner join strukpelayanan_t as sp on sp.norec=pj.norecrelated INNER JOIN rekanan_m as rkn on rkn.id=sp.objectrekananfk " & _
+                 "INNER JOIN ruangan_m as ru on ru.id=sp.objectruanganfk  inner join chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
                  "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuand <>0 "
     End If
     
@@ -285,6 +284,7 @@ Set Report = New crLaporanJurnalDetailRev
             .TxtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
+            .TxtJudul.SetText Judul
             
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.noaccount}")
             .usNmPerkiraan.SetUnboundFieldSource ("{ado.namaaccount}")
