@@ -178,7 +178,7 @@ Dim jml As Integer
             "inner join jenisdiet_m as jd on jd.id = op.objectjenisdietfk " & _
             "inner join kategorydiet_m as kd on kd.id = op.objectkategorydietfk " & _
             "left join kelas_m as kls on kls.id = op.objectkelasfk " & _
-            "where sk.nokirim= '" & noregistrasi & "' "
+            "where sk.norec= '" & noregistrasi & "' "
 '
               ReadRs strSQL
 '            jml = qty - 1
