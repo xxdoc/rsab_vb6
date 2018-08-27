@@ -184,7 +184,7 @@ Dim adocmd As New ADODB.Command
     End If
 Set Report = New crRekapPendapatan
     
-    strSQL = "select distinct * from (select sp.statusenabled, apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
+    strSQL = "select * from (select apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
             "(case when pd.objectkelompokpasienlastfk = 1 then pd.noregistrasi else null end) as nonpj, " & _
             "(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as jm, " & _
             "pp.hargajual as hargapp, pp.jumlah as jumlahpp, case when pp.hargadiscount is null then 0 else pp.hargadiscount  end as diskonpp,kp.id as kpid, ppd.komponenhargafk as khid, " & _
@@ -202,10 +202,9 @@ Set Report = New crRekapPendapatan
             "left join kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
-            "left join strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
-            "order by pg.namalengkap) as x where x.statusenabled is null "
+            "order by pg.namalengkap) as x"
    
    
     ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
