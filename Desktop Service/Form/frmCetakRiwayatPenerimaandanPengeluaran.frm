@@ -182,7 +182,7 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
 '            .usNo.SetUnboundFieldSource ("{Ado.nomor}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
-             .usSumberDana.SetUnboundFieldSource ("{Ado.asalproduk}")
+             .usKdSirs.SetUnboundFieldSource ("{Ado.kdproduk}")
              .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
