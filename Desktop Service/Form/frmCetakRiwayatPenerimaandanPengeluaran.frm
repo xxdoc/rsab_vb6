@@ -155,7 +155,7 @@ On Error GoTo errLoad
 Set frmCetakRiwayatPenerimaandanPengeluaran = Nothing
 Dim adocmd As New ADODB.Command
 
- Dim str1, str2 As String
+ Dim str1, str2, NamaDirut, nippns1, jabatan As String
 
  str1 = getBulan(Format(tglAwal, "yyyy/MM/dd"))
 '    If strIdRuangan <> "" Then
@@ -171,7 +171,15 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
             "from pegawai_m as pg " & _
             "left join jabatan_m as jb on jb.id = pg.objectjabataninternalfk " & _
             "where objectjabataninternalfk in (853) and pg.id=285"
-            
+     If RS2.EOF = False Then
+        NamaDirut = RS2!namalengkap
+        nippns1 = RS2!nippns
+        jabatan = RS2!namajabatan
+    Else
+        NamaDirut = "-"
+        nippns1 = "-"
+        jabatan = "-"
+    End If
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
     With Report
@@ -181,9 +189,8 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
 '            .txtPeriode.SetText Format(tglAkhir, "MMMM yyyy")
 '            .usNo.SetUnboundFieldSource ("{Ado.nomor}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
-             .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
-             .usKdSirs.SetUnboundFieldSource ("{Ado.kdproduk}")
-             .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
+             .unKdBarang.SetUnboundFieldSource ("{Ado.objectprodukfk}")
+             .usKdSirs.SetUnboundFieldSource ("{Ado.kodebmn}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
              .usTglMasuk.SetUnboundFieldSource ("{Ado.tglstruk}")
@@ -196,9 +203,9 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
              .ucJmlPngluaran.SetUnboundFieldSource ("{Ado.ttlkeluar}")
              .unQtyAkhir.SetUnboundFieldSource ("{Ado.qtyakhir}")
              .ucJmlSaldoAkhir.SetUnboundFieldSource ("{Ado.ttlakhir}")
-             .txtpenangungjawab1.SetText RS2!namalengkap
-             .txtJabatan.SetText RS2!namajabatan
-             .txtnip.SetText RS2!nippns
+             .txtpenangungjawab1.SetText NamaDirut
+             .txtJabatan.SetText jabatan
+             .txtnip.SetText nippns1
 '             .txtpenangungjawab1.SetText RS2!namalengkap
             If view = "false" Then
                 Dim strPrinter As String
