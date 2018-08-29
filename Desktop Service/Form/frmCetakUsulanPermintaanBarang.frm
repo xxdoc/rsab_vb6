@@ -168,9 +168,10 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub Cetak(strNorec As String, view As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 Set frmCetakUsulanPermintaanBarang = Nothing
 Dim strSQL As String
+Dim namalengkap, nip As String
 
 bolStrukResep = True
 
@@ -180,7 +181,7 @@ bolStrukResep = True
             adoReport.ActiveConnection = CN_String
             
             strSQL = "select " & _
-                    "sp.norec,sp.tglorder,sp.noorder,pg.namalengkap as penanggungjawab, " & _
+                    "sp.norec,sp.tglorder,sp.noorder,pg.namalengkap as penanggungjawab,pg.nippns, " & _
                     "sp.tglvalidasi as tglkebutuhan,sp.alamattempattujuan,sp.keteranganlainnya,sp.tglvalidasi,sp.noorderintern, " & _
                     "sp.keterangankeperluan,sp.keteranganorder,ru.namaruangan as ruangan,ru.id as ruid, " & _
                     "ru2.namaruangan as ruangantujuan,ru2.id as ruidtujuan, " & _
@@ -196,6 +197,20 @@ bolStrukResep = True
                     "LEFT JOIN ruangan_m as ru2 on ru2.id=sp.objectruangantujuanfk " & _
                     "where sp.norec = '" & strNorec & "'"
                     
+            ReadRs strSQL
+             If RS.EOF = False Then
+                If IsNull(RS!nippns) Then
+                    namalengkap = RS!penanggungjawab
+                    nip = "NIP : -"
+                Else
+                    namalengkap = RS!penanggungjawab
+                    nip = "NIP : " + RS!nippns
+                End If
+             Else
+                namalengkap = "-"
+                nip = "NIP : -"
+             End If
+            
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
@@ -218,6 +233,8 @@ bolStrukResep = True
              .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
              .ucPpn.SetUnboundFieldSource ("{Ado.hargappn}")
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")
+             .Text47.SetText namalengkap
+             .Text48.SetText nip
              
              
             If view = "false" Then
