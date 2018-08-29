@@ -183,7 +183,13 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
-                
+            
+            Case "cetak-hps"
+                Call frmCetakHargaPerkiraanSendiri.Cetak(Param2(1), Param3(1))
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
+            
             Case "cetak-riwayatpersediaan"
                 Call frmCetakRiwayatPenerimaandanPengeluaran.Cetak(Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
 '               http://127.0.0.1:1237/printvb/logistik?cetak-riwayatpersediaan=1&tglAwal=2018-05-31%2000:00&tglAkhir=2018-05-31%2023:59&idriwayat=IR18050001&view=true&user=Administrator

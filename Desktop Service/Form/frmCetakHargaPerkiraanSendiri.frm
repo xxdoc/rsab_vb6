@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCetakSPK 
+Begin VB.Form frmCetakHargaPerkiraanSendiri 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   9075
-   Icon            =   "frmCetakSPK.frx":0000
+   Icon            =   "frmCetakHargaPerkiraanSendiri.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   9075
@@ -99,13 +99,13 @@ Begin VB.Form frmCetakSPK
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCetakSPK"
+Attribute VB_Name = "frmCetakHargaPerkiraanSendiri"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim ReportResep As New crSuratPerintahKerja
+Dim ReportResep As New crHargaPerkiraanSendiri
 
 Dim ii As Integer
 Dim tempPrint1 As String
@@ -163,77 +163,84 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCetakSPK = Nothing
+    Set frmCetakHargaPerkiraanSendiri = Nothing
 
 End Sub
 
 Public Sub Cetak(strNorec As String, view As String)
 'On Error GoTo errLoad
-Set frmCetakSPK = Nothing
+Set frmCetakHargaPerkiraanSendiri = Nothing
 Dim strSQL As String
-Dim str1, str2, str3 As String
-
+Dim namalengkap, nip As String
 bolStrukResep = True
-    
-    
+
+
         With ReportResep
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select so.keteranganlainnya,so.noorderhps,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder, so.keterangankeperluan,so.noorderintern, so.tglorder, so.keteranganorder, " & _
-                    "so.nokontrakspk,so.noorderrfq,so.namarekanansales,so.alamat,so.alamattempattujuan,so.keteranganorder || ' RSAB HK THN '|| so.noorderrfq as judul, " & _
-                    "pr.namaproduk,so.totalbiayakirim,ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount,op.hargappn,so.tglkontrak, " & _
-                    "case when op.hargadiscount <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargadiscount else 0 end as persenDisc, " & _
-                    "case when op.hargappn <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargappn else 0 end as persenPpn, " & _
-                    "(op.hargasatuan * op.qtyproduk)-(hargadiscount+hargappn)as total,pg.namalengkap,pg1.namalengkap as pegawaispk,pg.nippns, " & _
-                    "pg1.nippns as nippns_spk,rk.namarekanan,rk.alamatlengkap,op.deskripsiprodukquo " & _
-                    "from strukorder_t so " & _
-                    "left join orderpelayanan_t op on op.strukorderfk=so.norec " & _
-                    "left join produk_m pr on pr.id=op.objectprodukfk " & _
-                    "left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
-                    "left join pegawai_m as pg on pg.id = so.objectpegawaiorderfk " & _
-                    "left join pegawai_m as pg1 on pg1.id = so.objectpegawaispkfk " & _
-                    "left join rekanan_m as rk on rk.id = so.objectrekananfk " & _
-                    "where so.norec = '" & strNorec & "'"
-             ReadRs strSQL
+            strSQL = "select " & _
+                    "sp.norec,sp.tglorder,sp.noorder,pg.namalengkap as penanggungjawab,sp.noorderhps,sp.tglhps,sp.objectpegawaihpsfk,pg1.namalengkap,pg1.nippns, " & _
+                    "sp.tglvalidasi as tglkebutuhan,sp.alamattempattujuan,sp.keteranganlainnya,sp.tglvalidasi,sp.noorderintern, " & _
+                    "sp.keterangankeperluan,sp.keteranganorder,ru.namaruangan as ruangan,ru.id as ruid, " & _
+                    "ru2.namaruangan as ruangantujuan,ru2.id as ruidtujuan, " & _
+                    "sp.totalhargasatuan , sp.Status,pr.kdproduk,pr.namaproduk,ss.satuanstandar,op.qtyproduk,op.hargasatuan,op.hargadiscount, " & _
+                    "case when op.hargappn is null then 0 else op.hargappn end as hargappn,(op.qtyproduk*(op.hargasatuan)) as total,op.tglpelayananakhir as tglkebutuhan, " & _
+                    "op.deskripsiprodukquo as spesifikasi,pr.id as prid,sv.noverifikasi as noconfirm,sv.tglverifikasi as tglconfirm,sv.objectpegawaipjawabfk as pegawaiupkid,pg1.namalengkap as pegawaiupk,pg1.nippns " & _
+                    "from strukorder_t sp " & _
+                    "LEFT JOIN orderpelayanan_t op on op.strukorderfk=sp.norec " & _
+                    "LEFT JOIN produk_m pr on pr.id=op.objectprodukfk " & _
+                    "LEFT JOIN satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
+                    "LEFT JOIN pegawai_m as pg on pg.id=sp.objectpegawaiorderfk " & _
+                    "LEFT JOIN ruangan_m as ru on ru.id=sp.objectruanganfk " & _
+                    "LEFT JOIN ruangan_m as ru2 on ru2.id=sp.objectruangantujuanfk " & _
+                    "LEFT JOIN strukverifikasi_t as sv on sv.norec = sp.objectsrukverifikasifk " & _
+                    "LEFT JOIN pegawai_m as pg1 on pg1.id=sp.objectpegawaihpsfk " & _
+                    "where sp.norec = '" & strNorec & "'"
+            ReadRs strSQL
              If RS.EOF = False Then
-                str1 = RS!namalengkap
-                str2 = RS!nippns
-                str3 = RS!nokontrakspk
+                If IsNull(RS!nippns) Then
+                    namalengkap = RS!penanggungjawab
+                    nip = "-"
+                Else
+                    namalengkap = RS!penanggungjawab
+                    nip = RS!nippns
+                End If
              Else
-                str1 = "-"
-                str2 = "-"
-                str3 = "-"
+                namalengkap = "-"
+                nip = "-"
              End If
+                    
+'             ReadRs2 "select pg.id,pg.namalengkap,pg.nippns,jb.namajabatan " & _
+'                     "from pegawai_m as pg " & _
+'                     "left join jabatan_m as jb on jb.id = pg.objectjabatanfungsionalfk " & _
+'                     "where objectjabatanfungsionalfk in (733,140) and pg.id=41"
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
             .database.AddADOCommand CN_String, adoReport
-                
-             .txtNoKontrak.SetText str3
+           
              .usNoUsulan.SetUnboundFieldSource ("{Ado.noorderintern}")
-             .udTglSPK.SetUnboundFieldSource ("{Ado.tglkontrak}")
-             .udTglStruk.SetUnboundFieldSource ("{Ado.tglorder}")
-             .usNamaRekanan.SetUnboundFieldSource ("{Ado.namarekanan}")
-             .usAlamat.SetUnboundFieldSource ("{Ado.alamatlengkap}")
-             .usJenisUsulan.SetUnboundFieldSource ("{Ado.keteranganlainnya}")
+             .usJenisUsulan.SetUnboundFieldSource ("{Ado.keteranganorder}")
+'             .usUnitTujuan.SetUnboundFieldSource ("{Ado.ruangantujuan}")
+'             .usUnitPengusul.SetUnboundFieldSource ("{Ado.ruangan}")
+'             .udTglUsulan.SetUnboundFieldSource ("{Ado.tglorder}")
+'             .udTglDibutuhkan.SetUnboundFieldSource ("{Ado.tglkebutuhan}")
+'             .udTglKebutuhan.SetUnboundFieldSource ("{Ado.tglkebutuhan}")
+             .usKdBarang.SetUnboundFieldSource ("{Ado.prid}")
              .usNamaBarang.SetUnboundFieldSource ("{ado.namaproduk}")
-             .usSpesifikasi.SetUnboundFieldSource ("{ado.deskripsiprodukquo}")
+             .usSpesifikasi.SetUnboundFieldSource ("{ado.spesifikasi}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
-             .ucHargasatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
-             .ucBiayaKirim.SetUnboundFieldSource ("{Ado.totalbiayakirim}")
-             .usNoSpph.SetUnboundFieldSource ("{Ado.noorderhps}")
-'             .unDisc.SetUnboundFieldSource ("{Ado.persenDisc}")
-             .ucPajak.SetUnboundFieldSource ("{Ado.hargappn}")
-'             .ucTotal.SetUnboundFieldSource ("{Ado.total}")
-'             .usQtyHari.SetUnboundFieldSource ("{Ado.nourutlogin}")
-'             .Text47.SetText str1
-'             .Text3.SetText str2
-             
-'             Dim X As Double
-'             X = Round("{Ado.total}")
-'            .usTerbilang.SetUnboundFieldSource "# " & TERBILANG(X) & " #"
+             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
+             .ucPpn.SetUnboundFieldSource ("{Ado.hargappn}")
+             .ucTotal.SetUnboundFieldSource ("{Ado.total}")
+             .usNoConfirm.SetUnboundFieldSource ("{Ado.noorderhps}")
+             .udTglConfirm.SetUnboundFieldSource ("{Ado.tglhps}")
+             .txtpenangungjawab1.SetText namalengkap
+'             .txtJabatan.SetText RS2!namajabatan
+             .txtnip.SetText nip
+'             .txtpenangungjawab.SetText namalengkap
              
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "Logistik_A4")

@@ -186,7 +186,7 @@ bolStrukResep = True
                     "ru2.namaruangan as ruangantujuan,ru2.id as ruidtujuan, " & _
                     "sp.totalhargasatuan , sp.Status,pr.kdproduk,pr.namaproduk,ss.satuanstandar,op.qtyproduk,op.hargasatuan,op.hargadiscount, " & _
                     "case when op.hargappn is null then 0 else op.hargappn end as hargappn,(op.qtyproduk*(op.hargasatuan)) as total,op.tglpelayananakhir as tglkebutuhan, " & _
-                    "op.deskripsiprodukquo as spesifikasi,pr.id as prid,sv.noverifikasi as noconfirm,sv.tglverifikasi as tglconfirm,sv.objectpegawaipjawabfk as pegawaiupkid,pg1.namalengkap as pegawaiupk " & _
+                    "op.deskripsiprodukquo as spesifikasi,pr.id as prid,sv.noverifikasi as noconfirm,sv.tglverifikasi as tglconfirm,sv.objectpegawaipjawabfk as pegawaiupkid,pg1.namalengkap as pegawaiupk,pg1.nippns " & _
                     "from strukorder_t sp " & _
                     "LEFT JOIN orderpelayanan_t op on op.strukorderfk=sp.norec " & _
                     "LEFT JOIN produk_m pr on pr.id=op.objectprodukfk " & _
