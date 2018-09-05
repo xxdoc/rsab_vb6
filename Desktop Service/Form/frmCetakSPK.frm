@@ -197,12 +197,12 @@ bolStrukResep = True
                     "where so.norec = '" & strNorec & "'"
              ReadRs strSQL
              If RS.EOF = False Then
-                str1 = RS!namalengkap
-                str2 = RS!nippns
+                str1 = RS!pegawaispk
+                str2 = "NIP : " + RS!nippns_spk
                 str3 = RS!nokontrakspk
              Else
                 str1 = "-"
-                str2 = "-"
+                str2 = "NIP : -"
                 str3 = "-"
              End If
              
@@ -221,7 +221,7 @@ bolStrukResep = True
              .usSpesifikasi.SetUnboundFieldSource ("{ado.deskripsiprodukquo}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
-             .ucHargasatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
+             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
              .ucBiayaKirim.SetUnboundFieldSource ("{Ado.totalbiayakirim}")
              .usNoSpph.SetUnboundFieldSource ("{Ado.noorderhps}")
 '             .unDisc.SetUnboundFieldSource ("{Ado.persenDisc}")
@@ -230,6 +230,8 @@ bolStrukResep = True
 '             .usQtyHari.SetUnboundFieldSource ("{Ado.nourutlogin}")
 '             .Text47.SetText str1
 '             .Text3.SetText str2
+             .txtpenangungjawab1.SetText str1
+             .Text18.SetText str2
              
 '             Dim X As Double
 '             X = Round("{Ado.total}")

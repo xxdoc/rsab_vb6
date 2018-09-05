@@ -153,7 +153,7 @@ On Error GoTo errLoad
 
 Set frmRekapPendapatan = Nothing
 Dim adocmd As New ADODB.Command
-    Dim str1, str2, str3, str4, str5 As String
+    Dim str1, str2, str3, str4, str5, str6 As String
     Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3 As String
     
     If idDokter <> "" Then
@@ -183,7 +183,7 @@ Dim adocmd As New ADODB.Command
         End If
     End If
 Set Report = New crRekapPendapatan
-    
+
     strSQL = "select * from (select apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
             "(case when pd.objectkelompokpasienlastfk = 1 then pd.noregistrasi else null end) as nonpj, " & _
             "(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as jm, " & _
@@ -205,6 +205,29 @@ Set Report = New crRekapPendapatan
             "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
             " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
             "order by pg.namalengkap) as x"
+
+'strSQL = "select distinct * from (select sp.statusenabled, apd.objectruanganfk, ru.namaruangan, apd.objectpegawaifk, pg.namalengkap, pd.noregistrasi, kps.id as kpsid, " & _
+'            "(case when pd.objectkelompokpasienlastfk = 1 then pd.noregistrasi else null end) as nonpj, " & _
+'            "(case when  pd.objectkelompokpasienlastfk > 1 then pd.noregistrasi else null end) as jm, " & _
+'            "pp.hargajual as hargapp, pp.jumlah as jumlahpp, case when pp.hargadiscount is null then 0 else pp.hargadiscount  end as diskonpp,kp.id as kpid, ppd.komponenhargafk as khid, " & _
+'            "ppd.hargajual as hargappd, ppd.jumlah as jumlahppd, case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end as diskonppd " & _
+'            "from pasiendaftar_t as pd " & _
+'            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+'            "left join pegawai_m as pg on pg.id=apd.objectpegawaifk " & _
+'            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+'            "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+'            "left join produk_m as pr on pr.id=pp.produkfk " & _
+'            "left join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+'            "left join jenisproduk_m as jp on jp.id=djp.objectjenisprodukfk " & _
+'            "left join kelompokproduk_m as kp on kp.id=jp.objectkelompokprodukfk " & _
+'            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+'            "left join kelompokpasien_m as kps on kps.id=pd.objectkelompokpasienlastfk " & _
+'            "left join strukpelayanan_t as sp  on sp.noregistrasifk=pd.norec " & _
+'            "where pd.tglregistrasi between '" & tglAwal & "' and '" & tglAkhir & "' and djp.objectjenisprodukfk <> 97 " & _
+'            " " & str1 & " " & str2 & " " & str3 & " " & str4 & " " & _
+'            "order by pg.namalengkap) as x where x.statusenabled is null "
    
    
     ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
@@ -216,11 +239,25 @@ Set Report = New crRekapPendapatan
             "from pegawai_m as pg " & _
             "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
             "where pg.objectjabatanstrukturalfk = 155"
+    If idRuangan = "491" Then
     
-    ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+        ReadRs4 "select pg.namalengkap,pg.nippns " & _
+                "from pegawai_m as pg " & _
+                "where pg.id = 255 "
+        str6 = "Ka.Instalasi Eksekutif Edelweis"
+        
+    Else
+    
+        ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
             "from pegawai_m as pg " & _
             "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
             "where pg.objectjabatanstrukturalfk = 436 "
+        str6 = "Ka. Instalasi Rawat Jalan"
+    
+    End If
+    
+    
+    
             
    If RS2.EOF = False Then
         NamaDirut = RS2!namalengkap
@@ -238,7 +275,7 @@ Set Report = New crRekapPendapatan
         nippns2 = "NIP. -"
     End If
     
-     If RS4.EOF = False Then
+    If RS4.EOF = False Then
         NamaKplInst = RS4!namalengkap
         nippns3 = "NIP. " & RS4!nippns
     Else
@@ -257,7 +294,7 @@ Set Report = New crRekapPendapatan
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .namaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .jCH.SetUnboundFieldSource ("{ado.nonpj}")
             .jJM.SetUnboundFieldSource ("{ado.jm}")
             .usKP.SetUnboundFieldSource ("{ado.kpid}")
@@ -275,7 +312,7 @@ Set Report = New crRekapPendapatan
             .txtnip1.SetText nippns2
             .txtPegawai3.SetText NamaKplInst
             .txtnip3.SetText nippns3
-            
+            .txtJabatan3.SetText str6
 '        ReadRs2 "SELECT pg.namalengkap, jb.namajabatan, pg.nippns FROM pegawai_m as pg " & _
 '                "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
 '                "where pg.id=776"
