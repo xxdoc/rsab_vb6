@@ -171,7 +171,7 @@ Public Sub Cetak(strNorec As String, view As String)
 'On Error GoTo errLoad
 Set frmCetakUsulanPermintaanBarang = Nothing
 Dim strSQL As String
-Dim namalengkap, nip As String
+Dim namalengkap, nip, namajabatan As String
 
 bolStrukResep = True
 
@@ -181,32 +181,37 @@ bolStrukResep = True
             adoReport.ActiveConnection = CN_String
             
             strSQL = "select " & _
-                    "sp.norec,sp.tglorder,sp.noorder,pg.namalengkap as penanggungjawab,pg.nippns, " & _
+                    "sp.norec,sp.tglorder,sp.noorder,pg.namalengkap as penanggungjawab,pg.nippns,sp.objectpetugasfk, " & _
                     "sp.tglvalidasi as tglkebutuhan,sp.alamattempattujuan,sp.keteranganlainnya,sp.tglvalidasi,sp.noorderintern, " & _
                     "sp.keterangankeperluan,sp.keteranganorder,ru.namaruangan as ruangan,ru.id as ruid, " & _
                     "ru2.namaruangan as ruangantujuan,ru2.id as ruidtujuan, " & _
                     "sp.totalhargasatuan , sp.Status,pr.kdproduk,pr.namaproduk,ss.satuanstandar,op.qtyproduk,op.hargasatuan,op.hargadiscount, " & _
                     "case when op.hargappn is null then 0 else op.hargappn end as hargappn,(op.qtyproduk*(op.hargasatuan)) as total,op.tglpelayananakhir as tglkebutuhan, " & _
-                    "op.deskripsiprodukquo as spesifikasi,pr.id as prid " & _
+                    "op.deskripsiprodukquo as spesifikasi,pr.id as prid,pg1.namalengkap,pg1.nippns as nippetugas,jb.namajabatan " & _
                     "from strukorder_t sp " & _
                     "left join orderpelayanan_t op on op.strukorderfk=sp.norec " & _
                     "left join produk_m pr on pr.id=op.objectprodukfk " & _
                     "left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
                     "LEFT JOIN pegawai_m as pg on pg.id=sp.objectpegawaiorderfk " & _
+                    "LEFT JOIN pegawai_m as pg1 on pg1.id=sp.objectpetugasfk " & _
+                    "LEFT JOIN jabatan_m as jb on jb.id=pg1.objectjabatanstrukturalfk " & _
                     "LEFT JOIN ruangan_m as ru on ru.id=sp.objectruanganfk " & _
                     "LEFT JOIN ruangan_m as ru2 on ru2.id=sp.objectruangantujuanfk " & _
                     "where sp.norec = '" & strNorec & "'"
                     
             ReadRs strSQL
              If RS.EOF = False Then
-                If IsNull(RS!nippns) Then
-                    namalengkap = RS!penanggungjawab
+                If IsNull(RS!nippetugas) And IsNull(RS!namajabatan) Then
+                    namajabatan = ""
+                    namalengkap = RS!namalengkap
                     nip = "NIP : -"
                 Else
-                    namalengkap = RS!penanggungjawab
-                    nip = "NIP : " + RS!nippns
+                    namajabatan = RS!namajabatan
+                    namalengkap = RS!namalengkap
+                    nip = "NIP : " + RS!nippetugas
                 End If
              Else
+                namajabatan = ""
                 namalengkap = "-"
                 nip = "NIP : -"
              End If
@@ -235,6 +240,7 @@ bolStrukResep = True
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")
              .Text47.SetText namalengkap
              .Text48.SetText nip
+             .txtJabatan.SetText namajabatan
              
              
             If view = "false" Then

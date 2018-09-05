@@ -225,7 +225,7 @@ bolStrukResep = True
              .usNoConfirm.SetUnboundFieldSource ("{Ado.noconfirm}")
              .udTglConfirm.SetUnboundFieldSource ("{Ado.tglconfirm}")
              .txtpenangungjawab1.SetText RS2!namalengkap
-             .txtJabatan.SetText RS2!namajabatan
+'             .txtJabatan.SetText RS2!namajabatan
              .txtnip.SetText RS2!nippns
              .txtpenangungjawab.SetText RS2!namalengkap
              
