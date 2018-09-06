@@ -166,7 +166,7 @@ Dim adocmd As New ADODB.Command
 Set Report = New cr_LaporanPersediaan
 
     '///**DATA BARANG'
-    strSQL = "select pr.kodebmn,rp.produkfk, pr.namaproduk, sas.satuanstandar, rp.bawal, rp.hargaawal, rp.jumlahawal, " & _
+    strSQL = "select pr.kdproduk,pr.kodebmn,rp.produkfk, pr.namaproduk, sas.satuanstandar, rp.bawal, rp.hargaawal, rp.jumlahawal, " & _
              "rp.bpenerimaan, rp.hargapenerimaan, rp.jumlahpenerimaan, rp.bpengeluaran, rp.hargapengeluaran, " & _
              "rp.jumlahpengeluaran , rp.bakhir, rp.hargaakhir, rp.jumlahakhir, rp.hargaakhir, rp.sumberdana, " & _
              "rp.tglmasuk, rp.tglkeluar, sc.tglclosing, rp.objectruanganfk, ru.namaruangan " & _
@@ -194,11 +194,12 @@ Set Report = New cr_LaporanPersediaan
              .txtNamaRuangan.SetText namaruangan
 '            .txtPeriode.SetText Format(tglAkhir, "MMMM yyyy")
 '            .usNo.SetUnboundFieldSource ("{Ado.nomor}")
-             .unKdBarang.SetUnboundFieldSource ("{Ado.kodebmn}")
+             .unKdBarang.SetUnboundFieldSource ("{Ado.produkfk}")
+             .usBarangSirs.SetUnboundFieldSource ("{Ado.kdproduk}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
-             .UsSumberDana.SetUnboundFieldSource ("{Ado.sumberdana}")
-             .UdTglMasuk.SetUnboundFieldSource ("{Ado.tglmasuk}")
+'             .UsSumberDana.SetUnboundFieldSource ("{Ado.sumberdana}")
+'             .udTglMasuk.SetUnboundFieldSource ("{Ado.tglmasuk}")
              .UnBanyaknya1.SetUnboundFieldSource ("{Ado.bawal}")
              .UnBanyaknya2.SetUnboundFieldSource ("{Ado.bpenerimaan}")
              .UnBanyaknya3.SetUnboundFieldSource ("{Ado.bpengeluaran}")

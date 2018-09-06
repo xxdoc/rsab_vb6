@@ -196,7 +196,7 @@ Set Report = New cr_LaporanRiwayatPenerimaandanPengeluaran
              .usTglMasuk.SetUnboundFieldSource ("{Ado.tglstruk}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyawal}")
              .ucJumlah.SetUnboundFieldSource ("{Ado.ttlawal}")
-             .ucHargasatuan.SetUnboundFieldSource ("{Ado.harga}")
+             .ucHargaSatuan.SetUnboundFieldSource ("{Ado.harga}")
              .unQtyPenerimaan.SetUnboundFieldSource ("{Ado.qtymasuk}")
              .ucJmPnerimaan.SetUnboundFieldSource ("{Ado.ttlmasuk}")
              .unQtyPengeluaran.SetUnboundFieldSource ("{Ado.qtykeluar}")
