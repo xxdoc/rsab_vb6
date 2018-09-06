@@ -177,18 +177,18 @@ Dim strSQL As String
 '                     "LEFT JOIN strukpelayanan_t as sp on sp.norec=pp.strukterimafk " & _
 '                     "LEFT JOIN produk_m as pr on pr.id=pp.produkfk LEFT JOIN satuanstandar_m as ss on ss.id=pr.objectsatuanstandarfk " & _
 '                     "left join jeniskemasan_m as jkm on jkm.id=pp.jeniskemasanfk left join jenisracikan_m as jr on jr.id=pp.jenisobatfk " & _
-'                     "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
-'                     "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
-'                     "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-'                     "inner join alamat_m as al on al.nocmfk= ps.id " & _
-'                     "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-'                     "inner JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
+'                     "left JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
+'                     "left JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
+'                     "left JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+'                     "left join alamat_m as al on al.nocmfk= ps.id " & _
+'                     "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+'                     "left JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
 '                     "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbklastfk " & _
 '                     "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
-'                     "inner JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
-'                     "inner JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
-'                     "inner join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
-'                     "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
+'                     "left JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
+'                     "left JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
+'                     "left join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
+'                     "left join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
 '                     "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
 '                     str1 & _
 '                     str2 & _
@@ -198,9 +198,9 @@ Dim strSQL As String
              "pr.id as idproduk,pr.namaproduk,ss.satuanstandar,pp.jumlah,pp.hargajual,case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,case when pp.jasa is null then 0 else pp.jasa end as jasa,0 as ppn, " & _
              "pp.jumlah*pp.hargajual as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan,case when jr.jenisracikan is null then '-' else jr.jenisracikan end as jenisracikan,'-' as kodefarmatologi, " & _
              "ps.namapasien,ps.tgllahir,ps.nocm,pd.noregistrasi,case when jk.id = '1' then 'l' else 'p' end as jeniskelamin,kp.kelompokpasien,ps.namaibu,al.alamatlengkap " & _
-             "from strukresep_t as sr inner join pelayananpasien_t as pp on pp.strukresepfk = sr.norec inner join produk_m as pr on pr.id=pp.produkfk left join satuanstandar_m as ss on ss.id=pr.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=pp.jeniskemasanfk " & _
-             "left join jenisracikan_m as jr on jr.id=pp.jenisobatfk inner join antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk inner join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk inner join pasien_m as ps on ps.id=pd.nocmfk inner join alamat_m as al on al.nocmfk= ps.id " & _
-             "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sr.penulisresepfk left join ruangan_m as ru on ru.id=sr.ruanganfk left join ruangan_m as ru2 on ru2.id=apd.objectruanganfk left join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
+             "from strukresep_t as sr left join pelayananpasien_t as pp on pp.strukresepfk = sr.norec left join produk_m as pr on pr.id=pp.produkfk left join satuanstandar_m as ss on ss.id=pr.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=pp.jeniskemasanfk " & _
+             "left join jenisracikan_m as jr on jr.id=pp.jenisobatfk left join antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk left join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk left join pasien_m as ps on ps.id=pd.nocmfk left join alamat_m as al on al.nocmfk= ps.id " & _
+             "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sr.penulisresepfk left join ruangan_m as ru on ru.id=sr.ruanganfk left join ruangan_m as ru2 on ru2.id=apd.objectruanganfk left join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
              "left join strukbuktipenerimaan_t as sbm on sbm.norec = pd.nosbmlastfk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
              "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
              "" & str1 & " " & str2 & " " & str3 & ""
@@ -210,7 +210,7 @@ Dim strSQL As String
             "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
             "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
             "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,'-' as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,sp.namatempattujuan as alamatlengkap,'-' as namaibu " & _
-            "from strukpelayanan_t as sp inner join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
+            "from strukpelayanan_t as sp left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
             "left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
@@ -223,7 +223,7 @@ Dim strSQL As String
             "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
             "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,ps.nocm as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,al.alamatlengkap as alamatlengkap,ps.namaibu as namaibu " & _
             "from strukpelayanan_t as sp left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
-            "inner join pasien_m as ps on ps.nocm=sp.nostruk_intern inner join alamat_m as al on al.nocmfk= ps.id inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk " & _
+            "left join pasien_m as ps on ps.nocm=sp.nostruk_intern left join alamat_m as al on al.nocmfk= ps.id left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk " & _
             "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             "" & str2 & " " & str4 & " " & _
@@ -259,13 +259,13 @@ Dim strSQL As String
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucHarga.SetUnboundFieldSource ("{ado.hargajual}")
-            .ucSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
             .usKdFarma.SetUnboundFieldSource ("{ado.noresep}")
             .usJenisKemasan.SetUnboundFieldSource ("{ado.jeniskemasan}")
             .usJenisRacikan.SetUnboundFieldSource ("{ado.jenisracikan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
 '            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")
