@@ -174,18 +174,18 @@ Set Report = New crPenjualanHarianFarmasi
 '            "from strukresep_t as sr " & _
 '            "left join pelayananpasien_t as pp on pp.strukresepfk = sr.norec " & _
 '            "left join strukpelayanan_t as sp on sp.norec=pp.strukfk " & _
-'            "inner join antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
-'            "inner join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
-'            "inner join pasien_m as ps on ps.id=pd.nocmfk " & _
-'            "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+'            "left join antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
+'            "left join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
+'            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+'            "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
 '            "left join pegawai_m as pg on pg.id=sr.penulisresepfk " & _
 '            "left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
 '            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
 '            "left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
 '            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk " & _
-'            "inner join ruangan_m as ru on ru.id=sr.ruanganfk " & _
-'            "inner join ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
-'            "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
+'            "left join ruangan_m as ru on ru.id=sr.ruanganfk " & _
+'            "left join ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
+'            "left join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
 '            "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
 '            "" & str1 & " " & str2 & " " & str3 & ""
 '    strSQL = strSQL & " UNION ALL " & _
@@ -199,14 +199,14 @@ Set Report = New crPenjualanHarianFarmasi
 '            "case when pg3.namalengkap is null then '-' else pg3.namalengkap end  as kasir " & _
 '            "from strukpelayanan_t as sp " & _
 '            "left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
-'            "inner join pasien_m as ps on ps.nocm=sp.nostruk_intern " & _
-'            "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+'            "left join pasien_m as ps on ps.nocm=sp.nostruk_intern " & _
+'            "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
 '            "left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
 '            "left join strukbuktipenerimaan_t as sbm on sbm.nostrukfk = sp.norec " & _
 '            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
 '            "left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk " & _
 '            "left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk " & _
-'            "inner join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
+'            "left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
 '            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
 '            "" & str2 & " " & str4 & " " & _
 '            " order by tglresep"
@@ -252,8 +252,8 @@ Set Report = New crPenjualanHarianFarmasi
             "0 as ppn,(spd.qtyproduk*spd.hargasatuan)-0-0-0 as total,case when sp.nosbmlastfk is null then 'n' else'p' end as statuspaid,pg3.namalengkap as namakasir " & _
             "from strukpelayanan_t as sp " & _
             "left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
-            "inner join pasien_m as ps on ps.nocm=sp.nostruk_intern " & _
-            "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+            "left join pasien_m as ps on ps.nocm=sp.nostruk_intern " & _
+            "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
             "left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
             "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk " & _
             "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
