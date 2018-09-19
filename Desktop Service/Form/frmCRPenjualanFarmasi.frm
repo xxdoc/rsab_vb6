@@ -243,7 +243,7 @@ Set Report = New crPenjualanHarianFarmasi
             "left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             "" & str2 & " " & str4 & " " & _
-            "and sp.nostruk_intern='-' "
+            "and sp.nostruk_intern='-' and substring(sp.nostruk from 1 for 2)='OB' "
     strSQL = strSQL & "UNION ALL " & _
             "select  sp.tglstruk,sp.nostruk,'-' as noregistrasi,upper(sp.namapasien_klien) as namapasien, " & _
             "( case when jk.id = 1 then 'l' when jk.id = 2 then 'p' else '-' end) as jeniskelamin, " & _
@@ -262,7 +262,7 @@ Set Report = New crPenjualanHarianFarmasi
             "left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             "" & str2 & " " & str4 & " " & _
-            "AND sp.nostruk_intern not in ('-')" & _
+            "AND sp.nostruk_intern not in ('-') and substring(sp.nostruk from 1 for 2)='OB' " & _
             " order by tglresep"
 
     adocmd.CommandText = strSQL
@@ -276,12 +276,12 @@ Set Report = New crPenjualanHarianFarmasi
             .usNoResep.SetUnboundFieldSource ("{ado.noresep}")
             .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usJumlahResep.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
