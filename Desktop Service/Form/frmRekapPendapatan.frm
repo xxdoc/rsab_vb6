@@ -147,15 +147,18 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmRekapPendapatan = Nothing
 End Sub
 
-Public Sub CetakRekapPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idDokter As String, idKelompok As String, namaKasir As String, view As String)
+Public Sub CetakRekapPendapatan(idKasir As String, tglAwal As String, tglAkhir As String, idDepartemen As String, idRuangan As String, idDokter As String, PrintBy As String, idKelompok As String, namaKasir As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmRekapPendapatan = Nothing
 Dim adocmd As New ADODB.Command
     Dim str1, str2, str3, str4, str5, str6 As String
-    Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3 As String
+    Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3, view As String
     
+    
+    
+    view = "true"
     If idDokter <> "" Then
         str1 = "and apd.objectpegawaifk=" & idDokter & " "
     End If
@@ -239,20 +242,20 @@ Set Report = New crRekapPendapatan
             "from pegawai_m as pg " & _
             "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
             "where pg.objectjabatanstrukturalfk = 155"
-    If idRuangan = "491" Then
-    
-        ReadRs4 "select pg.namalengkap,pg.nippns " & _
-                "from pegawai_m as pg " & _
-                "where pg.id = 255 "
-        str6 = "Ka.Instalasi Eksekutif Edelweis"
+    If PrintBy = "1" Then
         
-    Else
-    
         ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
             "from pegawai_m as pg " & _
             "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
             "where pg.objectjabatanstrukturalfk = 436 "
         str6 = "Ka. Instalasi Rawat Jalan"
+      
+        
+    Else
+          ReadRs4 "select pg.namalengkap,pg.nippns " & _
+                "from pegawai_m as pg " & _
+                "where pg.id = 255 "
+        str6 = "Ka.Instalasi Eksekutif Edelweis"
     
     End If
     
@@ -294,7 +297,7 @@ Set Report = New crRekapPendapatan
 '            .usNamaKasir.SetUnboundFieldSource ("{ado.kasir}")
             .usNamaRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
             .namaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .jCH.SetUnboundFieldSource ("{ado.nonpj}")
             .jJM.SetUnboundFieldSource ("{ado.jm}")
             .usKP.SetUnboundFieldSource ("{ado.kpid}")
