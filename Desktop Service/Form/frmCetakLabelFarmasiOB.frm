@@ -152,12 +152,12 @@ Set frmCetakLabelFarmasiOB = Nothing
 Dim adocmd As New ADODB.Command
     
 Set Report = New Cr_cetakLabelFarmasi
-    strSQL = "sp.namapasien_klien as namapasien,ps.tgllahir,sp.nostruk as noresep,sp.tglstruk as tglresep, sp.nostruk_intern as nocm, " & _
+    strSQL = "select sp.namapasien_klien as namapasien,ps.tgllahir,sp.nostruk as noresep,sp.tglstruk as tglresep, sp.nostruk_intern as nocm, " & _
             "pr.namaproduk,spd.aturanpakai,spd.resepke as rke from strukpelayanan_t as sp inner join strukpelayanandetail_t as spd on sp.norec= spd.nostrukfk " & _
             "inner JOIN produk_m as pr on pr.id=spd.objectprodukfk " & _
             "left JOIN jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
             "left join pasien_m as ps on ps.nocm= sp.nostruk_intern " & _
-            "where pp.jeniskemasanfk in (1,2) and " & _
+            "where spd.objectjeniskemasanfk in (1,2) and " & _
             str1 & _
             ""
     'strSQL = strSQL & " union all select distinct ps.namapasien, ps.tgllahir, sr.noresep, sr.tglresep,'Racikan' as namaproduk, pp.aturanpakai,pp.rke " & _
@@ -180,7 +180,7 @@ Set Report = New Cr_cetakLabelFarmasi
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .udtTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNamaProduk.SetUnboundFieldSource ("{ado.namaproduk}")
-            .usAturanPakai.SetUnboundFieldSource ("{ado.aturanpakai}")
+            .Usaturanpakai.SetUnboundFieldSource ("{ado.aturanpakai}")
             
 '            If view = "false" Then
                 Dim strPrinter As String
