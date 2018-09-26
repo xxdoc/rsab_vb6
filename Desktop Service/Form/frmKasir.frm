@@ -30,6 +30,7 @@ On Error Resume Next
     Dim Param7() As String
     Dim Param8() As String
     Dim Param9() As String
+    Dim Param10() As String
     Dim arrItem() As String
     
    If CN.State = adStateClosed Then Call openConnection

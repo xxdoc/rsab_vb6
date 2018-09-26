@@ -177,57 +177,52 @@ Dim strSQL As String
 '                     "LEFT JOIN strukpelayanan_t as sp on sp.norec=pp.strukterimafk " & _
 '                     "LEFT JOIN produk_m as pr on pr.id=pp.produkfk LEFT JOIN satuanstandar_m as ss on ss.id=pr.objectsatuanstandarfk " & _
 '                     "left join jeniskemasan_m as jkm on jkm.id=pp.jeniskemasanfk left join jenisracikan_m as jr on jr.id=pp.jenisobatfk " & _
-'                     "left JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
-'                     "left JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
-'                     "left JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
-'                     "left join alamat_m as al on al.nocmfk= ps.id " & _
-'                     "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
-'                     "left JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
+'                     "inner JOIN antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk " & _
+'                     "inner JOIN pasiendaftar_t as pd on pd.norec=apd.noregistrasifk " & _
+'                     "inner JOIN pasien_m as ps on ps.id=pd.nocmfk " & _
+'                     "inner join alamat_m as al on al.nocmfk= ps.id " & _
+'                     "inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk " & _
+'                     "inner JOIN pegawai_m as pg on pg.id=sr.penulisresepfk " & _
 '                     "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbklastfk " & _
 '                     "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
-'                     "left JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
-'                     "left JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
-'                     "left join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
-'                     "left join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
+'                     "inner JOIN ruangan_m as ru on ru.id=sr.ruanganfk " & _
+'                     "inner JOIN ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
+'                     "inner join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
+'                     "inner join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
 '                     "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
 '                     str1 & _
 '                     str2 & _
                      str3
                      ''and dp.id=16 "
-    strSQL = "select pg.namalengkap,ru.namaruangan as ruangan,ru2.namaruangan,dp.namadepartemen, sr.tglresep,to_char(sr.tglresep,'hh12:mi pm') as jamresep,sr.noresep,pr.kdproduk as kdproduk, " & _
-             "pr.id as idproduk,pr.namaproduk,ss.satuanstandar,pp.jumlah,pp.hargajual,case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,case when pp.jasa is null then 0 else pp.jasa end as jasa,0 as ppn, " & _
-             "pp.jumlah*pp.hargajual as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan,case when jr.jenisracikan is null then '-' else jr.jenisracikan end as jenisracikan,'-' as kodefarmatologi, " & _
-             "ps.namapasien,ps.tgllahir,ps.nocm,pd.noregistrasi,case when jk.id = '1' then 'l' else 'p' end as jeniskelamin,kp.kelompokpasien,ps.namaibu,al.alamatlengkap " & _
-             "from strukresep_t as sr left join pelayananpasien_t as pp on pp.strukresepfk = sr.norec left join produk_m as pr on pr.id=pp.produkfk left join satuanstandar_m as ss on ss.id=pr.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=pp.jeniskemasanfk " & _
-             "left join jenisracikan_m as jr on jr.id=pp.jenisobatfk left join antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk left join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk left join pasien_m as ps on ps.id=pd.nocmfk left join alamat_m as al on al.nocmfk= ps.id " & _
-             "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sr.penulisresepfk left join ruangan_m as ru on ru.id=sr.ruanganfk left join ruangan_m as ru2 on ru2.id=apd.objectruanganfk left join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk " & _
-             "left join strukbuktipenerimaan_t as sbm on sbm.norec = pd.nosbmlastfk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
+    strSQL = "select pg.namalengkap,ru.namaruangan as ruangan,ru2.namaruangan,dp.namadepartemen,sr.tglresep,to_char(sr.tglresep,'hh12:mi pm') as jamresep,sr.noresep,pr.kdproduk as kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,pp.jumlah,pp.hargajual, " & _
+             "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,case when pp.jasa is null then 0 else pp.jasa end as jasa,0 as ppn,pp.jumlah*pp.hargajual as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
+             "case when jr.jenisracikan is null then '-' else jr.jenisracikan end as jenisracikan,'-' as kodefarmatologi,ps.namapasien,ps.tgllahir,ps.nocm,pd.noregistrasi,case when jk.id = '1' then 'l' else 'p' end as jeniskelamin,kp.kelompokpasien,ps.namaibu, al.alamatlengkap " & _
+             "from strukresep_t as sr left join pelayananpasien_t as pp on pp.strukresepfk = sr.norec left join antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk left join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk left join pasien_m as ps on ps.id=pd.nocmfk " & _
+             "left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join alamat_m as al on al.nocmfk= ps.id left join pegawai_m as pg on pg.id=sr.penulisresepfk left join ruangan_m as ru on ru.id=sr.ruanganfk left join ruangan_m as ru2 on ru2.id=apd.objectruanganfk " & _
+             "left join kelompokpasien_m kp on kp.id=pd.objectkelompokpasienlastfk left join strukbuktipenerimaan_t as sbm on sbm.norec = pd.nosbmlastfk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk " & _
+             "left join produk_m as pr on pr.id=pp.produkfk left join satuanstandar_m as ss on ss.id=pr.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=pp.jeniskemasanfk left join jenisracikan_m as jr on jr.id=pp.jenisobatfk left join departemen_m as dp on dp.id=ru2.objectdepartemenfk " & _
              "where sr.tglresep BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
              "" & str1 & " " & str2 & " " & str3 & ""
     
     strSQL = strSQL & "UNION ALL " & _
-            "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
-            "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
-            "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
-            "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,'-' as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,sp.namatempattujuan as alamatlengkap,'-' as namaibu " & _
-            "from strukpelayanan_t as sp left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
-            "left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk " & _
-            "left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
+            "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep,pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual, " & _
+            "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon,case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
+            "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien, sp.tglfaktur as tgllahir,'-' as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien, sp.namatempattujuan as alamatlengkap,'-' as namaibu from strukpelayanan_t as sp inner join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec " & _
+            "left join produk_m as pr on pr.id=spd.objectprodukfk left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk " & _
+            "left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             "" & str2 & " " & str4 & " " & _
-            "and sp.nostruk_intern='-' "
+            "and sp.nostruk_intern='-' and substring(sp.nostruk from 1 for 2)='OB' "
     
     strSQL = strSQL & "UNION ALL " & _
-            "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
-            "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
-            "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
-            "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,ps.nocm as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,al.alamatlengkap as alamatlengkap,ps.namaibu as namaibu " & _
-            "from strukpelayanan_t as sp left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec left join produk_m as pr on pr.id=spd.objectprodukfk left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
-            "left join pasien_m as ps on ps.nocm=sp.nostruk_intern left join alamat_m as al on al.nocmfk= ps.id left join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk " & _
-            "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
+             "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep,pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
+             "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan,'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,ps.nocm as nocm,'-' as noregistrasi,'-' as jeniskelamin, " & _
+             "'umum/sendiri' as kelompokpasien,al.alamatlengkap as alamatlengkap,ps.namaibu as namaibu from strukpelayanan_t as sp left join strukpelayanandetail_t as spd on spd.nostrukfk = sp.norec inner join pasien_m as ps on ps.nocm=sp.nostruk_intern left join alamat_m as al on al.nocmfk= ps.id inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
+             "left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left join ruangan_m as ru on ru.id=sp.objectruanganfk left join produk_m as pr on pr.id=spd.objectprodukfk left join satuanstandar_m as ss on ss.id=spd.objectsatuanstandarfk " & _
+            "left join jeniskemasan_m as jkm on jkm.id=spd.objectjeniskemasanfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' " & _
             "" & str2 & " " & str4 & " " & _
-            "AND sp.nostruk_intern not in ('-')" & _
+            "AND sp.nostruk_intern not in ('-') and substring(sp.nostruk from 1 for 2)='OB' " & _
             " order by tglresep"
             'ReadRs strSQL
             
