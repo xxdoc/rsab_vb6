@@ -1,5 +1,6 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
 Begin VB.Form frmCetakPendaftaran 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
@@ -11,6 +12,13 @@ Begin VB.Form frmCetakPendaftaran
    ScaleHeight     =   7005
    ScaleWidth      =   9075
    WindowState     =   2  'Maximized
+   Begin MSWinsockLib.Winsock Winsock1 
+      Left            =   8040
+      Top             =   6120
+      _ExtentX        =   741
+      _ExtentY        =   741
+      _Version        =   393216
+   End
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
       BeginProperty Font 
@@ -361,8 +369,6 @@ errLoad:
 
     MsgBox Err.Number & " " & Err.Description
 End Sub
-
-
 Public Sub cetakTracer(strNorec As String, view As String)
 On Error GoTo errLoad
 Set frmCetakPendaftaran = Nothing
@@ -381,7 +387,8 @@ boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
 bolBuktiLayananRuanganBedah = False
-
+Dim namaKomputer As String
+namaKomputer = Winsock1.LocalHostName
     With ReportTracer
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
@@ -414,7 +421,7 @@ bolBuktiLayananRuanganBedah = False
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
             .usNamaKel.SetUnboundFieldSource ("{ado.namaayah}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
-
+            .namaPc.SetText namaKomputer
             If view = "false" Then
                
 
@@ -1035,7 +1042,7 @@ bolBuktiLayananRuanganBedah = False
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
 
         .txtTgl.SetText strTglLahir
-        .txtnocm.SetText strNocm
+        .txtNoCM.SetText strNocm
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
@@ -1309,7 +1316,7 @@ bolBuktiLayananRuanganBedah = False
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namakeluarga}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
            
