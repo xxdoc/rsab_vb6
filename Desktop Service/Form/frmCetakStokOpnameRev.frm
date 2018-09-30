@@ -166,11 +166,11 @@ Set Report = New cr_LaporanStokOpnameRev
             strSQL = "select x.kdproduk, " & _
                     "x.tglclosing,x.namaproduk,x.satuanstandar, " & _
                     "x.namaruangan,x.tglkadaluarsa, " & _
-                    "sum(x.qtyproduksystem) as qtyproduksystem, " & _
+                    "sum(x.qtyprodukreal) as qtyprodukreal, " & _
                     "sum(x.harganetto1) as harganetto1, " & _
                     "sum (x.total) as total  from ( " & _
                     "select DISTINCT pr.id as kdproduk, sp.tglstruk,sc.tglclosing, pr.namaproduk, ss.satuanstandar, " & _
-                    "spd.qtyproduksystem,spd.harganetto1,spd.qtyproduksystem * spd.harganetto1 as total,ru.namaruangan,spdt.tglkadaluarsa " & _
+                    "spd.qtyprodukreal,spd.harganetto1,spd.qtyprodukreal * spd.harganetto1 as total,ru.namaruangan,spdt.tglkadaluarsa " & _
                     "from strukclosing_t sc " & _
                     "left join stokprodukdetailopname_t spd on spd.noclosingfk=sc.norec " & _
                     "left join strukpelayanan_t sp on sp.norec=spd.nostrukterimafk " & _
@@ -196,7 +196,7 @@ Set Report = New cr_LaporanStokOpnameRev
              .unKdBarang.SetUnboundFieldSource ("{Ado.kdproduk}")
              .usNamaBarang.SetUnboundFieldSource ("{Ado.namaproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
-             .unBanyak.SetUnboundFieldSource ("{Ado.qtyproduksystem}")
+             .unBanyak.SetUnboundFieldSource ("{Ado.qtyprodukreal}")
              .ucHarga.SetUnboundFieldSource ("{Ado.harganetto1}")
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")
             
