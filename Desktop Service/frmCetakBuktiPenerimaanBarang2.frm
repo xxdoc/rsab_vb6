@@ -179,7 +179,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select sp.nostruk, sp.nofaktur,sp.nokontrak,sp.tglstruk, sp.tglspk, " & _
+            strSQL = "select sp.nostruk, sp.nofaktur,sp.nokontrak,sp.tglstruk, sp.tglspk, sp.nokontrak, sp.tglkontrak, " & _
                     "case when ap.asalproduk is null then '-' else ap.asalproduk end as asalproduk," & _
                     "case when sp.totaldiscount is null then '0,00%' else (sp.totaldiscount * 100) / sp.totalhargasatuan || ',00%' end as persendiskon," & _
                     "case when sp.totalppn is null then '0,00%' else (sp.totalppn * 100) / sp.totalhargasatuan || ',00%' end as persenppn," & _
@@ -187,7 +187,7 @@ bolStrukResep = True
                     "pr.id as idproduk, pr.namaproduk, " & _
                     "ss.satuanstandar, sp.totalharusdibayar, " & _
                     "(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as harga, spd.qtyproduk, " & _
-                    "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang " & _
+                    "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang, sp.keteranganambil as ketterima " & _
                     "from strukpelayanan_t sp " & _
                     "left join strukpelayanandetail_t spd on spd.nostrukfk=sp.norec " & _
                     "left JOIN pegawai_m pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
@@ -207,7 +207,7 @@ bolStrukResep = True
 
              .txtuser.SetText strUser
            
-             .udtanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
+             .udtTanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
              .udTglSPK.SetUnboundFieldSource ("{Ado.tglspk}")
              .usResep.SetUnboundFieldSource ("{Ado.nofaktur}")
              .usPemesanan.SetUnboundFieldSource ("{Ado.nostruk}")
@@ -223,8 +223,9 @@ bolStrukResep = True
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .ucTotalBayar.SetUnboundFieldSource ("{Ado.totalharusdibayar}")
              .usNoKontrak.SetUnboundFieldSource ("{Ado.nokontrak}")
-             
-             
+             .usKetTerima.SetUnboundFieldSource ("{Ado.ketterima}")
+             .usNoSPK.SetUnboundFieldSource ("{Ado.nokontakspk}")
+             .udtTglKontrak.SetUnboundFieldSource ("{Ado.tglkontrak}")
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "Logistik_A4")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
