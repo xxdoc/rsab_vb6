@@ -167,10 +167,11 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub cetak(strNoKirim As String, view As String, strUser As String)
+Public Sub Cetak(view As String, strNoKirim As String, pegawaiMengetahui As String, jabatanMengetahui, strUser As String)
 On Error GoTo errLoad
 Set frmCetakBuktiOrderBarang = Nothing
 Dim strSQL As String
+Dim pegawai1, pegawai2, pegawai3, nip1, nip2, nip3 As String
 
 bolStrukResep = True
     
@@ -194,6 +195,19 @@ bolStrukResep = True
                     "where so.norec = '" & strNoKirim & "'"
 
              ReadRs strSQL
+                     
+            ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                     "from pegawai_m as pg " & _
+                     "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                     "where pg.id = '" & pegawaiMengetahui & "'"
+            
+            If RS4.EOF = False Then
+                pegawai3 = RS4!namalengkap
+                nip3 = "NIP. " & RS4!nippns
+            Else
+                pegawai2 = "-"
+                nip3 = "NIP. -"
+            End If
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
@@ -216,8 +230,10 @@ bolStrukResep = True
              .unDiminta.SetUnboundFieldSource ("{Ado.qtyproduk}")
 '             .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
-             
-             .txtKepalaBagian.SetText UCase(IIf(IsNull(RS!kepalaBagian), "-", RS!kepalaBagian))
+             .txtJabatan.SetText jabatanMengetahui
+             .txtKepalaBagian.SetText pegawai3
+             .Text73.SetText nip3
+'             .txtKepalaBagian.SetText UCase(IIf(IsNull(RS!kepalaBagian), "-", RS!kepalaBagian))
              '.usKepalaBagian.SetUnboundFieldSource ("{Ado.kepalaBagian}")
 '             .usNamaPenyerah.SetUnboundFieldSource ("{Ado.pegawaipengirim}")
 '             .usNIPPenyerah.SetUnboundFieldSource ("{Ado.nippengirim}")

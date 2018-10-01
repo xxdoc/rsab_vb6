@@ -207,7 +207,8 @@ bolStrukResep = True
 
              .txtuser.SetText strUser
            
-             .udtanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
+             .udTanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
+             .udTanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
              .udTglSPK.SetUnboundFieldSource ("{Ado.tglspk}")
              .usResep.SetUnboundFieldSource ("{Ado.nofaktur}")
              .usPemesanan.SetUnboundFieldSource ("{Ado.nostruk}")
