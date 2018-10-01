@@ -275,7 +275,7 @@ Set Report = New crRekapffsIBS
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
             "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "case when ppd.komponenhargafk = " & Jasa & " then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* ppd.jumlah) else 0 end as total,0 as remun, ppd.jumlah,pg.objecttypepegawaifk " & _
+            "case when ppd.komponenhargafk = " & Jasa & " then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) else 0 end as total,0 as remun, pp.jumlah,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -363,7 +363,7 @@ Set Report = New crRekapffsIBS
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
+            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .Text17.SetText NamaDirut
             .Text19.SetText nippns1

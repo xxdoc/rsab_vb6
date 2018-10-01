@@ -1,5 +1,6 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
 Begin VB.Form frmCetakPendaftaran 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
@@ -11,6 +12,13 @@ Begin VB.Form frmCetakPendaftaran
    ScaleHeight     =   7005
    ScaleWidth      =   9075
    WindowState     =   2  'Maximized
+   Begin MSWinsockLib.Winsock Winsock1 
+      Left            =   8040
+      Top             =   6120
+      _ExtentX        =   741
+      _ExtentY        =   741
+      _Version        =   393216
+   End
    Begin VB.CommandButton cmdOption 
       Caption         =   "Option"
       BeginProperty Font 
@@ -215,6 +223,7 @@ Private Sub cmdCetak_Click()
         PrinterNama = cboPrinter.Text
         reportBuktiLayananRuanganBedah.PrintOut False
     End If
+    SaveSetting "SMART", "SettingPrinter", "cboPrinter", PrinterNama
 End Sub
 
 Private Sub CmdOption_Click()
@@ -262,6 +271,8 @@ Private Sub Form_Load()
         cboPrinter.AddItem p.DeviceName
     Next
     strPrinter = strPrinter1
+    
+    cboPrinter.Text = GetSetting("SMART", "SettingPrinter", "cboPrinter")
     
 End Sub
 
@@ -358,8 +369,6 @@ errLoad:
 
     MsgBox Err.Number & " " & Err.Description
 End Sub
-
-
 Public Sub cetakTracer(strNorec As String, view As String)
 On Error GoTo errLoad
 Set frmCetakPendaftaran = Nothing
@@ -378,7 +387,8 @@ boolSumList = False
 boolLembarRMK = False
 boolLembarPersetujuan = False
 bolBuktiLayananRuanganBedah = False
-
+Dim namaKomputer As String
+namaKomputer = Winsock1.LocalHostName
     With ReportTracer
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
@@ -411,7 +421,7 @@ bolBuktiLayananRuanganBedah = False
             .usNamaDokter.SetUnboundFieldSource ("{ado.namadokter}")
             .usNamaKel.SetUnboundFieldSource ("{ado.namaayah}")
             .usruangperiksa.SetUnboundFieldSource ("{ado.ruanganPeriksa}")
-
+            .namaPc.SetText namaKomputer
             If view = "false" Then
                
 
@@ -493,11 +503,11 @@ bolBuktiLayananRuanganBedah = False
               .txtAsalRujukan.SetText IIf(IsNull(RS("nmprovider")), "-", RS("nmprovider"))
               .txtPeserta.SetText IIf(IsNull(RS("jenispeserta")), "-", RS("jenispeserta"))
               .txtJenisrawat.SetText IIf(IsNull(RS("jenisrawat")), "-", RS("jenisrawat")) 'RS("jenisrawat")
-              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
-              .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
+              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
+              .txtDiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
               .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
               .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
-              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
               .txtNoPendaftaran2.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi"))
              End If
 
@@ -590,11 +600,11 @@ bolBuktiLayananRuanganBedah = False
               .txtAsalRujukan.SetText IIf(IsNull(RS("nmprovider")), "-", RS("nmprovider"))
               .txtPeserta.SetText IIf(IsNull(RS("jenispeserta")), "-", RS("jenispeserta"))
               .txtJenisrawat.SetText IIf(IsNull(RS("jenisrawat")), "-", RS("jenisrawat")) 'RS("jenisrawat")
-              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
-              .txtdiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
+              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm")) 'RS("nocm")
+              .txtDiagnosa.SetText IIf(IsNull(RS("namadiagnosa")), "-", RS("namadiagnosa")) 'RS("namadiagnosa")
               .txtKelasrawat.SetText IIf(IsNull(RS("namakelas")), "-", RS("namakelas")) 'RS("namakelas")
               .txtCatatan.SetText IIf(IsNull(RS("catatan")), "-", RS("catatan"))
-              .txtnocm2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
+              .txtNoCM2.SetText IIf(IsNull(RS("nocm")), "-", RS("nocm"))
               .txtNoPendaftaran2.SetText IIf(IsNull(RS("noregistrasi")), "-", RS("noregistrasi"))
               .txtNoTelpon.SetText IIf(IsNull(RS("notelpmobile")), "-", RS("notelpmobile"))
               .txtPenjamin.SetText IIf(IsNull(RS("penjaminlakalantas")), "-", RS("penjaminlakalantas"))
