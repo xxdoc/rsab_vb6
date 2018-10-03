@@ -213,46 +213,64 @@ bolStrukResep = True
 '                     "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
 '                     "left join ruangan_m as ru2 on ru2.id = so.objectruangantujuanfk " & _
 '                     "where so.norec ='" & RS!norecSo & "' order by pr.namaproduk ASC "
-'
-             ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
-                     "from pegawai_m as pg " & _
-                     "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
-                     "where pg.id = '" & pegawaiPenyerah & "'"
-                     
-            ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
-                     "from pegawai_m as pg " & _
-                     "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
-                     "where pg.id = '" & pegawaiPenerima & "'"
-                     
-            ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
-                     "from pegawai_m as pg " & _
-                     "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
-                     "where pg.id = '" & pegawaiMengetahui & "'"
-                
-            If RS2.EOF = False Then
-                pegawai1 = RS2!namalengkap
-                nip1 = "NIP. " & RS2!nippns
+            If pegawaiPenyerah <> "" Then
+            
+                ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiPenyerah & "'"
+                         
+                If RS2.EOF = False Then
+                    pegawai1 = RS2!namalengkap
+                    nip1 = "NIP. " & RS2!nippns
+                Else
+                    pegawai1 = "-"
+                    nip1 = "NIP. -"
+                End If
             Else
-                pegawai1 = "-"
-                nip1 = "NIP. -"
+                    pegawai1 = "-"
+                    nip1 = "NIP. -"
             End If
             
-            If RS3.EOF = False Then
-                pegawai2 = RS3!namalengkap
-                nip2 = "NIP. " & RS3!nippns
+            If pegawaiMengetahui <> "" Then
+                            
+                ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiMengetahui & "'"
+                         
+                If RS4.EOF = False Then
+                    pegawai3 = RS4!namalengkap
+                    nip3 = "NIP. " & RS4!nippns
+                Else
+                    pegawai3 = "-"
+                    nip3 = "NIP. -"
+                End If
             Else
-                pegawai2 = "-"
-                nip1 = "NIP. -"
-            End If
-            
-            If RS4.EOF = False Then
-                pegawai3 = RS4!namalengkap
-                nip3 = "NIP. " & RS4!nippns
-            Else
-                pegawai2 = "-"
+                pegawai3 = "-"
                 nip3 = "NIP. -"
             End If
+            
+            If pegawaiPenerima <> "" Then
+                            
+                ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiPenerima & "'"
+                
+                If RS3.EOF = False Then
+                    pegawai2 = RS3!namalengkap
+                    nip2 = "NIP. " & RS3!nippns
+                Else
+                    pegawai2 = "-"
+                    nip2 = "NIP. -"
+                End If
+            Else
+                pegawai2 = "-"
+                nip2 = "NIP. -"
+            End If
              
+           
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
             .database.AddADOCommand CN_String, adoReport

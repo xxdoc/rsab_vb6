@@ -195,19 +195,28 @@ bolStrukResep = True
                     "where so.norec = '" & strNoKirim & "'"
 
              ReadRs strSQL
-                     
-            ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+             If pegawaiMengetahui <> "" Then
+                 ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
                      "from pegawai_m as pg " & _
-                     "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                     "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
                      "where pg.id = '" & pegawaiMengetahui & "'"
             
-            If RS4.EOF = False Then
-                pegawai3 = RS4!namalengkap
-                nip3 = "NIP. " & RS4!nippns
+           
+            
+                
+                If RS4.EOF = False Then
+                    pegawai3 = RS4!namalengkap
+                    nip3 = "NIP. " & RS4!nippns
+                Else
+                    pegawai3 = "-"
+                    nip3 = "NIP. -"
+                End If
             Else
-                pegawai2 = "-"
+                pegawai3 = "-"
                 nip3 = "NIP. -"
             End If
+           
+            
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
