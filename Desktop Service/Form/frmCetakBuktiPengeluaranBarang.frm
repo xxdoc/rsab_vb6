@@ -167,10 +167,11 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub cetak(strNoKirim As String, view As String, strUser As String)
-On Error GoTo errLoad
+Public Sub Cetak(view As String, strNoKirim As String, pegawaiPenyerah As String, pegawaiMengetahui As String, pegawaiPenerima As String, JabatanPenyerah As String, jabatanMengetahui, JabatanPenerima As String, test As String, strUser As String)
+'On Error GoTo errLoad
 Set frmCetakBuktiPengeluaranBarang = Nothing
 Dim strSQL As String
+Dim pegawai1, pegawai2, pegawai3, nip1, nip2, nip3 As String
 
 bolStrukResep = True
     
@@ -179,7 +180,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select sk.tglkirim, so.tglorder, sk.nokirim, so.noorder, jp.name, ru.namaruangan, " & _
+            strSQL = "select sk.tglkirim,so.tglorder, sk.nokirim, so.noorder, jp.name, ru.namaruangan, " & _
                     "ru.kdruangan || ' - ' || ru.namaruangan as ruangankirim, " & _
                     "ru2.namaruangan, ru2.kdruangan || ' - ' || ru2.namaruangan as ruangantujuan, pg.namalengkap, " & _
                     "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, kp.qtyproduk, kp.qtyorder, kp.hargasatuan, (kp.hargasatuan * kp.qtyproduk) as total, sk.keteranganlainnyakirim, " & _
@@ -197,10 +198,79 @@ bolStrukResep = True
                     "left JOIN departemen_m as dp2 on dp2.id = ru2.objectdepartemenfk " & _
                     "left join pegawai_m as pg on pg.id = sk.objectpegawaipengirimfk " & _
                     "left join pegawai_m as pg2 on pg2.id = sk.objectpegawaipenerimafk  " & _
-                    "where sk.norec = '" & strNoKirim & "' and kp.qtyproduk <> 0"
+                    "where sk.norec = '" & strNoKirim & "' and kp.qtyproduk <> 0 order by pr.namaproduk asc"
 
              ReadRs strSQL
              
+'             ReadRs5 "select so.tglorder, so.noorder, jp.name,ru.namaruangan,ru.kdruangan || ' - ' || ru.namaruangan as ruangankirim,ru2.namaruangan, " & _
+'                     "ru2.kdruangan || ' - ' || ru2.namaruangan as ruangantujuan,pr.namaproduk,ss.satuanstandar,op.qtyproduk " & _
+'                     "from strukorder_t as so " & _
+'                     "left join orderpelayanan_t as op on op.noorderfk = so.norec " & _
+'                     "left join produk_m as pr on pr.id = op.objectprodukfk " & _
+'                     "left join satuanstandar_m as ss on ss.id = pr.objectsatuanstandarfk " & _
+'                     "left join jenis_permintaan_m as jp on jp.id = so.jenispermintaanfk " & _
+'                     "left join ruangan_m as ru on ru.id = so.objectruanganfk " & _
+'                     "left join departemen_m as dp on dp.id = ru.objectdepartemenfk " & _
+'                     "left join ruangan_m as ru2 on ru2.id = so.objectruangantujuanfk " & _
+'                     "where so.norec ='" & RS!norecSo & "' order by pr.namaproduk ASC "
+            If pegawaiPenyerah <> "" Then
+            
+                ReadRs2 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiPenyerah & "'"
+                         
+                If RS2.EOF = False Then
+                    pegawai1 = RS2!namalengkap
+                    nip1 = "NIP. " & RS2!nippns
+                Else
+                    pegawai1 = "-"
+                    nip1 = "NIP. -"
+                End If
+            Else
+                    pegawai1 = "-"
+                    nip1 = "NIP. -"
+            End If
+            
+            If pegawaiMengetahui <> "" Then
+                            
+                ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiMengetahui & "'"
+                         
+                If RS4.EOF = False Then
+                    pegawai3 = RS4!namalengkap
+                    nip3 = "NIP. " & RS4!nippns
+                Else
+                    pegawai3 = "-"
+                    nip3 = "NIP. -"
+                End If
+            Else
+                pegawai3 = "-"
+                nip3 = "NIP. -"
+            End If
+            
+            If pegawaiPenerima <> "" Then
+                            
+                ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiPenerima & "'"
+                
+                If RS3.EOF = False Then
+                    pegawai2 = RS3!namalengkap
+                    nip2 = "NIP. " & RS3!nippns
+                Else
+                    pegawai2 = "-"
+                    nip2 = "NIP. -"
+                End If
+            Else
+                pegawai2 = "-"
+                nip2 = "NIP. -"
+            End If
+             
+           
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
             .database.AddADOCommand CN_String, adoReport
@@ -210,6 +280,7 @@ bolStrukResep = True
              .udtglDok.SetUnboundFieldSource ("{Ado.tglkirim}")
              .udTglPermintaan.SetUnboundFieldSource ("{Ado.tglorder}")
              .udTglTerima.SetUnboundFieldSource ("{Ado.tglorder}")
+             .udTglTerima2.SetUnboundFieldSource ("{Ado.tglorder}")
              .usNoDok.SetUnboundFieldSource ("{Ado.nokirim}")
              .usNoPemesanan.SetUnboundFieldSource ("{Ado.noorder}")
              .usRuangKirim.SetUnboundFieldSource ("{Ado.ruangankirim}")
@@ -223,12 +294,21 @@ bolStrukResep = True
              .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
              
-             .usPnjPengirim.SetUnboundFieldSource ("{Ado.pnjPengirim}")
-             .usNamaPenyerah.SetUnboundFieldSource ("{Ado.pegawaipengirim}")
-             .usNIPPenyerah.SetUnboundFieldSource ("{Ado.nippengirim}")
-             .usPnjPenerima.SetUnboundFieldSource ("{Ado.pnjPenerima}")
-             .usNamaPenerima.SetUnboundFieldSource ("{Ado.pegawaipenerima}")
-             .usNIPPenerima.SetUnboundFieldSource ("{Ado.nippenerima}")
+              .txtJabatan1.SetText JabatanPenyerah
+              .txtJabatan2.SetText JabatanPenerima
+              .txtJabatan3.SetText jabatanMengetahui
+              .txtPegawai1.SetText pegawai1
+              .txtPegawai2.SetText pegawai2
+              .txtPegawai3.SetText pegawai3
+              .txtNIP1.SetText nip1
+              .txtNIP2.SetText nip2
+              .txtNIP3.SetText nip3
+'             .usPnjPengirim.SetUnboundFieldSource ("JabatanPenyerah")
+'             .usNamaPenyerah.SetUnboundFieldSource ("{pegawai1}")
+'             .usNIPPenyerah.SetUnboundFieldSource ("{nip1}")
+'             .usPnjPenerima.SetUnboundFieldSource ("{JabatanPenerima}")
+'             .usNamaPenerima.SetUnboundFieldSource ("{pegawai2}")
+'             .usNIPPenerima.SetUnboundFieldSource ("{nip2}")
              
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "Logistik_A4")

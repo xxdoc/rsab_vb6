@@ -167,10 +167,11 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub cetak(strNoKirim As String, view As String, strUser As String)
+Public Sub Cetak(view As String, strNoKirim As String, pegawaiMengetahui As String, jabatanMengetahui, test As String, strUser As String)
 On Error GoTo errLoad
 Set frmCetakBuktiOrderBarang = Nothing
 Dim strSQL As String
+Dim pegawai1, pegawai2, pegawai3, nip1, nip2, nip3 As String
 
 bolStrukResep = True
     
@@ -179,7 +180,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select so.tglorder, so.noorder, jp.name,ru2.namaruangan as ruangantujuan, " & _
+            strSQL = "select so.tglorder, so.noorder, jp.name,ru2.namaruangan as ruangantujuan,so.keteranganorder, " & _
                     "ru.namaruangan as ruangan, 'KA. '||dp.namadepartemen as kepalaBagian, pg.namalengkap, jp.name ||' '|| ru.namaruangan || ' Tgl '|| so.tglorder as keteranganorder, " & _
                     "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, op.qtyproduk, so.totalhargasatuan as hargasatuan, (so.totalhargasatuan * op.qtyproduk) as total " & _
                     "from strukorder_t as so " & _
@@ -194,6 +195,28 @@ bolStrukResep = True
                     "where so.norec = '" & strNoKirim & "'"
 
              ReadRs strSQL
+             If pegawaiMengetahui <> "" Then
+                 ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                     "from pegawai_m as pg " & _
+                     "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                     "where pg.id = '" & pegawaiMengetahui & "'"
+            
+           
+            
+                
+                If RS4.EOF = False Then
+                    pegawai3 = RS4!namalengkap
+                    nip3 = "NIP. " & RS4!nippns
+                Else
+                    pegawai3 = "-"
+                    nip3 = "NIP. -"
+                End If
+            Else
+                pegawai3 = "-"
+                nip3 = "NIP. -"
+            End If
+           
+            
              
              adoReport.CommandText = strSQL
              adoReport.CommandType = adCmdUnknown
@@ -216,8 +239,10 @@ bolStrukResep = True
              .unDiminta.SetUnboundFieldSource ("{Ado.qtyproduk}")
 '             .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
-             
-             .txtKepalaBagian.SetText UCase(IIf(IsNull(RS!kepalaBagian), "-", RS!kepalaBagian))
+             .txtJabatan.SetText jabatanMengetahui
+             .txtKepalaBagian.SetText pegawai3
+             .Text73.SetText nip3
+'             .txtKepalaBagian.SetText UCase(IIf(IsNull(RS!kepalaBagian), "-", RS!kepalaBagian))
              '.usKepalaBagian.SetUnboundFieldSource ("{Ado.kepalaBagian}")
 '             .usNamaPenyerah.SetUnboundFieldSource ("{Ado.pegawaipengirim}")
 '             .usNIPPenyerah.SetUnboundFieldSource ("{Ado.nippengirim}")
