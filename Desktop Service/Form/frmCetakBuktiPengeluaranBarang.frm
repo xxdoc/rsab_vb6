@@ -167,7 +167,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub Cetak(view As String, strNoKirim As String, pegawaiPenyerah As String, pegawaiMengetahui As String, pegawaiPenerima As String, JabatanPenyerah As String, jabatanMengetahui, JabatanPenerima As String, strUser As String)
+Public Sub Cetak(view As String, strNoKirim As String, pegawaiPenyerah As String, pegawaiMengetahui As String, pegawaiPenerima As String, JabatanPenyerah As String, jabatanMengetahui, JabatanPenerima As String, test As String, strUser As String)
 'On Error GoTo errLoad
 Set frmCetakBuktiPengeluaranBarang = Nothing
 Dim strSQL As String
@@ -280,6 +280,7 @@ bolStrukResep = True
              .udtglDok.SetUnboundFieldSource ("{Ado.tglkirim}")
              .udTglPermintaan.SetUnboundFieldSource ("{Ado.tglorder}")
              .udTglTerima.SetUnboundFieldSource ("{Ado.tglorder}")
+             .udTglTerima2.SetUnboundFieldSource ("{Ado.tglorder}")
              .usNoDok.SetUnboundFieldSource ("{Ado.nokirim}")
              .usNoPemesanan.SetUnboundFieldSource ("{Ado.noorder}")
              .usRuangKirim.SetUnboundFieldSource ("{Ado.ruangankirim}")

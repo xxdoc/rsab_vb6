@@ -167,7 +167,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub Cetak(view As String, strNores As String, Penerima As String, Penyerah As String, pegawaiMengetahui As String, jabatan1 As String, jabatan2 As String, jabatanMengetahui As String, strUser As String)
+Public Sub Cetak(view As String, strNores As String, Penerima As String, Penyerah As String, pegawaiMengetahui As String, jabatan1 As String, jabatan2 As String, jabatanMengetahui As String, test As String, strUser As String)
 'view As String, strNoKirim As String, pegawaiPenyerah As String, pegawaiMengetahui As String, pegawaiPenerima As String, JabatanPenyerah As String, jabatanMengetahui, JabatanPenerima As String, strUser As String
 'On Error GoTo errLoad
 Set frmCetakBuktiPenerimaanBarang2 = Nothing
@@ -180,7 +180,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select DISTINCT sp.nostruk, sp.nofaktur,sp.tglstruk, sp.tglspk,tglfaktur,sp.tglkontrak, " & _
+            strSQL = "select DISTINCT sp.nostruk,sp.nofaktur,sp.tglstruk, sp.tglspk,tglfaktur,sp.tglkontrak, " & _
                     "case when ap.asalproduk is null then '-' else ap.asalproduk end as asalproduk," & _
                     "case when sp.totaldiscount is null then '0,00%' else (sp.totaldiscount * 100) / sp.totalhargasatuan || ',00%' end as persendiskon," & _
                     "case when sp.totalppn is null then '0,00%' else (sp.totalppn * 100) / sp.totalhargasatuan || ',00%' end as persenppn," & _
@@ -190,7 +190,7 @@ bolStrukResep = True
                     "(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as harga, spd.qtyproduk, " & _
                     "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang,sp.keteranganambil, " & _
                     "case when sp.nokontrak is null then '-' else sp.nokontrak end as nokontrak,case when sp.nosppb is null then '-' else sp.nosppb end as nosppb, " & _
-                    "CASE when so.tglorder is null then so1.tglorder else so.tglorder end as tglorder,sp.keteranganambil " & _
+                    "CASE when so.tglorder is null then sp.tglstruk else so.tglorder end as tglorder,sp.keteranganambil " & _
                     "from strukpelayanan_t sp " & _
                     "left join strukpelayanandetail_t spd on spd.nostrukfk=sp.norec " & _
                     "left join strukorder_t so on so.noorder = sp.nosppb " & _

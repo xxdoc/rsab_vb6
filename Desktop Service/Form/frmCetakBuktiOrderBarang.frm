@@ -167,7 +167,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub Cetak(view As String, strNoKirim As String, pegawaiMengetahui As String, jabatanMengetahui, strUser As String)
+Public Sub Cetak(view As String, strNoKirim As String, pegawaiMengetahui As String, jabatanMengetahui, test As String, strUser As String)
 On Error GoTo errLoad
 Set frmCetakBuktiOrderBarang = Nothing
 Dim strSQL As String
@@ -180,7 +180,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select so.tglorder, so.noorder, jp.name,ru2.namaruangan as ruangantujuan, " & _
+            strSQL = "select so.tglorder, so.noorder, jp.name,ru2.namaruangan as ruangantujuan,so.keteranganorder, " & _
                     "ru.namaruangan as ruangan, 'KA. '||dp.namadepartemen as kepalaBagian, pg.namalengkap, jp.name ||' '|| ru.namaruangan || ' Tgl '|| so.tglorder as keteranganorder, " & _
                     "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, op.qtyproduk, so.totalhargasatuan as hargasatuan, (so.totalhargasatuan * op.qtyproduk) as total " & _
                     "from strukorder_t as so " & _
