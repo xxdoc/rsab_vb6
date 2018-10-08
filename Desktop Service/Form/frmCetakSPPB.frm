@@ -171,7 +171,7 @@ Public Sub Cetak(strNorec As String, view As String)
 On Error GoTo errLoad
 Set frmCetakSPPB = Nothing
 Dim strSQL As String
-Dim str1, str2, str3 As String
+Dim str1, str2, str3, str4 As String
 
 bolStrukResep = True
     
@@ -198,6 +198,11 @@ bolStrukResep = True
                 str1 = RS!namalengkap
                 str2 = RS!nippns
                 str3 = RS!namajabatan
+                If RS!nourutlogin = 0 Then
+                    str4 = ""
+                Else
+                    str4 = RS!nourutlogin
+                End If
              Else
                 str1 = "-"
                 str2 = "-"
@@ -218,7 +223,8 @@ bolStrukResep = True
              .usNamaPerusahaan.SetUnboundFieldSource ("{Ado.namarekanansales}")
              .usAlamatPerusahaan.SetUnboundFieldSource ("{Ado.alamat}")
              .usAlamats.SetUnboundFieldSource ("{ado.alamattempattujuan}")
-             .usJudul.SetUnboundFieldSource ("{Ado.judul}")
+'             .usJudul.SetUnboundFieldSource ("{Ado.judul}")
+             .usJudul.SetUnboundFieldSource ("{Ado.keterangankeperluan}")
              .usNamaBarang.SetUnboundFieldSource ("{ado.namaproduk}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
@@ -227,6 +233,7 @@ bolStrukResep = True
              .unPPN.SetUnboundFieldSource ("{Ado.persenPpn}")
              .ucTotal.SetUnboundFieldSource ("{Ado.total}")
              .udTglppb.SetUnboundFieldSource ("{Ado.tglorder}")
+             .txtJmlHari.SetText str4
 '             .usQtyHari.SetUnboundFieldSource ("{Ado.nourutlogin}")
              .Text47.SetText str1
              .Text3.SetText str2
