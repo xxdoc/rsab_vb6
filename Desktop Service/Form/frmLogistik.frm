@@ -35,6 +35,10 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
     Dim Param4() As String
     Dim Param5() As String
     Dim Param6() As String
+    Dim Param7() As String
+    Dim Param8() As String
+    Dim Param9() As String
+    Dim Param10() As String
     Dim arrItem() As String
    
     If CN.State = adStateClosed Then Call openConnection
@@ -47,6 +51,10 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
         Param4 = Split(arrItem(3), "=")
         Param5 = Split(arrItem(4), "=")
         Param6 = Split(arrItem(5), "=")
+        Param7 = Split(arrItem(6), "=")
+        Param8 = Split(arrItem(7), "=")
+        Param9 = Split(arrItem(8), "=")
+        Param10 = Split(arrItem(9), "=")
         Select Case Param1(0)
             Case "cek-konek"
 '                lblStatus.Caption = "Cek"
@@ -54,6 +62,10 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Root("Status") = "Ok!!"
                 
             Case "cetak-rincian-penerimaan"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Param7 = Split(arrItem(6), "=")
 '                lblStatus.Caption = "Cetak Struk Resep"
                 Call frmCetakBuktiPenerimaanBarang.Cetak(Param2(1), Param3(1), Param4(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
@@ -63,23 +75,31 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 
             Case "cetak-bukti-penerimaan"
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiPenerimaanBarang2.Cetak(Param2(1), Param3(1), Param4(1))
+                Call frmCetakBuktiPenerimaanBarang2.Cetak(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1), Param10(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
             
             Case "cetak-bukti-pengeluaran"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Param7 = Split(arrItem(6), "=")
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiPengeluaranBarang.Cetak(Param2(1), Param3(1), Param4(1))
+                Call frmCetakBuktiPengeluaranBarang.Cetak(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1), Param10(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
             
             Case "cetak-bukti-order"
+                Param4 = Split(arrItem(3), "=")
+                Param5 = Split(arrItem(4), "=")
+                Param6 = Split(arrItem(5), "=")
+                Param7 = Split(arrItem(6), "=")
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiOrderBarang.Cetak(Param2(1), Param3(1), Param4(1))
+                Call frmCetakBuktiOrderBarang.Cetak(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"

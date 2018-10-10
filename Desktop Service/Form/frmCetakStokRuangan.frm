@@ -157,21 +157,26 @@ Dim adocmd As New ADODB.Command
 
     Dim str1, str2 As String
     If strIdRuangan <> "" Then
-        str1 = " where ru.id=" & strIdRuangan & " "
+        str1 = " where ru.id=" & strIdRuangan & " )as x GROUP BY x.kdproduk,x.kdinternal,x.kodebmn,x.namaproduk,x.satuanstandar,x.harganetto1,x.objectruanganfk,x.namaruangan"
     End If
     
 Set Report = New cr_LaporanStokRuangan
-            strSQL = "select sp.nostruk as noterima,spd.objectprodukfk as kdproduk,pr.kodebmn,pr.namaproduk,ap.asalproduk, " & _
-                     "ss.satuanstandar,spd.tglkadaluarsa,spd.nobatch,spd.qtyproduk,spd.harganetto1,(spd.qtyproduk*spd.harganetto1) as total," & _
-                     "spd.norec as norec_spd,spd.nostrukterimafk,spd.tglpelayanan,spd.objectruanganfk,ru.namaruangan " & _
-                     "from stokprodukdetail_t as spd " & _
-                     "inner join strukpelayanan_t as sp on sp.norec = spd.nostrukterimafk " & _
-                     "inner join produk_m as pr on pr.id = spd.objectprodukfk " & _
-                     "inner join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
-                     "inner join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
-                     "inner join asalproduk_m as ap on ap.id = spd.objectasalprodukfk " & _
-                     "inner join satuanstandar_m as ss on ss.id = pr.objectsatuanstandarfk " & _
-                     "inner join ruangan_m as ru on ru.id = spd.objectruanganfk " & _
+'            strSQL = "select sp.nostruk as noterima,spd.objectprodukfk as kdproduk,pr.kodebmn,pr.namaproduk,ap.asalproduk, " & _
+'                     "ss.satuanstandar,spd.tglkadaluarsa,spd.nobatch,spd.qtyproduk,spd.harganetto1,(spd.qtyproduk*spd.harganetto1) as total," & _
+'                     "spd.norec as norec_spd,spd.nostrukterimafk,spd.tglpelayanan,spd.objectruanganfk,ru.namaruangan " & _
+'                     "from stokprodukdetail_t as spd " & _
+'                     "inner join strukpelayanan_t as sp on sp.norec = spd.nostrukterimafk " & _
+'                     "inner join produk_m as pr on pr.id = spd.objectprodukfk " & _
+'                     "inner join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
+'                     "inner join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk " & _
+'                     "inner join asalproduk_m as ap on ap.id = spd.objectasalprodukfk " & _
+'                     "inner join satuanstandar_m as ss on ss.id = pr.objectsatuanstandarfk " & _
+'                     "inner join ruangan_m as ru on ru.id = spd.objectruanganfk " & _
+'                     str1
+            strSQL = "select x.kdproduk,x.kdinternal,x.kodebmn,x.namaproduk,x.satuanstandar,sum(x.qtyproduk) as qtyproduk,x.harganetto1,x.objectruanganfk,x.namaruangan from " & _
+                     "(select spd.objectprodukfk as kdproduk,pr.kdproduk as kdinternal,pr.kodebmn,pr.namaproduk,ss.satuanstandar,spd.qtyproduk,spd.harganetto1,spd.objectruanganfk,ru.namaruangan " & _
+                     "from stokprodukdetail_t as spd inner join strukpelayanan_t as sp on sp.norec = spd.nostrukterimafk inner join produk_m as pr on pr.id = spd.objectprodukfk inner join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
+                     "inner join jenisproduk_m as jp on jp.id = djp.objectjenisprodukfk inner join asalproduk_m as ap on ap.id = spd.objectasalprodukfk inner join satuanstandar_m as ss on ss.id = pr.objectsatuanstandarfk inner join ruangan_m as ru on ru.id = spd.objectruanganfk " & _
                      str1
             
     adocmd.CommandText = strSQL
