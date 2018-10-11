@@ -168,7 +168,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub Cetak(strNorec As String, view As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 Set frmCetakSPPB = Nothing
 Dim strSQL As String
 Dim str1, str2, str3, str4 As String
