@@ -168,7 +168,7 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Sub Cetak(strNorec As String, view As String)
-On Error GoTo errLoad
+'On Error GoTo errLoad
 Set frmCetakSPPB = Nothing
 Dim strSQL As String
 Dim str1, str2, str3, str4 As String
@@ -180,7 +180,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select so.keteranganlainnya,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder, so.keterangankeperluan,so.noorderintern, so.tglorder, so.keteranganorder, so.nokontrakspk, " & _
+            strSQL = "select so.keteranganlainnya,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder,so.noorderintern, so.tglorder, so.keteranganorder, so.nokontrakspk, " & _
                     "so.noorderrfq, so.namarekanansales, so.alamat, so.alamattempattujuan, so.keteranganorder || ' RSAB HK THN '|| so.noorderrfq as judul,  " & _
                     "pr.namaproduk, ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount, op.hargappn, " & _
                     "case when op.hargadiscount <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargadiscount else 0 end as persenDisc, " & _
@@ -224,7 +224,7 @@ bolStrukResep = True
              .usAlamatPerusahaan.SetUnboundFieldSource ("{Ado.alamat}")
              .usAlamats.SetUnboundFieldSource ("{ado.alamattempattujuan}")
 '             .usJudul.SetUnboundFieldSource ("{Ado.judul}")
-             .usJudul.SetUnboundFieldSource ("{Ado.keterangankeperluan}")
+             .usJudul.SetUnboundFieldSource ("{Ado.keteranganorder}")
              .usNamaBarang.SetUnboundFieldSource ("{ado.namaproduk}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")

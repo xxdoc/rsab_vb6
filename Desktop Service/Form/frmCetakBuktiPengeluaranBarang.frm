@@ -185,9 +185,10 @@ bolStrukResep = True
                     "ru2.namaruangan, ru2.kdruangan || ' - ' || ru2.namaruangan as ruangantujuan, pg.namalengkap, " & _
                     "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, kp.qtyproduk, kp.qtyorder, kp.hargasatuan, (kp.hargasatuan * kp.qtyproduk) as total, sk.keteranganlainnyakirim, " & _
                     "'Ka. ' || dp.namadepartemen as pnjPengirim, pg.namalengkap as pegawaipengirim, 'NIP. ' || pg.nippns as nippengirim, " & _
-                    "'Ka. ' || dp2.namadepartemen as pnjPenerima, pg2.namalengkap as pegawaipenerima, 'NIP. ' || pg2.nippns as nippenerima " & _
+                    "'Ka. ' || dp2.namadepartemen as pnjPenerima, pg2.namalengkap as pegawaipenerima, 'NIP. ' || pg2.nippns as nippenerima, sp.tglfaktur " & _
                     "from strukkirim_t as sk " & _
                     "left join kirimproduk_t as kp on kp.nokirimfk = sk.norec " & _
+                    "left join strukpelayanan_t as sp on sp.norec = kp.nostrukterimafk " & _
                     "left join strukorder_t as so on so.norec = sk.noorderfk " & _
                     "left join produk_m as pr on pr.id = kp.objectprodukfk " & _
                     "left join satuanstandar_m as ss on ss.id = pr.objectsatuanstandarfk " & _
@@ -279,8 +280,8 @@ bolStrukResep = True
            
              .udtglDok.SetUnboundFieldSource ("{Ado.tglkirim}")
              .udTglPermintaan.SetUnboundFieldSource ("{Ado.tglorder}")
-             .udTglTerima.SetUnboundFieldSource ("{Ado.tglorder}")
-             .udTglTerima2.SetUnboundFieldSource ("{Ado.tglorder}")
+             .udTglTerima.SetUnboundFieldSource ("{Ado.tglfaktur}")
+             .udTglTerima2.SetUnboundFieldSource ("{Ado.tglfaktur}")
              .usNoDok.SetUnboundFieldSource ("{Ado.nokirim}")
              .usNoPemesanan.SetUnboundFieldSource ("{Ado.noorder}")
              .usRuangKirim.SetUnboundFieldSource ("{Ado.ruangankirim}")

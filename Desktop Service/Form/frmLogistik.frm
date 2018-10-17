@@ -99,7 +99,7 @@ Public Function Logistik(ByVal QueryText As String) As Byte()
                 Param6 = Split(arrItem(5), "=")
                 Param7 = Split(arrItem(6), "=")
 '                lblStatus.Caption = "Cetak Struk Resep"
-                Call frmCetakBuktiOrderBarang.Cetak(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1))
+                Call frmCetakBuktiOrderBarang.Cetak(Param1(1), Param2(1), (Param3(1)), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 'http://127.0.0.1:1237/printvb/farmasiApotik?cetak-strukresep=1&nores=f9b07b20-81d9-11e7-8420-d5194da3&view=true&user=Gregorius
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"

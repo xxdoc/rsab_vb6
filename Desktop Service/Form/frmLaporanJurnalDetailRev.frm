@@ -217,7 +217,19 @@ Set Report = New crLaporanJurnalDetailRev
                      "INNER JOIN ruangan_m as ru on ru.id=apd.objectruanganfk " & _
                      "INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
                      "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank <>0 " & _
-                     "order by coa.namaaccount; "
+                     " "
+            strSQL = strSQL + " union all select ru.namaruangan,  sp.nostruk  as nomr, sp.namapasien_klien as namapasien , " & _
+                     "spd.objectprodukfk as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
+                     "spd.qtyproduk as hargapp,spd.qtyproduk as jumlah, (spd.hargasatuan + spd.hargatambahan - spd.hargadiscount)*spd.qtyproduk as total, " & _
+                     "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand " & _
+                      "from postingjurnaltransaksi_t as pj " & _
+                      "inner join postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated " & _
+                      "inner join strukpelayanandetail_t as spd on spd.norec=pj.norecrelated " & _
+                      "inner join strukpelayanan_t as sp on sp.norec=spd.nostrukfk " & _
+                      "inner join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
+                      "inner join chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
+                      "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank <>0 and substring(nostruk,1,2)='OB' " & _
+                      ""
         End If
     End If
     If Mid(noJurnal, 5, 2) = "PN" And (Right(noJurnal, 5) = "00003" Or Right(noJurnal, 5) = "00004") Then
@@ -281,10 +293,10 @@ Set Report = New crLaporanJurnalDetailRev
         
     With Report
         .database.AddADOCommand CN_String, adocmd
-            .TxtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN"
+            .txtJudul.SetText "RINCIAN JURNAL PENDAPATAN HARIAN"
             .txtPrinted.SetText namaPrinted
             .txtTanggal.SetText Format(tglAwal, "dd-MM-yyyy")
-            .TxtJudul.SetText Judul
+            .txtJudul.SetText Judul
             
             .usKdPerkiraan.SetUnboundFieldSource ("{ado.noaccount}")
             .usNmPerkiraan.SetUnboundFieldSource ("{ado.namaaccount}")

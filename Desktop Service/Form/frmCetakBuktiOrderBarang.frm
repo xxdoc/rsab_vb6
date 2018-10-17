@@ -167,8 +167,8 @@ Private Sub Form_Unload(Cancel As Integer)
 
 End Sub
 
-Public Sub Cetak(view As String, strNoKirim As String, pegawaiMengetahui As String, jabatanMengetahui, test As String, strUser As String)
-On Error GoTo errLoad
+Public Sub Cetak(view As String, strNoKirim As String, pegawaiMengetahui As String, pegawaiMeminta As String, jabatanMeminta, jabatanMengetahui As String, test As String, strUser As String)
+'On Error GoTo errLoad
 Set frmCetakBuktiOrderBarang = Nothing
 Dim strSQL As String
 Dim pegawai1, pegawai2, pegawai3, nip1, nip2, nip3 As String
@@ -197,23 +197,41 @@ bolStrukResep = True
              ReadRs strSQL
              If pegawaiMengetahui <> "" Then
                  ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
-                     "from pegawai_m as pg " & _
-                     "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
-                     "where pg.id = '" & pegawaiMengetahui & "'"
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiMengetahui & "'"
+                
+                If RS4.EOF = False Then
+                    pegawai1 = RS4!namalengkap
+                    nip1 = "NIP. " & RS4!nippns
+                Else
+                    pegawai1 = "-"
+                    nip1 = "NIP. -"
+                End If
+            Else
+                pegawai1 = "-"
+                nip1 = "NIP. -"
+            End If
+            
+            If pegawaiMeminta <> "" Then
+                 ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+                         "from pegawai_m as pg " & _
+                         "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                         "where pg.id = '" & pegawaiMeminta & "'"
             
            
             
                 
-                If RS4.EOF = False Then
-                    pegawai3 = RS4!namalengkap
-                    nip3 = "NIP. " & RS4!nippns
+                If RS3.EOF = False Then
+                    pegawai2 = RS3!namalengkap
+                    nip2 = "NIP. " & RS3!nippns
                 Else
-                    pegawai3 = "-"
-                    nip3 = "NIP. -"
+                    pegawai2 = "-"
+                    nip2 = "NIP. -"
                 End If
             Else
-                pegawai3 = "-"
-                nip3 = "NIP. -"
+                pegawai2 = "-"
+                nip2 = "NIP. -"
             End If
            
             
@@ -240,8 +258,11 @@ bolStrukResep = True
 '             .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
              .txtJabatan.SetText jabatanMengetahui
-             .txtKepalaBagian.SetText pegawai3
-             .Text73.SetText nip3
+             .txtKepalaBagian.SetText pegawai1
+             .Text73.SetText nip1
+             .txtJabPeminta.SetText jabatanMeminta
+             .txtPeminta.SetText pegawai2
+             .txtNipPeminta.SetText nip2
 '             .txtKepalaBagian.SetText UCase(IIf(IsNull(RS!kepalaBagian), "-", RS!kepalaBagian))
              '.usKepalaBagian.SetUnboundFieldSource ("{Ado.kepalaBagian}")
 '             .usNamaPenyerah.SetUnboundFieldSource ("{Ado.pegawaipengirim}")

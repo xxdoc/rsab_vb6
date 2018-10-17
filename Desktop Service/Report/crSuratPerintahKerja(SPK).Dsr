@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crSuratPerintahKerja 
-   ClientHeight    =   14430
+   ClientHeight    =   9510
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   23745
+   ClientWidth     =   16350
    OleObjectBlob   =   "crSuratPerintahKerja(SPK).dsx":0000
 End
 Attribute VB_Name = "crSuratPerintahKerja"

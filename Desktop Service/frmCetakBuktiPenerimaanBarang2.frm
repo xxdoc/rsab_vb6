@@ -190,7 +190,8 @@ bolStrukResep = True
                     "(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as harga, spd.qtyproduk, " & _
                     "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang,sp.keteranganambil, " & _
                     "case when sp.nokontrak is null then '-' else sp.nokontrak end as nokontrak,case when sp.nosppb is null then '-' else sp.nosppb end as nosppb, " & _
-                    "CASE when so.tglorder is null then sp.tglstruk else so.tglorder end as tglorder,sp.keteranganambil " & _
+                    "CASE when so.tglorder is null then sp.tglstruk else so.tglorder end as tglorder,sp.keteranganambil, " & _
+                    "spd.qtyproduk*(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as subtotal " & _
                     "from strukpelayanan_t sp " & _
                     "left join strukpelayanandetail_t spd on spd.nostrukfk=sp.norec " & _
                     "left join strukorder_t so on so.noorder = sp.nosppb " & _
@@ -286,13 +287,15 @@ bolStrukResep = True
              .usSatuan.SetUnboundFieldSource ("{ado.satuanstandar}")
              .ucHarga.SetUnboundFieldSource ("{Ado.harga}")
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
-             .ucTotalBayar.SetUnboundFieldSource ("{Ado.totalharusdibayar}")
+'             .ucTotalHarga.SetUnboundFieldSource ("{Ado.subtotal)")
+'             .ucTotalBayar.SetUnboundFieldSource ("{Ado.totalharusdibayar}")
              .usNoSPK.SetUnboundFieldSource ("{Ado.nosppb}")
              .usNoKontrak.SetUnboundFieldSource ("{Ado.nokontrak}")
              .udTglDokumen.SetUnboundFieldSource ("{Ado.tglfaktur}")
              .udTglOrder.SetUnboundFieldSource ("{Ado.tglorder}")
              .tglKontrak.SetUnboundFieldSource ("{Ado.tglkontrak}")
              .usKeteranganAmbil.SetUnboundFieldSource ("{Ado.keteranganambil}")
+             .UnboundCurrency2.SetUnboundFieldSource ("{Ado.subtotal}")
              .txtJabatan1.SetText jabatan1
              .txtJabatan2.SetText jabatan2
              .txtJabatan.SetText jabatanMengetahui
