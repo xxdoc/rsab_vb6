@@ -165,7 +165,7 @@ Dim jml As Integer
             Set adoReport = New ADODB.Command
              adoReport.ActiveConnection = CN_String
             
-            strSQL = "select pd.noregistrasi, sk.nokirim, sk.qtyproduk as qtykirim,sk.keteranganlainnyakirim, pd.tglregistrasi,  ps.tgllahir, " & _
+            strSQL = "select pd.noregistrasi, sk.nokirim, sk.qtyproduk as qtykirim,op.keteranganlainnya as keteranganlainnyakirim,cast (op.qtyprodukinuse as text) as cc  ,cast (op.jumlah as text) as volume , pd.tglregistrasi,  ps.tgllahir, " & _
             "to_date(to_char(ps.tgllahir, 'YYYY/MM/DD'), 'YYYY/MM/DD') as tgllahirNew,ps.namapasien, ps.nocm, ru.namaruangan as ruanganasal, " & _
             "jw.jeniswaktu,jd.jenisdiet,  op.qtyproduk,kls.namakelas " & _
             "from orderpelayanan_t as op " & _
@@ -215,7 +215,8 @@ Dim jml As Integer
             .usJenisDiet.SetUnboundFieldSource ("{ado.jenisdiet}")
             .usJenisWaktu.SetUnboundFieldSource ("{ado.jeniswaktu}")
             .usKet.SetUnboundFieldSource ("{ado.keteranganlainnyakirim}")
-            
+            .usCC.SetUnboundFieldSource ("{ado.cc}")
+            .usVolume.SetUnboundFieldSource ("{ado.volume}")
             
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "LabelGizi")
