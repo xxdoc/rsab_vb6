@@ -180,7 +180,7 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select DISTINCT sp.nostruk,sp.nofaktur,sp.tglstruk, sp.tglspk,tglfaktur,sp.tglkontrak, " & _
+            strSQL = "select sp.nostruk,sp.nofaktur,sp.tglstruk, sp.tglspk,tglfaktur,sp.tglkontrak, " & _
                     "case when ap.asalproduk is null then '-' else ap.asalproduk end as asalproduk," & _
                     "case when sp.totaldiscount is null then '0,00%' else (sp.totaldiscount * 100) / sp.totalhargasatuan || ',00%' end as persendiskon," & _
                     "case when sp.totalppn is null then '0,00%' else (sp.totalppn * 100) / sp.totalhargasatuan || ',00%' end as persenppn," & _
@@ -188,22 +188,17 @@ bolStrukResep = True
                     "pr.id as idproduk, pr.namaproduk, " & _
                     "ss.satuanstandar, sp.totalharusdibayar, " & _
                     "(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as harga, spd.qtyproduk, " & _
-                    "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang,sp.keteranganambil, " & _
+                    "case when ru.namaruangan is null then '-' else ru.kdruangan || ' - ' || ru.namaruangan end as gudang,sp.keteranganambil,sr.tglrealisasi, " & _
                     "case when sp.nokontrak is null then '-' else sp.nokontrak end as nokontrak,case when sp.nosppb is null then '-' else sp.nosppb end as nosppb, " & _
-                    "CASE when so.tglorder is null then sp.tglstruk else so.tglorder end as tglorder,sp.keteranganambil, " & _
-                    "spd.qtyproduk*(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as subtotal " & _
-                    "from strukpelayanan_t sp " & _
-                    "left join strukpelayanandetail_t spd on spd.nostrukfk=sp.norec " & _
-                    "left join strukorder_t so on so.noorder = sp.nosppb " & _
-                    "left join strukorder_t so1 on so1.nokontrakspk = sp.nokontrak " & _
-                    "left JOIN pegawai_m pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
-                    "left JOIN ruangan_m ru on ru.id=sp.objectruanganfk " & _
-                    "left JOIN produk_m pr on pr.id=spd.objectprodukfk " & _
-                    "left join asalproduk_m as ap on ap.id=spd.objectasalprodukfk " & _
-                    "left join rekanan_m rk on rk.id=sp.objectrekananfk " & _
-                    "left JOIN jeniskemasan_m jkm on jkm.id=spd.objectjeniskemasanfk " & _
-                    "left join satuanstandar_m ss on ss.id=spd.objectsatuanstandarfk " & _
-                    "where sp.norec = '" & strNores & "'"
+                    "sp.keteranganambil,spd.qtyproduk*(spd.hargasatuan - spd.hargadiscount + spd.hargappn) as subtotal " & _
+                    "from strukpelayanan_t sp left join strukpelayanandetail_t spd on spd.nostrukfk=sp.norec left JOIN pegawai_m pg on pg.id=sp.objectpegawaipenanggungjawabfk " & _
+                    "left JOIN ruangan_m ru on ru.id=sp.objectruanganfk left JOIN produk_m pr on pr.id=spd.objectprodukfk left join asalproduk_m as ap on ap.id=spd.objectasalprodukfk " & _
+                    "left join rekanan_m rk on rk.id=sp.objectrekananfk left JOIN jeniskemasan_m jkm on jkm.id=spd.objectjeniskemasanfk left join satuanstandar_m ss on ss.id=spd.objectsatuanstandarfk " & _
+                    "left join riwayatrealisasi_t as rr on rr.penerimaanfk = sp.norec  left join strukrealisasi_t as sr on sr.norec = rr.objectstrukrealisasifk " & _
+                    "where sp.norec = '" & strNores & "'" & _
+                    "GROUP BY sp.nostruk,sp.nofaktur,sp.tglstruk,sp.tglspk,tglfaktur,sp.tglkontrak,ap.asalproduk, " & _
+                    "rk.kdrekanan,rk.namarekanan,ru.kdruangan,ru.namaruangan,sp.tglstruk,sp.keteranganambil,sp.totaldiscount,sp.totalhargasatuan,sp.totalppn,pr.id,ss.satuanstandar,sp.totalharusdibayar,spd.hargasatuan, " & _
+                    "spd.hargadiscount,spd.hargappn, spd.qtyproduk,sp.nokontrak,sp.nosppb,sr.tglrealisasi"
 
              ReadRs strSQL & " limit 1 "
              If Penerima <> "" Then
@@ -270,11 +265,11 @@ bolStrukResep = True
              adoReport.CommandType = adCmdUnknown
             .database.AddADOCommand CN_String, adoReport
 
-             .txtuser.SetText strUser
+             .txtUser.SetText strUser
            
 '             .udtanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
 '             .udtanggal.SetUnboundFieldSource ("{Ado.tglstruk}")
-             .udTglSPK.SetUnboundFieldSource ("{Ado.tglspk}")
+             .udTglSPK.SetUnboundFieldSource ("{Ado.tglrealisasi}")
              .usResep.SetUnboundFieldSource ("{Ado.nofaktur}")
              .usPemesanan.SetUnboundFieldSource ("{Ado.nostruk}")
              .usPersenDiskon.SetUnboundFieldSource ("{Ado.persendiskon}")
@@ -292,7 +287,7 @@ bolStrukResep = True
              .usNoSPK.SetUnboundFieldSource ("{Ado.nosppb}")
              .usNoKontrak.SetUnboundFieldSource ("{Ado.nokontrak}")
              .udTglDokumen.SetUnboundFieldSource ("{Ado.tglfaktur}")
-             .udTglOrder.SetUnboundFieldSource ("{Ado.tglorder}")
+             .udTglOrder.SetUnboundFieldSource ("{Ado.tglrealisasi}")
              .tglKontrak.SetUnboundFieldSource ("{Ado.tglkontrak}")
              .usKeteranganAmbil.SetUnboundFieldSource ("{Ado.keteranganambil}")
              .UnboundCurrency2.SetUnboundFieldSource ("{Ado.subtotal}")
