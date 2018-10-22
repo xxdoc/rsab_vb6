@@ -105,7 +105,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanffsIGD
+Dim Report As New crLaporanffsRI 'crLaporanffsIGD
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -127,12 +127,14 @@ Private Sub CmdOption_Click()
 End Sub
 
 Private Sub Form_Load()
+    Call openConnection
     Dim p As Printer
     cboPrinter.Clear
     For Each p In Printers
         cboPrinter.AddItem p.DeviceName
     Next
-    cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+     cboPrinter.Text = GetTxt("Setting.ini", "Printer", "LaporanPenerimaan")
+     If CN.State = adStateOpen Then CN.Close
 End Sub
 
 Private Sub Form_Resize()
@@ -143,21 +145,26 @@ Private Sub Form_Resize()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-
-    Set frmCRLaporanffsIGD = Nothing
+    Set frmLaporanffsRJ = Nothing
+    If CN.State = adStateOpen Then CN.Close
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, personKa As String, idDokter As String, tglLibur As String, kdRuangan As String)
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, personKa As String, idDokter As String, tglLibur As String, kdRuangan As String, kpid As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCRLaporanffsIGD = Nothing
+Set frmLaporanffsRJ = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
     Dim str2 As String
     Dim str6 As String
     Dim diff As Integer
+    Dim NamaDirut, nippns1, Namakeuangan, nippns2, NamaKplInst, nippns3 As String
+    
+    Dim dokter As String
+    Dim typeDokter As String
+    Dim dokterluar As String
     
     diff = DateDiff("d", tglAwal, tglAkhir)
     Dim strTgl As String
@@ -166,20 +173,56 @@ Dim adocmd As New ADODB.Command
     Dim i As Integer
     Dim SQLdate As String
     Dim SQLdateLibur As String
-    
-    For i = 0 To diff
-        strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-        ElseIf Weekday(strTgl, vbSunday) = 6 Then
-            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-                           "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+      
+    If idDokter <> "" Then
+        dokter = " and pg.id = '" & idDokter & "'"
+        ReadRs2 "select * from pegawai_m where id = " & idDokter
+        typeDokter = RS2!objecttypepegawaifk
+        
+        If typeDokter = 1 Then
+            For i = 0 To diff
+                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                End If
+                SQLdate = SQLdate & strTglJamSQL
+            Next
+            dokterluar = " and djp.objectjenisprodukfk in (100,101) "
         Else
-            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+            For i = 0 To diff
+                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                SQLdate = SQLdate & strTglJamSQL
+            Next
+            dokterluar = "   "
+            
         End If
-        SQLdate = SQLdate & strTglJamSQL
-    Next
+    Else
+        For i = 0 To diff
+            strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+'            If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+    '        Else
+    '            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+    '                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+'            End If
+            SQLdate = SQLdate & strTglJamSQL
+        Next
+    End If
+    
+'    For i = 0 To diff
+'        strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+'        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+'            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+'        ElseIf Weekday(strTgl, vbSunday) = 6 Then
+'            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+'                           "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+'        Else
+'            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+'                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+'        End If
+'        SQLdate = SQLdate & strTglJamSQL
+'    Next
     
     If tglLibur <> "" Then
         Dim strarr() As String
@@ -197,21 +240,48 @@ Dim adocmd As New ADODB.Command
     
         SQLdate = Right(SQLdate, Len(SQLdate) - 3)
     
-    Dim dokter As String
-    If idDokter <> "" Then
-        dokter = " and pg.id = '" & idDokter & "'"
-    End If
+'    Dim dokter As String
+'    If idDokter <> "" Then
+'        dokter = " and pg.id = '" & idDokter & "'"
+'    End If
     Dim idRuangan As String
     If kdRuangan <> "" Then
         idRuangan = " and ru.id = '" & kdRuangan & "'"
     End If
-
+    Dim idKelompokPasien As String
+    If kpid <> "" Then
+        If kpid = "153" Then
+            idKelompokPasien = " and kp.id in (1,5,3)"
+        Else
+            idKelompokPasien = " and kp.id = '" & kpid & "'"
+        End If
+    End If
     
-Set Report = New crLaporanffsIGD
+Set Report = New crLaporanffsRI 'crLaporanffsIGD
+'    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
+'            "select to_char(pd.tglregistrasi,'Day') as hari,pd.tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
+'            "ppd.tglpelayanan,ppp.pelayananpasien as norec,pr.namaproduk,pg.namalengkap, " & _
+'            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun, " & _
+'            "kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
+'            "from pasiendaftar_t as pd " & _
+'            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+'            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+'            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+'            "left join produk_m as pr on pr.id=ppd.produkfk " & _
+'            "left join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
+'            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+'            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+'            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+'            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97  " & _
+'            "and ru.objectdepartemenfk in (18,28)" & dokter & idRuangan & "" & _
+'            "order by pd.tglregistrasi) as x where  " & SQLdate
+    
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-            "select to_char(pd.tglregistrasi,'Day') as hari,pd.tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
-            "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total2,30000 as total,0 as remun " & _
+            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
+            "ppd.tglpelayanan,ppp.pelayananpasien as norec, pr.namaproduk,pg.namalengkap, " & _
+            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun,kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -219,21 +289,91 @@ Set Report = New crLaporanffsIGD
             "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
             "left join pasien_m as ps on ps.id=pd.nocmfk " & _
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
-            "left join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
+            "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97  " & _
-            "and ru.objectdepartemenfk in (18,28)" & dokter & idRuangan & "" & _
-            "order by pd.tglregistrasi) as x where  " & SQLdate
+            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 " & dokterluar & " and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & " " & _
+            "order by pp.tglpelayanan) as x where  " & SQLdate
+    
+    ReadRs5 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 82"
             
+    ReadRs3 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 155"
+    
+'    ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+'            "from pegawai_m as pg " & _
+'            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+'            "where pg.objectjabatanstrukturalfk = 436 "
+            
+    If personKa = "1" Then
+        
+        ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
+            "from pegawai_m as pg " & _
+            "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+            "where pg.objectjabatanstrukturalfk = 436 "
+        str6 = "Ka. Instalasi Rawat Jalan"
+      
+        
+    Else
+          ReadRs4 "select pg.namalengkap,pg.nippns " & _
+                "from pegawai_m as pg " & _
+                "where pg.id = 255 "
+          str6 = "Ka.Instalasi Eksekutif Edelweis"
+    
+    End If
+            
+   If RS5.EOF = False Then
+        NamaDirut = RS5!namalengkap
+        nippns1 = "NIP. " & RS5!nippns
+    Else
+        NamaDirut = "-"
+        nippns1 = "NIP. -"
+    End If
+    
+    If RS3.EOF = False Then
+        Namakeuangan = RS3!namalengkap
+        nippns2 = "NIP. " & RS3!nippns
+    Else
+        Namakeuangan = "-"
+        nippns2 = "NIP. -"
+    End If
+    
+   If RS4.EOF = False Then
+        NamaKplInst = RS4!namalengkap
+        nippns3 = "NIP. " & RS4!nippns
+    Else
+        NamaKplInst = "-"
+        nippns3 = "NIP. -"
+    End If
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
-        
     With Report
         .database.AddADOCommand CN_String, adocmd
+'            .txtNamaKasir.SetText PrinteDBY
+'            .txtVer.SetText App.Comments
+'
+'            .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
+'            .usHari.SetUnboundFieldSource ("{ado.harihari}")
+'            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
+''            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
+'            .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
+'            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+'            .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
+'            .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
+'            .ucJasaMedis.SetUnboundFieldSource ("{ado.total}")
+'            .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+            
             .txtNamaKasir.SetText PrinteDBY
             .txtVer.SetText App.Comments
-            
+            .Text94.SetText "LAPORAN FEE FOR SERVICE RAWAT JALAN"
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
             .usHari.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -244,8 +384,31 @@ Set Report = New crLaporanffsIGD
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .ucJasaMedis.SetUnboundFieldSource ("{ado.total}")
+            .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
+            .UnboundString1.SetUnboundFieldSource ("{ado.norec}")
+            .ucKPID.SetUnboundFieldSource ("{ado.kpid}")
+            .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
+            .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
+            .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")
+            .Text23.SetText NamaDirut
+            .Text24.SetText nippns1
+            .Text20.SetText Namakeuangan
+            .Text21.SetText nippns2
+            .txtKainsnm.SetText str6
+            .txtKaIns.SetText NamaKplInst
+            .txtKaNIP.SetText nippns3
+            
+'            If nmKaInstalasi = 1 Then
+'                .txtKainsnm.SetText "Ka. Instalasi Perinatal Risiko Tinggi"
+'                .txtKaIns.SetText "DR. dr. Setyadewi Lusyati, SpA (K), Ph.D"
+'                .txtKaNIP.SetText "Nip. 196606131991032012"
+'            Else
+'                .txtKainsnm.SetText "Ka. Instalasi Rawat Inap"
+'                .txtKaIns.SetText "dr. Retno Widyaningsih, SpA (K)"
+'                .txtKaNIP.SetText "Nip. 196207281989022001"
+'            End If
+            
             
 '            If view = "false" Then
 '                Dim strPrinter As String

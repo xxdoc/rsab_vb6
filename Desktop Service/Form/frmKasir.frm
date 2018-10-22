@@ -240,27 +240,27 @@ On Error Resume Next
                 'http://127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan=403&tglAwal=2017-09-02&tglAkhir=2017-09-02&idRuangan=&idDokter=&view=true
                 
              Case "cetak-laporan-ffs-gawatdarurat"
-                Call frmCRLaporanffsIGD.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRLaporanffsIGD.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
                 
               
              Case "cetak-rekap-ffs-gawatdarurat"
-                Call frmCRRekapffsIGD.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRRekapffsIGD.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
                 
              Case "cetak-laporan-ffs-ranap"
-                Call frmCRLaporanffsRI.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRLaporanffsRI.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
                 
               
              Case "cetak-rekap-ffs-ranap"
-                Call frmCRRekapffsRI.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRRekapffsRI.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
@@ -408,13 +408,13 @@ On Error Resume Next
                 'http://127.0.0.1:1237/printvb/kasir?cetak-lap-pasien-dalam-perawatan=890901&tglAwal=2018-06-28%2000:00:00&tglAkhir=2018-06-28%2023:30:00&idRuangan=&idDokter=&view=true&strIdPegawai=Egie
       
             Case "cetak-laporan-ffs-jalan"
-               Call frmLaporanffsRJ.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
+               Call frmLaporanffsRJ.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
                Set Root = New JNode
                Root("Status") = "Cetak Laporan"
                Root("by") = "as@epic"
               
             Case "cetak-rekap-ffs-jalan"
-               Call frmRekapffsRJ.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
+               Call frmRekapffsRJ.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1))
                Set Root = New JNode
                Root("Status") = "Cetak Laporan"
                Root("by") = "as@epic"

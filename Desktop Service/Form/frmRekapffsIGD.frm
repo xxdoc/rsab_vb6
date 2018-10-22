@@ -146,8 +146,7 @@ Private Sub Form_Unload(Cancel As Integer)
 
     Set frmCRRekapffsIGD = Nothing
 End Sub
-
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String)
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String, kpid As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -243,12 +242,19 @@ Dim adocmd As New ADODB.Command
     If kdRuangan <> "" Then
         idRuangan = " and ru.id = '" & kdRuangan & "'"
     End If
-
+    Dim idKelompokPasien As String
+    If kpid <> "" Then
+        If kpid = "153" Then
+            idKelompokPasien = " and pd.objectkelompokpasienlastfk in (1,5,3)"
+        Else
+            idKelompokPasien = " and pd.objectkelompokpasienlastfk = '" & kpid & "'"
+        End If
+    End If
     
 Set Report = New crRekapffsIGD
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select to_char(pd.tglregistrasi,'Day') as hari,pd.tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
-            "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
+            "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap,pd.objectkelompokpasienlastfk as kpid, " & _
             "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total2,30000 as total,0 as remun,pp.jumlah " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
@@ -275,7 +281,7 @@ Set Report = New crRekapffsIGD
     ReadRs4 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
             "from pegawai_m as pg " & _
             "inner join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
-            "where pg.objectjabatanstrukturalfk = 438"
+            "where pg.objectjabatanlamarfk = 438"
             
    If RS2.EOF = False Then
         NamaDirut = RS2!namalengkap

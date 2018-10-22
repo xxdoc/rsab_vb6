@@ -147,8 +147,8 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanffsIGD = Nothing
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String)
-'On Error GoTo errLoad
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String, kpid As String)
+On Error GoTo errLoad
 'On Error Resume Next
 
 Set frmCRLaporanffsIGD = Nothing
@@ -205,12 +205,19 @@ Dim adocmd As New ADODB.Command
     If kdRuangan <> "" Then
         idRuangan = " and ru.id = '" & kdRuangan & "'"
     End If
-
+    Dim idKelompokPasien As String
+    If kpid <> "" Then
+        If kpid = "153" Then
+            idKelompokPasien = " and pd.objectkelompokpasienlastfk in (1,5,3)"
+        Else
+            idKelompokPasien = " and pd.objectkelompokpasienlastfk = '" & kpid & "'"
+        End If
+    End If
     
 Set Report = New crLaporanffsIGD
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
             "select to_char(pd.tglregistrasi,'Day') as hari,pd.tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
-            "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
+            "ppd.tglpelayanan, pr.namaproduk,pg.namalengkap,pd.objectkelompokpasienlastfk as kpid, " & _
             "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total2,30000 as total,0 as remun " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
@@ -221,7 +228,7 @@ Set Report = New crLaporanffsIGD
             "left join produk_m as pr on pr.id=ppd.produkfk " & _
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.id=400 and ru.objectdepartemenfk=24  " & dokter & idRuangan & "" & _
+            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and pr.id=400 and ru.objectdepartemenfk=24  " & dokter & idRuangan & idKelompokPasien & "" & _
             "order by pd.tglregistrasi) as x where  " & SQLdate
 
 '
@@ -240,7 +247,7 @@ Set Report = New crLaporanffsIGD
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucJasaMedis.SetUnboundFieldSource ("{ado.total}")
