@@ -169,79 +169,67 @@ Dim adocmd As New ADODB.Command
     Dim dokterluar As String
     Dim dokter As String
     Dim typeDokter As String
-    
     Dim dokterJD As String
     
-'    If idDokter <> "" Then
-'        dokter = " and pg.id = '" & idDokter & "'"
-'        ReadRs2 "select * from pegawai_m where id = " & idDokter
-'        typeDokter = RS2!objecttypepegawaifk
-'
-'        If typeDokter = 1 Then
-'            For i = 0 To diff
-'                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-'                If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-'                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-'                End If
-'                SQLdate = SQLdate & strTglJamSQL
-'            Next
-'            dokterJD = " and djp.objectjenisprodukfk in (100,101) "
-'        Else
-'            For i = 0 To diff
-'                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-'                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-'                SQLdate = SQLdate & strTglJamSQL
-'            Next
-'            dokterJD = " "
-'        End If
-'    Else
-'        For i = 0 To diff
-'            strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-'            If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-'                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-'    '        Else
-'    '            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-'    '                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
-'            End If
-'            SQLdate = SQLdate & strTglJamSQL
-'        Next
-'    End If
-        
-    If idDokter <> "" Then
-        dokter = " and pg.id = '" & idDokter & "'"
-        ReadRs2 "select * from pegawai_m where id = " & idDokter
-        typeDokter = RS2!objecttypepegawaifk
-        
-        If typeDokter = 1 Then
-            For i = 0 To diff
-                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-                If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+        If idDokter <> "" Then
+            dokter = " and pg.id = '" & idDokter & "'"
+            ReadRs2 "select * from pegawai_m where id = " & idDokter
+            typeDokter = RS2!objecttypepegawaifk
+            
+            If typeDokter = 1 Then
+                For i = 0 To diff
+                    strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                    If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
+                        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                        ElseIf Weekday(strTgl, vbSunday) = 6 Then
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                           "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+                        Else
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+                        End If
+                    Else
+                        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                        Else
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                           "tglregistrasi between '" & strTgl & " 14:00' and '" & strTgl & " 23:59'"
+                        End If
+                    End If
+                    SQLdate = SQLdate & strTglJamSQL
+                Next
+            Else
+                For i = 0 To diff
+                    strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
                     strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-                End If
-                SQLdate = SQLdate & strTglJamSQL
-            Next
-            dokterluar = " and djp.objectjenisprodukfk in (100,101) "
+                    SQLdate = SQLdate & strTglJamSQL
+                Next
+            End If
         Else
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
+                    If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                    ElseIf Weekday(strTgl, vbSunday) = 6 Then
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                       "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+                    Else
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                       "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+                    End If
+                Else
+                    If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                    Else
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                       "tglregistrasi between '" & strTgl & " 14:00' and '" & strTgl & " 23:59'"
+                    End If
+                End If
                 SQLdate = SQLdate & strTglJamSQL
             Next
-            dokterluar = "   "
-            
         End If
-    Else
-        For i = 0 To diff
-            strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-'            If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-    '        Else
-    '            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-    '                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
-'            End If
-            SQLdate = SQLdate & strTglJamSQL
-        Next
-    End If
     
     If tglLibur <> "" Then
         Dim strarr() As String
@@ -279,23 +267,23 @@ Dim adocmd As New ADODB.Command
     
 Set Report = New crRekapffsRJ3
 
-strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
-            "ppd.tglpelayanan,ppp.pelayananpasien as norec, pr.namaproduk,pg.namalengkap, " & _
-            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun,pp.jumlah,kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
-            "from pasiendaftar_t as pd " & _
-            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
-            "left join produk_m as pr on pr.id=ppd.produkfk " & _
-            "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
-            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
-            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 " & dokterluar & " and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & " " & _
-            "order by pp.tglpelayanan) as x where  " & SQLdate
+'strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
+'            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
+'            "ppd.tglpelayanan,ppp.pelayananpasien as norec, pr.namaproduk,pg.namalengkap, " & _
+'            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun,pp.jumlah,kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
+'            "from pasiendaftar_t as pd " & _
+'            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+'            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+'            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+'            "left join produk_m as pr on pr.id=ppd.produkfk " & _
+'            "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+'            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+'            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+'            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+'            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 " & dokterluar & " and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & " " & _
+'            "order by pp.tglpelayanan) as x where  " & SQLdate
     
 '    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
 '            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
@@ -313,6 +301,24 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
 '            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
 '            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4  " & dokterJD & " and ru.objectdepartemenfk in (18,28)  " & dokter & idRuangan & idKelompokPasien & " " & _
 '            "order by pp.tglpelayanan) as x where  " & SQLdate
+
+strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
+            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
+            "ppd.tglpelayanan,ppp.pelayananpasien as norec, pr.namaproduk,pg.namalengkap, " & _
+            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun,pp.jumlah,kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
+            "from pasiendaftar_t as pd " & _
+            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+            "left join produk_m as pr on pr.id=ppd.produkfk " & _
+            "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & " " & _
+            "order by pp.tglpelayanan) as x where  " & SQLdate
     
     If personKa = "1" Then
         
@@ -386,7 +392,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucKPID.SetUnboundFieldSource ("{ado.kpid}")
+            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")
@@ -394,7 +400,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             .Text19.SetText nippns1
             .Text16.SetText Namakeuangan
             .Text14.SetText nippns2
-            .txtKainsnm.SetText str6
+            .txtKaInsnm.SetText str6
             .txtKaIns.SetText NamaKplInst
             .txtKaNIP.SetText nippns3
             

@@ -169,11 +169,43 @@ Dim adocmd As New ADODB.Command
     
     Dim dokter As String
     Dim typeDokter As String
-    If idDokter <> "" Then
-        dokter = " and pg.id = '" & idDokter & "'"
-        ReadRs2 "select * from pegawai_m where id = " & idDokter
-        typeDokter = RS2!objecttypepegawaifk
-        If typeDokter = 1 Then
+    
+        If idDokter <> "" Then
+            dokter = " and pg.id = '" & idDokter & "'"
+            ReadRs2 "select * from pegawai_m where id = " & idDokter
+            typeDokter = RS2!objecttypepegawaifk
+            
+            If typeDokter = 1 Then
+                For i = 0 To diff
+                    strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                    If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
+                        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                        ElseIf Weekday(strTgl, vbSunday) = 6 Then
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                           "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+                        Else
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                           "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+                        End If
+                    Else
+                        If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                        Else
+                            strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                           "tglregistrasi between '" & strTgl & " 14:00' and '" & strTgl & " 23:59'"
+                        End If
+                    End If
+                    SQLdate = SQLdate & strTglJamSQL
+                Next
+            Else
+                For i = 0 To diff
+                    strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                    SQLdate = SQLdate & strTglJamSQL
+                Next
+            End If
+        Else
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
                 If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
@@ -193,42 +225,10 @@ Dim adocmd As New ADODB.Command
                         strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
                                        "tglregistrasi between '" & strTgl & " 14:00' and '" & strTgl & " 23:59'"
                     End If
-                
                 End If
-                SQLdate = SQLdate & strTglJamSQL
-            Next
-        Else
-            For i = 0 To diff
-                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
                 SQLdate = SQLdate & strTglJamSQL
             Next
         End If
-    Else
-        For i = 0 To diff
-            strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
-            If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
-                If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-                ElseIf Weekday(strTgl, vbSunday) = 6 Then
-                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-                                   "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
-                Else
-                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-                                   "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
-                End If
-            Else
-                If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
-                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
-                Else
-                    strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
-                                   "tglregistrasi between '" & strTgl & " 14:00' and '" & strTgl & " 23:59'"
-                End If
-            
-            End If
-            SQLdate = SQLdate & strTglJamSQL
-        Next
-    End If
     
     
     
