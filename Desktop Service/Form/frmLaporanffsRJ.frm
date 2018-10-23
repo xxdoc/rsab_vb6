@@ -149,7 +149,7 @@ Private Sub Form_Unload(Cancel As Integer)
     If CN.State = adStateOpen Then CN.Close
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY2 As String, personKa As String, idDokter As String, tglLibur As String, kdRuangan As String, kpid As String)
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY2 As String, personKa As String, idDokter As String, tglLibur As String, kdRuangan As String, kpid As String, tipeDokter As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -172,6 +172,7 @@ Dim adocmd As New ADODB.Command
     Dim dokter As String
     Dim typeDokter As String
     Dim dokterluar As String
+    Dim strluar As String
     
     Dim nmKaInstalasi As String
     Dim PrinteDBY As String
@@ -237,7 +238,41 @@ Dim adocmd As New ADODB.Command
             Next
         End If
     
+    If tipeDokter <> "" Then
+        strluar = " and  pg.objecttypepegawaifk = '" & tipeDokter & "'"
+        If tipeDokter = 1 Then
+            For i = 0 To diff
+                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
+                    If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                    ElseIf Weekday(strTgl, vbSunday) = 6 Then
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                       "tglregistrasi between '" & strTgl & " 16:00' and '" & strTgl & " 23:59'"
+                    Else
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                       "tglregistrasi between '" & strTgl & " 15:30' and '" & strTgl & " 23:59'"
+                    End If
+                Else
+                    If Weekday(strTgl, vbSunday) = 1 Or Weekday(strTgl, vbSunday) = 7 Then
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                    Else
+                        strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 06:59' or " & _
+                                       "tglregistrasi between '" & strTgl & " 14:00' and '" & strTgl & " 23:59'"
+                    End If
+                End If
+                SQLdate = SQLdate & strTglJamSQL
+            Next
+        Else
+            For i = 0 To diff
+                strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
+                strTglJamSQL = " or tglregistrasi between '" & strTgl & " 00:00' and '" & strTgl & " 23:59'"
+                SQLdate = SQLdate & strTglJamSQL
+            Next
+        End If
     
+    End If
+
     
 '     For i = 0 To diff
 '        strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
@@ -286,61 +321,24 @@ Dim adocmd As New ADODB.Command
     End If
     
 Set Report = New crLaporanffsRJ 'crLaporanffsIGD
-'    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-'            "select to_char(pd.tglregistrasi,'Day') as hari,pd.tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
-'            "ppd.tglpelayanan,ppp.pelayananpasien as norec,pr.namaproduk,pg.namalengkap, " & _
-'            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun, " & _
-'            "kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
-'            "from pasiendaftar_t as pd " & _
-'            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-'            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-'            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-'            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-'            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
-'            "left join produk_m as pr on pr.id=ppd.produkfk " & _
-'            "left join detailjenisproduk_m as djp on djp.id = pr.objectdetailjenisprodukfk " & _
-'            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
-'            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-'            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-'            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97  " & _
-'            "and ru.objectdepartemenfk in (18,28)" & dokter & idRuangan & "" & _
-'            "order by pd.tglregistrasi) as x where  " & SQLdate
-    
-'    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-'            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
-'            "ppd.tglpelayanan,ppp.pelayananpasien as norec, pr.namaproduk,pg.namalengkap, " & _
-'            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun,kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
-'            "from pasiendaftar_t as pd " & _
-'            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-'            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-'            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-'            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-'            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
-'            "left join produk_m as pr on pr.id=ppd.produkfk " & _
-'            "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
-'            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
-'            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-'            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-'            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 " & dokterluar & " and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & " " & _
-'            "order by pp.tglpelayanan) as x where  " & SQLdate
 
 strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-            "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
-            "ppd.tglpelayanan,ppp.pelayananpasien as norec, pr.namaproduk,pg.namalengkap, " & _
-            "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun,kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
-            "from pasiendaftar_t as pd " & _
-            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
-            "left join produk_m as pr on pr.id=ppd.produkfk " & _
-            "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
-            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
-            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & " " & _
-            "order by pp.tglpelayanan) as x where  " & SQLdate
+        "select to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
+        "ppd.tglpelayanan,ppp.pelayananpasien as norec, pr.namaproduk,pg.namalengkap, " & _
+        "((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as total,0 as remun,kp.id as kpid,kp.kelompokpasien,pg.objecttypepegawaifk " & _
+        "from pasiendaftar_t as pd " & _
+        "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+        "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+        "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+        "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+        "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+        "left join produk_m as pr on pr.id=ppd.produkfk " & _
+        "inner join detailjenisproduk_m as djp on djp.id=pr.objectdetailjenisprodukfk " & _
+        "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+        "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+        "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+        "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & strluar & " " & _
+        "order by pp.tglpelayanan) as x where  " & SQLdate
     
     ReadRs5 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
             "from pegawai_m as pg " & _
@@ -417,7 +415,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
 '            .ucJasaMedis.SetUnboundFieldSource ("{ado.total}")
 '            .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             
-            .txtNamaKasir.SetText PrinteDBY
+            .txtNamaKasir.SetText PrinteDBY2
             .txtVer.SetText App.Comments
             .Text94.SetText "LAPORAN FEE FOR SERVICE RAWAT JALAN"
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
