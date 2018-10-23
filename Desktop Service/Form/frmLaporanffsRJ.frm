@@ -105,7 +105,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crLaporanffsRI 'crLaporanffsIGD
+Dim Report As New crLaporanffsRJ 'crLaporanffsIGD
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
 'Dim tempPrint1 As String
@@ -257,7 +257,7 @@ Dim adocmd As New ADODB.Command
         End If
     End If
     
-Set Report = New crLaporanffsRI 'crLaporanffsIGD
+Set Report = New crLaporanffsRJ 'crLaporanffsIGD
 '    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
 '            "select to_char(pd.tglregistrasi,'Day') as hari,pd.tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien) as namapasien, " & _
 '            "ppd.tglpelayanan,ppp.pelayananpasien as norec,pr.namaproduk,pg.namalengkap, " & _
@@ -378,10 +378,10 @@ Set Report = New crLaporanffsRI 'crLaporanffsIGD
             .usHari.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
-            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
+'            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
@@ -395,7 +395,7 @@ Set Report = New crLaporanffsRI 'crLaporanffsIGD
             .Text24.SetText nippns1
             .Text20.SetText Namakeuangan
             .Text21.SetText nippns2
-            .txtKainsnm.SetText str6
+            .txtKaInsnm.SetText str6
             .txtKaIns.SetText NamaKplInst
             .txtKaNIP.SetText nippns3
             
