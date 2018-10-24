@@ -44,8 +44,10 @@ Public Sub openConnection()
         .ConnectionString = CN_String
         StatusCN = host
 '        .CommandTimeout = 120
-        .ConnectionTimeout = 0
+'        .ConnectionTimeout = 0
+        '.ConnectionTimeout = 300
         .CommandTimeout = 300
+'        .CommandTimeout = 600
         .Open
 
         If CN.State = adStateOpen Then
