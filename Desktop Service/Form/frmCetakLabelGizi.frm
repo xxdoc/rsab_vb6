@@ -167,7 +167,7 @@ Dim jml As Integer
             
             strSQL = "select pd.noregistrasi, sk.nokirim, sk.qtyproduk as qtykirim,op.keteranganlainnya as keteranganlainnyakirim,cast (op.qtyprodukinuse as text) as cc  ,cast (op.jumlah as text) as volume , pd.tglregistrasi,  ps.tgllahir, " & _
             "to_date(to_char(ps.tgllahir, 'YYYY/MM/DD'), 'YYYY/MM/DD') as tgllahirNew,ps.namapasien, ps.nocm, ru.namaruangan as ruanganasal, " & _
-            "jw.jeniswaktu,jd.jenisdiet,  op.qtyproduk,kls.namakelas " & _
+            "jw.jeniswaktu,jd.jenisdiet,  op.qtyproduk,kls.namakelas, kd.kategorydiet " & _
             "from orderpelayanan_t as op " & _
             "inner join pasiendaftar_t as pd on pd.norec = op.noregistrasifk " & _
             "inner join ruangan_m as ru on ru.id = op.objectruanganfk " & _
@@ -217,7 +217,7 @@ Dim jml As Integer
             .usKet.SetUnboundFieldSource ("{ado.keteranganlainnyakirim}")
             .usCC.SetUnboundFieldSource ("{ado.cc}")
             .usVolume.SetUnboundFieldSource ("{ado.volume}")
-            
+            .usKategori.SetUnboundFieldSource ("{ado.kategorydiet}")
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "LabelGizi")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
