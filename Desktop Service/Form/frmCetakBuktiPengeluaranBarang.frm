@@ -183,7 +183,7 @@ bolStrukResep = True
             strSQL = "select sk.tglkirim,so.tglorder, sk.nokirim, so.noorder, jp.name, ru.namaruangan, " & _
                     "ru.kdruangan || ' - ' || ru.namaruangan as ruangankirim, " & _
                     "ru2.namaruangan, ru2.kdruangan || ' - ' || ru2.namaruangan as ruangantujuan, pg.namalengkap, " & _
-                    "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, kp.qtyproduk, kp.qtyorder, kp.hargasatuan, (kp.hargasatuan * kp.qtyproduk) as total, sk.keteranganlainnyakirim, " & _
+                    "pr.id as idproduk,pr.kdproduk as kdsirs,pr.namaproduk, ss.satuanstandar, kp.qtyproduk, kp.qtyorder, kp.hargasatuan, (kp.hargasatuan * kp.qtyproduk) as total, sk.keteranganlainnyakirim, " & _
                     "'Ka. ' || dp.namadepartemen as pnjPengirim, pg.namalengkap as pegawaipengirim, 'NIP. ' || pg.nippns as nippengirim, " & _
                     "'Ka. ' || dp2.namadepartemen as pnjPenerima, pg2.namalengkap as pegawaipenerima, 'NIP. ' || pg2.nippns as nippenerima, sp.tglfaktur " & _
                     "from strukkirim_t as sk " & _
@@ -276,7 +276,7 @@ bolStrukResep = True
              adoReport.CommandType = adCmdUnknown
             .database.AddADOCommand CN_String, adoReport
 
-             .txtuser.SetText strUser
+             .txtUser.SetText strUser
            
              .udtglDok.SetUnboundFieldSource ("{Ado.tglkirim}")
              .udTglPermintaan.SetUnboundFieldSource ("{Ado.tglorder}")
@@ -294,7 +294,7 @@ bolStrukResep = True
              .unDiminta.SetUnboundFieldSource ("{Ado.qtyorder}")
              .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
-             
+             .usKdSirs.SetUnboundFieldSource ("{Ado.kdsirs}")
               .txtJabatan1.SetText JabatanPenyerah
               .txtJabatan2.SetText JabatanPenerima
               .txtJabatan3.SetText jabatanMengetahui
