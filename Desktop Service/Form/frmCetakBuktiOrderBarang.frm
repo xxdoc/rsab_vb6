@@ -182,7 +182,7 @@ bolStrukResep = True
             
             strSQL = "select so.tglorder, so.noorder, jp.name,ru2.namaruangan as ruangantujuan,so.keteranganorder, " & _
                     "ru.namaruangan as ruangan, 'KA. '||dp.namadepartemen as kepalaBagian, pg.namalengkap, jp.name ||' '|| ru.namaruangan || ' Tgl '|| so.tglorder as keteranganorder, " & _
-                    "pr.id as idproduk, pr.namaproduk, ss.satuanstandar, op.qtyproduk, so.totalhargasatuan as hargasatuan, (so.totalhargasatuan * op.qtyproduk) as total " & _
+                    "pr.id as idproduk,pr.kdproduk as kdsirs,pr.namaproduk, ss.satuanstandar, op.qtyproduk, so.totalhargasatuan as hargasatuan, (so.totalhargasatuan * op.qtyproduk) as total " & _
                     "from strukorder_t as so " & _
                     "left join orderpelayanan_t as op on op.strukorderfk = so.norec " & _
                     "left join produk_m as pr on pr.id = op.objectprodukfk " & _
@@ -256,6 +256,7 @@ bolStrukResep = True
 '             .ucHarga.SetUnboundFieldSource ("{Ado.hargasatuan}")
              .unDiminta.SetUnboundFieldSource ("{Ado.qtyproduk}")
 '             .unDikirim.SetUnboundFieldSource ("{Ado.qtyproduk}")
+             .usKdBrgSirs.SetUnboundFieldSource ("{Ado.kdsirs}")
              .ucTotalHarga.SetUnboundFieldSource ("{Ado.total}")
              .txtJabatan.SetText jabatanMengetahui
              .txtKepalaBagian.SetText pegawai1
