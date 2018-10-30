@@ -110,6 +110,11 @@ On Error Resume Next
                 Set Root = New JNode
                 Root("Status") = "Cetak Kartu Piutang Perusahaan"
                 
+            Case "cetak-transaksipiutangperusahaan"
+               Call frmTransaksiPiutangPerusahaan.cetakTgl(Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+               Set Root = New JNode
+               Root("Status") = "Cetak Transaksi Piutang Perusahaan"
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
