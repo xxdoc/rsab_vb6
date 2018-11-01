@@ -387,7 +387,7 @@ On Error Resume Next
                 'http://127.0.0.1:1237/printvb/kasir?cetak-laporan-penerimaan-pertransaksi=890901&tglAwal=2018-06-28%2000:00:00&tglAkhir=2018-06-28%2023:30:00&idRuangan=&idDokter=&view=true&strIdPegawai=Egie
               
             Case "cetak-laporan-harian-kasbank"
-                Call frmCRLaporanHarianKasBank.Cetak(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1))
+                Call frmCRLaporanHarianKasBank.Cetak(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan Harian Kas Bank"
                 Root("by") = "as@epic"
