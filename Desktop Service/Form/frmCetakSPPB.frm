@@ -180,19 +180,32 @@ bolStrukResep = True
             Set adoReport = New ADODB.Command
             adoReport.ActiveConnection = CN_String
             
-            strSQL = "select so.keteranganlainnya,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder,so.noorderintern, so.tglorder, so.keteranganorder, so.nokontrakspk, " & _
-                    "so.noorderrfq, so.namarekanansales, so.alamat, so.alamattempattujuan, so.keteranganorder || ' RSAB HK THN '|| so.noorderrfq as judul,  " & _
-                    "pr.namaproduk, ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount, op.hargappn, " & _
-                    "case when op.hargadiscount <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargadiscount else 0 end as persenDisc, " & _
-                    "case when op.hargappn <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargappn else 0 end as persenPpn, " & _
-                    "(op.hargasatuan * op.qtyproduk)-(hargadiscount+hargappn)as total,pg.namalengkap,pg.nippns,jb.namajabatan " & _
-                    "from strukorder_t so " & _
-                    "left join orderpelayanan_t op on op.strukorderfk=so.norec " & _
-                    "left join produk_m pr on pr.id=op.objectprodukfk " & _
-                    "left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
-                    "left join pegawai_m as pg on pg.id = so.objectpegawaiorderfk " & _
-                    "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
-                    "where so.norec = '" & strNorec & "'"
+'            strSQL = "select so.keteranganlainnya,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder,so.noorderintern, so.tglorder, so.keteranganorder, so.nokontrakspk, " & _
+'                    "so.noorderrfq, so.namarekanansales, so.alamat, so.alamattempattujuan, so.keteranganorder || ' RSAB HK THN '|| so.noorderrfq as judul,  " & _
+'                    "pr.namaproduk, ss.satuanstandar, op.hargasatuan, op.qtyproduk, op.hargadiscount, op.hargappn, " & _
+'                    "case when op.hargadiscount <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargadiscount else 0 end as persenDisc, " & _
+'                    "case when op.hargappn <> 0 then (op.hargasatuan * op.qtyproduk) / op.hargappn else 0 end as persenPpn, " & _
+'                    "(op.hargasatuan * op.qtyproduk)-(hargadiscount+hargappn)as total,pg.namalengkap,pg.nippns,jb.namajabatan " & _
+'                    "from strukorder_t so " & _
+'                    "left join orderpelayanan_t op on op.strukorderfk=so.norec " & _
+'                    "left join produk_m pr on pr.id=op.objectprodukfk " & _
+'                    "left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
+'                    "left join pegawai_m as pg on pg.id = so.objectpegawaiorderfk " & _
+'                    "left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+'                    "where so.norec = '" & strNorec & "'"
+             
+             strSQL = "select so.keteranganlainnya,so.tglvalidasi,so.nourutlogin,so.keterangankeperluan,so.noorder, " & _
+                      "so.noorderintern,so.tglorder,so.keteranganorder,so.nokontrakspk,so.noorderrfq,so.namarekanansales, " & _
+                      "so.alamat,so.alamattempattujuan,so.keteranganorder || ' rsab hk thn '|| so.noorderrfq as judul,pr.namaproduk, " & _
+                      "ss.satuanstandar,op.hargasatuan,op.qtyproduk,op.hargadiscount,op.hargappn, " & _
+                      "case when op.hargadiscount <> 0 then (op.hargasatuan * op.hargadiscount) / 100 else 0 end as persendisc, " & _
+                      "case when op.hargappn <> 0 then (op.hargasatuan * op.hargappn) / 100 else 0 end as persenppn, " & _
+                      "((op.hargasatuan-((op.hargadiscount * op.hargappn) / 100)+((op.hargasatuan * op.hargappn) / 100)) * op.qtyproduk)as total, " & _
+                      "pg.namalengkap , pg.nippns, jb.namajabatan from strukorder_t so left join orderpelayanan_t op on op.strukorderfk=so.norec " & _
+                      "left join produk_m pr on pr.id=op.objectprodukfk left join satuanstandar_m ss on ss.id=op.objectsatuanstandarfk " & _
+                      "left join pegawai_m as pg on pg.id = so.objectpegawaiorderfk left join jabatan_m as jb on jb.id = pg.objectjabatanstrukturalfk " & _
+                      "Where so.norec = '" & strNorec & "'"
+                
              ReadRs strSQL
              If RS.EOF = False Then
                 str1 = RS!namalengkap
