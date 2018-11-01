@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanffsPenunjangRad = Nothing
 End Sub
 
-Public Sub CetakLaporan(kpid As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String)
+Public Sub CetakLaporan(kpid As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, idDokter As String, tglLibur As String, kdRuangan As String, personKa As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -169,7 +169,6 @@ Dim adocmd As New ADODB.Command
     
     Dim dokter As String
     Dim typeDokter As String
-    
     If idDokter <> "" Then
         dokter = " and pg.id = '" & idDokter & "'"
         ReadRs2 "select * from pegawai_m where id = " & idDokter
@@ -246,24 +245,66 @@ Dim adocmd As New ADODB.Command
 
     
 Set Report = New crLaporanffsPenunjangRad
-    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
-            "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
-            "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
-            "case when ppd.komponenhargafk = 35 then ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) else 0 end as total,0 as remun, " & _
-            " ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
-            "from pasiendaftar_t as pd " & _
-            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
-            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
-            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
-            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
-            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
-            "left join produk_m as pr on pr.id=ppd.produkfk " & _
-            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
-            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
-            "Where  objectjenispetugaspefk = 4  and ru.objectdepartemenfk=27  " & dokter & idRuangan & idKelompokPasien & "" & _
-            "order by pp.tglpelayanan) as x where  " & SQLdate
+'    strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
+'            "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
+'            "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
+'            "case when ppd.komponenhargafk = 35 then ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) else 0 end as total,0 as remun, " & _
+'            " ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
+'            "from pasiendaftar_t as pd " & _
+'            "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+'            "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+'            "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+'            "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+'            "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+'            "left join produk_m as pr on pr.id=ppd.produkfk " & _
+'            "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+'            "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+'            "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+'            "Where  objectjenispetugaspefk = 4  and ru.objectdepartemenfk=27  " & dokter & idRuangan & idKelompokPasien & "" & _
+'            "order by pp.tglpelayanan) as x where  " & SQLdate
             
+    If personKa <> "" Then
+        If personKa = 1 Then
+            strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
+                "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
+                "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
+                "case when ppd.komponenhargafk = 35 then ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) else 0 end as total,0 as remun, " & _
+                " ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
+                "from pasiendaftar_t as pd " & _
+                "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+                "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+                "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+                "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+                "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+                "left join produk_m as pr on pr.id=ppd.produkfk " & _
+                "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+                "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+                "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+                "left join ruangan_m as ru1 on ru1.id= pd.objectruanganlastfk " & _
+                "Where  objectjenispetugaspefk = 4  and ru.id = 35 and ru1.objectdepartemenfk in (18,27,28,24) " & dokter & idRuangan & idKelompokPasien & "" & _
+                "order by pp.tglpelayanan) as x where  " & SQLdate
+        
+        ElseIf personKa = 2 Then
+            strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
+                "select kp.id as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
+                "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
+                "case when ppd.komponenhargafk = 35 then ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) else 0 end as total,0 as remun, " & _
+                " ((ppd.hargasatuan-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
+                "from pasiendaftar_t as pd " & _
+                "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
+                "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
+                "left join pelayananpasiendetail_t as ppd on ppd.pelayananpasien=pp.norec " & _
+                "left join pelayananpasienpetugas_t as ppp on ppp.pelayananpasien=pp.norec " & _
+                "left join pasien_m as ps on ps.id=pd.nocmfk " & _
+                "left join produk_m as pr on pr.id=ppd.produkfk " & _
+                "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
+                "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
+                "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
+                "left join ruangan_m as ru1 on ru1.id= pd.objectruanganlastfk " & _
+                "Where  objectjenispetugaspefk = 4  and ru.id = 35 and ru1.objectdepartemenfk in (16,25) " & dokter & idRuangan & idKelompokPasien & "" & _
+                "order by pp.tglpelayanan) as x where  " & SQLdate
+        End If
+    End If
     
     If kpid <> "" Then
         ReadRs "Select * from kelompokpasien_m where id= '" & kpid & "'"
@@ -325,7 +366,7 @@ Set Report = New crLaporanffsPenunjangRad
                 If kpid = "153" Then
                     .TxtJudul.SetText "Type Pasien : Non BPJS"
                 Else
-                    .TxtJudul.SetText "Type Pasien : " & RS!kelompokpasien
+                    .TxtJudul.SetText "Type Pasien : " & RS!KelompokPasien
                 End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -335,7 +376,7 @@ Set Report = New crLaporanffsPenunjangRad
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRemunerasi2.SetUnboundFieldSource ("{ado.totalTarif}")
