@@ -147,7 +147,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanffsRI = Nothing
 End Sub
 
-Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY2 As String, idDokter As String, tglLibur As String, kdRuangan As String)
+Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY2 As String, idDokter As String, tglLibur As String, kdRuangan As String, kpid As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -243,7 +243,14 @@ Dim adocmd As New ADODB.Command
     If kdRuangan <> "" Then
         idRuangan = " and ru.id = '" & kdRuangan & "'"
     End If
-
+    Dim idKelompokPasien As String
+    If kpid <> "" Then
+        If kpid = "153" Then
+            idKelompokPasien = " and kp.id in (1,5,3)"
+        Else
+            idKelompokPasien = " and kp.id = '" & kpid & "'"
+        End If
+    End If
     
 Set Report = New crLaporanffsRI
     strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu' when hari='Sunday   ' then 'Minggu' when hari='Monday   ' then 'Senin' when hari='Tuesday  ' then 'Selasa' when hari='Wednesday' then 'Rabu' when hari='Thursday ' then 'Kamis' when hari='Friday   ' then 'Jumat' " & STREND & "  end as harihari from ( " & _
@@ -261,7 +268,7 @@ Set Report = New crLaporanffsRI
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4  " & dokterluar & " and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & "" & _
+            "Where ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4  " & dokterluar & " and ru.objectdepartemenfk in (16,26)  " & dokter & idRuangan & idKelompokPasien & "" & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
             
     ReadRs5 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _
@@ -318,7 +325,7 @@ Set Report = New crLaporanffsRI
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")

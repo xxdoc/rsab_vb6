@@ -187,7 +187,7 @@ Dim adocmd As New ADODB.Command
     
     Dim tBayar As Double
     Dim i As Integer
-    Dim X As Double
+    Dim x As Double
     
     For i = 0 To RS.RecordCount - 1
         tBayar = tBayar + CDbl(IIf(IsNull(RS!totaldibayar), 0, RS!totaldibayar))
@@ -201,15 +201,15 @@ Dim adocmd As New ADODB.Command
     With Report
         .database.AddADOCommand CN_String, adocmd
             .txtPrinter.SetText namaPrinted
-            '.txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
+            .txtPeriode.SetText "Periode : " & tglAwal & " s/d " & tglAkhir & ""
             .usNamaPerusahaan.SetUnboundFieldSource ("{ado.namarekanan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noposting}")
             .usKeterangan.SetUnboundFieldSource ("{ado.keteranganlainnya}")
             .udTglKeluar.SetUnboundFieldSource ("{ado.tglsbm}")
             .unSubtotal.SetUnboundFieldSource ("{ado.totaldibayar}")
             
-            X = Round(tBayar)
-            .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
+            x = Round(tBayar)
+            .txtTerbilang.SetText "# " & TERBILANG(x) & " #"
             
             If view = "false" Then
                 Dim strPrinter As String
@@ -233,7 +233,7 @@ errLoad:
     MsgBox Err.Number & " " & Err.Description
 End Sub
 
-Public Sub Cetak(noposting As String, namaPrinted As String, view As String)
+Public Sub Cetak(noPosting As String, namaPrinted As String, view As String)
 On Error GoTo errLoad
 'On Error Resume Next
 
@@ -241,8 +241,8 @@ Set frmCRPembayaranPiutangPerusahaan = Nothing
 Dim adocmd As New ADODB.Command
     Dim str1 As String
     
-    If noposting <> "" Then
-        str1 = " and php.noposting= '" & noposting & "' "
+    If noPosting <> "" Then
+        str1 = " and php.noposting= '" & noPosting & "' "
     End If
                 
     Set Report = New crPembayaranPiutangPerusahaan
@@ -266,7 +266,7 @@ Dim adocmd As New ADODB.Command
     
     Dim tBayar As Double
     Dim i As Integer
-    Dim X As Double
+    Dim x As Double
     
     For i = 0 To RS.RecordCount - 1
         tBayar = tBayar + CDbl(IIf(IsNull(RS!totaldibayar), 0, RS!totaldibayar))
@@ -287,8 +287,8 @@ Dim adocmd As New ADODB.Command
             .udTglKeluar.SetUnboundFieldSource ("{ado.tglsbm}")
             .unSubtotal.SetUnboundFieldSource ("{ado.totaldibayar}")
             
-            X = Round(tBayar)
-            .txtTerbilang.SetText "# " & TERBILANG(X) & " #"
+            x = Round(tBayar)
+            .txtTerbilang.SetText "# " & TERBILANG(x) & " #"
             
             If view = "false" Then
                 Dim strPrinter As String

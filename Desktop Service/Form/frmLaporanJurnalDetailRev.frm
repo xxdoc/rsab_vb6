@@ -197,14 +197,14 @@ Set Report = New crLaporanJurnalDetailRev
                      "INNER JOIN chartofaccount_m as coa on coa.id=pjd.objectaccountfk " & _
                      "where nojurnal_intern='" & noJurnal & "' and pjd.hargasatuank <>0 " & _
                      "and case when pjd.hargasatuand =0 then  pjd.hargasatuank else pjd.hargasatuand end  <> " & _
-                     "(case when pp.hargajual is null then 0 else pp.hargajual end-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) *pp.jumlah " & _
+                     "((case when pp.hargajual is null then 0 else pp.hargajual end) *pp.jumlah)+ case when jasa is null then 0 else jasa end " & _
                      "order by coa.namaaccount;"
         Else
             strSQL = "select ru.namaruangan, pd.noregistrasi || '/' || ps.nocm as noMR, ps.namapasien , " & _
                      "pp.produkfk, " & _
                      "pj.namaproduktransaksi as keteranganlainnya, " & _
-                     "(case when pp.hargajual is null then 0 else pp.hargajual end-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) as hargaPP,pp.jumlah, " & _
-                     "(case when pp.hargajual is null then 0 else pp.hargajual end-(case when pp.hargadiscount is null then 0 else pp.hargadiscount end)) * pp.jumlah as Total, " & _
+                     "(case when pp.hargajual is null then 0 else pp.hargajual end)  as hargaPP,pp.jumlah, " & _
+                     "((case when pp.hargajual is null then 0 else pp.hargajual end) * pp.jumlah) + case when jasa is null then 0 else jasa end as Total, " & _
                      "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, " & _
                      "coa.namaaccount, " & _
                      "pjd.hargasatuank , pjd.hargasatuand " & _
@@ -220,7 +220,7 @@ Set Report = New crLaporanJurnalDetailRev
                      " "
             strSQL = strSQL + " union all select ru.namaruangan,  sp.nostruk  as nomr, sp.namapasien_klien as namapasien , " & _
                      "spd.objectprodukfk as produkfk, pj.namaproduktransaksi as keteranganlainnya, " & _
-                     "spd.qtyproduk as hargapp,spd.qtyproduk as jumlah, (spd.hargasatuan + spd.hargatambahan - spd.hargadiscount)*spd.qtyproduk as total, " & _
+                     "spd.qtyproduk as hargapp,spd.qtyproduk as jumlah, ((spd.hargasatuan )*spd.qtyproduk) + spd.hargatambahan as total, " & _
                      "pjd.objectaccountfk as accountid, pj.nojurnal,coa.noaccount, coa.namaaccount, pjd.hargasatuank , pjd.hargasatuand " & _
                       "from postingjurnaltransaksi_t as pj " & _
                       "inner join postingjurnaltransaksid_t as pjd on pj.norec=pjd.norecrelated " & _
