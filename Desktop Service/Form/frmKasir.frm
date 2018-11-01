@@ -312,14 +312,14 @@ On Error Resume Next
                 Root("by") = "as@epic"
                 
              Case "cetak-laporan-ffs-penunjangRad"
-                Call frmCRLaporanffsPenunjangRad.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRLaporanffsPenunjangRad.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
                 
               
              Case "cetak-rekap-ffs-penunjangRad"
-                Call frmCRRekapffsPenunjangRad.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRRekapffsPenunjangRad.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1))
                 Set Root = New JNode
                 Root("Status") = "Cetak Laporan"
                 Root("by") = "as@epic"
