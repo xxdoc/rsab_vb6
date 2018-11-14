@@ -228,7 +228,7 @@ Set Report = New crLaporanPasienPulang2
 '            "LEFT JOIN strukpelayananpenjamin_t as sppj on sp.norec=sppj.nostrukfk " & _
 '            "left join rekanan_m  as rk on rk.id=pd.objectrekananfk " & orderby
 
-strSQL = "select * from templaporanpasienpulang_t where idlappulang = '" & idlaporan & "'"
+strSQL = "select * from templaporanpasienpulang_t where idlappulang = '" & idlaporan & "' order by nosep desc"
 
 
             
@@ -266,16 +266,16 @@ strSQL = "select * from templaporanpasienpulang_t where idlappulang = '" & idlap
         
         If strIdKelompokPasien <> "" Then
             ReadRs2 "SELECT kelompokpasien FROM kelompokpasien_m where id='" & strIdKelompokPasien & "' "
-            .txtKelompokPasien.SetText "TIPE PASIEN " & UCase(IIf(IsNull(RS2!kelompokpasien), "SEMUA", RS2!kelompokpasien))
+            .txtKelompokPasien.SetText "TIPE PASIEN " & UCase(IIf(IsNull(RS2!KelompokPasien), "SEMUA", RS2!KelompokPasien))
         Else
             .txtKelompokPasien.SetText "SEMUA TIPE PASIEN"
         End If
              
         ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
         If RS2.BOF Then
-            .txtuser.SetText "-"
+            .txtUser.SetText "-"
         Else
-            .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+            .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
         End If
             
             If view = "false" Then
