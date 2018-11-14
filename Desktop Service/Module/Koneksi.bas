@@ -91,6 +91,14 @@ Public Function ReadRs5(sql As String)
   Set RS5 = Nothing
   RS5.Open sql, CN, adOpenStatic, adLockReadOnly
 End Function
+Public Function WriteRs(sql As String)
+  Set RS = Nothing
+  RS.Open sql, CN, adOpenStatic, adLockOptimistic
+End Function
+Public Function WriteRs2(sql As String)
+  Set RS2 = Nothing
+  RS2.Open sql, CN, adOpenStatic, adLockOptimistic
+End Function
 Public Function tempSQLWebService(sql As String) As String
   Set myMSXML = CreateObject("Microsoft.XmlHttp")
     myMSXML.Open "GET", "http://localhost:8200/service/transaksi/temp/save-sql-from-vb6?sql=" + sql, False
@@ -99,3 +107,20 @@ Public Function tempSQLWebService(sql As String) As String
     myMSXML.send
     tempSQLWebService = myMSXML.responseText
 End Function
+Function getNewNumber(tableName As String, fieldName As String, Keys As String)
+Dim newKode As String
+    ReadRs "select count(" & fieldName & ") from " & tableName
+    If RS.RecordCount <> 0 Then
+        newKode = Keys & (Val(RS(0)) + 1)
+    End If
+    getNewNumber = newKode
+End Function
+Function getNewNumberWithDate(tableName As String, fieldName As String, Keys As String, Tgl As Date) As String
+Dim newKode As String
+    ReadRs "select count(" & fieldName & ") from " & tableName & " where tglRegistrasi = '" & Format_tgl(Tgl) & "'"
+    If RS.RecordCount <> 0 Then
+        newKode = Keys & (Val(RS(0)) + 1)
+    End If
+    getNewNumberWithDate = Format(Tgl, "yyMMdd") & Format(newKode, "0###")
+End Function
+

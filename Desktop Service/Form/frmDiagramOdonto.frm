@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
+Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomct2.ocx"
 Begin VB.Form frmDiagramOdonto 
    BorderStyle     =   1  'Fixed Single
    Caption         =   " Odontogram"
@@ -14,6 +14,7 @@ Begin VB.Form frmDiagramOdonto
    Moveable        =   0   'False
    ScaleHeight     =   8235
    ScaleWidth      =   14700
+   StartUpPosition =   2  'CenterScreen
    Begin VB.Frame Frame4 
       Height          =   735
       Left            =   0
@@ -90,7 +91,7 @@ Begin VB.Form frmDiagramOdonto
             Strikethrough   =   0   'False
          EndProperty
          CustomFormat    =   "dd/MM/yyyy HH:mm"
-         Format          =   134676483
+         Format          =   178323459
          UpDown          =   -1  'True
          CurrentDate     =   37823
       End
@@ -7667,9 +7668,9 @@ Private Const RC_PALETTE As Long = &H100
 Private Const SIZEPALETTE As Long = 104
 
 Private Declare Function GetDC Lib "user32" ( _
-ByVal hWnd As Long) As Long
+ByVal hwnd As Long) As Long
 Private Declare Function GetWindowDC Lib "user32" ( _
-ByVal hWnd As Long) As Long
+ByVal hwnd As Long) As Long
 Private Declare Function CreateCompatibleDC Lib "gdi32" ( _
 ByVal hDC As Long) As Long
 Private Declare Function CreateCompatibleBitmap Lib "gdi32" ( _
@@ -7694,10 +7695,10 @@ Private Declare Function BitBlt Lib "gdi32" ( _
 ByVal hDCDest As Long, ByVal XDest As Long, _
 ByVal YDest As Long, ByVal nWidth As Long, _
 ByVal nHeight As Long, ByVal hDCSrc As Long, _
-ByVal XSrc As Long, ByVal YSrc As Long, ByVal dwRop As Long) _
+ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) _
 As Long
 Private Declare Function ReleaseDC Lib "user32" ( _
-ByVal hWnd As Long, ByVal hDC As Long) As Long
+ByVal hwnd As Long, ByVal hDC As Long) As Long
 Private Declare Function DeleteDC Lib "gdi32" ( _
 ByVal hDC As Long) As Long
 Private Declare Function OleCreatePictureIndirect _
@@ -7813,11 +7814,14 @@ Private Type SumbuKoordinat
     SmbX As Single
     SmbY As Single
 End Type
+Dim norec, norecnew, norecdetail As String
+Dim DokterPemeriksafk As Integer
+Dim LoginId As Integer
 
 Public Function CreateBitmapPicture(ByVal hBmp As Long, _
     ByVal hPal As Long) As Picture
     Dim r As Long
-    Dim Pic As PicBmp
+    Dim pic As PicBmp
     Dim IPic As IPicture
     Dim IID_IDispatch As GUID
 
@@ -7827,14 +7831,14 @@ Public Function CreateBitmapPicture(ByVal hBmp As Long, _
         .Data4(7) = &H46
     End With
 
-    With Pic
-        .Size = Len(Pic)
+    With pic
+        .Size = Len(pic)
         .Type = vbPicTypeBitmap
         .hBmp = hBmp
         .hPal = hPal
     End With
 
-    r = OleCreatePictureIndirect(Pic, IID_IDispatch, 1, IPic)
+    r = OleCreatePictureIndirect(pic, IID_IDispatch, 1, IPic)
 
     Set CreateBitmapPicture = IPic
 End Function
@@ -7896,7 +7900,7 @@ Public Function CaptureWindow(ByVal hWndSrc As Long, _
     Set CaptureWindow = CreateBitmapPicture(hBmp, hPal)
 End Function
 
-Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single, Warna As ColorConstants)
+Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single, Warna As ColorConstants)
     Dim i As Integer
     Dim sngLTengah As Single, sngTTengah As Single
     Dim varWarna As ColorConstants
@@ -7904,7 +7908,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
     If Button <> 1 Then Exit Sub
     sngLTengah = Me.picTengah(Index).Left + Me.picTengah(Index).Width
     sngTTengah = Me.picTengah(Index).Top + Me.picTengah(Index).Height
-    If (X > 0 And X < Me.picTengah(Index).Left) And (y > Me.picTengah(Index).Top And y < sngTTengah) Then 'kiri
+    If (x > 0 And x < Me.picTengah(Index).Left) And (y > Me.picTengah(Index).Top And y < sngTTengah) Then 'kiri
         Select Case varStatusAksi
             Case KARIES
                 If varKondisiGigi(Index).KariesKiri = "Y" Then
@@ -7980,7 +7984,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
         For i = 0 To Me.picTengah(Index).Left
             Me.picGigi(Index).Line (i, i)-(i, Me.picGigi(Index).ScaleHeight - i), varWarna
         Next
-    ElseIf X > sngLTengah And X < Me.picGigi(Index).ScaleWidth Then 'kanan
+    ElseIf x > sngLTengah And x < Me.picGigi(Index).ScaleWidth Then 'kanan
         Select Case varStatusAksi
             Case KARIES
                 If varKondisiGigi(Index).KariesKanan = "Y" Then
@@ -8211,7 +8215,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
     End If
 End Sub
 
-Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single, Warna As ColorConstants)
+Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single, Warna As ColorConstants)
     Dim varWarna As ColorConstants
 
     If Button <> 1 Then Exit Sub
@@ -8351,7 +8355,40 @@ Private Sub subResetArray()
 End Sub
 
 Private Function Add_CatatanOdonto() As Boolean
-    On Error GoTo errSimpan
+On Error GoTo errSimpan
+Dim keter As String
+Dim Nocmfk, DokterId, RuanganId, IdUser As Integer
+
+     ReadRs2 "select pd.tglregistrasi,pm.tgllahir,pd.noregistrasi,pm.id as nocmfk,pm.nocm,pm.namapasien,kp.kelompokpasien,kls.namakelas,jk.jeniskelamin, " & _
+             "ru.id as ruanganid,ru.namaruangan " & _
+             "from antrianpasiendiperiksa_t as apd " & _
+             "inner join pasiendaftar_t as pd on pd.norec = apd.noregistrasifk " & _
+             "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
+             "inner join pasien_m as pm on pm.id = pd.nocmfk " & _
+             "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
+             "inner join jeniskelamin_m as jk on jk.id = pm.objectjeniskelaminfk " & _
+             "left join kelas_m as kls on kls.id = apd.objectkelasfk " & _
+             "where apd.norec= '" & norec & "' "
+    norecnew = Format(getNewNumber("catatanodonto_t", "norec", ""), "0#########")
+   
+    If txtKeterangan.Text = "" Then MsgBox "Keterangan Harus Diisi", vbCritical, ".:Warning": txtKeterangan.SetFocus: Exit Function
+    If Not RS2.EOF Then
+        Nocmfk = RS2!Nocmfk
+        DokterId = DokterPemeriksafk
+        IdUser = LoginId
+        RuanganId = RS2!RuanganId
+        WriteRs "insert into catatanodonto_t values ('" & norecnew & "',0,'t','" & norec & "','" & Nocmfk & "','" & RuanganId & "', " & _
+                "'','" & txtKeterangan.Text & "','" & IdUser & "','" & DokterId & "','" & Format(dtpTglPeriksa.Value, "yyyy-MM-dd HH:mm:ss") & "')"
+        MsgBox "Simpan berhasil !", vbOKOnly, ".:Informasi"
+        Add_CatatanOdonto = True
+    Else
+        MsgBox "Pasien Tak Ada!", vbInformation, "..:."
+        Add_CatatanOdonto = False
+        Exit Function
+    End If
+    
+    
+'********* DATA TERDAHULU *****************'
 '    Set adoCommand = Nothing
 '    With adoCommand
 '        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
@@ -8378,15 +8415,43 @@ Private Function Add_CatatanOdonto() As Boolean
 '        Call deleteADOCommandParameters(adoCommand)
 '        Set adoCommand = Nothing
 '    End With
+'********* END DATA TERDAHULU *****************'
     Exit Function
 errSimpan:
+    CN.RollbackTrans
 '    Call deleteADOCommandParameters(adoCommand)
 '    Set adoCommand = Nothing
 '    Call msubPesanError
 End Function
 
 Private Function Add_DetailCatatanOdonto(ByVal NoDiagramOdonto As String) As Boolean
-    On Error GoTo errSimpan
+On Error GoTo errSimpan
+Dim objSave1 As String
+norecdetail = Format(getNewNumber("detailcatatanodonto_t", "norec", ""), "0#########")
+    CN.BeginTrans
+    objSave1 = objSave1 & "('" & norecdetail & "',0,'t','" & norecnew & "',NoDiagramOdonto,'" & varKondisiGigi(NoDiagramOdonto).BelumErupsi & "','" & varKondisiGigi(NoDiagramOdonto).ErupsiSebagian & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).AnomaliBentuk & "','" & varKondisiGigi(NoDiagramOdonto).Calculus & "','" & varKondisiGigi(NoDiagramOdonto).KariesDepan & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).KariesKiri & "','" & varKondisiGigi(NoDiagramOdonto).KariesKanan & "','" & varKondisiGigi(NoDiagramOdonto).KariesAtas & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).KariesBawah & "','" & varKondisiGigi(NoDiagramOdonto).NonVital & "','" & varKondisiGigi(NoDiagramOdonto).TambalanLogamDepan & "') " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanLogamKiri & "','" & varKondisiGigi(NoDiagramOdonto).TambalanLogamKanan & "','" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamAtas & "') " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanLogamBawah & "','" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamDepan & "','" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKiri & "') " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKanan & "','" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamAtas & "','" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamBawah & "') " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamDepan & "','" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamKiri & "','" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamKanan & "') " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamAtas & "','" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamBawah & "','" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamDepan & "') " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKiri & "','" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKanan & "','" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamAtas & "') " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamBawah & "','" & varKondisiGigi(NoDiagramOdonto).SisaAkar & "','" & varKondisiGigi(NoDiagramOdonto).GigiHilang & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).Jembatan & "','" & varKondisiGigi(NoDiagramOdonto).GigiTiruanLepas & "') "
+     WriteRs "insert into detailcatatanodonto_t (norec,kdprofile,statusenabled,catatanodontofk,nodiagramodonto,belumerupsi, " & _
+             "erupsisebagian,anomalibentuk,calculus,kariesdepan,karieskiri,karieskanan,kariesatas,kariesbawah,nonvital,tambalanlogamdepan " & _
+             "tambalanlogamkiri,tambalanlogamkanan,tambalanlogamatas,tambalanlogambawah,tambalannonlogamDepan,tambalannonlogamkiri,tambalannonlogamkanan " & _
+             "tambalannonlogamatas,tambalannonlogambawah,mahkotalogamdepan,mahkotalogamkiri,mahkotalogamkanan,mahkotalogamatas,mahkotalogambawah,mahkotanonlogamdepan " & _
+             "mahkotanonlogamkiri,mahkotanonlogamkanan,mahkotanonlogamatas,mahkotanonlogambawah,sisaakar,gigihilang,jembatan,gigitiruanlepas) " & _
+             "values " & _
+             objSave1
+     CN.CommitTrans
+     MsgBox "Simpan berhasil !", vbOKOnly, ".:Informasi"
+     Add_DetailCatatanOdonto = True
+'********* CODE TERDAHULU *****************'
 '    With adoCommand
 '        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
 '        .Parameters.Append .CreateParameter("NoPendaftaran", adChar, adParamInput, 10, txtNoPendaftaran.Text)
@@ -8442,8 +8507,11 @@ Private Function Add_DetailCatatanOdonto(ByVal NoDiagramOdonto As String) As Boo
 '        Call deleteADOCommandParameters(adoCommand)
 '        Set adoCommand = Nothing
 '    End With
+'********* END CODE TERDAHULU *****************'
     Exit Function
 errSimpan:
+     CN.RollbackTrans
+     Add_DetailCatatanOdonto = False
 '    Call deleteADOCommandParameters(adoCommand)
 '    Set adoCommand = Nothing
 '    msubPesanError
@@ -8472,7 +8540,7 @@ Public Sub subLoadDetailCatatanOdonto()
     Dim idx As Integer
     Dim intX As Single, intY As Single
 
-    strSQL = "select * from DetailCatatanOdonto where NoPendaftaran='" & Me.txtNoPendaftaran.Text & "'"
+    strSQL = "select * from DetailCatatanOdonto where NoPendaftaran='" & Me.txtnopendaftaran.Text & "'"
 
     ReadRs strSQL
     While Not RS.EOF
@@ -8660,7 +8728,7 @@ Public Sub subLoadDetailCatatanOdonto()
         End If
         RS.MoveNext
     Wend
-    strSQL = "select Keterangan from CatatanOdonto where NoPendaftaran='" & Me.txtNoPendaftaran.Text & "'"
+    strSQL = "select Keterangan from CatatanOdonto where NoPendaftaran='" & Me.txtnopendaftaran.Text & "'"
     Set RS = Nothing
     ReadRs strSQL
     If Not RS.EOF Then txtKeterangan.Text = IIf(IsNull(RS(0).Value), "", RS(0).Value)
@@ -8672,7 +8740,7 @@ Private Function subCaptureDesktop() As Boolean
     Dim hWndScreen As Long
 
     With Me.picDiagramOdondo
-        Set Me.picTemp.Picture = CaptureWindow(.hWnd, True, 40, 0, _
+        Set Me.picTemp.Picture = CaptureWindow(.hwnd, True, 40, 0, _
         .ScaleX(Me.picTemp.ScaleWidth, .ScaleMode, vbPixels), _
         .ScaleY(Me.picTemp.ScaleHeight, .ScaleMode, vbPixels))
     End With
@@ -8786,14 +8854,50 @@ Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
             Call subCaptureDesktop
     End Select
 End Sub
+Public Sub LoadDataPasien(norec_apd As String, dokter As String, IdUser As String)
+Dim tgllahir, tglregistrasi As String
+Dim umur As String
 
+    If norec_apd <> "" And dokter <> "" And IdUser <> "" Then
+        DokterPemeriksafk = dokter
+        LoginId = IdUser
+        norec = norec_apd
+        ReadRs "select pd.tglregistrasi,pm.tgllahir,pd.noregistrasi,pm.nocm,pm.namapasien,kp.kelompokpasien,kls.namakelas,jk.jeniskelamin " & _
+                "from antrianpasiendiperiksa_t as apd " & _
+                "inner join pasiendaftar_t as pd on pd.norec = apd.noregistrasifk " & _
+                "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
+                "inner join pasien_m as pm on pm.id = pd.nocmfk " & _
+                "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
+                "inner join jeniskelamin_m as jk on jk.id = pm.objectjeniskelaminfk " & _
+                "left join kelas_m as kls on kls.id = apd.objectkelasfk " & _
+                "where apd.norec= '" & norec_apd & "' "
+                
+         If Not RS.EOF Then
+            tgllahir = RS!tgllahir
+            tglregistrasi = RS!tglregistrasi
+            txtnopendaftaran.Text = RS!noregistrasi
+            txtnocm.Text = RS!nocm
+            txtNamaPasien.Text = RS!namapasien
+            txtJenisPasien.Text = RS!KelompokPasien
+            txtKls.Text = RS!namakelas
+            txtSex.Text = RS!jeniskelamin
+            txtTglDaftar.Text = RS!tglregistrasi
+            umur = hitungUmur(RS!tgllahir, RS!tglregistrasi)
+            Dim umur_arr() As String
+            umur_arr = Split(umur, " ")
+            txtThn.Text = umur_arr(0)
+            txtBln.Text = umur_arr(2)
+            txtHr.Text = umur_arr(4)
+         End If
+    End If
+End Sub
 Private Sub Form_Load()
 '    Call centerForm(Me, MDIUtama)
 '    Call PlayFlashMovie(Me)
     
     Me.Left = (Screen.Width - Me.Width) / 2
     Me.Top = (Screen.Height - 1500 - Me.Height) / 2
-
+'    Call LoadDataPasien
     Call subResetArray
     Me.dtpTglPeriksa.Value = Now
 
@@ -8819,12 +8923,12 @@ Private Sub Form_Load()
     Me.Height = 9690
 End Sub
 
-Private Sub lblGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
-    Call picTengah_MouseUp(Index, Button, Shift, X, y)
+Private Sub lblGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+    Call picTengah_MouseUp(Index, Button, Shift, x, y)
 End Sub
 
-Private Sub lblGigiAnomali_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
-    Call picTengah_MouseUp(Index, Button, Shift, X, y)
+Private Sub lblGigiAnomali_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+    Call picTengah_MouseUp(Index, Button, Shift, x, y)
 End Sub
 
 Private Sub optAksi_Click(Index As Integer)
@@ -8833,7 +8937,7 @@ Private Sub optAksi_Click(Index As Integer)
     End If
 End Sub
 
-Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
+Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
     Select Case varStatusAksi
         Case BELUM_ERUPSI
             Me.lblGigi(Index).font.Size = 8 'direset
@@ -8889,33 +8993,33 @@ Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Intege
             End If
         Case KARIES
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picKaries.BackColor)
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picKaries.BackColor)
         Case NON_VITAL
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
         Case TAMBALAN_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picTLogam.BackColor)
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picTLogam.BackColor)
         Case TAMBALAN_NON_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picTNonLogam.BackColor)
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picTNonLogam.BackColor)
         Case MAHKOTA_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picMLogam.BackColor)
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picMLogam.BackColor)
         Case MAHKOTA_NON_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picMNonLogam.BackColor)
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picMNonLogam.BackColor)
         Case SISA_AKAR
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
         Case GIGI_HILANG
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
         Case JEMBATAN_A
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
         Case GIGI_TIRUAN_LEPAS
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
     End Select
     varKondisiGigi(Index).AdaGigi = True
     Exit Sub
@@ -8924,7 +9028,8 @@ jump:
     varKondisiGigi(Index).AdaGigi = True
 End Sub
 
-Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
+Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+'Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     Select Case varStatusAksi
         Case BELUM_ERUPSI
             Me.lblGigi(Index).font.Size = 8 'direset
@@ -8967,7 +9072,7 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
             End If
         Case KARIES
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picKaries.BackColor)
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picKaries.BackColor)
         Case NON_VITAL
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).NonVital = "Y" Then
@@ -8989,16 +9094,16 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
             End If
         Case TAMBALAN_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picTLogam.BackColor)
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picTLogam.BackColor)
         Case TAMBALAN_NON_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picTNonLogam.BackColor)
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picTNonLogam.BackColor)
         Case MAHKOTA_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picMLogam.BackColor)
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picMLogam.BackColor)
         Case MAHKOTA_NON_LOGAM
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picMNonLogam.BackColor)
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picMNonLogam.BackColor)
         Case SISA_AKAR
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).SisaAkar = "Y" Then
