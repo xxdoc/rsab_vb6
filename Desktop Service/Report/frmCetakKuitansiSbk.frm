@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -165,8 +165,8 @@ Dim jenisKwitansi As String
                     "left join loginuser_s as lu on lu.id = sbk.objectpegawaipembayarfk " & _
                     "left join pegawai_m as pg on pg.id = lu.objectpegawaifk " & _
                     "where sbk.nosbk= '" & strNoSbk & "' "
-        End If
-    End If
+'        End If
+'    End If
     
     Dim i As Integer
     Dim jumlahDuit As Double

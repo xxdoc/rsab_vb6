@@ -110,17 +110,18 @@ End Function
 Function getNewNumber(tableName As String, fieldName As String, Keys As String)
 Dim newKode As String
     ReadRs "select count(" & fieldName & ") from " & tableName
+    newKode = Keys & 1
     If RS.RecordCount <> 0 Then
         newKode = Keys & (Val(RS(0)) + 1)
     End If
     getNewNumber = newKode
 End Function
-Function getNewNumberWithDate(tableName As String, fieldName As String, Keys As String, Tgl As Date) As String
-Dim newKode As String
-    ReadRs "select count(" & fieldName & ") from " & tableName & " where tglRegistrasi = '" & Format_tgl(Tgl) & "'"
-    If RS.RecordCount <> 0 Then
-        newKode = Keys & (Val(RS(0)) + 1)
-    End If
-    getNewNumberWithDate = Format(Tgl, "yyMMdd") & Format(newKode, "0###")
-End Function
+'Function getNewNumberWithDate(tableName As String, fieldName As String, Keys As String, Tgl As Date) As String
+'Dim newKode As String
+'    ReadRs "select count(" & fieldName & ") from " & tableName & " where tglRegistrasi = '" & Format_tgl(Tgl) & "'"
+'    If RS.RecordCount <> 0 Then
+'        newKode = Keys & (Val(RS(0)) + 1)
+'    End If
+'    getNewNumberWithDate = Format(Tgl, "yyMMdd") & Format(newKode, "0###")
+'End Function
 
