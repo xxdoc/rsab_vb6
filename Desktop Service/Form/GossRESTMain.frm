@@ -260,7 +260,7 @@ Private Sub Gossamer1_DynamicRequest( _
         If URI = "\printvb\akuntansi" Then RespBody = frmAkuntansi.akuntansi(Gossamer1.URLDecode(Params)) 'XX
         If URI = "\printvb\logistik" Then RespBody = frmLogistik.Logistik(Gossamer1.URLDecode(Params)) 'XX
         If URI = "\printvb\simakbmn" Then RespBody = frmSimakBmn.Fungsi(Gossamer1.URLDecode(Params)) 'XX
-        If URI = "\printvb\gizi" Then RespBody = frmGizi.Gizi(Gossamer1.URLDecode(Params))
+        
        
         If Err Then
             ErrNumber = Err.Number

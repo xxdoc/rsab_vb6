@@ -6,12 +6,14 @@ Begin VB.Form frmRajal
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   4005
+   Enabled         =   0   'False
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   1035
    ScaleWidth      =   4005
    StartUpPosition =   3  'Windows Default
+   Visible         =   0   'False
 End
 Attribute VB_Name = "frmRajal"
 Attribute VB_GlobalNameSpace = False
@@ -19,7 +21,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Function RawatJalan(ByVal QueryText As String) As Byte()
-On Error Resume Next
+'On Error Resume Next
     Dim Root As JNode
     Dim Param1() As String
     Dim Param2() As String
@@ -39,11 +41,12 @@ On Error Resume Next
         Param2 = Split(arrItem(1), "=")
         Param3 = Split(arrItem(2), "=")
         Param4 = Split(arrItem(3), "=")
-        Param5 = Split(arrItem(4), "=")
-        Param6 = Split(arrItem(5), "=")
+'        Param5 = Split(arrItem(4), "=")
+'        Param6 = Split(arrItem(5), "=")
         Select Case Param1(0)
             Case "form-odontogram"
                 frmDiagramOdonto.Show
+                Call frmDiagramOdonto.LoadDataPasien(Param2(1), Param3(1), Param4(1))
                 
                 Set Root = New JNode
                 Root("Status") = "Cetak Billing!!"

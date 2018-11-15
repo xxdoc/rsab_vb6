@@ -425,7 +425,14 @@ On Error Resume Next
                 Root("Status") = "Cetak Laporan Penerimaan Deposit"
                 Root("by") = "as@epic"
                 'http://127.0.0.1:1237/printvb/kasir?cetak-lap-pasien-dalam-perawatan=890901&tglAwal=2018-06-28%2000:00:00&tglAkhir=2018-06-28%2023:30:00&idRuangan=&idDokter=&view=true&strIdPegawai=Egie
-      
+            
+            Case "cetak-kwitansi-sbk"
+'                Param4 = Split(arrItem(3), "=")
+                Call frmCetakKuitansiSbk.CetakUlangJenisKuitansi(Param2(1), Val(Param1(1)), Param3(1), Param4(1), Param5(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Kwitansi"
+                '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&strIdPegawai=1&view=false
+            
             Case "cetak-berita-acara-kasbank"
                 'Call frmCRBeritaAcaraKasBank.Cetak(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
                 Call frmCRBeritaAcaraKasBank.Cetak(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1))
