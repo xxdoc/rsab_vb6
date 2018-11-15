@@ -426,6 +426,19 @@ On Error Resume Next
                 Root("by") = "as@epic"
                 'http://127.0.0.1:1237/printvb/kasir?cetak-lap-pasien-dalam-perawatan=890901&tglAwal=2018-06-28%2000:00:00&tglAkhir=2018-06-28%2023:30:00&idRuangan=&idDokter=&view=true&strIdPegawai=Egie
       
+            Case "cetak-berita-acara-kasbank"
+                'Call frmCRBeritaAcaraKasBank.Cetak(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1))
+                Call frmCRBeritaAcaraKasBank.Cetak(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Laporan Harian Kas Bank"
+                Root("by") = "as@epic"
+        
+            Case "cetak-lampiran-berita-acara-kasbank"
+                Call frmCRLampiranBeritaAcaraKasBank.Cetak(Param1(1), Param2(1))
+                Set Root = New JNode
+                Root("Status") = "Cetak Lampiran Berita Acara"
+                Root("by") = "as@epic"
+                
             Case Else
                 Set Root = New JNode
                 Root("Status") = "Error"
