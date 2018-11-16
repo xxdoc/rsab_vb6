@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -337,7 +337,9 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
         "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
         "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
         "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-        "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & strluar & " " & _
+        "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18)  " & _
+        "and ru.id not in (491,528,534,527,532,526,529,531,530,533,510,511,512,514,517,518,524,513,516,515,519,520,521,522,523,525) " & _
+        " " & dokter & idRuangan & idKelompokPasien & strluar & " " & _
         "order by pp.tglpelayanan) as x where  " & SQLdate
     
     ReadRs5 "select pg.namalengkap,pg.nippns,jb.namajabatan " & _

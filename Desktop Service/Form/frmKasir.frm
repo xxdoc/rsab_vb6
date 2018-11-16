@@ -432,6 +432,18 @@ On Error Resume Next
                 Set Root = New JNode
                 Root("Status") = "Cetak Kwitansi"
                 '127.0.0.1:1237/printvb/kasir?cetak-kwitansiv2=1&noregistrasi=1708000446&strIdPegawai=1&view=false
+                
+            Case "cetak-laporan-ffs-edelweis"
+               Call frmLaporanEdelweisFfs.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1), Param10(1))
+               Set Root = New JNode
+               Root("Status") = "Cetak Laporan"
+               Root("by") = "as@epic"
+              
+            Case "cetak-rekap-ffs-edelweis"
+               Call frmRekapEdelweisffs.CetakLaporan(Param1(1), Param2(1), Param3(1), Param4(1), Param5(1), Param6(1), Param7(1), Param8(1), Param9(1), Param10(1))
+               Set Root = New JNode
+               Root("Status") = "Cetak Laporan"
+               Root("by") = "as@epic"
             
             Case Else
                 Set Root = New JNode
