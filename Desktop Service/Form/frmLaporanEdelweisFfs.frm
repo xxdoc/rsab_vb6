@@ -420,7 +420,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             
             .txtNamaKasir.SetText PrinteDBY2
             .txtVer.SetText App.Comments
-            .Text94.SetText "LAPORAN FEE FOR SERVICE RAWAT JALAN"
+            .Text94.SetText "LAPORAN FEE FOR SERVICE EDELWEIS"
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
             .usHari.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -434,7 +434,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .UnboundString1.SetUnboundFieldSource ("{ado.norec}")
-            .ucKpID.SetUnboundFieldSource ("{ado.kpid}")
+            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")

@@ -322,6 +322,7 @@ Form=Form\frmRekapffsRJ.frm
 Designer=Report\cr_SuratTagihanDeposit.Dsr
 Form=Report\frmCRBeritaAcaraKasBank.frm
 Designer=Report\cr_BeritaAcaraKasBank.Dsr
+Form=Form\frmLaporanffsRJ.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
 HelpFile=""

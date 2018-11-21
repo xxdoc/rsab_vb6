@@ -207,6 +207,7 @@ Dim adocmd As New ADODB.Command
                 Next
             End If
         Else
+            dokter = ""
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
                 If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
@@ -316,9 +317,8 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
             "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18) " & _
-            "and ru.id not in (491,528,534,527,532,526,529,531, " & _
-                    "530,533,510,511,512,514,517,518,524,513,516,515,519,520,521,522,523,525) " & _
-            " & dokter & idRuangan & idKelompokPasien & strluar & " " & _
+            "and ru.id not in (491,528,534,527,532,526,529,531,530,533,510,511,512,514,517,518,524,513,516,515,519,520,521,522,523,525) " & _
+            " " & dokter & idRuangan & idKelompokPasien & strluar & " " & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
     
     If personKa = "1" Then
@@ -376,7 +376,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
     adocmd.CommandType = adCmdText
         
     With Report
-        .database.AddADOCommand CN_String, adocmd
+         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText PrinteDBY
             .txtVer.SetText App.Comments
             .Text94.SetText "LAPORAN REKAP FEE FOR SERVICE DOKTER RAWAT JALAN"

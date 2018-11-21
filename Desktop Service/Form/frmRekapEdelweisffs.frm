@@ -379,7 +379,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
         .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText PrinteDBY
             .txtVer.SetText App.Comments
-            .Text94.SetText "LAPORAN REKAP FEE FOR SERVICE DOKTER RAWAT JALAN"
+            .Text94.SetText "LAPORAN REKAP FEE FOR SERVICE EDELWEIS"
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
 '            .usHari.SetUnboundFieldSource ("{ado.harihari}")
 '            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
