@@ -289,8 +289,7 @@ Dim adocmd As New ADODB.Command
     If kdRuangan <> "" Then
         idRuangan = " and ru.id = '" & kdRuangan & "'"
     Else
-        idRuangan = " and ru.id in (491,528,534,527,532,526,529,531, " & _
-                    "530,533,510,511,512,514,517,518,524,513,516,515,519,520,521,522,523,525) "
+        idRuangan = " and ru.id in (491,528,534,527,532,526,529,531,530,533,510,511,512,514,517,518,524,513,516,515,519,520,521,522,523,525) "
     End If
     Dim idKelompokPasien As String
     If kpid <> "" Then
