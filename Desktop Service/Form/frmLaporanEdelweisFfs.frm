@@ -428,13 +428,13 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
 '            .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .UnboundString1.SetUnboundFieldSource ("{ado.norec}")
-            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
+            .ucKPID.SetUnboundFieldSource ("{ado.kpid}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")
@@ -442,7 +442,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             .Text24.SetText nippns1
             .Text20.SetText Namakeuangan
             .Text21.SetText nippns2
-            .txtKaInsnm.SetText str6
+            .txtKainsnm.SetText str6
             .txtKaIns.SetText NamaKplInst
             .txtKaNIP.SetText nippns3
             

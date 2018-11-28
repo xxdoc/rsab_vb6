@@ -393,7 +393,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
-            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
+            .unKpFk.SetUnboundFieldSource ("{ado.kpid}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")
@@ -401,7 +401,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             .Text19.SetText nippns1
             .Text16.SetText Namakeuangan
             .Text14.SetText nippns2
-            .txtKaInsnm.SetText str6
+            .txtKainsnm.SetText str6
             .txtKaIns.SetText NamaKplInst
             .txtKaNIP.SetText nippns3
             

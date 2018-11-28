@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -328,7 +328,7 @@ Set Report = New crRekapffsPenunjang
                 If kpid = "153" Then
                     .txtJudul2.SetText "TIPE PASIEN : Non BPJS"
                 Else
-                    .txtJudul2.SetText "TIPE PASIEN : " & RS!kelompokpasien
+                    .txtJudul2.SetText "TIPE PASIEN : " & RS!KelompokPasien
                 End If
             End If
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMMM yyyy")
@@ -344,7 +344,7 @@ Set Report = New crRekapffsPenunjang
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
-            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
+            .unKpFk.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .Text17.SetText NamaDirut
             .Text19.SetText nippns1
