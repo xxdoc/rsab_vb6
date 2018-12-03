@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -281,7 +281,7 @@ Set Report = New crLaporanffsIBS
             "select cast(kp.id as TEXT) as kpid, to_char(pp.tglpelayanan,'Day') as hari,pp.tglpelayanan as tglregistrasi,pd.noregistrasi,ru.namaruangan,ps.nocm,upper(ps.namapasien || ' (' || kp.kelompokpasien || ')') as namapasien, " & _
             "pp.norec as norec_ppd,ppd.tglpelayanan, pr.namaproduk,pg.namalengkap, " & _
             "case when ppd.komponenhargafk = " & Jasa & " then ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) else 0 end as total,0 as remun, " & _
-            " ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as totalTarif,pg.objecttypepegawaifk " & _
+            " ((ppd.hargajual-case when ppd.hargadiscount is null then 0 else ppd.hargadiscount end )* pp.jumlah) as totalTarif,pg.objecttypepegawaifk,kp.id as kpids " & _
             "from pasiendaftar_t as pd " & _
             "left join antrianpasiendiperiksa_t as apd on apd.noregistrasifk=pd.norec " & _
             "left join pelayananpasien_t as pp on pp.noregistrasifk=apd.norec " & _
@@ -351,12 +351,12 @@ Set Report = New crLaporanffsIBS
             .usNgaranPoe.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             If kpid = "" Then
-                .txtjudul.SetText "Type Pasien : ALL"
+                .TxtJudul.SetText "Type Pasien : ALL"
             Else
                 If kpid = "153" Then
-                    .txtjudul.SetText "Type Pasien : Non BPJS"
+                    .TxtJudul.SetText "Type Pasien : Non BPJS"
                 Else
-                    .txtjudul.SetText "Type Pasien : " & RS!kelompokpasien
+                    .TxtJudul.SetText "Type Pasien : " & RS!KelompokPasien
                 End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -366,14 +366,14 @@ Set Report = New crLaporanffsIBS
             .utJam.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usLayanan.SetUnboundFieldSource ("{ado.namaproduk}")
             .usUnitLayanan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNoMR.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usRemunerasi2.SetUnboundFieldSource ("{ado.totalTarif}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            '.ucKpID.SetUnboundFieldSource ("{ado.kpid}")
-            .ussKPID.SetUnboundFieldSource ("{ado.kpid}")
+            .ucKpID.SetUnboundFieldSource ("{ado.kpids}")
+'            .ussKPID.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usNorec.SetUnboundFieldSource ("{ado.norec_ppd}")
             .Text17.SetText NamaDirut

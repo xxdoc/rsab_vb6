@@ -3,7 +3,7 @@ Begin {BD4B4E61-F7B8-11D0-964D-00A0C9273C2A} crLaporanffsRJ
    ClientHeight    =   9360
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   15690
+   ClientWidth     =   16200
    OleObjectBlob   =   "crLaporanffsRJ.dsx":0000
 End
 Attribute VB_Name = "crLaporanffsRJ"

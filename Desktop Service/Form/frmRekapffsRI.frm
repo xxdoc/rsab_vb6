@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -326,7 +326,7 @@ Set Report = New crRekapffsRI
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .ucQty.SetUnboundFieldSource ("{ado.jumlah}")
-            .uckpid.SetUnboundFieldSource ("{ado.KPID}")
+            .unKpId.SetUnboundFieldSource ("{ado.KPID}")
             .ucTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usKelompokPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .txttglTTD.SetText "JAKARTA, " & Format(Now(), "dd MMM yyyy")

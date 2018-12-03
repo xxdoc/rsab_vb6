@@ -122,7 +122,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -329,12 +329,12 @@ Set Report = New crLaporanffsPenunjang
             .usNgaranPoe.SetUnboundFieldSource ("{ado.harihari}")
             .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             If kpid = "" Then
-                .TxtJudul.SetText "Type Pasien : ALL"
+                .txtjudul.SetText "Type Pasien : ALL"
             Else
                 If kpid = "153" Then
-                    .TxtJudul.SetText "Type Pasien : Non BPJS"
+                    .txtjudul.SetText "Type Pasien : Non BPJS"
                 Else
-                    .TxtJudul.SetText "Type Pasien : " & RS!kelompokpasien
+                    .txtjudul.SetText "Type Pasien : " & RS!KelompokPasien
                 End If
             End If
 '            .UnboundDateTime1.SetUnboundFieldSource ("{ado.tglregistrasi}")
@@ -350,7 +350,7 @@ Set Report = New crLaporanffsPenunjang
             .usRemunerasi2.SetUnboundFieldSource ("{ado.totalTarif}")
             .ucJM.SetUnboundFieldSource ("{ado.total}")
             .usNamaDokter.SetUnboundFieldSource ("{ado.namalengkap}")
-            .uckpid.SetUnboundFieldSource ("{ado.kpid}")
+            .unKpFk.SetUnboundFieldSource ("{ado.kpid}")
             .usTypePeg.SetUnboundFieldSource ("{ado.objecttypepegawaifk}")
             .usNorec.SetUnboundFieldSource ("{ado.norec_ppd}")
             .Text17.SetText NamaDirut

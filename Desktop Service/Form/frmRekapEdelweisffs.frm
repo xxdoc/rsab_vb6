@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmRekapffsRJ 
+Begin VB.Form frmRekapEdelweisffs 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmRekapffsRJ.frx":0000
+   Icon            =   "frmRekapEdelweisffs.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,7 +99,7 @@ Begin VB.Form frmRekapffsRJ
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmRekapffsRJ"
+Attribute VB_Name = "frmRekapEdelweisffs"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -144,14 +144,14 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmRekapffsRJ = Nothing
+    Set frmRekapEdelweisffs = Nothing
 End Sub
 
 Public Sub CetakLaporan(jmlCetak As String, tglAwal As String, tglAkhir As String, PrinteDBY As String, personKa As String, idDokter As String, tglLibur As String, kdRuangan As String, kpid As String, tipeDokter As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmRekapffsRJ = Nothing
+Set frmRekapEdelweisffs = Nothing
 Dim adocmd As New ADODB.Command
 
     Dim str1 As String
@@ -207,7 +207,6 @@ Dim adocmd As New ADODB.Command
                 Next
             End If
         Else
-            dokter = ""
             For i = 0 To diff
                 strTgl = Format(DateAdd("d", i, tglAwal), "yyyy-MM-dd")
                 If CDate(strTgl & " 01:00") < CDate("2018-05-17 00:00") Or CDate(strTgl & " 01:00") > CDate("2018-06-14 23:59") Then
@@ -289,6 +288,8 @@ Dim adocmd As New ADODB.Command
     Dim idRuangan As String
     If kdRuangan <> "" Then
         idRuangan = " and ru.id = '" & kdRuangan & "'"
+    Else
+        idRuangan = " and ru.id in (491,528,534,527,532,526,529,531,530,533,510,511,512,514,517,518,524,513,516,515,519,520,521,522,523,525) "
     End If
     Dim idKelompokPasien As String
     If kpid <> "" Then
@@ -316,9 +317,7 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
             "left join pegawai_m as pg on pg.id=ppp.objectpegawaifk " & _
             "left join ruangan_m as ru on ru.id=apd.objectruanganfk " & _
             "left join kelompokpasien_m as kp on kp.id=pd.objectkelompokpasienlastfk " & _
-            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18) " & _
-            "and ru.id not in (491,528,534,527,532,526,529,531,530,533,510,511,512,514,517,518,524,513,516,515,519,520,521,522,523,525) " & _
-            " " & dokter & idRuangan & idKelompokPasien & strluar & " " & _
+            "Where pg.id is not null and ppd.komponenhargafk = 35 and objectjenispetugaspefk = 4 and djp.objectjenisprodukfk <> 97 and ru.objectdepartemenfk in (18)  " & dokter & idRuangan & idKelompokPasien & strluar & " " & _
             "order by pp.tglpelayanan) as x where  " & SQLdate
     
     If personKa = "1" Then
@@ -376,10 +375,10 @@ strSQL = "select *, " & SQLdateLibur & "  case when hari='Saturday ' then 'Sabtu
     adocmd.CommandType = adCmdText
         
     With Report
-         .database.AddADOCommand CN_String, adocmd
+        .database.AddADOCommand CN_String, adocmd
             .txtNamaKasir.SetText PrinteDBY
             .txtVer.SetText App.Comments
-            .Text94.SetText "LAPORAN REKAP FEE FOR SERVICE DOKTER RAWAT JALAN"
+            .Text94.SetText "LAPORAN REKAP FEE FOR SERVICE EDELWEIS"
             .txtPeriode.SetText "Periode : " & Format(tglAwal, "yyyy MMM dd") & " s/d " & Format(tglAkhir, "yyyy MMM dd") & "  "
 '            .usHari.SetUnboundFieldSource ("{ado.harihari}")
 '            .usTgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
