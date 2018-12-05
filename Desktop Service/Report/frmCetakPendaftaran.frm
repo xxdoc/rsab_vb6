@@ -229,35 +229,35 @@ End Sub
 Private Sub CmdOption_Click()
     
     If bolBuktiPendaftaran = True Then
-        Report.PrinterSetup Me.hWnd
+        Report.PrinterSetup Me.hwnd
     ElseIf bolBuktiLayanan = True Then
-        reportBuktiLayanan.PrinterSetup Me.hWnd
+        reportBuktiLayanan.PrinterSetup Me.hwnd
     ElseIf bolBuktiLayananRuangan = True Then
-        reportBuktiLayananRuangan.PrinterSetup Me.hWnd
+        reportBuktiLayananRuangan.PrinterSetup Me.hwnd
     ElseIf bolBuktiLayananRuanganPerTindakan = True Then
-        reportBuktiLayananRuanganPerTindakan.PrinterSetup Me.hWnd
+        reportBuktiLayananRuanganPerTindakan.PrinterSetup Me.hwnd
     ElseIf bolBuktiLayananJasa = True Then
-        reportBuktiLayananJasa.PrinterSetup Me.hWnd
+        reportBuktiLayananJasa.PrinterSetup Me.hwnd
     ElseIf bolcetakSep = True Then
-        reportSep.PrinterSetup Me.hWnd
+        reportSep.PrinterSetup Me.hwnd
     ElseIf bolTracer1 = True Then
-        ReportTracer.PrinterSetup Me.hWnd
+        ReportTracer.PrinterSetup Me.hwnd
     ElseIf bolKartuPasien = True Then
-        reportKartuPasien.PrinterSetup Me.hWnd
+        reportKartuPasien.PrinterSetup Me.hwnd
     ElseIf boolLabelPasien = True Then
-         reportLabel.PrinterSetup Me.hWnd
+         reportLabel.PrinterSetup Me.hwnd
     ElseIf boolLabelPasienZebra = True Then
-         reportLabelZebra.PrinterSetup Me.hWnd
+         reportLabelZebra.PrinterSetup Me.hwnd
     ElseIf boolSumList = True Then
-         reportSumList.PrinterSetup Me.hWnd
+         reportSumList.PrinterSetup Me.hwnd
     ElseIf boolLembarRMK = True Then
-         reportRmk.PrinterSetup Me.hWnd
+         reportRmk.PrinterSetup Me.hwnd
     ElseIf boolBuktiLayananJasa = True Then
-         reportBuktiLayananJasa.PrinterSetup Me.hWnd
+         reportBuktiLayananJasa.PrinterSetup Me.hwnd
     ElseIf boolLembarPersetujuan = True Then
-         reportLembarGC.PrinterSetup Me.hWnd
+         reportLembarGC.PrinterSetup Me.hwnd
     ElseIf bolBuktiLayananRuanganBedah = True Then
-        reportBuktiLayananRuanganBedah.PrinterSetup Me.hWnd
+        reportBuktiLayananRuanganBedah.PrinterSetup Me.hwnd
     End If
     
     CRViewer1.Refresh
@@ -334,7 +334,7 @@ bolBuktiLayananRuanganBedah = False
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
@@ -413,7 +413,7 @@ namaKomputer = Winsock1.LocalHostName
             .usnoantri.SetUnboundFieldSource ("{ado.noantrian}")
 '            .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usnodft.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             .usStatusPasien.SetUnboundFieldSource ("{ado.statuspasien}")
@@ -718,7 +718,7 @@ bolBuktiLayananRuanganBedah = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             
@@ -739,9 +739,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -837,7 +837,7 @@ bolBuktiLayananRuanganBedah = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
             
@@ -858,9 +858,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -959,7 +959,7 @@ bolBuktiLayananRuanganBedah = False
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -983,9 +983,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -1042,7 +1042,7 @@ bolBuktiLayananRuanganBedah = False
         .txtNamaPas.SetText strNamaPasien & "(" & strJk & ")"
 
         .txtTgl.SetText strTglLahir
-        .txtNoCM.SetText strNocm
+        .txtnocm.SetText strNocm
             If view = "false" Then
                 strPrinter1 = GetTxt("Setting.ini", "Printer", "KartuPasien")
                 .SelectPrinter "winspool", strPrinter1, "Ne00:"
@@ -1122,7 +1122,7 @@ bolBuktiLayananRuanganBedah = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
     
@@ -1223,7 +1223,7 @@ boolLembarPersetujuan = False
 
             .udtgl.SetUnboundFieldSource ("{ado.tgllahir}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
     
@@ -1316,7 +1316,7 @@ bolBuktiLayananRuanganBedah = False
             .usNamaKeuarga.SetUnboundFieldSource ("{ado.namakeluarga}")
             .udTglLahir.SetUnboundFieldSource ("{ado.tglLahir}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
             .usKota.SetUnboundFieldSource ("{ado.kotakabupaten}")
            
@@ -1434,7 +1434,7 @@ bolBuktiLayananRuanganBedah = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1614,7 +1614,7 @@ boolLembarPersetujuan = False
             End If
             
             .usDokter.SetUnboundFieldSource ("{ado.namadokterpj}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
                 
             .usKamar.SetUnboundFieldSource ("{ado.namakamar}")
             .usTempatTidur.SetUnboundFieldSource ("{ado.nomorbed}")
@@ -1844,7 +1844,7 @@ bolBuktiLayananRuanganBedah = False
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -1870,9 +1870,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -1954,7 +1954,7 @@ bolBuktiLayananRuanganBedah = False
                        " INNER JOIN jeniskelamin_m AS jk ON ps.objectjeniskelaminfk = jk.id " & _
                        " INNER JOIN kelompokpasien_m AS kp ON pd.objectkelompokpasienlastfk = kp.id " & _
                        " INNER JOIN antrianpasiendiperiksa_t AS apdp ON apdp.noregistrasifk = pd.norec " & _
-                       " INNER JOIN ruangan_m AS ru ON apdp.objectruanganfk = ru.id " & _
+                       " INNER JOIN ruangan_m AS ru ON pd.objectruanganlastfk= ru.id " & _
                        " LEFT JOIN pelayananpasien_t AS tp ON tp.noregistrasifk = apdp.norec " & _
                        " LEFT JOIN pegawai_m AS pp ON apdp.objectpegawaifk = pp.id " & _
                        " LEFT JOIN produk_m AS pro ON tp.produkfk = pro.id " & _
@@ -1980,7 +1980,7 @@ bolBuktiLayananRuanganBedah = False
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -2004,9 +2004,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2116,7 +2116,7 @@ bolBuktiLayananRuanganBedah = False
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -2140,9 +2140,9 @@ bolBuktiLayananRuanganBedah = False
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
@@ -2249,7 +2249,7 @@ bolBuktiLayananRuanganBedah = True
             
             .udtgl.SetUnboundFieldSource ("{ado.tglregistrasi}")
             .usNoRegistrasi.SetUnboundFieldSource ("{ado.noregistrasi}")
-            .usnocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usnmpasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jk}")
 
@@ -2300,9 +2300,9 @@ bolBuktiLayananRuanganBedah = True
 
             ReadRs2 "SELECT namalengkap FROM pegawai_m where id='" & strIdPegawai & "' "
             If RS2.BOF Then
-                .txtuser.SetText "-"
+                .txtUser.SetText "-"
             Else
-                .txtuser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
+                .txtUser.SetText UCase(IIf(IsNull(RS2("namalengkap")), "-", RS2("namalengkap")))
             End If
             
             If view = "false" Then
