@@ -1,12 +1,12 @@
 VERSION 5.00
 Object = "{C4847593-972C-11D0-9567-00A0C9273C2A}#8.0#0"; "crviewer.dll"
-Begin VB.Form frmCrResumeRawatJalan 
+Begin VB.Form frmCrResumeRawatInap 
    Caption         =   "Medifirst2000"
    ClientHeight    =   7005
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   5820
-   Icon            =   "frmCrResumeRawatJalan.frx":0000
+   Icon            =   "frmCrResumeRawatInap.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7005
    ScaleWidth      =   5820
@@ -99,13 +99,13 @@ Begin VB.Form frmCrResumeRawatJalan
       Width           =   2175
    End
 End
-Attribute VB_Name = "frmCrResumeRawatJalan"
+Attribute VB_Name = "frmCrResumeRawatInap"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Report As New crResumeRawatJalan
+Dim Report As New crResumeRawatInap
 
 Dim strDeviceName As String
 Dim strDriverName As String
@@ -140,42 +140,38 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-    Set frmCrResumeRawatJalan = Nothing
+    Set frmCrResumeRawatInap = Nothing
 End Sub
 
-Public Sub Cetak(noCm As String, view As String)
+Public Sub Cetak(noCm As String, noRec As String, view As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
-Set frmCrResumeRawatJalan = Nothing
+Set frmCrResumeRawatInap = Nothing
 Dim adocmd As New ADODB.Command
 Dim strFilter, strFilter1 As String
 'Set Report = New crLaporanPasienDaftar
-Set Report = New crResumeRawatJalan
+Set Report = New crResumeRawatInap
 
       
-    strSQL = "select rm.norec, to_char(rm.tglresume, 'DD-MM-YYYY HH:mm') as tglresume,   ru.namaruangan,  rm.diagnosisawal as diagnosis,  rm.icd,  rm.jenispemeriksaan, " & _
-             "rm.riwayatlalu,  pg.namalengkap as namadokter,  rm.pegawaifk,  pd.noregistrasi,  pd.tglregistrasi,  ps.nocm,  ps.namapasien, " & _
-             "ps.namakeluarga,to_char(ps.tgllahir, 'DD-MM-YYYY') as tgllahir,age(ps.tgllahir) as umur,jk.jeniskelamin,alm.alamatlengkap,kk.namakotakabupaten,ps.notelepon, " & _
-             "dk.namadesakelurahan,kc.namakecamatan,ps.nohp,ps.tempatlahir,agm.agama,kbs.name as kebangsaan,pkj.pekerjaan, " & _
-             "ps.noidentitas ||' / '|| ps.paspor as noidentitas,stp.statusperkawinan,kps.kelompokpasien " & _
+    strSQL = "select rm.norec, rm.tglresume,  ru.namaruangan,  pg.namalengkap as namadokter,  rm.ringkasanriwayatpenyakit,  " & _
+             "rm.pemeriksaanfisik,  rm.pemeriksaanpenunjang,  rm.hasilkonsultasi,  rm.terapi,  rm.diagnosisawal,  rm.diagnosissekunder, " & _
+             "rm.tindakanprosedur,  rm.alergi,  rm.diet,  rm.instruksianjuran,  rm.hasillab,  rm.kondisiwaktukeluar,  rm.pengobatandilanjutkan, " & _
+             "rm.koderesume,  rm.pegawaifk,  pd.noregistrasi,to_char(  pd.tglregistrasi,'DD-MM-YYYY HH:ss') as tglregistrasi,  ps.nocm,  ps.namapasien, " & _
+             "dt.namaobat,dt.jumlah,dt.dosis,dt.frekuensi,dt.carapemberian, " & _
+             "kps.kelompokpasien,to_char(pd.tglpulang, 'DD-MM-YYYY HH:mm')as tglpulang,ru2.namaruangan as ruanganterakhir, " & _
+             "to_char(ps.tgllahir, 'DD-MM-YYYY') as tgllahir,age(ps.tgllahir) as umur,jk.jeniskelamin " & _
              "from resumemedis_t as rm " & _
-            "inner join antrianpasiendiperiksa_t as apd on apd.norec = rm.noregistrasifk " & _
-            "inner join pasiendaftar_t as pd on pd.norec = apd.noregistrasifk " & _
-            "inner join pasien_m as ps on ps.id = pd.nocmfk " & _
-            "left join jeniskelamin_m as jk on jk.id = ps.objectjeniskelaminfk " & _
-            "left join alamat_m as alm on alm.nocmfk = ps.id " & _
-            "left join kotakabupaten_m as kk on kk.id= alm.objectkotakabupatenfk " & _
-            "left join desakelurahan_m as dk on dk.id= alm.objectdesakelurahanfk " & _
-            "left join kecamatan_m as kc on kc.id= alm.objectkecamatanfk " & _
-            "left join agama_m as agm on agm.id= ps.objectagamafk " & _
-            "left join kebangsaan_m as kbs on kbs.id= ps.objectkebangsaanfk " & _
-            "left join pekerjaan_m as pkj on pkj.id= ps.objectpekerjaanfk " & _
-            "left join statusperkawinan_m as stp on stp.id= ps.objectstatusperkawinanfk " & _
-            "inner join kelompokpasien_m as kps on kps.id= pd.objectkelompokpasienlastfk " & _
-            "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
-            "left join pegawai_m as pg on pg.id = rm.pegawaifk " & _
-            "where rm.statusenabled = 't' and rm.keteranganlainnya = 'RawatJalan' and ps.nocm = '" & noCm & "' "
+             "inner join antrianpasiendiperiksa_t as apd on apd.norec = rm.noregistrasifk " & _
+             "inner join pasiendaftar_t as pd on pd.norec = apd.noregistrasifk " & _
+             "inner join pasien_m as ps on ps.id = pd.nocmfk " & _
+             "left join jeniskelamin_m as jk on jk.id = ps.objectjeniskelaminfk " & _
+             "inner join kelompokpasien_m as kps on kps.id= pd.objectkelompokpasienlastfk " & _
+             "left join resumemedisdetail_t as dt on dt.resumefk = rm.norec " & _
+             "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
+             "left join ruangan_m as ru2 on ru2.id = pd.objectruanganlastfk " & _
+             "left join pegawai_m as pg on pg.id = rm.pegawaifk " & _
+             "where rm.statusenabled = 't' and rm.keteranganlainnya='RawatInap' and ps.nocm = '" & noCm & "' and rm.norec = '" & noRec & "'  "
     
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -185,33 +181,35 @@ Set Report = New crResumeRawatJalan
         'If Not RS.EOF Then
            
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNamaKeluarga.SetUnboundFieldSource ("{ado.namakeluarga}")
+            .udtTglKeluar.SetUnboundFieldSource ("{ado.tglpulang}")
             .udtTglLahir.SetUnboundFieldSource ("{ado.tgllahir}")
             .usUmur.SetUnboundFieldSource ("{ado.umur}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
-            .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
-            .usNoTelpon.SetUnboundFieldSource ("{ado.notelepon}")
-            .usDesaKelurahan.SetUnboundFieldSource ("{ado.namadesakelurahan}")
-            .usKecamatan.SetUnboundFieldSource ("{ado.namakecamatan}")
-            .usKotaKab.SetUnboundFieldSource ("{ado.namakotakabupaten}")
-            .usNoHP.SetUnboundFieldSource ("{ado.nohp}")
-            .usTempatLahir.SetUnboundFieldSource ("{ado.tempatlahir}")
-            .usAgama.SetUnboundFieldSource ("{ado.agama}")
-            .usKebangsaan.SetUnboundFieldSource ("{ado.kebangsaan}")
-            .usPekerjaan.SetUnboundFieldSource ("{ado.pekerjaan}")
-            .usNoIdentitas.SetUnboundFieldSource ("{ado.noidentitas}")
-            .usKebangsaan.SetUnboundFieldSource ("{ado.pekerjaan}")
-            .usStatusKawin.SetUnboundFieldSource ("{ado.statusperkawinan}")
+            .udtTglMasuk.SetUnboundFieldSource ("{ado.tglregistrasi}")
+            .usRuanganLast.SetUnboundFieldSource ("{ado.ruanganterakhir}")
+            .usRingkasan.SetUnboundFieldSource ("{ado.ringkasanriwayatpenyakit}")
+            .usPemeriksaanFisik.SetUnboundFieldSource ("{ado.pemeriksaanfisik}")
+            .usPemeriksaanPenunjang.SetUnboundFieldSource ("{ado.pemeriksaanpenunjang}")
+            .usHasilKonsul.SetUnboundFieldSource ("{ado.hasilkonsultasi}")
+            .usTerapi.SetUnboundFieldSource ("{ado.terapi}")
+            .usDiagnosisUtama.SetUnboundFieldSource ("{ado.diagnosisawal}")
+            .usDiagnosisSekunder.SetUnboundFieldSource ("{ado.diagnosissekunder}")
+            .usTindakan.SetUnboundFieldSource ("{ado.tindakanprosedur}")
+            .usAlergi.SetUnboundFieldSource ("{ado.alergi}")
+            .usDiet.SetUnboundFieldSource ("{ado.diet}")
+            .usIntruksi.SetUnboundFieldSource ("{ado.instruksianjuran}")
+            .usHasilLab.SetUnboundFieldSource ("{ado.hasillab}")
             .usJenisPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usDiagnosis.SetUnboundFieldSource ("{ado.diagnosis}")
-            .udtTglResume.SetUnboundFieldSource ("{ado.tglresume}")
-            .usRuangan.SetUnboundFieldSource ("{ado.namaruangan}")
-            .usJenisPemeriksaan.SetUnboundFieldSource ("{ado.jenispemeriksaan}")
-            .usRiwayat.SetUnboundFieldSource ("{ado.riwayatlalu}")
-            .usDokter.SetUnboundFieldSource ("{ado.namadokter}")
+            .usKondisi.SetUnboundFieldSource ("{ado.kondisiwaktukeluar}")
+            .usPengobatan.SetUnboundFieldSource ("{ado.pengobatandilanjutkan}")
+            .usNamaObat.SetUnboundFieldSource ("{ado.namaobat}")
+            .usJumlah.SetUnboundFieldSource ("{ado.jumlah}")
+            .usDosis.SetUnboundFieldSource ("{ado.dosis}")
+            .usFrekuensi.SetUnboundFieldSource ("{ado.frekuensi}")
+            .usCaraPemberian.SetUnboundFieldSource ("{ado.carapemberian}")
             .usNorec.SetUnboundFieldSource ("{ado.norec}")
-            .usICD.SetUnboundFieldSource ("{ado.icd}")
+            '.usICD.SetUnboundFieldSource ("{ado.icd}")
 '
 '            .txtTgl.SetText Format(tglAwal, "dd/MM/yyyy 00:00:00") & "  s/d  " & Format(tglAkhir, "dd/MM/yyyy 23:59:59")
 '

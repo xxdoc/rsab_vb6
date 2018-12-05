@@ -49,7 +49,13 @@ Public Function Fungsi(ByVal QueryText As String) As Byte()
                 Set Root = New JNode
                 Root("Status") = "Sedang Dicetak!!"
                 Root("by") = "grh@epic"
-                
+             
+             Case "cetak-resume-ri"
+                Call frmCrResumeRawatInap.Cetak(Param1(1), Param2(1), Param3(1))
+                'http://127.0.0.1:1237/printvb/rekammedis?cetak-resume-rj=01829121&view=true'
+                Set Root = New JNode
+                Root("Status") = "Sedang Dicetak!!"
+                Root("by") = "grh@epic"
                 
             Case Else
                 Set Root = New JNode
