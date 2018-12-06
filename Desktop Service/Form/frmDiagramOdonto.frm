@@ -14,6 +14,7 @@ Begin VB.Form frmDiagramOdonto
    Moveable        =   0   'False
    ScaleHeight     =   8235
    ScaleWidth      =   14700
+   StartUpPosition =   2  'CenterScreen
    Begin VB.Frame Frame4 
       Height          =   735
       Left            =   0
@@ -90,7 +91,7 @@ Begin VB.Form frmDiagramOdonto
             Strikethrough   =   0   'False
          EndProperty
          CustomFormat    =   "dd/MM/yyyy HH:mm"
-         Format          =   134676483
+         Format          =   135921667
          UpDown          =   -1  'True
          CurrentDate     =   37823
       End
@@ -7667,9 +7668,9 @@ Private Const RC_PALETTE As Long = &H100
 Private Const SIZEPALETTE As Long = 104
 
 Private Declare Function GetDC Lib "user32" ( _
-ByVal hWnd As Long) As Long
+ByVal hwnd As Long) As Long
 Private Declare Function GetWindowDC Lib "user32" ( _
-ByVal hWnd As Long) As Long
+ByVal hwnd As Long) As Long
 Private Declare Function CreateCompatibleDC Lib "gdi32" ( _
 ByVal hDC As Long) As Long
 Private Declare Function CreateCompatibleBitmap Lib "gdi32" ( _
@@ -7694,10 +7695,10 @@ Private Declare Function BitBlt Lib "gdi32" ( _
 ByVal hDCDest As Long, ByVal XDest As Long, _
 ByVal YDest As Long, ByVal nWidth As Long, _
 ByVal nHeight As Long, ByVal hDCSrc As Long, _
-ByVal XSrc As Long, ByVal YSrc As Long, ByVal dwRop As Long) _
+ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) _
 As Long
 Private Declare Function ReleaseDC Lib "user32" ( _
-ByVal hWnd As Long, ByVal hDC As Long) As Long
+ByVal hwnd As Long, ByVal hDC As Long) As Long
 Private Declare Function DeleteDC Lib "gdi32" ( _
 ByVal hDC As Long) As Long
 Private Declare Function OleCreatePictureIndirect _
@@ -7711,28 +7712,28 @@ Private adoCommand As New ADODB.Command
 
 Private Enum StatusAksi
     NORMAL_A = 0
-    BELUM_ERUPSI = 1
-    ERUPSI_SEBAGIAN = 2
-    ANOMALI_BENTUK = 3
-    KARIES = 4
-    NON_VITAL = 5
-    TAMBALAN_LOGAM = 6
-    TAMBALAN_NON_LOGAM = 7
-    MAHKOTA_LOGAM = 8
-    MAHKOTA_NON_LOGAM = 9
-    SISA_AKAR = 10
-    GIGI_HILANG = 11
-    JEMBATAN_A = 12
-    GIGI_TIRUAN_LEPAS = 13
+    belum_erupsi = 1
+    erupsi_sebagian = 2
+    anomali_bentuk = 3
+    karies = 4
+    non_vital = 5
+    tambalan_logam = 6
+    tambalan_non_logam = 7
+    mahkota_logam = 8
+    mahkota_non_logam = 9
+    sisa_akar = 10
+    gigi_hilang = 11
+    jembatan_a = 12
+    gigi_tiruan_lepas = 13
     Calculus = 14
 End Enum
 
 Private Enum BagianGigi
-    DEPAN_PART = 1
-    KIRI_PART = 2
-    KANAN_PART = 3
-    ATAS_PART = 4
-    BAWAH_PART = 5
+    depan_part = 1
+    kiri_part = 2
+    kanan_part = 3
+    atas_part = 4
+    bawah_part = 5
 End Enum
 
 Private Type KondisiGigi
@@ -7813,11 +7814,48 @@ Private Type SumbuKoordinat
     SmbX As Single
     SmbY As Single
 End Type
+Dim norec, norecnew, norecdetail As String
+Dim DokterPemeriksafk As Integer
+Dim LoginId As Integer
+Dim NOCMAING As String
+Public CN2 As New ADODB.Connection
+Public RSCN2 As New ADODB.Recordset
+Public RS2CN2 As New ADODB.Recordset
+Public strsqlCN2 As String
+Public strsql2CN2 As String
+
+Private Sub openKoneksi()
+Dim cnstr As String
+
+With CN2
+        If .State = adStateOpen Then Exit Sub
+        .CursorLocation = adUseClient
+        
+        cnstr = "DRIVER={PostgreSQL Unicode};" & _
+                            "SERVER=192.168.12.1;" & _
+                            "port=5432;" & _
+                            "DATABASE=rsab_hk_production;" & _
+                            "UID=postgres;" & _
+                            "PWD=root"
+        .ConnectionString = cnstr
+        .CommandTimeout = 300
+        .Open
+
+        If CN2.State = adStateOpen Then
+        '    Connected sucsessfully"
+        Else
+            MsgBox "Koneksi ke database error, hubungi administrator !" & vbCrLf & Err.Description & " (" & Err.Number & ")"
+'            frmSettingKoneksi.Show
+        End If
+    End With
+End Sub
+
+
 
 Public Function CreateBitmapPicture(ByVal hBmp As Long, _
     ByVal hPal As Long) As Picture
     Dim r As Long
-    Dim Pic As PicBmp
+    Dim pic As PicBmp
     Dim IPic As IPicture
     Dim IID_IDispatch As GUID
 
@@ -7827,14 +7865,14 @@ Public Function CreateBitmapPicture(ByVal hBmp As Long, _
         .Data4(7) = &H46
     End With
 
-    With Pic
-        .Size = Len(Pic)
+    With pic
+        .Size = Len(pic)
         .Type = vbPicTypeBitmap
         .hBmp = hBmp
         .hPal = hPal
     End With
 
-    r = OleCreatePictureIndirect(Pic, IID_IDispatch, 1, IPic)
+    r = OleCreatePictureIndirect(pic, IID_IDispatch, 1, IPic)
 
     Set CreateBitmapPicture = IPic
 End Function
@@ -7896,7 +7934,7 @@ Public Function CaptureWindow(ByVal hWndSrc As Long, _
     Set CaptureWindow = CreateBitmapPicture(hBmp, hPal)
 End Function
 
-Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single, Warna As ColorConstants)
+Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single, Warna As ColorConstants)
     Dim i As Integer
     Dim sngLTengah As Single, sngTTengah As Single
     Dim varWarna As ColorConstants
@@ -7904,9 +7942,9 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
     If Button <> 1 Then Exit Sub
     sngLTengah = Me.picTengah(Index).Left + Me.picTengah(Index).Width
     sngTTengah = Me.picTengah(Index).Top + Me.picTengah(Index).Height
-    If (X > 0 And X < Me.picTengah(Index).Left) And (y > Me.picTengah(Index).Top And y < sngTTengah) Then 'kiri
+    If (x > 0 And x < Me.picTengah(Index).Left) And (y > Me.picTengah(Index).Top And y < sngTTengah) Then 'kiri
         Select Case varStatusAksi
-            Case KARIES
+            Case karies
                 If varKondisiGigi(Index).KariesKiri = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).KariesKiri = "T"
@@ -7920,7 +7958,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKiri = "T"
                     End With
                 End If
-            Case TAMBALAN_LOGAM
+            Case tambalan_logam
                 If varKondisiGigi(Index).TambalanLogamKiri = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanLogamKiri = "T"
@@ -7934,7 +7972,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKiri = "T"
                     End With
                 End If
-            Case TAMBALAN_NON_LOGAM
+            Case tambalan_non_logam
                 If varKondisiGigi(Index).TambalanNonLogamKiri = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanNonLogamKiri = "T"
@@ -7948,7 +7986,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKiri = "T"
                     End With
                 End If
-            Case MAHKOTA_LOGAM
+            Case mahkota_logam
                 If varKondisiGigi(Index).MahkotaLogamKiri = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaLogamKiri = "T"
@@ -7962,7 +8000,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKiri = "T"
                     End With
                 End If
-            Case MAHKOTA_NON_LOGAM
+            Case mahkota_non_logam
                 If varKondisiGigi(Index).MahkotaNonLogamKiri = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaNonLogamKiri = "T"
@@ -7980,9 +8018,9 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
         For i = 0 To Me.picTengah(Index).Left
             Me.picGigi(Index).Line (i, i)-(i, Me.picGigi(Index).ScaleHeight - i), varWarna
         Next
-    ElseIf X > sngLTengah And X < Me.picGigi(Index).ScaleWidth Then 'kanan
+    ElseIf x > sngLTengah And x < Me.picGigi(Index).ScaleWidth Then 'kanan
         Select Case varStatusAksi
-            Case KARIES
+            Case karies
                 If varKondisiGigi(Index).KariesKanan = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).KariesKanan = "T"
@@ -7996,7 +8034,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKanan = "T"
                     End With
                 End If
-            Case TAMBALAN_LOGAM
+            Case tambalan_logam
                 If varKondisiGigi(Index).TambalanLogamKanan = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanLogamKanan = "T"
@@ -8010,7 +8048,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKanan = "T"
                     End With
                 End If
-            Case TAMBALAN_NON_LOGAM
+            Case tambalan_non_logam
                 If varKondisiGigi(Index).TambalanNonLogamKanan = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanNonLogamKanan = "T"
@@ -8024,7 +8062,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKanan = "T"
                     End With
                 End If
-            Case MAHKOTA_LOGAM
+            Case mahkota_logam
                 If varKondisiGigi(Index).MahkotaLogamKanan = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaLogamKanan = "T"
@@ -8038,7 +8076,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamKanan = "T"
                     End With
                 End If
-            Case MAHKOTA_NON_LOGAM
+            Case mahkota_non_logam
                 If varKondisiGigi(Index).MahkotaNonLogamKanan = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaNonLogamKanan = "T"
@@ -8058,7 +8096,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
         Next
     ElseIf y > 0 And y < Me.picTengah(Index).Top Then 'atas
         Select Case varStatusAksi
-            Case KARIES
+            Case karies
                 If varKondisiGigi(Index).KariesAtas = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).KariesAtas = "T"
@@ -8072,7 +8110,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamAtas = "T"
                     End With
                 End If
-            Case TAMBALAN_LOGAM
+            Case tambalan_logam
                 If varKondisiGigi(Index).TambalanLogamAtas = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanLogamAtas = "T"
@@ -8086,7 +8124,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamAtas = "T"
                     End With
                 End If
-            Case TAMBALAN_NON_LOGAM
+            Case tambalan_non_logam
                 If varKondisiGigi(Index).TambalanNonLogamAtas = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanNonLogamAtas = "T"
@@ -8100,7 +8138,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamAtas = "T"
                     End With
                 End If
-            Case MAHKOTA_LOGAM
+            Case mahkota_logam
                 If varKondisiGigi(Index).MahkotaLogamAtas = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaLogamAtas = "T"
@@ -8114,7 +8152,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamAtas = "T"
                     End With
                 End If
-            Case MAHKOTA_NON_LOGAM
+            Case mahkota_non_logam
                 If varKondisiGigi(Index).MahkotaNonLogamAtas = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaNonLogamAtas = "T"
@@ -8134,7 +8172,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
         Next
     ElseIf y > sngTTengah And y < Me.picGigi(Index).ScaleHeight Then 'bawah
         Select Case varStatusAksi
-            Case KARIES
+            Case karies
                 If varKondisiGigi(Index).KariesBawah = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).KariesBawah = "T"
@@ -8148,7 +8186,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamBawah = "T"
                     End With
                 End If
-            Case TAMBALAN_LOGAM
+            Case tambalan_logam
                 If varKondisiGigi(Index).TambalanLogamBawah = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanLogamBawah = "T"
@@ -8162,7 +8200,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamBawah = "T"
                     End With
                 End If
-            Case TAMBALAN_NON_LOGAM
+            Case tambalan_non_logam
                 If varKondisiGigi(Index).TambalanNonLogamBawah = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).TambalanNonLogamBawah = "T"
@@ -8176,7 +8214,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamBawah = "T"
                     End With
                 End If
-            Case MAHKOTA_LOGAM
+            Case mahkota_logam
                 If varKondisiGigi(Index).MahkotaLogamBawah = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaLogamBawah = "T"
@@ -8190,7 +8228,7 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
                         .MahkotaNonLogamBawah = "T"
                     End With
                 End If
-            Case MAHKOTA_NON_LOGAM
+            Case mahkota_non_logam
                 If varKondisiGigi(Index).MahkotaNonLogamBawah = "Y" Then
                     varWarna = vbWhite
                     varKondisiGigi(Index).MahkotaNonLogamBawah = "T"
@@ -8211,12 +8249,12 @@ Private Sub subWarnaiBagianGigi(Index As Integer, Button As Integer, Shift As In
     End If
 End Sub
 
-Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single, Warna As ColorConstants)
+Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single, Warna As ColorConstants)
     Dim varWarna As ColorConstants
 
     If Button <> 1 Then Exit Sub
     Select Case varStatusAksi
-        Case KARIES
+        Case karies
             If varKondisiGigi(Index).KariesDepan = "Y" Then
                 varWarna = vbWhite
                 varKondisiGigi(Index).KariesDepan = "T"
@@ -8230,7 +8268,7 @@ Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Inte
                     .MahkotaNonLogamDepan = "T"
                 End With
             End If
-        Case TAMBALAN_LOGAM
+        Case tambalan_logam
             If varKondisiGigi(Index).TambalanLogamDepan = "Y" Then
                 varWarna = vbWhite
                 varKondisiGigi(Index).TambalanLogamDepan = "T"
@@ -8244,7 +8282,7 @@ Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Inte
                     .MahkotaNonLogamDepan = "T"
                 End With
             End If
-        Case TAMBALAN_NON_LOGAM
+        Case tambalan_non_logam
             If varKondisiGigi(Index).TambalanNonLogamDepan = "Y" Then
                 varWarna = vbWhite
                 varKondisiGigi(Index).TambalanNonLogamDepan = "T"
@@ -8258,7 +8296,7 @@ Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Inte
                     .MahkotaNonLogamDepan = "T"
                 End With
             End If
-        Case MAHKOTA_LOGAM
+        Case mahkota_logam
             If varKondisiGigi(Index).MahkotaLogamDepan = "Y" Then
                 varWarna = vbWhite
                 varKondisiGigi(Index).MahkotaLogamDepan = "T"
@@ -8272,7 +8310,7 @@ Private Sub subSetBagianDepan(Index As Integer, Button As Integer, Shift As Inte
                     .MahkotaNonLogamDepan = "T"
                 End With
             End If
-        Case MAHKOTA_NON_LOGAM
+        Case mahkota_non_logam
             If varKondisiGigi(Index).MahkotaNonLogamDepan = "Y" Then
                 varWarna = vbWhite
                 varKondisiGigi(Index).MahkotaNonLogamDepan = "T"
@@ -8351,7 +8389,59 @@ Private Sub subResetArray()
 End Sub
 
 Private Function Add_CatatanOdonto() As Boolean
-    On Error GoTo errSimpan
+'On Error GoTo errSimpan
+Dim keter As String
+Dim Nocmfk, DokterId, RuanganId, IdUser As Integer
+    
+    
+     ReadRs2 "select pd.tglregistrasi,pm.tgllahir,pd.noregistrasi,pm.id as nocmfk,pm.nocm,pm.namapasien,kp.kelompokpasien,kls.namakelas,jk.jeniskelamin, " & _
+             "ru.id as ruanganid,ru.namaruangan " & _
+             "from antrianpasiendiperiksa_t as apd " & _
+             "inner join pasiendaftar_t as pd on pd.norec = apd.noregistrasifk " & _
+             "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
+             "inner join pasien_m as pm on pm.id = pd.nocmfk " & _
+             "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
+             "inner join jeniskelamin_m as jk on jk.id = pm.objectjeniskelaminfk " & _
+             "left join kelas_m as kls on kls.id = apd.objectkelasfk " & _
+             "where apd.norec= '" & norec & "' "
+    
+    
+'    Set RSCN2 = Nothing
+'    RSCN2.Open strsqlCN2, CN2, adOpenStatic, adLockPessimistic
+'
+'    Set RS2CN2 = Nothing
+'    RS2CN2.Open "select count(norec) from catatanodonto_t", CN2, adOpenStatic, adLockPessimistic
+'    norecnew = Format(1, "0#########")
+'    If RS2CN2.RecordCount <> 0 Then
+'        norecnew = Format(Val(RS2CN2(0)) + 1, "0#########")
+'    End If
+    
+    
+    norecnew = Format(getNewNumber("catatanodonto_t", "norec", ""), "0#########")
+   
+    If txtKeterangan.Text = "" Then MsgBox "Keterangan Harus Diisi", vbCritical, ".:Warning": txtKeterangan.SetFocus: Exit Function
+    If Not RS2.EOF Then
+        Nocmfk = RS2!Nocmfk
+        DokterId = DokterPemeriksafk
+        IdUser = LoginId
+        RuanganId = RS2!RuanganId
+        
+        strsqlCN2 = "insert into catatanodonto_t values ('" & norecnew & "',0,'t','" & norec & "','" & Nocmfk & "','" & RuanganId & "', " & _
+                "'','" & txtKeterangan.Text & "','" & IdUser & "','" & DokterId & "','" & Format(dtpTglPeriksa.Value, "yyyy-MM-dd") & "')"
+        Set RSCN2 = Nothing
+        RSCN2.Open strsqlCN2, CN2, adOpenStatic, adLockOptimistic
+        
+'        MsgBox "Simpan berhasil !", vbOKOnly, ".:Informasi"
+        Add_CatatanOdonto = True
+    Else
+        MsgBox "Pasien Tak Ada!", vbInformation, "..:."
+        Add_CatatanOdonto = False
+        Exit Function
+    End If
+    
+    
+    
+'********* DATA TERDAHULU *****************'
 '    Set adoCommand = Nothing
 '    With adoCommand
 '        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
@@ -8378,15 +8468,66 @@ Private Function Add_CatatanOdonto() As Boolean
 '        Call deleteADOCommandParameters(adoCommand)
 '        Set adoCommand = Nothing
 '    End With
+'********* END DATA TERDAHULU *****************'
     Exit Function
-errSimpan:
+'errSimpan:
+'    CN.RollbackTrans
 '    Call deleteADOCommandParameters(adoCommand)
 '    Set adoCommand = Nothing
 '    Call msubPesanError
 End Function
 
 Private Function Add_DetailCatatanOdonto(ByVal NoDiagramOdonto As String) As Boolean
-    On Error GoTo errSimpan
+On Error GoTo errSimpan
+Dim objSave1 As String
+norecdetail = Format(getNewNumber("detailcatatanodonto_t", "norec", ""), "0#########")
+    CN2.BeginTrans
+    objSave1 = objSave1 & "('" & norecdetail & "',0,'t', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).BelumErupsi & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).ErupsiSebagian & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).AnomaliBentuk & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).Calculus & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).KariesDepan & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).KariesKiri & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).KariesKanan & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).KariesAtas & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).KariesBawah & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).NonVital & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanLogamDepan & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanLogamKiri & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanLogamKanan & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamAtas & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanLogamBawah & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamDepan & "'," & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKiri & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamKanan & "',"
+      objSave1 = objSave1 + "'" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamAtas & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).TambalanNonLogamBawah & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamDepan & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamKiri & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamKanan & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamAtas & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaLogamBawah & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamDepan & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKiri & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamKanan & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamAtas & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).MahkotaNonLogamBawah & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).SisaAkar & "', " & _
+                "'" & norecnew & "'," & NoDiagramOdonto & ", " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).GigiHilang & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).Jembatan & "', " & _
+                "'" & varKondisiGigi(NoDiagramOdonto).GigiTiruanLepas & "') "
+     strsql2CN2 = "insert into detailcatatanodonto_t " & _
+             "values " & _
+             objSave1
+             
+    Set RSCN2 = Nothing
+    RSCN2.Open strsql2CN2, CN2, adOpenStatic, adLockOptimistic
+     CN2.CommitTrans
+'     MsgBox "Simpan berhasil !", vbOKOnly, ".:Informasi"
+     Add_DetailCatatanOdonto = True
+'********* CODE TERDAHULU *****************'
 '    With adoCommand
 '        .Parameters.Append .CreateParameter("RETURN_VALUE", adInteger, adParamReturnValue, , Null)
 '        .Parameters.Append .CreateParameter("NoPendaftaran", adChar, adParamInput, 10, txtNoPendaftaran.Text)
@@ -8442,8 +8583,11 @@ Private Function Add_DetailCatatanOdonto(ByVal NoDiagramOdonto As String) As Boo
 '        Call deleteADOCommandParameters(adoCommand)
 '        Set adoCommand = Nothing
 '    End With
+'********* END CODE TERDAHULU *****************'
     Exit Function
 errSimpan:
+     CN2.RollbackTrans
+     Add_DetailCatatanOdonto = False
 '    Call deleteADOCommandParameters(adoCommand)
 '    Set adoCommand = Nothing
 '    msubPesanError
@@ -8452,16 +8596,16 @@ End Function
 Private Function funcKonvertKeKoordinat(varBagianGigi As BagianGigi) As SumbuKoordinat
     With funcKonvertKeKoordinat
         Select Case varBagianGigi
-            Case KIRI_PART
+            Case kiri_part
                 .SmbX = 10
                 .SmbY = Me.picTengah(11).ScaleHeight / 2
-            Case KANAN_PART
+            Case kanan_part
                 .SmbX = Me.picTengah(11).Left + Me.picTengah(11).Width + 10
                 .SmbY = Me.picTengah(11).ScaleHeight / 2
-            Case ATAS_PART
+            Case atas_part
                 .SmbX = (Me.picTengah(11).ScaleWidth / 2)
                 .SmbY = 10
-            Case BAWAH_PART
+            Case bawah_part
                 .SmbX = (Me.picTengah(11).ScaleWidth / 2)
                 .SmbY = Me.picTengah(11).Top + Me.picTengah(11).Height + 10
         End Select
@@ -8472,195 +8616,204 @@ Public Sub subLoadDetailCatatanOdonto()
     Dim idx As Integer
     Dim intX As Single, intY As Single
 
-    strSQL = "select * from DetailCatatanOdonto where NoPendaftaran='" & Me.txtNoPendaftaran.Text & "'"
+'    strSQL = "select * from DetailCatatanOdonto where NoPendaftaran='" & Me.txtnopendaftaran.Text & "'"
+    strSQL = "select cat.tglperiksa, det.* from detailcatatanodonto_t as det " & _
+           "INNER JOIN catatanodonto_t as cat on cat.norec=det.catatanodontofk " & _
+           "where cat.norec = (select cat.norec from catatanodonto_t as cat " & _
+                                "INNER JOIN pasien_m as pas on pas.id=cat.nocmfk " & _
+                                "where pas.nocm='" & NOCMAING & "' order by cat.norec desc limit 1)"
+    
 
     ReadRs strSQL
     While Not RS.EOF
-        idx = RS.Fields.Item("NoDiagramOdonto").Value
-        If RS.Fields.Item("BelumErupsi").Value = "Y" Then
-            varStatusAksi = BELUM_ERUPSI
+        idx = RS.Fields.Item("nodiagramodonto").Value
+        If RS.Fields.Item("belumerupsi").Value = "Y" Then
+            varStatusAksi = belum_erupsi
             Call picGigi_MouseUp(idx, 1, 0, intX, intY)
         End If
-        If RS.Fields.Item("ErupsiSebagian").Value = "Y" Then
-            varStatusAksi = ERUPSI_SEBAGIAN
+        If RS.Fields.Item("erupsisebagian").Value = "Y" Then
+            varStatusAksi = erupsi_sebagian
             Call picGigi_MouseUp(idx, 1, 0, intX, intY)
         End If
-        If RS.Fields.Item("AnomaliBentuk").Value = "Y" Then
-            varStatusAksi = ANOMALI_BENTUK
+        If RS.Fields.Item("anomalibentuk").Value = "Y" Then
+            varStatusAksi = anomali_bentuk
             Call picGigi_MouseUp(idx, 1, 0, intX, intY)
         End If
-        If RS.Fields.Item("Calculus").Value = "Y" Then
+        If RS.Fields.Item("calculus").Value = "Y" Then
             varStatusAksi = Calculus
             Call picGigi_MouseUp(idx, 1, 0, intX, intY)
         End If
-        If RS.Fields.Item("KariesDepan").Value = "Y" Then
-            varStatusAksi = KARIES
+        If RS.Fields.Item("kariesdepan").Value = "Y" Then
+            varStatusAksi = karies
             Call picTengah_MouseUp(idx, 1, 0, 50, 50)
         End If
-        If RS.Fields.Item("KariesKiri").Value = "Y" Then
-            varStatusAksi = KARIES
-            With funcKonvertKeKoordinat(KIRI_PART)
+        If RS.Fields.Item("karieskiri").Value = "Y" Then
+            varStatusAksi = karies
+            With funcKonvertKeKoordinat(kiri_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("KariesKanan").Value = "Y" Then
-            varStatusAksi = KARIES
-            With funcKonvertKeKoordinat(KANAN_PART)
+        If RS.Fields.Item("karieskanan").Value = "Y" Then
+            varStatusAksi = karies
+            With funcKonvertKeKoordinat(kanan_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("KariesAtas").Value = "Y" Then
-            varStatusAksi = KARIES
-            With funcKonvertKeKoordinat(DEPAN_PART)
+        If RS.Fields.Item("kariesatas").Value = "Y" Then
+            varStatusAksi = karies
+            With funcKonvertKeKoordinat(depan_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("KariesBawah").Value = "Y" Then
-            varStatusAksi = KARIES
-            With funcKonvertKeKoordinat(BAWAH_PART)
+        If RS.Fields.Item("kariesbawah").Value = "Y" Then
+            varStatusAksi = karies
+            With funcKonvertKeKoordinat(bawah_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("NonVital").Value = "Y" Then
-            varStatusAksi = NON_VITAL
+        If RS.Fields.Item("nonvital").Value = "Y" Then
+            varStatusAksi = non_vital
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
 
-        If RS.Fields.Item("TambalanLogamDepan").Value = "Y" Then
-            varStatusAksi = TAMBALAN_LOGAM
+        If RS.Fields.Item("tambalanlogamdepan").Value = "Y" Then
+            varStatusAksi = tambalan_logam
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
-        If RS.Fields.Item("TambalanLogamKiri").Value = "Y" Then
-            varStatusAksi = TAMBALAN_LOGAM
-            With funcKonvertKeKoordinat(KIRI_PART)
+        If RS.Fields.Item("tambalanlogamkiri").Value = "Y" Then
+            varStatusAksi = tambalan_logam
+            With funcKonvertKeKoordinat(kiri_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("TambalanLogamKanan").Value = "Y" Then
-            varStatusAksi = TAMBALAN_LOGAM
-            With funcKonvertKeKoordinat(KANAN_PART)
+        If RS.Fields.Item("tambalanlogamkanan").Value = "Y" Then
+            varStatusAksi = tambalan_logam
+            With funcKonvertKeKoordinat(kanan_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("TambalanLogamAtas").Value = "Y" Then
-            varStatusAksi = TAMBALAN_LOGAM
-            With funcKonvertKeKoordinat(ATAS_PART)
+        If RS.Fields.Item("tambalanlogamatas").Value = "Y" Then
+            varStatusAksi = tambalan_logam
+            With funcKonvertKeKoordinat(atas_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("TambalanLogamBawah").Value = "Y" Then
-            varStatusAksi = TAMBALAN_LOGAM
-            With funcKonvertKeKoordinat(BAWAH_PART)
-                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
-            End With
-        End If
-
-        If RS.Fields.Item("TambalanNonLogamDepan").Value = "Y" Then
-            varStatusAksi = TAMBALAN_NON_LOGAM
-            Call picTengah_MouseUp(idx, 1, 0, 10, 10)
-        End If
-        If RS.Fields.Item("TambalanNonLogamKiri").Value = "Y" Then
-            varStatusAksi = TAMBALAN_NON_LOGAM
-            With funcKonvertKeKoordinat(KIRI_PART)
-                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
-            End With
-        End If
-        If RS.Fields.Item("TambalanNonLogamKanan").Value = "Y" Then
-            varStatusAksi = TAMBALAN_NON_LOGAM
-            With funcKonvertKeKoordinat(KANAN_PART)
-                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
-            End With
-        End If
-        If RS.Fields.Item("TambalanNonLogamAtas").Value = "Y" Then
-            varStatusAksi = TAMBALAN_NON_LOGAM
-            With funcKonvertKeKoordinat(ATAS_PART)
-                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
-            End With
-        End If
-        If RS.Fields.Item("TambalanNonLogamBawah").Value = "Y" Then
-            varStatusAksi = TAMBALAN_NON_LOGAM
-            With funcKonvertKeKoordinat(BAWAH_PART)
+        If RS.Fields.Item("tambalanlogambawah").Value = "Y" Then
+            varStatusAksi = tambalan_logam
+            With funcKonvertKeKoordinat(bawah_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
 
-        If RS.Fields.Item("MahkotaLogamDepan").Value = "Y" Then
-            varStatusAksi = MAHKOTA_LOGAM
+        If RS.Fields.Item("tambalannonlogamdepan").Value = "Y" Then
+            varStatusAksi = tambalan_non_logam
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
-        If RS.Fields.Item("MahkotaLogamKiri").Value = "Y" Then
-            varStatusAksi = MAHKOTA_LOGAM
-            With funcKonvertKeKoordinat(KIRI_PART)
+        If RS.Fields.Item("tambalannonlogamkiri").Value = "Y" Then
+            varStatusAksi = tambalan_non_logam
+            With funcKonvertKeKoordinat(kiri_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("MahkotaLogamKanan").Value = "Y" Then
-            varStatusAksi = MAHKOTA_LOGAM
-            With funcKonvertKeKoordinat(KANAN_PART)
+        If RS.Fields.Item("tambalannonlogamkanan").Value = "Y" Then
+            varStatusAksi = tambalan_non_logam
+            With funcKonvertKeKoordinat(kanan_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("MahkotaLogamAtas").Value = "Y" Then
-            varStatusAksi = MAHKOTA_LOGAM
-            With funcKonvertKeKoordinat(ATAS_PART)
+        If RS.Fields.Item("tambalannonlogamatas").Value = "Y" Then
+            varStatusAksi = tambalan_non_logam
+            With funcKonvertKeKoordinat(atas_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("MahkotaLogamBawah").Value = "Y" Then
-            varStatusAksi = MAHKOTA_LOGAM
-            With funcKonvertKeKoordinat(BAWAH_PART)
+        If RS.Fields.Item("tambalannonlogambawah").Value = "Y" Then
+            varStatusAksi = tambalan_non_logam
+            With funcKonvertKeKoordinat(bawah_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
 
-        If RS.Fields.Item("MahkotaNonLogamDepan").Value = "Y" Then
-            varStatusAksi = MAHKOTA_NON_LOGAM
+        If RS.Fields.Item("mahkotalogamdepan").Value = "Y" Then
+            varStatusAksi = mahkota_logam
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
-        If RS.Fields.Item("MahkotaNonLogamKiri").Value = "Y" Then
-            varStatusAksi = MAHKOTA_NON_LOGAM
-            With funcKonvertKeKoordinat(KIRI_PART)
+        If RS.Fields.Item("mahkotalogamkiri").Value = "Y" Then
+            varStatusAksi = mahkota_logam
+            With funcKonvertKeKoordinat(kiri_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("MahkotaNonLogamKanan").Value = "Y" Then
-            varStatusAksi = MAHKOTA_NON_LOGAM
-            With funcKonvertKeKoordinat(KANAN_PART)
+        If RS.Fields.Item("mahkotalogamkanan").Value = "Y" Then
+            varStatusAksi = mahkota_logam
+            With funcKonvertKeKoordinat(kanan_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("MahkotaNonLogamAtas").Value = "Y" Then
-            varStatusAksi = MAHKOTA_NON_LOGAM
-            With funcKonvertKeKoordinat(ATAS_PART)
+        If RS.Fields.Item("mahkotalogamatas").Value = "Y" Then
+            varStatusAksi = mahkota_logam
+            With funcKonvertKeKoordinat(atas_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
-        If RS.Fields.Item("MahkotaNonLogamBawah").Value = "Y" Then
-            varStatusAksi = MAHKOTA_NON_LOGAM
-            With funcKonvertKeKoordinat(BAWAH_PART)
+        If RS.Fields.Item("mahkotalogambawah").Value = "Y" Then
+            varStatusAksi = mahkota_logam
+            With funcKonvertKeKoordinat(bawah_part)
                 Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
             End With
         End If
 
-        If RS.Fields.Item("SisaAkar").Value = "Y" Then
-            varStatusAksi = SISA_AKAR
+        If RS.Fields.Item("mahkotanonlogamdepan").Value = "Y" Then
+            varStatusAksi = mahkota_non_logam
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
-        If RS.Fields.Item("GigiHilang").Value = "Y" Then
-            varStatusAksi = GIGI_HILANG
+        If RS.Fields.Item("mahkotanonlogamkiri").Value = "Y" Then
+            varStatusAksi = mahkota_non_logam
+            With funcKonvertKeKoordinat(kiri_part)
+                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
+            End With
+        End If
+        If RS.Fields.Item("mahkotanonlogamkanan").Value = "Y" Then
+            varStatusAksi = mahkota_non_logam
+            With funcKonvertKeKoordinat(kanan_part)
+                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
+            End With
+        End If
+        If RS.Fields.Item("mahkotanonlogamatas").Value = "Y" Then
+            varStatusAksi = mahkota_non_logam
+            With funcKonvertKeKoordinat(atas_part)
+                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
+            End With
+        End If
+        If RS.Fields.Item("mahkotanonlogambawah").Value = "Y" Then
+            varStatusAksi = mahkota_non_logam
+            With funcKonvertKeKoordinat(bawah_part)
+                Call picGigi_MouseUp(idx, 1, 0, .SmbX, .SmbY)
+            End With
+        End If
+
+        If RS.Fields.Item("sisaakar").Value = "Y" Then
+            varStatusAksi = sisa_akar
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
-        If RS.Fields.Item("Jembatan").Value = "Y" Then
-            varStatusAksi = JEMBATAN_A
+        If RS.Fields.Item("gigihilang").Value = "Y" Then
+            varStatusAksi = gigi_hilang
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
-        If RS.Fields.Item("GigiTiruanLepas").Value = "Y" Then
-            varStatusAksi = GIGI_TIRUAN_LEPAS
+        If RS.Fields.Item("jembatan").Value = "Y" Then
+            varStatusAksi = jembatan_a
             Call picTengah_MouseUp(idx, 1, 0, 10, 10)
         End If
+        If RS.Fields.Item("gigitiruanlepas").Value = "Y" Then
+            varStatusAksi = gigi_tiruan_lepas
+            Call picTengah_MouseUp(idx, 1, 0, 10, 10)
+        End If
+
         RS.MoveNext
     Wend
-    strSQL = "select Keterangan from CatatanOdonto where NoPendaftaran='" & Me.txtNoPendaftaran.Text & "'"
+    strSQL = "select cat.keterangan from catatanodonto_t as cat " & _
+            "INNER JOIN pasien_m as pas on pas.id=cat.nocmfk " & _
+            "where pas.nocm='" & NOCMAING & "' order by cat.norec desc limit 1"
     Set RS = Nothing
     ReadRs strSQL
     If Not RS.EOF Then txtKeterangan.Text = IIf(IsNull(RS(0).Value), "", RS(0).Value)
@@ -8672,7 +8825,7 @@ Private Function subCaptureDesktop() As Boolean
     Dim hWndScreen As Long
 
     With Me.picDiagramOdondo
-        Set Me.picTemp.Picture = CaptureWindow(.hWnd, True, 40, 0, _
+        Set Me.picTemp.Picture = CaptureWindow(.hwnd, True, 40, 0, _
         .ScaleX(Me.picTemp.ScaleWidth, .ScaleMode, vbPixels), _
         .ScaleY(Me.picTemp.ScaleHeight, .ScaleMode, vbPixels))
     End With
@@ -8756,6 +8909,9 @@ End Sub
 Private Sub cmdSimpan_Click()
     Dim i As Integer
     Dim blnBerhasil As Boolean
+    
+    
+    Call openKoneksi
 
     If Not Add_CatatanOdonto Then Exit Sub
     For i = 11 To 85
@@ -8774,6 +8930,8 @@ Private Sub cmdSimpan_Click()
         MsgBox "Penyimpanan data berhasil!", vbInformation
         Me.cmdCetakOdonto.Enabled = True
     End If
+    
+    CN2.Close
 End Sub
 
 Private Sub cmdTutup_Click()
@@ -8786,14 +8944,53 @@ Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
             Call subCaptureDesktop
     End Select
 End Sub
+Public Sub LoadDataPasien(norec_apd As String, dokter As String, IdUser As String)
+Dim tgllahir, tglregistrasi As String
+Dim umur As String
 
+    If norec_apd <> "" And dokter <> "" And IdUser <> "" Then
+        DokterPemeriksafk = dokter
+        LoginId = IdUser
+        norec = norec_apd
+        ReadRs "select pd.tglregistrasi,pm.tgllahir,pd.noregistrasi,pm.nocm,pm.namapasien,kp.kelompokpasien,kls.namakelas,jk.jeniskelamin " & _
+                "from antrianpasiendiperiksa_t as apd " & _
+                "inner join pasiendaftar_t as pd on pd.norec = apd.noregistrasifk " & _
+                "left join kelompokpasien_m as kp on kp.id = pd.objectkelompokpasienlastfk " & _
+                "inner join pasien_m as pm on pm.id = pd.nocmfk " & _
+                "left join ruangan_m as ru on ru.id = apd.objectruanganfk " & _
+                "inner join jeniskelamin_m as jk on jk.id = pm.objectjeniskelaminfk " & _
+                "left join kelas_m as kls on kls.id = apd.objectkelasfk " & _
+                "where apd.norec= '" & norec_apd & "' "
+                
+         If Not RS.EOF Then
+            tgllahir = RS!tgllahir
+            tglregistrasi = RS!tglregistrasi
+            txtNoPendaftaran.Text = RS!noregistrasi
+            txtNoCM.Text = RS!nocm
+            NOCMAING = RS!nocm
+            txtNamaPasien.Text = RS!namapasien
+            txtJenisPasien.Text = RS!KelompokPasien
+            txtKls.Text = RS!namakelas
+            txtSex.Text = RS!jeniskelamin
+            txtTglDaftar.Text = RS!tglregistrasi
+            umur = hitungUmur(RS!tgllahir, RS!tglregistrasi)
+            Dim umur_arr() As String
+            umur_arr = Split(umur, " ")
+            txtThn.Text = umur_arr(0)
+            txtBln.Text = umur_arr(2)
+            txtHr.Text = umur_arr(4)
+         End If
+    End If
+    
+    Call subLoadDetailCatatanOdonto
+End Sub
 Private Sub Form_Load()
 '    Call centerForm(Me, MDIUtama)
 '    Call PlayFlashMovie(Me)
     
     Me.Left = (Screen.Width - Me.Width) / 2
     Me.Top = (Screen.Height - 1500 - Me.Height) / 2
-
+'    Call LoadDataPasien
     Call subResetArray
     Me.dtpTglPeriksa.Value = Now
 
@@ -8817,14 +9014,15 @@ Private Sub Form_Load()
     Frame2.Height = 2175
     Frame4.Top = 8400
     Me.Height = 9690
+    
 End Sub
 
-Private Sub lblGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
-    Call picTengah_MouseUp(Index, Button, Shift, X, y)
+Private Sub lblGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+    Call picTengah_MouseUp(Index, Button, Shift, x, y)
 End Sub
 
-Private Sub lblGigiAnomali_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
-    Call picTengah_MouseUp(Index, Button, Shift, X, y)
+Private Sub lblGigiAnomali_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+    Call picTengah_MouseUp(Index, Button, Shift, x, y)
 End Sub
 
 Private Sub optAksi_Click(Index As Integer)
@@ -8833,9 +9031,9 @@ Private Sub optAksi_Click(Index As Integer)
     End If
 End Sub
 
-Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
+Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
     Select Case varStatusAksi
-        Case BELUM_ERUPSI
+        Case belum_erupsi
             Me.lblGigi(Index).font.Size = 8 'direset
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).BelumErupsi = "Y" Then
@@ -8848,7 +9046,7 @@ Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Intege
                 End With
                 varKondisiGigi(Index).BelumErupsi = "Y"
             End If
-        Case ERUPSI_SEBAGIAN
+        Case erupsi_sebagian
             Me.lblGigi(Index).font.Size = 8 'direset
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).ErupsiSebagian = "Y" Then
@@ -8861,7 +9059,7 @@ Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Intege
                 End With
                 varKondisiGigi(Index).ErupsiSebagian = "Y"
             End If
-        Case ANOMALI_BENTUK
+        Case anomali_bentuk
             Me.lblGigi(Index).font.Size = 8 'direset
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).AnomaliBentuk = "Y" Then
@@ -8887,35 +9085,35 @@ Private Sub picGigi_MouseUp(Index As Integer, Button As Integer, Shift As Intege
                 End With
                 varKondisiGigi(Index).Calculus = "Y"
             End If
-        Case KARIES
+        Case karies
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picKaries.BackColor)
-        Case NON_VITAL
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picKaries.BackColor)
+        Case non_vital
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
-        Case TAMBALAN_LOGAM
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
+        Case tambalan_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picTLogam.BackColor)
-        Case TAMBALAN_NON_LOGAM
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picTLogam.BackColor)
+        Case tambalan_non_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picTNonLogam.BackColor)
-        Case MAHKOTA_LOGAM
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picTNonLogam.BackColor)
+        Case mahkota_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picMLogam.BackColor)
-        Case MAHKOTA_NON_LOGAM
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picMLogam.BackColor)
+        Case mahkota_non_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subWarnaiBagianGigi(Index, Button, Shift, X, y, Me.picMNonLogam.BackColor)
-        Case SISA_AKAR
+            Call subWarnaiBagianGigi(Index, Button, Shift, x, y, Me.picMNonLogam.BackColor)
+        Case sisa_akar
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
-        Case GIGI_HILANG
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
-        Case JEMBATAN_A
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
+        Case gigi_hilang
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
+        Case jembatan_a
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
-        Case GIGI_TIRUAN_LEPAS
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
+        Case gigi_tiruan_lepas
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call picTengah_MouseUp(Index, Button, Shift, X, y)
+            Call picTengah_MouseUp(Index, Button, Shift, x, y)
     End Select
     varKondisiGigi(Index).AdaGigi = True
     Exit Sub
@@ -8924,9 +9122,10 @@ jump:
     varKondisiGigi(Index).AdaGigi = True
 End Sub
 
-Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, y As Single)
+Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+'Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     Select Case varStatusAksi
-        Case BELUM_ERUPSI
+        Case belum_erupsi
             Me.lblGigi(Index).font.Size = 8 'direset
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).BelumErupsi = "Y" Then
@@ -8939,7 +9138,7 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
                 End With
                 varKondisiGigi(Index).BelumErupsi = "Y"
             End If
-        Case ERUPSI_SEBAGIAN
+        Case erupsi_sebagian
             Me.lblGigi(Index).font.Size = 8 'direset
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).ErupsiSebagian = "Y" Then
@@ -8952,7 +9151,7 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
                 End With
                 varKondisiGigi(Index).ErupsiSebagian = "Y"
             End If
-        Case ANOMALI_BENTUK
+        Case anomali_bentuk
             Me.lblGigi(Index).font.Size = 8 'direset
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).AnomaliBentuk = "Y" Then
@@ -8965,10 +9164,10 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
                 End With
                 varKondisiGigi(Index).AnomaliBentuk = "Y"
             End If
-        Case KARIES
+        Case karies
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picKaries.BackColor)
-        Case NON_VITAL
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picKaries.BackColor)
+        Case non_vital
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).NonVital = "Y" Then
                 Me.picTengah(Index).Cls
@@ -8987,19 +9186,19 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
                     End If
                 End With
             End If
-        Case TAMBALAN_LOGAM
+        Case tambalan_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picTLogam.BackColor)
-        Case TAMBALAN_NON_LOGAM
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picTLogam.BackColor)
+        Case tambalan_non_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picTNonLogam.BackColor)
-        Case MAHKOTA_LOGAM
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picTNonLogam.BackColor)
+        Case mahkota_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picMLogam.BackColor)
-        Case MAHKOTA_NON_LOGAM
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picMLogam.BackColor)
+        Case mahkota_non_logam
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
-            Call subSetBagianDepan(Index, Button, Shift, X, y, Me.picMNonLogam.BackColor)
-        Case SISA_AKAR
+            Call subSetBagianDepan(Index, Button, Shift, x, y, Me.picMNonLogam.BackColor)
+        Case sisa_akar
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).SisaAkar = "Y" Then
                 Me.picTengah(Index).Cls
@@ -9014,7 +9213,7 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
                 Call subSisaAkar(Index)
                 varKondisiGigi(Index).SisaAkar = "Y"
             End If
-        Case GIGI_HILANG
+        Case gigi_hilang
             If varKondisiGigi(Index).GigiHilang = "Y" Then
                 Me.picTengah(Index).Cls
                 With varKondisiGigi(Index)
@@ -9031,7 +9230,7 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
                     Me.picGigi(Index).Visible = False
                 End If
             End If
-        Case JEMBATAN_A
+        Case jembatan_a
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).Jembatan = "Y" Then
                 Me.picTengah(Index).Cls
@@ -9046,7 +9245,7 @@ Private Sub picTengah_MouseUp(Index As Integer, Button As Integer, Shift As Inte
                 Call subJembatan(Index)
                 varKondisiGigi(Index).Jembatan = "Y"
             End If
-        Case GIGI_TIRUAN_LEPAS
+        Case gigi_tiruan_lepas
             If varKondisiGigi(Index).GigiHilang = "Y" Then GoTo jump
             If varKondisiGigi(Index).GigiTiruanLepas = "Y" Then
                 Me.picTengah(Index).Cls

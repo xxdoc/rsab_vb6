@@ -141,7 +141,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set frmCRLaporanHarianKasBank = Nothing
 End Sub
 
-Public Sub Cetak(idBKU As String, tglAwal As String, tglAkhir As String, view As String, user As String)
+Public Sub Cetak(idBKU As String, tglAwal As String, tglAkhir As String, view As String, user As String, judul As String)
 'On Error GoTo errLoad
 'On Error Resume Next
 
@@ -169,7 +169,7 @@ Set Report = New crLaporanHarianKasBank
             .ucSaldo.SetUnboundFieldSource ("{ado.saldo}")
             .ucSaldoAwal.SetUnboundFieldSource ("{ado.saldoawal}")
             .ucSaldoAkhir.SetUnboundFieldSource ("{ado.saldoakhir}")
-            
+            .TxtJudul.SetText judul
             If view = "false" Then
                 Dim strPrinter As String
 '
