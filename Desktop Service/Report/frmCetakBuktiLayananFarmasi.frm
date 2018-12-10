@@ -105,7 +105,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim ReportResep As New cr_RincianBiayaResep_3
+Dim ReportResep As New cr_RincianBiayaResep_4
 
 Dim ii As Integer
 Dim tempPrint1 As String
@@ -137,7 +137,7 @@ End Sub
 Private Sub CmdOption_Click()
     
     If bolStrukResep = True Then
-        ReportResep.PrinterSetup Me.hWnd
+        ReportResep.PrinterSetup Me.hwnd
     End If
     
     CRViewer1.Refresh
