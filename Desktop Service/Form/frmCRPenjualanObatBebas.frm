@@ -114,7 +114,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -197,7 +197,7 @@ Set Report = New crDetailPengeluaranObatBebas
 '            "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.nostruk_intern = '-' " & _
 '            str1 & str2 & str3 & ") as x order by x.noresep"
 
-    strSQL = "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
+    strSQL = "select sp.norec,pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
             "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
             "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan,case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid," & _
             "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,'-' as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,sp.namatempattujuan as alamatlengkap,'-' as namaibu,spd.resepke,pg3.namalengkap as namakasir  " & _
@@ -207,7 +207,7 @@ Set Report = New crDetailPengeluaranObatBebas
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' and sp.nostruk_intern='-' and substring(sp.nostruk from 1 for 2)='OB' " & _
             str1 & str2 & str3
     strSQL = strSQL & "UNION ALL " & _
-            "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
+            "select sp.norec,pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
             "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
             "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan,case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, " & _
             "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,ps.nocm as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,al.alamatlengkap as alamatlengkap,ps.namaibu as namaibu,spd.resepke,pg3.namalengkap as namakasir " & _
@@ -215,8 +215,8 @@ Set Report = New crDetailPengeluaranObatBebas
             "inner join pasien_m as ps on ps.nocm=sp.nostruk_intern inner join alamat_m as al on al.nocmfk= ps.id inner join jeniskelamin_m as jk on jk.id=ps.objectjeniskelaminfk left join pegawai_m as pg on pg.id=sp.objectpegawaipenanggungjawabfk left join strukbuktipenerimaan_t as sbm on sbm.norec = sp.nosbmlastfk " & _
             "left join pegawai_m as pg2 on pg2.id = sbm.objectpegawaipenerimafk left join loginuser_s as lu on lu.id = sbm.objectpegawaipenerimafk left join pegawai_m as pg3 on pg3.id = lu.objectpegawaifk left join ruangan_m as ru on ru.id=sp.objectruanganfk " & _
             "where sp.tglstruk BETWEEN '" & tglAwal & "' and '" & tglAkhir & "' AND sp.nostruk_intern not in ('-') and substring(sp.nostruk from 1 for 2)='OB' " & _
-            str1 & str2 & str3
-'            " order by tglresep"
+            str1 & str2 & str3 & _
+            " order by tglresep"
    
     adocmd.CommandText = strSQL
     adocmd.CommandType = adCmdText
@@ -273,13 +273,13 @@ Set Report = New crDetailPengeluaranObatBebas
             .usJenisRacikan.SetUnboundFieldSource ("{ado.jenisracikan}")
             '.usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNocm.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaIbu.SetUnboundFieldSource ("{ado.namaibu}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
-            
+            .usNorecResep.SetUnboundFieldSource ("{ado.norec}")
             
             If view = "false" Then
                 Dim strPrinter As String

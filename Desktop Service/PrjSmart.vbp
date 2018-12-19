@@ -329,6 +329,7 @@ Form=Report\frmCRCetakDaftarPasien.frm
 Form=Form\frmCRSuratTagihanDeposit.frm
 Designer=Report\crResumeRawatJalan.Dsr
 Designer=Report\cr_RincianBiayaResep_3.Dsr
+Form=Form\frmCRLaporanTagihanPenjamin.frm
 Form=Report\frmCrResumeRawatJalan.frm
 IconForm="GossRESTMain"
 Startup="GossRESTMain"
