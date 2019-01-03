@@ -114,7 +114,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -228,15 +228,20 @@ Set Report = New crPenjualanHarianFarmasi
             .usNoResep.SetUnboundFieldSource ("{ado.nostruk}")
             .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
             .usJumlahResep.SetUnboundFieldSource ("{ado.jumlah}")
-            .ucSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
+            .ucDiskonBener.SetUnboundFieldSource ("{ado.diskon}")
+            .ucHargaBener.SetUnboundFieldSource ("{ado.hargasatuan}")
+            .ucJasaBener.SetUnboundFieldSource ("{ado.jasa}")
+            .ucPPNBener.SetUnboundFieldSource ("{ado.ppn}")
+            .unQty.SetUnboundFieldSource ("{ado.jumlah}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
             .usKasir.SetUnboundFieldSource ("{ado.kasir}")
