@@ -98,7 +98,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim reportDetailPengeluaran As New crDetailPengeluaranObat
+Dim reportDetailPengeluaran As New crDetailPengeluaranObat2
+'Dim reportDetailPengeluaran As New crDetailPengeluaranObat
 Dim adoReport As New ADODB.Command
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer

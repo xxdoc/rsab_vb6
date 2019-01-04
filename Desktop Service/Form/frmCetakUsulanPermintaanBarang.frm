@@ -137,7 +137,7 @@ End Sub
 Private Sub CmdOption_Click()
     
     If bolStrukResep = True Then
-        ReportResep.PrinterSetup Me.hWnd
+        ReportResep.PrinterSetup Me.hwnd
     End If
     
     CRViewer1.Refresh
@@ -236,8 +236,8 @@ bolStrukResep = True
              .unQty.SetUnboundFieldSource ("{Ado.qtyproduk}")
              .usSatuan.SetUnboundFieldSource ("{Ado.satuanstandar}")
              .ucHargaSatuan.SetUnboundFieldSource ("{Ado.hargasatuan}")
-             .ucPpn.SetUnboundFieldSource ("{Ado.hargappn}")
-             .ucTotal.SetUnboundFieldSource ("{Ado.total}")
+             .ucPpn1.SetUnboundFieldSource ("{Ado.hargappn}")
+'             .ucTotal.SetUnboundFieldSource ("{Ado.total}")
              .Text47.SetText namalengkap
              .Text48.SetText nip
              .txtJabatan.SetText namajabatan
