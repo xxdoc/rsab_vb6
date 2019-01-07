@@ -98,7 +98,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim reportDetailPengeluaran As New crDetailPengeluaranObat
+Dim reportDetailPengeluaran As New crDetailPengeluaranObat2
+'Dim reportDetailPengeluaran As New crDetailPengeluaranObat
 Dim adoReport As New ADODB.Command
 'Dim bolSuppresDetailSection10 As Boolean
 'Dim ii As Integer
@@ -116,7 +117,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    reportDetailPengeluaran.PrinterSetup Me.hWnd
+    reportDetailPengeluaran.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -194,7 +195,7 @@ Dim strSQL As String
 '                     str2 & _
                      str3
                      ''and dp.id=16 "
-    strSQL = "select pg.namalengkap,ru.namaruangan as ruangan,ru2.namaruangan,dp.namadepartemen,sr.tglresep,to_char(sr.tglresep,'hh12:mi pm') as jamresep,sr.noresep,pr.kdproduk as kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,pp.jumlah,pp.hargajual, " & _
+    strSQL = "select sr.norec,pg.namalengkap,ru.namaruangan as ruangan,ru2.namaruangan,dp.namadepartemen,sr.tglresep,to_char(sr.tglresep,'hh12:mi pm') as jamresep,sr.noresep,pr.kdproduk as kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,pp.jumlah,pp.hargajual, " & _
              "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,case when pp.jasa is null then 0 else pp.jasa end as jasa,0 as ppn,pp.jumlah*pp.hargajual as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
              "case when jr.jenisracikan is null then '-' else jr.jenisracikan end as jenisracikan,'-' as kodefarmatologi,ps.namapasien,ps.tgllahir,ps.nocm,pd.noregistrasi,case when jk.id = '1' then 'l' else 'p' end as jeniskelamin,kp.kelompokpasien,ps.namaibu, al.alamatlengkap " & _
              "from strukresep_t as sr left join pelayananpasien_t as pp on pp.strukresepfk = sr.norec left join antrianpasiendiperiksa_t as apd on apd.norec=pp.noregistrasifk left join pasiendaftar_t as pd on pd.norec=apd.noregistrasifk left join pasien_m as ps on ps.id=pd.nocmfk " & _
@@ -205,7 +206,7 @@ Dim strSQL As String
              "" & str1 & " " & str2 & " " & str3 & ""
     
     strSQL = strSQL & "UNION ALL " & _
-             "select  pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
+             "select  sp.norec,pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
              "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
              "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan, " & _
              "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,'-' as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,sp.namatempattujuan as alamatlengkap,'-' as namaibu " & _
@@ -217,7 +218,7 @@ Dim strSQL As String
              "and sp.nostruk_intern='-' and substring(sp.nostruk from 1 for 2)='OB'"
 
     strSQL = strSQL & "UNION ALL " & _
-             "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan, " & _
+             "select sp.norec,pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan, " & _
              "sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
              "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual, " & _
              "case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
@@ -262,18 +263,19 @@ Dim strSQL As String
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucHarga.SetUnboundFieldSource ("{ado.hargajual}")
-            .ucSubTotal.SetUnboundFieldSource ("{ado.subtotal}")
+            .ucSubtotal.SetUnboundFieldSource ("{ado.subtotal}")
             .usKdFarma.SetUnboundFieldSource ("{ado.noresep}")
             .usJenisKemasan.SetUnboundFieldSource ("{ado.jeniskemasan}")
             .usJenisRacikan.SetUnboundFieldSource ("{ado.jenisracikan}")
             .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
-            .usNoCM.SetUnboundFieldSource ("{ado.nocm}")
+            .usNoCm.SetUnboundFieldSource ("{ado.nocm}")
 '            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usKelTransaksi.SetUnboundFieldSource ("{ado.kelompokpasien}")
             .usNamaIbu.SetUnboundFieldSource ("{ado.namaibu}")
             .usAlamat.SetUnboundFieldSource ("{ado.alamatlengkap}")
+            .usNorecResep.SetUnboundFieldSource ("{ado.norec}")
             
             If view = "false" Then
                 Dim strPrinter As String

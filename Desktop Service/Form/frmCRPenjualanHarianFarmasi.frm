@@ -114,7 +114,7 @@ Private Sub cmdCetak_Click()
 End Sub
 
 Private Sub CmdOption_Click()
-    Report.PrinterSetup Me.hWnd
+    Report.PrinterSetup Me.hwnd
     CRViewer1.Refresh
 End Sub
 
@@ -210,7 +210,7 @@ Set Report = New crPenjualanHarianFarmasi
 '            str1 & _
 '            str2 & _
 '            str3 & " and sr.statusenabled = 't' and pp.jumlah > 0 order by sr.noresep"
-    strSQL = "select sr.tglresep,sr.noresep,pd.noregistrasi,upper(ps.namapasien) as namapasien,(case when jk.id = 1 then 'l' when jk.id = 2 then 'p' else '-' end) as jeniskelamin, " & _
+    strSQL = "select sr.norec,sr.tglresep,sr.noresep,pd.noregistrasi,upper(ps.namapasien) as namapasien,(case when jk.id = 1 then 'l' when jk.id = 2 then 'p' else '-' end) as jeniskelamin, " & _
              "kp.kelompokpasien,pg.namalengkap,ru2.namaruangan,ru.namaruangan as ruanganapotik,pp.jumlah,pp.hargajual as harga,pp.rke as rke,(pp.jumlah)*(pp.hargajual) as subtotal, " & _
              "case when pp.hargadiscount is null then 0 else pp.hargadiscount end as diskon,case when pp.jasa is null then 0 else pp.jasa end as jasa,0 as ppn, " & _
              "case when pd.nosbmlastfk is null then 'n' else'p' end as statuspaid,pg3.namalengkap as namakasir,sr.noresep || pp.rke as rke " & _
@@ -241,7 +241,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usNoResep.SetUnboundFieldSource ("{ado.noresep}")
             .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -250,12 +250,17 @@ Set Report = New crPenjualanHarianFarmasi
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
+            .unQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .ucHargaBener.SetUnboundFieldSource ("{ado.harga}")
+            .ucDiskonBener.SetUnboundFieldSource ("{ado.diskon}")
+            .ucJasaBener.SetUnboundFieldSource ("{ado.jasa}")
+            .ucPPNBener.SetUnboundFieldSource ("{ado.ppn}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
             .usKasir.SetUnboundFieldSource ("{ado.namakasir}")
             .usrke.SetUnboundFieldSource ("{ado.rke}")
             .usRuanganFarmasi.SetUnboundFieldSource ("{ado.ruanganapotik}")
-            
+            .usNorecResep.SetUnboundFieldSource ("{ado.norec}")
             
             If view = "false" Then
                 Dim strPrinter As String
@@ -329,7 +334,7 @@ Set Report = New crPenjualanHarianFarmasi
 '            str1 & _
 '            str2 & _
 '            str3 & ")as x order by x.nostruk"
-   strSQL = "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
+   strSQL = "select sp.norec,pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
             "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
             "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan,case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid," & _
             "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,'-' as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,sp.namatempattujuan as alamatlengkap,'-' as namaibu,spd.resepke,pg3.namalengkap as namakasir  " & _
@@ -341,7 +346,7 @@ Set Report = New crPenjualanHarianFarmasi
             "and sp.nostruk_intern='-' and sp.objectkelompoktransaksifk=2 and sp.nostruk like '%OB%' "
     
     strSQL = strSQL & "UNION ALL " & _
-            "select pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
+            "select sp.norec,pg.namalengkap,ru.namaruangan as ruangan,'-' as namadepartemen,'-' as namaruangan,sp.tglstruk as tglresep,to_char(sp.tglstruk,'hh12:mi pm') as jamresep,sp.nostruk as noresep, " & _
             "pr.kdproduk,pr.id as idproduk,pr.namaproduk,ss.satuanstandar,spd.qtyproduk as jumlah,spd.hargasatuan as hargajual,case when spd.hargadiscount is null then 0 else spd.hargadiscount end as diskon, " & _
             "case when spd.hargatambahan is null then 0 else spd.hargatambahan end as jasa,0 as ppn,(spd.qtyproduk * spd.hargasatuan) as subtotal,case when jkm.jeniskemasan is null then '-' else jkm.jeniskemasan end as jeniskemasan,case when sp.nosbmlastfk is null then 'N' else'P' end as statuspaid, " & _
             "'-' as jenisracikan,'-' as kodefarmatologi,upper(sp.namapasien_klien) as namapasien,sp.tglfaktur as tgllahir,ps.nocm as nocm,'-' as noregistrasi,'-' as jeniskelamin,'umum/sendiri' as kelompokpasien,al.alamatlengkap as alamatlengkap,ps.namaibu as namaibu,spd.resepke,pg3.namalengkap as namakasir " & _
@@ -365,7 +370,7 @@ Set Report = New crPenjualanHarianFarmasi
             .usNoResep.SetUnboundFieldSource ("{ado.noresep}")
             .usRuangan1.SetUnboundFieldSource ("{ado.namaruangan}")
             .usKelPasien.SetUnboundFieldSource ("{ado.kelompokpasien}")
-            .usNoreg.SetUnboundFieldSource ("{ado.noregistrasi}")
+            .usNoReg.SetUnboundFieldSource ("{ado.noregistrasi}")
             .usNamaPasien.SetUnboundFieldSource ("{ado.namapasien}")
             .usJK.SetUnboundFieldSource ("{ado.jeniskelamin}")
             .usDokter.SetUnboundFieldSource ("{ado.namalengkap}")
@@ -374,12 +379,17 @@ Set Report = New crPenjualanHarianFarmasi
             .ucDiskon.SetUnboundFieldSource ("{ado.diskon}")
             .ucJasa.SetUnboundFieldSource ("{ado.jasa}")
             .ucPpn.SetUnboundFieldSource ("{ado.ppn}")
+            .unQty.SetUnboundFieldSource ("{ado.jumlah}")
+            .ucHargaBener.SetUnboundFieldSource ("{ado.hargajual}")
+            .ucDiskonBener.SetUnboundFieldSource ("{ado.diskon}")
+            .ucJasaBener.SetUnboundFieldSource ("{ado.jasa}")
+            .ucPPNBener.SetUnboundFieldSource ("{ado.ppn}")
 '            .ucTotal.SetUnboundFieldSource ("{ado.total}")
             .usStatusPaid.SetUnboundFieldSource ("{ado.statuspaid}")
             .usKasir.SetUnboundFieldSource ("{ado.namakasir}")
             .usrke.SetUnboundFieldSource ("{ado.resepke}")
             .usRuanganFarmasi.SetUnboundFieldSource ("{ado.ruangan}")
-            
+            .usNorecResep.SetUnboundFieldSource ("{ado.norec}")
             
             If view = "false" Then
                 Dim strPrinter As String
